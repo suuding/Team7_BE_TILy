@@ -1,5 +1,7 @@
 # Team7_BE
+
 7조
+
 ## 카카오 테크 캠퍼스 3단계 진행 보드
 
 </br>
@@ -19,6 +21,7 @@
 ex ) AWS(아마존), GCP(구글), Azure(마이크로소프트), Cloudtype 
 
 ```
+
 ## Notice
 
 ```
@@ -37,12 +40,13 @@ ex ) AWS(아마존), GCP(구글), Azure(마이크로소프트), Cloudtype
 </br>
 
 ## 필요 산출물
+
 <details>
 <summary>Step3. Week-1</summary>
 <div>
-    
+
 ✅**1주차**
-    
+
 ```
     - 5 Whys
     - 마켓 리서치
@@ -50,7 +54,7 @@ ex ) AWS(아마존), GCP(구글), Azure(마이크로소프트), Cloudtype
     - 와이어 프레임
     - 칸반보드
 ```
-    
+
 </div>
 </details>
 
@@ -59,15 +63,15 @@ ex ) AWS(아마존), GCP(구글), Azure(마이크로소프트), Cloudtype
 <details>
 <summary>Step3. Week-2</summary>
 <div>
-    
+
 ✅**2주차**
-    
+
 ```
     - ERD 설계서
     
     - API 명세서
 ```
-    
+
 </div>
 </details>
 
@@ -76,13 +80,13 @@ ex ) AWS(아마존), GCP(구글), Azure(마이크로소프트), Cloudtype
 <details>
 <summary>Step3. Week-3</summary>
 <div>
-    
+
 ✅**3주차**
-    
+
 ```
     - 최종 기획안
 ```
-    
+
 </div>
 </details>
 
@@ -91,15 +95,15 @@ ex ) AWS(아마존), GCP(구글), Azure(마이크로소프트), Cloudtype
 <details>
 <summary>Step3. Week-4</summary>
 <div>
-    
+
 ✅**4주차**
-    
+
 ```
     - 4주차 github
     
     - 4주차 노션
 ```
-    
+
 </div>
 </details>
 
@@ -107,15 +111,15 @@ ex ) AWS(아마존), GCP(구글), Azure(마이크로소프트), Cloudtype
 <details>
 <summary>Step3. Week-5</summary>
 <div>
-    
+
 ✅**5주차**
-    
+
 ```
     - 5주차 github
     
     - 5주차 노션
 ```
-    
+
 </div>
 </details>
 
@@ -124,9 +128,9 @@ ex ) AWS(아마존), GCP(구글), Azure(마이크로소프트), Cloudtype
 <details>
 <summary>Step3. Week-6</summary>
 <div>
-    
+
 ✅**6주차**
-    
+
 ```
     - 6주차 github
     
@@ -134,7 +138,7 @@ ex ) AWS(아마존), GCP(구글), Azure(마이크로소프트), Cloudtype
     
     - 피어리뷰시트
 ```
-    
+
 </div>
 </details>
 
@@ -143,15 +147,15 @@ ex ) AWS(아마존), GCP(구글), Azure(마이크로소프트), Cloudtype
 <details>
 <summary>Step3. Week-7</summary>
 <div>
-    
+
 ✅**7주차**
-    
+
 ```
     - 7주차 github
     
     - 7주차 노션
 ```
-    
+
 </div>
 </details>
 
@@ -160,14 +164,14 @@ ex ) AWS(아마존), GCP(구글), Azure(마이크로소프트), Cloudtype
 <details>
 <summary>Step3. Week-8</summary>
 <div>
-    
+
 ✅**8주차**
-    
+
 ```
     - 중간고사
     
 ```
-    
+
 </div>
 </details>
 
@@ -176,15 +180,15 @@ ex ) AWS(아마존), GCP(구글), Azure(마이크로소프트), Cloudtype
 <details>
 <summary>Step3. Week-9</summary>
 <div>
-    
+
 ✅**9주차**
-    
+
 ```
     - 9주차 github
     
     - 9주차 노션
 ```
-    
+
 </div>
 </details>
 
@@ -193,9 +197,9 @@ ex ) AWS(아마존), GCP(구글), Azure(마이크로소프트), Cloudtype
 <details>
 <summary>Step3. Week-10</summary>
 <div>
-    
+
 ✅**10주차**
-    
+
 ```
     - 10주차 github
     
@@ -203,7 +207,7 @@ ex ) AWS(아마존), GCP(구글), Azure(마이크로소프트), Cloudtype
     
     - 테스트 결과 보고서
 ```
-    
+
 </div>
 </details>
 
@@ -212,15 +216,15 @@ ex ) AWS(아마존), GCP(구글), Azure(마이크로소프트), Cloudtype
 <details>
 <summary>Step3. Week-11</summary>
 <div>
-    
+
 ✅**11주차**
-    
+
 ```
     - 최종 기획안
     
     - 배포 인스턴스 링크
 ```
-    
+
 </div>
 </details>
 
@@ -244,7 +248,7 @@ UI 컴포넌트의 명칭과 이를 구현하는 능력은 필수적인 커뮤�
 **1. PR 제목과 내용을 아래와 같이 작성 해주세요.**
 
 > PR 제목 : 부산대_0조_아이템명_0주차
-> 
+>
 
 </br>
 
