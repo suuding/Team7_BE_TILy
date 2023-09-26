@@ -20,10 +20,7 @@ public class UserService {
 
     @Transactional
     public void join(UserRequest.JoinDTO requestDTO) {
-        Optional<User> user = userRepository.findByEmail(requestDTO.getEmail());
-        if (user.isPresent()) {
-            throw new Exception400("이미 존재하는 이메일입니다 : " + requestDTO.getEmail());
-        }
+        checkEmail(requestDTO.getEmail());
 
         requestDTO.setPassword(passwordEncoder.encode(requestDTO.getPassword()));
         try {
@@ -38,6 +35,29 @@ public class UserService {
         if (user.isPresent()) {
             throw new Exception400("이미 존재하는 이메일입니다 : " +email);
         }
+    }
+
+    @Transactional
+    public String login(UserRequest.LoginDTO requestDTO) {
+        User user = userRepository.findByEmail(requestDTO.getEmail()).orElseThrow(
+                () -> new Exception400("해당 이메일을 찾을 수 없습니다 : "+requestDTO.getEmail())
+        );
+
+        if(!passwordEncoder.matches(requestDTO.getPassword(), user.getPassword())) {
+            throw new Exception400("비밀번호가 일치하지 않습니다. ");
+        }
+
+        return JWTProvider.create(user);
+    }
+
+    @Transactional
+    public void changePassword(UserRequest.ChangePwdDTO requestDTO) {
+        User user = userRepository.findByEmail(requestDTO.getEmail()).orElseThrow(
+                () -> new Exception400("해당 이메일을 찾을 수 없습니다 : "+requestDTO.getEmail())
+        );
+
+        String enPassword = passwordEncoder.encode(requestDTO.getPassword());
+        user.updatePassword(enPassword);
     }
 
 }
