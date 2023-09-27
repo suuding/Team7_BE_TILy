@@ -29,7 +29,7 @@ public class UserControllerTest {
     public void user_email_check_success_test() throws Exception {
 
         // given
-        String email = "test1@nate.com";
+        String email = "test@test.com";
         UserRequest.CheckEmailDTO requestDTO = new UserRequest.CheckEmailDTO();
         requestDTO.setEmail(email);
 
@@ -256,4 +256,5 @@ public class UserControllerTest {
         result.andExpect(jsonPath("$.success").value("false"));
         result.andExpect(jsonPath("$.message").value("올바른 비밀번호 형식을 입력해주세요."));
     }
+    
 }

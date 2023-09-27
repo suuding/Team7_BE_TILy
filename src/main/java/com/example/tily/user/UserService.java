@@ -120,8 +120,13 @@ public class UserService {
 
             MimeMessage message = javaMailSender.createMimeMessage();
             message.addRecipients(Message.RecipientType.TO, email);
-            message.setSubject("[TIL-y]인증번호가 도착했습니다.");
-            message.setText("아래 코드를 복사해 인증 코드 칸에 입력해주세요.<br>" + "인증코드 : <span style='font-size:25px'>"+code+"</span> \n\n", "utf-8", "html");
+            message.setSubject("[TIL-y] 인증코드가 도착했습니다.");
+            String text = "<div style='background-color: #f8f9fa; padding: 10px 20px 50px 20px; margin: 20px'>" +
+                    "<h1 style='margin: 20px'>이메일 인증</h1>" +
+                    "<p>안녕하세요!<br>본인 인증을 위해 아래의 코드를 복사해 인증코드 입력 칸에 입력해주세요.<br>" +
+                    "<div style='background-color:gainsboro; font-size: 30px; margin: 10px; padding: 5px; width: 250px' >"+code+"</div><br>" +
+                    "TIL-y 서비스를 이용해주셔서 감사합니다. <br></p></div>";
+            message.setText(text, "utf-8", "html");
 
             // 이메일로 인증코드 전송
             javaMailSender.send(message);
