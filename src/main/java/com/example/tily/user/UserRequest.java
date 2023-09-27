@@ -34,11 +34,37 @@ public class UserRequest {
     }
 
     @Getter @Setter
-    public static class EmailCheckDTO {
+    public static class CheckEmailDTO {
 
         @NotBlank(message = "이메일을 입력해주세요.")
         @Pattern(regexp = "^[\\w._%+-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$", message = "올바른 이메일 형식을 입력해주세요.")
         private String email;
     }
 
+    @Getter @Setter
+    public static class LoginDTO {
+
+        @NotBlank(message = "이메일을 입력해주세요.")
+        @Pattern(regexp = "^[\\w._%+-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$", message = "올바른 이메일 형식을 입력해주세요.")
+        private String email;
+
+        @NotBlank(message="비밀번호를 입력해주세요.")
+        @Size(min=8, max=20, message = "8자에서 20자 이내여야 합니다.")
+        @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[@#$%^&+=!~`<>,./?;:'\"\\[\\]{}\\\\()|_-])\\S*$", message = "올바른 비밀번호 형식을 입력해주세요.")
+        private String password;
+    }
+
+    @Getter @Setter
+    public static class ChangePwdDTO {
+
+        @NotBlank(message = "이메일을 입력해주세요.")
+        @Pattern(regexp = "^[\\w._%+-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$", message = "올바른 이메일 형식을 입력해주세요.")
+        private String email;
+
+        @NotBlank(message="비밀번호를 입력해주세요.")
+        @Size(min=8, max=20, message = "8자에서 20자 이내여야 합니다.")
+        @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[@#$%^&+=!~`<>,./?;:'\"\\[\\]{}\\\\()|_-])\\S*$", message = "올바른 비밀번호 형식을 입력해주세요.")
+        private String password;
+
+    }
 }
