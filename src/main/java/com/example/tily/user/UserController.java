@@ -4,15 +4,15 @@ import com.example.tily._core.security.JWTProvider;
 import com.example.tily._core.utils.ApiUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
 @RequiredArgsConstructor
-@RestController
+@Controller
 public class UserController {
 
     private final UserService userService;
@@ -20,8 +20,22 @@ public class UserController {
     // 이메일 중복 체크 (후 인증코드 전송)
     @PostMapping("/email/check")
     public ResponseEntity<?> checkEmail(@RequestBody @Valid UserRequest.CheckEmailDTO requestDTO, Errors errors) {
-        userService.checkEmail(requestDTO.getEmail());
+        userService.checkEmail(requestDTO);
         return ResponseEntity.ok().body(ApiUtils.success(null));
+    }
+
+    // 인증코드 전송
+    @PostMapping("/email/code")
+    public ResponseEntity<?> sendEmailCode(@RequestBody @Valid UserRequest.SendEmailCodeDTO requestDTO, Errors errors) {
+        userService.sendEmailCode(requestDTO);
+        return ResponseEntity.ok().body(ApiUtils.success(null));
+    }
+
+    // 인증코드 확인
+    @PostMapping("/email/code/check")
+    public ResponseEntity<?> checkEmailCode(@RequestBody @Valid UserRequest.CheckEmailCodeDTO requestDTO, Errors errors) {
+        UserResponse.CheckEmailCodeDTO responseDTO = userService.checkEmailCode(requestDTO);
+        return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
 
     // 회원가입

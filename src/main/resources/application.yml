@@ -21,3 +21,19 @@ spring:
         format_sql: true
       default_batch_fetch_size: 100
     open-in-view: false
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: rlatngus4789@gmail.com
+    password: vpbiqmdyhqwxipgi
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+  redis: # redis 설정 (로컬)
+    host: 127.0.0.1
+    port: 6379
