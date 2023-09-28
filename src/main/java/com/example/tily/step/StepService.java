@@ -15,7 +15,7 @@ public class StepService {
     private final StepRepository stepRepository;
 
     @Transactional
-    public StepResponse.CreateStepDTO createIndividual(int id, StepRequest.CreateStepDTO requestDTO){
+    public StepResponse.CreateIndividualStepDTO createIndividualStep(Long id, StepRequest.CreateIndividualStepDTO requestDTO){
         Roadmap roadmap = roadmapRepository.findById(id).orElseThrow(
                 () -> new Exception400("해당 로드맵을 찾을 수 없습니다")
         );
@@ -25,6 +25,6 @@ public class StepService {
 
         stepRepository.save(step);
 
-        return new StepResponse.CreateStepDTO(step);
+        return new StepResponse.CreateIndividualStepDTO(step);
     }
 }

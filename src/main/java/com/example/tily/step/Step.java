@@ -17,7 +17,7 @@ public class Step {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @ManyToOne
     private Roadmap roadmap;
@@ -30,7 +30,7 @@ public class Step {
     private LocalDateTime dueDate;
 
     @Builder
-    public Step(int id, Roadmap roadmap,String title, String description, LocalDateTime dueDate) {
+    public Step(Long id, Roadmap roadmap,String title, String description, LocalDateTime dueDate) {
         this.id = id;
         this.roadmap = roadmap;
         this.title = title;

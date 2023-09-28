@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 
 public class StepRequest {
     @Getter @Setter
-    public static class CreateStepDTO{
+    public static class CreateIndividualStepDTO{
         @NotBlank(message = "스텝 제목을 입력해주세요.")
         private String title;
     }
