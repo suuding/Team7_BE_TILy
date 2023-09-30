@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name="roadmap")
+@Table(name="roadmap_tb")
 public class Roadmap {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

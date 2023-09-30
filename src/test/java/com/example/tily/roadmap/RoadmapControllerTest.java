@@ -43,9 +43,6 @@ public class RoadmapControllerTest {
                         .content(requestBody)
         );
 
-        String response = result.andReturn().getResponse().getContentAsString();
-        System.out.println("response = " + response);
-
         // then
         result.andExpect(jsonPath("$.success").value("true"));
     }
