@@ -18,8 +18,7 @@ public class RoadmapController {
     @PostMapping("/roadmaps/individual")
     public ResponseEntity<?> createIndividual(@RequestBody @Valid RoadmapRequest.CreateIndividualDTO requestDTO, @AuthenticationPrincipal CustomUserDetails userDetails) {
         RoadmapResponse.CreateIndividualDTO responseDTO = roadmapService.createIndividual(requestDTO, userDetails.getUser());
-        ApiUtils.ApiResult<?> apiResult = ApiUtils.success(responseDTO);
 
-        return ResponseEntity.ok(apiResult);
+        return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
 }

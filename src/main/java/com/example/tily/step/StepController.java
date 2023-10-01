@@ -16,8 +16,7 @@ public class StepController {
     @PostMapping("/roadmaps/individual/{id}/steps")
     public ResponseEntity<?> createIndividualStep(@PathVariable Long id, @RequestBody @Valid StepRequest.CreateIndividualStepDTO requestDTO) {
         StepResponse.CreateIndividualStepDTO responseDTO = stepService.createIndividualStep(id, requestDTO);
-        ApiUtils.ApiResult<?> apiResult = ApiUtils.success(responseDTO);
 
-        return ResponseEntity.ok(apiResult);
+        return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
 }

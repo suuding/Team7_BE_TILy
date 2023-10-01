@@ -30,7 +30,7 @@ public class Roadmap {
     @Column
     private Boolean isPublic;
     @Column
-    private Integer currentNum;
+    private Long currentNum;
     @Column
     private String code;
     @Column
@@ -39,7 +39,7 @@ public class Roadmap {
     private Long stepNum;
 
     @Builder
-    public Roadmap(Long id, String creator, String category, String name, String description, Boolean isPublic, Integer currentNum, String code, Boolean isRecruit, Long stepNum) {
+    public Roadmap(Long id, String creator, String category, String name, String description, Boolean isPublic, Long currentNum, String code, Boolean isRecruit, Long stepNum) {
         this.id = id;
         this.creator = creator;
         this.category = category;

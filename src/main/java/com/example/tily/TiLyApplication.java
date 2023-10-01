@@ -33,10 +33,9 @@ public class TiLyApplication {
 			roadmapRepository.saveAll(Arrays.asList(
 					newIndividualRoadmap("hong","individual", "스프링 시큐리티", 10L),
 					newIndividualRoadmap("puuding","individual", "JPA 입문", 10L),
-					newIndividualRoadmap("sam-mae","individual", "자바 reflection", 10L)
-			));
-			stepRepository.saveAll(Arrays.asList(
-					newIndividualStep("자바 100일 학습", "자바를 처음 다루는 사람을 위한 자바 학습법")
+					newIndividualRoadmap("sam-mae","individual", "자바 reflection", 10L),
+					newGroupRoadmap("hong", "group", "JAVA 입문 수업 - 생활 코딩", "생활 코딩님의 로드맵입니다!", true, 3L, "pnu1234", true, 3L),
+					newGroupRoadmap("puuding", "group", "JPA 스터디", "김영한 강사님의 JPA를 공부하는 스터디 ^^", false, 10L, "ashfkc", true, 10L)
 			));
 		};
 	}
@@ -59,10 +58,24 @@ public class TiLyApplication {
 				.build();
 	}
 
-	private Step newIndividualStep(String title, String description) {
-		return Step.builder()
-				.title(title)
+	private Roadmap newGroupRoadmap(String creator, String category, String name, String description, boolean isPublic, Long currentNum, String code, boolean isRecruit,Long stepNum) {
+		return Roadmap.builder()
+				.creator(creator)
+				.category(category)
+				.name(name)
 				.description(description)
+				.isPublic(isPublic)
+				.currentNum(currentNum)
+				.code(code)
+				.isRecruit(isRecruit)
+				.stepNum(stepNum)
+				.build();
+	}
+
+	private Step newIndividualStep(Roadmap roadmap, String title) {
+		return Step.builder()
+				.roadmap(roadmap)
+				.title(title)
 				.build();
 	}
 }
