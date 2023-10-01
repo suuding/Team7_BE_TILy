@@ -2,6 +2,8 @@ package com.example.tily;
 
 import com.example.tily.roadmap.Roadmap;
 import com.example.tily.roadmap.RoadmapRepository;
+import com.example.tily.step.Step;
+import com.example.tily.step.StepRepository;
 import com.example.tily.user.Role;
 import com.example.tily.user.User;
 import com.example.tily.user.UserRepository;
@@ -25,13 +27,16 @@ public class TiLyApplication {
 
 	@Profile("local")
 	@Bean
-	CommandLineRunner localServerStart(UserRepository userRepository, RoadmapRepository roadmapRepository, PasswordEncoder passwordEncoder) {
+	CommandLineRunner localServerStart(UserRepository userRepository, RoadmapRepository roadmapRepository, StepRepository stepRepository, PasswordEncoder passwordEncoder) {
 		return args -> {
 			userRepository.saveAll(Arrays.asList(newUser("hong@naver.com", "hong", passwordEncoder)));
 			roadmapRepository.saveAll(Arrays.asList(
 					newIndividualRoadmap("hong","individual", "스프링 시큐리티", 10L),
 					newIndividualRoadmap("puuding","individual", "JPA 입문", 10L),
 					newIndividualRoadmap("sam-mae","individual", "자바 reflection", 10L)
+			));
+			stepRepository.saveAll(Arrays.asList(
+					newIndividualStep("자바 100일 학습", "자바를 처음 다루는 사람을 위한 자바 학습법")
 			));
 		};
 	}
@@ -51,6 +56,13 @@ public class TiLyApplication {
 				.category(category)
 				.name(name)
 				.stepNum(stepNum)
+				.build();
+	}
+
+	private Step newIndividualStep(String title, String description) {
+		return Step.builder()
+				.title(title)
+				.description(description)
 				.build();
 	}
 }
