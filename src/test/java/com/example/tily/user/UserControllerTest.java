@@ -49,6 +49,51 @@ public class UserControllerTest {
         result.andExpect(jsonPath("$.success").value("true"));
     }
 
+    @DisplayName("사용자_인증코드_전송_성공_test")
+    @Test
+    public void user_send_email_code_success_test() throws Exception {
+
+        // given
+        String email = "tngus@pusan.ac.kr";
+        UserRequest.SendEmailCodeDTO requestDTO = new UserRequest.SendEmailCodeDTO();
+        requestDTO.setEmail(email);
+
+        String requestBody = om.writeValueAsString(requestDTO);
+
+        // when
+        ResultActions result = mvc.perform(
+                post("/email/code")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(requestBody)
+        );
+
+        // then
+        result.andExpect(jsonPath("$.success").value("true"));
+    }
+
+    @DisplayName("사용자_인증코드_전송_실패_test1:존재하지 않는 이메일")
+    @Test
+    public void user_send_email_code_fail_test_1() throws Exception {
+
+        // given
+        String email = "test@test.com";
+        UserRequest.SendEmailCodeDTO requestDTO = new UserRequest.SendEmailCodeDTO();
+        requestDTO.setEmail(email);
+
+        String requestBody = om.writeValueAsString(requestDTO);
+
+        // when
+        ResultActions result = mvc.perform(
+                post("/email/code")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(requestBody)
+        );
+
+        // then
+        result.andExpect(jsonPath("$.success").value("false"));
+        result.andExpect(jsonPath("$.message").value("해당 이메일을 찾을 수 없습니다 : test@test.com"));
+    }
+
     @DisplayName("사용자_회원가입_성공_test")
     @Test
     public void user_join_success_test() throws Exception {
@@ -149,7 +194,7 @@ public class UserControllerTest {
 
         // given
         UserRequest.LoginDTO requestDTO = new UserRequest.LoginDTO();
-        requestDTO.setEmail("tngus@pusan.ac.kr");
+        requestDTO.setEmail("tngus1@pusan.ac.kr");
         requestDTO.setPassword("meta1234!");
 
         String requestBody = om.writeValueAsString(requestDTO);
@@ -163,7 +208,7 @@ public class UserControllerTest {
 
         // then
         result.andExpect(jsonPath("$.success").value("false"));
-        result.andExpect(jsonPath("$.message").value("해당 이메일을 찾을 수 없습니다 : tngus1@nate.com"));
+        result.andExpect(jsonPath("$.message").value("해당 이메일을 찾을 수 없습니다 : tngus1@pusan.ac.kr"));
     }
 
     @DisplayName("사용자_로그인_실패_2:비밀번호 불일치")
@@ -173,7 +218,7 @@ public class UserControllerTest {
         // given
         UserRequest.LoginDTO requestDTO = new UserRequest.LoginDTO();
         requestDTO.setEmail("tngus@pusan.ac.kr");
-        requestDTO.setPassword("meta1234!!");
+        requestDTO.setPassword("meta1234!@");
 
         String requestBody = om.writeValueAsString(requestDTO);
 
