@@ -9,7 +9,6 @@
 
 ## 논의하고 싶은점
 
-
 ## Linked Issues
 
 <!-- closes (# 이슈번호) -->
