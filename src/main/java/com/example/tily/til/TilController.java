@@ -45,6 +45,7 @@ public class TilController {
     @DeleteMapping("/roadmaps/{roadmapId}/steps/{stepId}/tils/{tilId}")
     public ResponseEntity<?> deleteTil(@PathVariable("roadmapId") Long roadmapId, @PathVariable("stepId")Long stepId, @PathVariable("tilId") Long tilId) {
 
+        tilService.deleteTil(tilId);
         return ResponseEntity.ok().body(ApiUtils.success(null));
 
     }
