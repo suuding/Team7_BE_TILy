@@ -4,8 +4,11 @@ import com.example.tily._core.errors.exception.Exception400;
 import com.example.tily.step.Step;
 import com.example.tily.step.StepRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 
 @Transactional(readOnly = true)
@@ -60,5 +63,14 @@ public class TilService {
             throw new Exception400("TIL 내용을 입력해주세요.");
         }
 
+    }
+
+    @Transactional
+    public void deleteTil(Long id) {
+        Optional<Til> til = tilRepository.findById(id);
+
+        if(til.isPresent()) {
+            tilRepository.deleteById(id);
+        }
     }
 }

@@ -181,4 +181,26 @@ public class TilControllerTest {
 
     }
 
+    @DisplayName("틸 삭제 성공 test")
+    @WithUserDetails(value = "hong@naver.com")
+    @Test
+    public void delete_til_test() throws Exception {
+
+        //given
+        Long roadmapId = 1L;
+        Long stepId = 1L;
+        Long tilId = 1L;
+
+        //when
+        ResultActions result = mvc.perform(
+                delete("/roadmaps/"+ roadmapId +"/steps/"+ stepId +"/tils/" + tilId )
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+        String responseBody = result.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : " + responseBody);
+
+        result.andExpect(jsonPath("$.success").value("true"));
+
+    }
+
 }
