@@ -21,9 +21,9 @@ public class StepController {
     }
 
     // 특정 step의 참고자료 목록 조회
-    @PostMapping("/roadmaps/{id1}/steps/{id2}/references")
-    public ResponseEntity<?> findReference(@PathVariable(value = "id2") Long stepId){
-        StepResponse.FindReferenceDTO responseDTO = stepService.findReference(stepId);
+    @PostMapping("/roadmaps/{roadmapsId}/steps/{stepsId}/references")
+    public ResponseEntity<?> findReference(@PathVariable Long stepsId){
+        StepResponse.FindReferenceDTO responseDTO = stepService.findReference(stepsId);
 
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }

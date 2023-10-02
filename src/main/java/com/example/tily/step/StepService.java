@@ -42,7 +42,7 @@ public class StepService {
                 () -> new Exception400("해당 스텝을 찾을 수 없습니다")
         );
 
-        List<Reference> referenceList = referenceRepository.findByStep(step);
+        List<Reference> referenceList = referenceRepository.findByStepId(stepId);
 
         List<StepResponse.FindReferenceDTO.YoutubeLink> youtubeLinks = new ArrayList<>();
         List<StepResponse.FindReferenceDTO.ReferenceLink> referenceLinks = new ArrayList<>();

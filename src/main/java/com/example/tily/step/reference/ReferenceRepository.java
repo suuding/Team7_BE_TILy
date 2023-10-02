@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface ReferenceRepository extends JpaRepository<Reference, Long> {
-    List<Reference> findByStep(Step step);
+    List<Reference> findByStepId(Long stepId);
 }
