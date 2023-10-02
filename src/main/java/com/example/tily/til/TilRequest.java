@@ -12,4 +12,10 @@ public class TilRequest {
         @NotBlank(message = "TIL 제목을 입력해주세요.")
         private String title;
     }
+
+    @Getter @Setter
+    public static class UpdateTilDTO {
+        @NotBlank(message = "TIL 내용을 입력해주세요.")
+        private String content;
+    }
 }

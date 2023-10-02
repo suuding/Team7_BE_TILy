@@ -37,8 +37,11 @@ public class Til {
     @Column
     private int commentNum;
 
+    @Column
+    private boolean isPersonal;
+
     @Builder
-    public Til(Long id, Step step, String title, String content, String submitContent, LocalDateTime submitDate, int commentNum) {
+    public Til(Long id, Step step, String title, String content, String submitContent, LocalDateTime submitDate, int commentNum, boolean isPersonal) {
         this.id = id;
         this.step = step;
         this.title = title;
@@ -46,6 +49,11 @@ public class Til {
         this.submitContent = submitContent;
         this.submitDate = submitDate;
         this.commentNum = commentNum;
+        this.isPersonal = isPersonal;
+    }
+
+    public void updateContent (String content) {
+        this.content  = content;
     }
 
 }
