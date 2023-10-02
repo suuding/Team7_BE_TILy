@@ -132,4 +132,53 @@ public class TilControllerTest {
 
     }
 
+    @DisplayName("틸 조회 실패 test")
+    @WithUserDetails(value = "hong@naver.com")
+    @Test
+    public void view_til_failed_test() throws Exception {
+        //given
+        Long roadmapId = 1L;
+        Long stepId = 1L;
+        Long tilId = 5L;
+
+        //when
+        ResultActions result = mvc.perform(
+                get("/roadmaps/"+ roadmapId +"/steps/"+ stepId +"/tils/" + tilId)
+        );
+
+        String responseBody = result.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : " + responseBody);
+
+        //then
+        result.andExpect(jsonPath("$.success").value("false"));
+
+    }
+
+    @DisplayName("틸 제출 성공 test")
+    @WithUserDetails(value = "hong@naver.com")
+    @Test
+    public void submit_til_test() throws Exception {
+        //given
+        Long roadmapId = 1L;
+        Long stepId = 1L;
+        Long tilId = 1L;
+
+        String submitContent = "제출할 내용입니다.";
+        TilRequest.SubmitTilDTO reqeustDTO = new TilRequest.SubmitTilDTO();
+        reqeustDTO.setSubmitContent(submitContent);
+
+        String requestBody = om.writeValueAsString(reqeustDTO);
+        //when
+        ResultActions result = mvc.perform(
+                post("/roadmaps/"+ roadmapId +"/steps/"+ stepId +"/tils/" + tilId)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(requestBody)
+        );
+
+        System.out.println("테스트 ---------------------------------- "+submitContent);
+        //then
+        result.andExpect(jsonPath("$.success").value("true"));
+
+    }
+
 }

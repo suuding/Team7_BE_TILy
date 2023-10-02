@@ -47,4 +47,18 @@ public class TilService {
 
         return new TilResponse.ViewDTO(step, til);
     }
+
+    @Transactional
+    public void submitTil(TilRequest.SubmitTilDTO requestDTO, Long id) {
+
+        Til til = tilRepository.findById(id).orElseThrow(
+                () -> new Exception400("해당 til을 찾을 수 없습니다.")
+        );
+
+        String submitContent = requestDTO.getSubmitContent();
+        if(submitContent == null){
+            throw new Exception400("TIL 내용을 입력해주세요.");
+        }
+
+    }
 }

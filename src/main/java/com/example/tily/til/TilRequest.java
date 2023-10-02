@@ -18,4 +18,10 @@ public class TilRequest {
         @NotBlank(message = "TIL 내용을 입력해주세요.")
         private String content;
     }
+
+    @Getter @Setter
+    public static class SubmitTilDTO {
+        @NotBlank(message = "TIL 내용을 입력해주세요.")
+        private String submitContent;
+    }
 }

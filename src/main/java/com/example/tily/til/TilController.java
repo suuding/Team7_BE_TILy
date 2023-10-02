@@ -35,4 +35,11 @@ public class TilController {
         return ResponseEntity.ok(apiResult);
 
     }
+    @PostMapping("/roadmaps/{roadmapId}/steps/{stepId}/tils/{tilId}")
+    public ResponseEntity<?> submitTil(@PathVariable("roadmapId") Long roadmapId, @PathVariable("stepId")Long stepId, @PathVariable("tilId") Long tilId, @RequestBody @Valid TilRequest.SubmitTilDTO requestDTO) {
+
+        tilService.submitTil(requestDTO, tilId);
+        return ResponseEntity.ok().body(ApiUtils.success(null));
+
+    }
 }
