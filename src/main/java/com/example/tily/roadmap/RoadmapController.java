@@ -32,9 +32,9 @@ public class RoadmapController {
 
     // 틸리, 그룹 로드맵 정보 조회하기
     @GetMapping("/roadmaps/{id}")
-    public ResponseEntity<?> findGroupRoadmap(){
+    public ResponseEntity<?> findGroupRoadmap(@PathVariable Long id, @AuthenticationPrincipal CustomUserDetails userDetails){
+         RoadmapResponse.findGroupRoadmapDTO responseDTO = roadmapService.findGroupRoadmap(id, userDetails.getUser());
 
-
-        return ResponseEntity.ok().body(null);
+        return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
 }

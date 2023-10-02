@@ -1,12 +1,9 @@
 package com.example.tily.roadmap;
 
-import com.example.tily.step.Step;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
 
@@ -22,7 +19,7 @@ public class RoadmapRequest {
     @Getter @Setter
     public static class CreateGroupRoadmapDTO{
         private RoadmapDTO roadmap;
-        private List<StepDTOs> steps;
+        private List<StepDTO> steps;
 
         @Getter @Setter
         public class RoadmapDTO{
@@ -32,18 +29,18 @@ public class RoadmapRequest {
         }
 
         @Getter @Setter
-        public class StepDTOs{
+        public class StepDTO{
             private String title;
             private String description;
-            private ReferenceDTO references;
+            private ReferenceDTOs references;
 
             @Getter @Setter
-            public class ReferenceDTO{
-                List<Link> youtube; // request JSON 형식에 따라..
-                List<Link> reference;
+            public class ReferenceDTOs {
+                List<ReferenceDTO> youtube; // request JSON 형식에 따라..
+                List<ReferenceDTO> web;
 
                 @Getter @Setter
-                public class Link {
+                public class ReferenceDTO {
                     private String link;
                 }
             }

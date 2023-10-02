@@ -1,6 +1,6 @@
 package com.example.tily.step;
 
-import com.example.tily._core.errors.exception.Exception400;
+import com.example.tily._core.errors.exception.Exception404;
 import com.example.tily.roadmap.Roadmap;
 import com.example.tily.roadmap.RoadmapRepository;
 import com.example.tily.step.reference.Reference;
@@ -10,9 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -25,7 +23,7 @@ public class StepService {
     @Transactional
     public StepResponse.CreateIndividualStepDTO createIndividualStep(Long id, StepRequest.CreateIndividualStepDTO requestDTO){
         Roadmap roadmap = roadmapRepository.findById(id).orElseThrow(
-                () -> new Exception400("해당 로드맵을 찾을 수 없습니다")
+                () -> new Exception404("해당 로드맵을 찾을 수 없습니다")
         );
         String title = requestDTO.getTitle();
 
@@ -39,7 +37,7 @@ public class StepService {
     @Transactional
     public StepResponse.FindReferenceDTO findReference(Long stepId){
         Step step = stepRepository.findById(stepId).orElseThrow(
-                () -> new Exception400("해당 스텝을 찾을 수 없습니다")
+                () -> new Exception404("해당 스텝을 찾을 수 없습니다")
         );
 
         List<Reference> referenceList = referenceRepository.findByStepId(stepId);
