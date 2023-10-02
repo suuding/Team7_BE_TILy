@@ -20,34 +20,34 @@ public class StepResponse {
         private Long id;
         private String description;
 
-        private List<YoutubeLink> youtubeLinks;
-        private List<ReferenceLink> referenceLinks;
+        private List<YoutubeDTO> youtubes;
+        private List<ReferenceDTO> references;
 
-        public static class YoutubeLink {
+        public static class YoutubeDTO {
             private Long id;
             private String link;
 
-            public YoutubeLink(Long id, String link){
+            public YoutubeDTO(Long id, String link){
                 this.id = id;
                 this.link = link;
             }
         }
 
-        public static class ReferenceLink {
+        public static class ReferenceDTO {
             private Long id;
             private String link;
 
-            public ReferenceLink(Long id, String link){
+            public ReferenceDTO(Long id, String link){
                 this.id = id;
                 this.link = link;
             }
         }
 
-        public FindReferenceDTO(Step step, List<YoutubeLink> youtubeLinks, List<ReferenceLink> referenceLinks){
+        public FindReferenceDTO(Step step, List<YoutubeDTO> youtubeLinks, List<ReferenceDTO> referenceLinks){
             this.id = step.getId();
             this.description = step.getDescription();
-            this.youtubeLinks = youtubeLinks;
-            this.referenceLinks = referenceLinks;
+            this.youtubes = youtubeLinks;
+            this.references = referenceLinks;
         }
     }
 }

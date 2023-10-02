@@ -21,4 +21,12 @@ public class RoadmapController {
 
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
+
+    // 그룹 로드맵 생성하기
+    @PostMapping("/roadmaps")
+    public ResponseEntity<?> createGroupRoadmap(@RequestBody @Valid RoadmapRequest.CreateGroupRoadmapDTO requestDTO, @AuthenticationPrincipal CustomUserDetails userDetails){
+        RoadmapResponse.createGroupRoadmapDTO responseDTO = roadmapService.createGroupRoadmap(requestDTO, userDetails.getUser());
+
+        return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
+    }
 }

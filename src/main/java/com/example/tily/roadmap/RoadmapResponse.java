@@ -13,4 +13,11 @@ public class RoadmapResponse {
             this.id = roadmap.getId();
         }
     }
+
+    @Getter @Setter
+    public static class createGroupRoadmapDTO{
+        private Long id;
+
+        public createGroupRoadmapDTO(Roadmap roadmap){ this.id = roadmap.getId();}
+    }
 }
