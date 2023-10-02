@@ -22,7 +22,7 @@ public class RoadmapService {
     private final ReferenceRepository referenceRepository;
 
     @Transactional
-    public RoadmapResponse.CreateIndividualDTO createIndividual(RoadmapRequest.CreateIndividualDTO requestDTO, User user){
+    public RoadmapResponse.CreateIndividualRoadmapDTO createIndividualRoadmap(RoadmapRequest.CreateIndividualRoadmapDTO requestDTO, User user){
         String creator = user.getName();
         String category = "individual";
         String name = requestDTO.getName();
@@ -32,7 +32,7 @@ public class RoadmapService {
 
         roadmapRepository.save(roadmap);
 
-        return new RoadmapResponse.CreateIndividualDTO(roadmap);
+        return new RoadmapResponse.CreateIndividualRoadmapDTO(roadmap);
     }
 
     @Transactional
@@ -85,6 +85,7 @@ public class RoadmapService {
 
         return new RoadmapResponse.createGroupRoadmapDTO(roadmap);
     }
+
 
 
     private static String generateRandomCode() {

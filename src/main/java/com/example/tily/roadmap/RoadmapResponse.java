@@ -5,10 +5,10 @@ import lombok.Setter;
 
 public class RoadmapResponse {
     @Getter @Setter
-    public static class CreateIndividualDTO {
+    public static class CreateIndividualRoadmapDTO {
         private Long id;
 
-        public CreateIndividualDTO(Roadmap roadmap)
+        public CreateIndividualRoadmapDTO(Roadmap roadmap)
         {
             this.id = roadmap.getId();
         }

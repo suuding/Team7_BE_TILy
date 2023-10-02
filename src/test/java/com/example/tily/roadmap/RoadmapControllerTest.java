@@ -31,7 +31,7 @@ public class RoadmapControllerTest {
 
         // given
         String name = "hong";
-        RoadmapRequest.CreateIndividualDTO requestDTO = new RoadmapRequest.CreateIndividualDTO();
+        RoadmapRequest.CreateIndividualRoadmapDTO requestDTO = new RoadmapRequest.CreateIndividualRoadmapDTO();
         requestDTO.setName(name);
 
         String requestBody = om.writeValueAsString(requestDTO);
@@ -54,7 +54,7 @@ public class RoadmapControllerTest {
 
         // given
         String name = "";
-        RoadmapRequest.CreateIndividualDTO requestDTO = new RoadmapRequest.CreateIndividualDTO();
+        RoadmapRequest.CreateIndividualRoadmapDTO requestDTO = new RoadmapRequest.CreateIndividualRoadmapDTO();
         requestDTO.setName(name);
 
         String requestBody = om.writeValueAsString(requestDTO);

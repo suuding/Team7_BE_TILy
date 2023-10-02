@@ -13,7 +13,7 @@ import java.util.List;
 public class RoadmapRequest {
 
     @Getter @Setter
-    public static class CreateIndividualDTO {
+    public static class CreateIndividualRoadmapDTO {
         @NotBlank(message = "이름을 입력해주세요.")
         @Size(min=2, max=20, message = "이름은 2자에서 20자 이내여야 합니다.")
         private String name;

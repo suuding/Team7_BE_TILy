@@ -16,8 +16,8 @@ public class RoadmapController {
 
     // 개인 로드맵(카테고리) 생성하기
     @PostMapping("/roadmaps/individual")
-    public ResponseEntity<?> createIndividual(@RequestBody @Valid RoadmapRequest.CreateIndividualDTO requestDTO, @AuthenticationPrincipal CustomUserDetails userDetails) {
-        RoadmapResponse.CreateIndividualDTO responseDTO = roadmapService.createIndividual(requestDTO, userDetails.getUser());
+    public ResponseEntity<?> createIndividualRoadmap(@RequestBody @Valid RoadmapRequest.CreateIndividualRoadmapDTO requestDTO, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        RoadmapResponse.CreateIndividualRoadmapDTO responseDTO = roadmapService.createIndividualRoadmap(requestDTO, userDetails.getUser());
 
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
@@ -28,5 +28,13 @@ public class RoadmapController {
         RoadmapResponse.createGroupRoadmapDTO responseDTO = roadmapService.createGroupRoadmap(requestDTO, userDetails.getUser());
 
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
+    }
+
+    // 틸리, 그룹 로드맵 정보 조회하기
+    @GetMapping("/roadmaps/{id}")
+    public ResponseEntity<?> findGroupRoadmap(){
+
+
+        return ResponseEntity.ok().body(null);
     }
 }
