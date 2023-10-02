@@ -18,9 +18,10 @@ public class TilService {
     private final StepRepository stepRepository;
 
     @Transactional
-    public TilResponse.CreateTilDTO createTil(){
+    public TilResponse.CreateTilDTO createTil(TilRequest.CreateTilDTO requestDTO, Long stepId){
 
-        Til til = Til.builder().build();
+        String title = requestDTO.getTitle();
+        Til til = Til.builder().title(title).build();
         tilRepository.save(til);
 
         return new TilResponse.CreateTilDTO(til);

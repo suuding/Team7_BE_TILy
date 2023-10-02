@@ -16,9 +16,9 @@ public class TilController {
 
     private final TilService tilService;
 
-    @PostMapping("/roadmaps/individual/{roadmapId}/steps/{stepId}/tils")
-    public ResponseEntity<?> createTil(@PathVariable("roadmapId") Long roadmapId, @PathVariable("stepId") Long stepId) {
-        TilResponse.CreateTilDTO responseDTO = tilService.createTil();
+    @PostMapping("/roadmaps/{roadmapId}/steps/{stepId}/tils")
+    public ResponseEntity<?> createTil(@PathVariable("roadmapId") Long roadmapId, @PathVariable("stepId") Long stepId, @RequestBody @Valid TilRequest.CreateTilDTO requestDTO) {
+        TilResponse.CreateTilDTO responseDTO = tilService.createTil(requestDTO, stepId);
         ApiUtils.ApiResult<?> apiResult= ApiUtils.success(responseDTO);
 
         return ResponseEntity.ok(apiResult);

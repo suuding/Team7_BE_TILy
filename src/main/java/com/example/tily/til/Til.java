@@ -22,14 +22,19 @@ public class Til {
     @OneToOne
     private Step step;
 
+    @Column(nullable = false)
     private String title;
 
+    @Column
     private String content;
 
+    @Column
     private String submitContent;
 
+    @Column
     private LocalDateTime submitDate;
 
+    @Column
     private int commentNum;
 
     @Builder
