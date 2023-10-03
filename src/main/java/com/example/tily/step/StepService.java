@@ -43,7 +43,7 @@ public class StepService {
         List<Reference> referenceList = referenceRepository.findByStepId(stepId);
 
         List<StepResponse.FindReferenceDTO.YoutubeDTO> youtubeDTOs = new ArrayList<>();
-        List<StepResponse.FindReferenceDTO.ReferenceDTO> referenceDTOs = new ArrayList<>();
+        List<StepResponse.FindReferenceDTO.WebDTO> webDTOS = new ArrayList<>();
 
         for(Reference reference : referenceList){
             String category = reference.getCategory();
@@ -55,11 +55,11 @@ public class StepService {
                 youtubeDTOs.add(youtubeDTO);
             }
             else if(category.equals("reference") ) {
-                StepResponse.FindReferenceDTO.ReferenceDTO referenceDTO = new StepResponse.FindReferenceDTO.ReferenceDTO(id, link);
-                referenceDTOs.add(referenceDTO);
+                StepResponse.FindReferenceDTO.WebDTO webDTO = new StepResponse.FindReferenceDTO.WebDTO(id, link);
+                webDTOS.add(webDTO);
             }
         }
 
-        return new StepResponse.FindReferenceDTO(step, youtubeDTOs, referenceDTOs);
+        return new StepResponse.FindReferenceDTO(step, youtubeDTOs, webDTOS);
     }
 }
