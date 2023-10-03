@@ -38,7 +38,7 @@ public class RoadmapResponse {
             this.description = roadmap.getDescription();
             this.role = user.getRole();
             this.recentTilId = recentTilId;
-            this.code = roadmap.getName();
+            this.code = roadmap.getCode();
             this.steps = stepList.stream()
                     .map(step -> new StepDTO(step, youtubeMap.get(step.getId()), webMap.get(step.getId())))
                     .collect(Collectors.toList());

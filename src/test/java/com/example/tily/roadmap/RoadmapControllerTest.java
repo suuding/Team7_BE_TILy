@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
@@ -143,7 +144,7 @@ public class RoadmapControllerTest {
         result.andExpect(jsonPath("$.result.id").value(6));
     }
 
-    @DisplayName("그룹 로드맵_생성_실패_test: ")
+    @DisplayName("그룹 로드맵_생성_실패_test: 로드맵 이름을 입력하지 않음")
     @WithUserDetails(value = "hong@naver.com")
     @Test
     public void roadmap_group_create_fail_test() throws Exception {
@@ -153,7 +154,7 @@ public class RoadmapControllerTest {
 
         // 로드맵
         RoadmapRequest.CreateGroupRoadmapDTO.RoadmapDTO roadmap = new RoadmapRequest.CreateGroupRoadmapDTO.RoadmapDTO();
-        roadmap.setName("");
+        roadmap.setName(null);
         roadmap.setDescription("면접 대비를 위한 CS 스터디 모임입니다!");
         roadmap.setIsPublic(true);
 
@@ -209,12 +210,7 @@ public class RoadmapControllerTest {
         );
 
         // then
-        result.andExpect(jsonPath("$.success").value("true"));
-        result.andExpect(jsonPath("$.result.id").value(6));
+        result.andExpect(jsonPath("$.success").value("false"));
     }
-
-
-
-    //String responseBody = result.andReturn().getResponse().getContentAsString();
-    //System.out.println("테스트 : "+responseBody);
+    
 }
