@@ -22,25 +22,28 @@ public class RoadmapRequest {
         private List<StepDTO> steps;
 
         @Getter @Setter
-        public class RoadmapDTO{
+        public static class RoadmapDTO{
+            @NotBlank(message = "이름을 입력해주세요.")
             private String name;
             private String description;
             private Boolean isPublic;
         }
 
         @Getter @Setter
-        public class StepDTO{
+        public static class StepDTO{
+            @NotBlank(message = "제목을 입력해주세요.")
             private String title;
             private String description;
             private ReferenceDTOs references;
 
             @Getter @Setter
-            public class ReferenceDTOs {
+            public static class ReferenceDTOs {
                 List<ReferenceDTO> youtube; // request JSON 형식에 따라..
                 List<ReferenceDTO> web;
 
                 @Getter @Setter
-                public class ReferenceDTO {
+                public static class ReferenceDTO {
+                    @NotBlank(message = "링크 주소를 입력해주세요.")
                     private String link;
                 }
             }
@@ -54,6 +57,7 @@ public class RoadmapRequest {
 
         @Getter @Setter
         public class RoadmapDTO{
+            @NotBlank(message = "이름을 입력해주세요.")
             private String name;
             private String description;
             private String code;
@@ -64,6 +68,7 @@ public class RoadmapRequest {
         @Getter @Setter
         public class StepDTO{
             private Long id;
+            @NotBlank(message = "제목을 입력해주세요.")
             private String title;
             private String description;
             private ReferenceDTOs references;
@@ -76,6 +81,7 @@ public class RoadmapRequest {
                 @Getter @Setter
                 public class ReferenceDTO {
                     private Long id;
+                    @NotBlank(message = "링크 주소를 입력해주세요.")
                     private String link;
                 }
             }
