@@ -51,4 +51,12 @@ public class Roadmap {
         this.isRecruit = isRecruit;
         this.stepNum = stepNum;
     }
+
+    public void update(String name, String description, String code, Boolean isPublic, Boolean isRecruit){
+        this.name = name;
+        this.description = description;
+        this.code = code;
+        this.isPublic = isPublic;
+        this.isRecruit = isRecruit;
+    }
 }

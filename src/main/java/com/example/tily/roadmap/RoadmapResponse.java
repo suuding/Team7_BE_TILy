@@ -7,31 +7,23 @@ import com.example.tily.user.User;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 public class RoadmapResponse {
     @Getter @Setter
-    public static class CreateIndividualRoadmapDTO {
+    public static class CreateRoadmapDTO {
         private Long id;
 
-        public CreateIndividualRoadmapDTO(Roadmap roadmap)
+        public CreateRoadmapDTO(Roadmap roadmap)
         {
             this.id = roadmap.getId();
         }
     }
 
     @Getter @Setter
-    public static class createGroupRoadmapDTO{
-        private Long id;
-
-        public createGroupRoadmapDTO(Roadmap roadmap){ this.id = roadmap.getId();}
-    }
-
-    @Getter @Setter
-    public static class findGroupRoadmapDTO{
+    public static class FindGroupRoadmapDTO {
         private Creator creator;
         private String name;
         private String description;
@@ -40,7 +32,7 @@ public class RoadmapResponse {
         private String code;
         private List<StepDTO> steps;
 
-        public findGroupRoadmapDTO(Roadmap roadmap, List<Step> stepList, Map<Long, List<Reference>> youtubeMap, Map<Long, List<Reference>> webMap, User user, Long recentTilId){
+        public FindGroupRoadmapDTO(Roadmap roadmap, List<Step> stepList, Map<Long, List<Reference>> youtubeMap, Map<Long, List<Reference>> webMap, User user, Long recentTilId){
             this.creator = new Creator(user.getName(), user.getImage());
             this.name = roadmap.getName();
             this.description = roadmap.getDescription();

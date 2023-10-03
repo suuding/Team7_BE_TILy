@@ -24,7 +24,7 @@ public class RoadmapService {
     private final TilRepository tilRepository;
 
     @Transactional
-    public RoadmapResponse.CreateIndividualRoadmapDTO createIndividualRoadmap(RoadmapRequest.CreateIndividualRoadmapDTO requestDTO, User user){
+    public RoadmapResponse.CreateRoadmapDTO createIndividualRoadmap(RoadmapRequest.CreateIndividualRoadmapDTO requestDTO, User user){
         String creator = user.getName();
         String category = "individual";
         String name = requestDTO.getName();
@@ -34,11 +34,11 @@ public class RoadmapService {
 
         roadmapRepository.save(roadmap);
 
-        return new RoadmapResponse.CreateIndividualRoadmapDTO(roadmap);
+        return new RoadmapResponse.CreateRoadmapDTO(roadmap);
     }
 
     @Transactional
-    public RoadmapResponse.createGroupRoadmapDTO createGroupRoadmap(RoadmapRequest.CreateGroupRoadmapDTO requestDTO, User user){
+    public RoadmapResponse.CreateRoadmapDTO createGroupRoadmap(RoadmapRequest.CreateGroupRoadmapDTO requestDTO, User user){
         // repository 저장
         String creator = user.getName();
         String category = "group";
@@ -85,10 +85,10 @@ public class RoadmapService {
             }
         }
 
-        return new RoadmapResponse.createGroupRoadmapDTO(roadmap);
+        return new RoadmapResponse.CreateRoadmapDTO(roadmap);
     }
 
-    public RoadmapResponse.findGroupRoadmapDTO findGroupRoadmap(Long id, User user){
+    public RoadmapResponse.FindGroupRoadmapDTO findGroupRoadmap(Long id, User user){
         Roadmap roadmap = roadmapRepository.findById(id).orElseThrow(
                 () -> new Exception404("해당 로드맵을 찾을 수 없습니다")
         );
@@ -120,8 +120,58 @@ public class RoadmapService {
         Til latestTil = tilRepository.findFirstByOrderBySubmitDateDesc();
         Long recentTilId = latestTil != null ? latestTil.getId() : null;
 
-        return new RoadmapResponse.findGroupRoadmapDTO(roadmap, stepList, youtubeMap, webMap, user, recentTilId);
+        return new RoadmapResponse.FindGroupRoadmapDTO(roadmap, stepList, youtubeMap, webMap, user, recentTilId);
     }
+
+    @Transactional
+    public void updateGroupRoadmap(Long id, RoadmapRequest.UpdateGroupRoadmapDTO requestDTO){
+        // 로드맵 업데이트
+        Roadmap roadmap = roadmapRepository.findById(id).orElseThrow(
+                () -> new Exception404("해당 로드맵을 찾을 수 없습니다")
+        );
+
+        String name = requestDTO.getRoadmap().getName();
+        String description = requestDTO.getRoadmap().getDescription();
+        String code = requestDTO.getRoadmap().getCode();
+        Boolean isPublic = requestDTO.getRoadmap().getIsPublic();
+        Boolean isRecruit = requestDTO.getRoadmap().getIsRecruit();
+
+        roadmap.update(name, description, code, isPublic, isRecruit);
+
+        // 스텝 업데이트
+        List<RoadmapRequest.UpdateGroupRoadmapDTO.StepDTO> stepDTOs = requestDTO.getSteps();
+
+        for(RoadmapRequest.UpdateGroupRoadmapDTO.StepDTO stepDTO : stepDTOs){
+            Step step;
+
+            step = stepRepository.findById(stepDTO.getId()).orElseThrow(
+                    () -> new Exception404("해당 스텝을 찾을 수 없습니다.")
+            );
+
+            String title = stepDTO.getTitle() ;
+            String stepDescription = stepDTO.getDescription();
+
+            step.update(title,stepDescription);
+
+            // reference 업데이트
+            List<RoadmapRequest.UpdateGroupRoadmapDTO.StepDTO.ReferenceDTOs.ReferenceDTO> referenceDTOs = new ArrayList<>();
+            referenceDTOs.addAll(stepDTO.getReferences().getWeb());
+            referenceDTOs.addAll(stepDTO.getReferences().getYoutube());
+
+            for(RoadmapRequest.UpdateGroupRoadmapDTO.StepDTO.ReferenceDTOs.ReferenceDTO referenceDTO : referenceDTOs){
+                Reference reference;
+
+                reference = referenceRepository.findById(referenceDTO.getId()).orElseThrow(
+                        () -> new Exception404("해당 참조를 찾을 수 없습니다")
+                );
+
+                String link = referenceDTO.getLink();
+
+                reference.update(link);
+            }
+        }
+    }
+
 
     private static String generateRandomCode() {
         String upperAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";

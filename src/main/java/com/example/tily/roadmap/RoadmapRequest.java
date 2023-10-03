@@ -17,7 +17,7 @@ public class RoadmapRequest {
     }
 
     @Getter @Setter
-    public static class CreateGroupRoadmapDTO{
+    public static class CreateGroupRoadmapDTO {
         private RoadmapDTO roadmap;
         private List<StepDTO> steps;
 
@@ -41,6 +41,41 @@ public class RoadmapRequest {
 
                 @Getter @Setter
                 public class ReferenceDTO {
+                    private String link;
+                }
+            }
+        }
+    }
+
+    @Getter @Setter
+    public static class UpdateGroupRoadmapDTO {
+        private RoadmapDTO roadmap;
+        private List<StepDTO> steps;
+
+        @Getter @Setter
+        public class RoadmapDTO{
+            private String name;
+            private String description;
+            private String code;
+            private Boolean isPublic;
+            private Boolean isRecruit;
+        }
+
+        @Getter @Setter
+        public class StepDTO{
+            private Long id;
+            private String title;
+            private String description;
+            private ReferenceDTOs references;
+
+            @Getter @Setter
+            public class ReferenceDTOs {
+                List<ReferenceDTO> youtube;
+                List<ReferenceDTO> web;
+
+                @Getter @Setter
+                public class ReferenceDTO {
+                    private Long id;
                     private String link;
                 }
             }
