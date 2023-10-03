@@ -99,4 +99,29 @@ public class StepControllerTest {
         // then
         result.andExpect(jsonPath("$.success").value("false"));
     }
+
+    @DisplayName("레퍼런스_조회_성공_test")
+    @WithUserDetails(value = "hong@naver.com")
+    @Test
+    public void find_reference_success_test() throws Exception {
+
+        // given
+        Long id = 5L;
+
+        String title = "스프링 시큐리티 - 세팅";
+        StepRequest.CreateIndividualStepDTO requestDTO = new StepRequest.CreateIndividualStepDTO();
+        requestDTO.setTitle(title);
+
+        String requestBody = om.writeValueAsString(requestDTO);
+
+        // when
+        ResultActions result = mvc.perform(
+                post("/roadmaps/individual/"+ id +"/steps")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(requestBody)
+        );
+
+        // then
+        result.andExpect(jsonPath("$.success").value("false"));
+    }
 }
