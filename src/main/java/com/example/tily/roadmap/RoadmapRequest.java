@@ -56,7 +56,7 @@ public class RoadmapRequest {
         private List<StepDTO> steps;
 
         @Getter @Setter
-        public class RoadmapDTO{
+        public static class RoadmapDTO{
             @NotBlank(message = "이름을 입력해주세요.")
             private String name;
             private String description;
@@ -66,7 +66,7 @@ public class RoadmapRequest {
         }
 
         @Getter @Setter
-        public class StepDTO{
+        public static class StepDTO{
             private Long id;
             @NotBlank(message = "제목을 입력해주세요.")
             private String title;
@@ -74,12 +74,12 @@ public class RoadmapRequest {
             private ReferenceDTOs references;
 
             @Getter @Setter
-            public class ReferenceDTOs {
+            public static class ReferenceDTOs {
                 List<ReferenceDTO> youtube;
                 List<ReferenceDTO> web;
 
                 @Getter @Setter
-                public class ReferenceDTO {
+                public static class ReferenceDTO {
                     private Long id;
                     @NotBlank(message = "링크 주소를 입력해주세요.")
                     private String link;

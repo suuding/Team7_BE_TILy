@@ -144,11 +144,11 @@ public class RoadmapControllerTest {
         result.andExpect(jsonPath("$.result.id").value(6));
     }
 
+    // 실패 케이스는 화면을 바탕으로 만듦
     @DisplayName("그룹 로드맵_생성_실패_test: 로드맵 이름을 입력하지 않음")
     @WithUserDetails(value = "hong@naver.com")
     @Test
     public void roadmap_group_create_fail_test() throws Exception {
-
         // given
         RoadmapRequest.CreateGroupRoadmapDTO requestDTO = new RoadmapRequest.CreateGroupRoadmapDTO();
 
@@ -199,7 +199,6 @@ public class RoadmapControllerTest {
         steps.add(step1);
         requestDTO.setSteps(steps); // requestDTO의 steps 설정
 
-        //
         String requestBody = om.writeValueAsString(requestDTO);
 
         // when
@@ -249,6 +248,143 @@ public class RoadmapControllerTest {
         ResultActions result = mvc.perform(
                 get("/roadmaps/"+ id)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+
+        // then
+        result.andExpect(jsonPath("$.success").value("false"));
+    }
+
+    @DisplayName("그룹 로드맵_수정_성공_test")
+    @WithUserDetails(value = "hong@naver.com")
+    @Test
+    public void roadmap_group_update_success_test() throws Exception {
+        // given
+        Long id = 4L;
+        RoadmapRequest.UpdateGroupRoadmapDTO requestDTO = new RoadmapRequest.UpdateGroupRoadmapDTO();
+
+        // 로드맵
+        RoadmapRequest.UpdateGroupRoadmapDTO.RoadmapDTO roadmap = new RoadmapRequest.UpdateGroupRoadmapDTO.RoadmapDTO();
+
+        roadmap.setName("new JAVA - 생활 코딩");
+        roadmap.setDescription("새로운 버젼 입니다");
+        roadmap.setCode("modifiedCode1234");
+        roadmap.setIsRecruit(false);
+        roadmap.setIsPublic(true);
+
+        requestDTO.setRoadmap(roadmap);
+
+        // 스텝
+        List<RoadmapRequest.UpdateGroupRoadmapDTO.StepDTO> steps = new ArrayList<>();
+
+        RoadmapRequest.UpdateGroupRoadmapDTO.StepDTO step1 = new RoadmapRequest.UpdateGroupRoadmapDTO.StepDTO();
+        step1.setId(4L);
+        step1.setTitle("다형성(Polymorphism)");
+        step1.setDescription("수정된 step description 입니다");
+
+        // step1의 참조
+        RoadmapRequest.UpdateGroupRoadmapDTO.StepDTO.ReferenceDTOs references1 = new RoadmapRequest.UpdateGroupRoadmapDTO.StepDTO.ReferenceDTOs();
+
+        // step1의 참조 - youtube
+        List<RoadmapRequest.UpdateGroupRoadmapDTO.StepDTO.ReferenceDTOs.ReferenceDTO> youtubeReferences = new ArrayList<>();
+
+        RoadmapRequest.UpdateGroupRoadmapDTO.StepDTO.ReferenceDTOs.ReferenceDTO youtubeReference1 = new RoadmapRequest.UpdateGroupRoadmapDTO.StepDTO.ReferenceDTOs.ReferenceDTO();
+        youtubeReference1.setId(1L);
+        youtubeReference1.setLink("https://www.youtube.com/watch?v=수정된 주소");
+        youtubeReferences.add(youtubeReference1);
+
+        references1.setYoutube(youtubeReferences); // references1의 youtube 설정
+
+        // step1의 참조 - web
+        List<RoadmapRequest.UpdateGroupRoadmapDTO.StepDTO.ReferenceDTOs.ReferenceDTO> webReferences = new ArrayList<>();
+
+        RoadmapRequest.UpdateGroupRoadmapDTO.StepDTO.ReferenceDTOs.ReferenceDTO webReference1 = new RoadmapRequest.UpdateGroupRoadmapDTO.StepDTO.ReferenceDTOs.ReferenceDTO();
+        webReference1.setId(4L);
+        webReference1.setLink("https://blog.naver.com/hoyai-/수정된 주소");
+        webReferences.add(webReference1);
+
+        references1.setWeb(webReferences); // references1의 web 설정
+
+        step1.setReferences(references1); // step1의 references 설정
+
+        steps.add(step1);
+        requestDTO.setSteps(steps); // requestDTO의 steps 설정
+
+        String requestBody = om.writeValueAsString(requestDTO);
+
+        // when
+        ResultActions result = mvc.perform(
+                post("/roadmaps/"+ id)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(requestBody)
+        );
+
+        // then
+        result.andExpect(jsonPath("$.success").value("true"));
+    }
+
+    // 실패 케이스는 화면을 바탕으로 만듦
+    @DisplayName("그룹 로드맵_수정_실패_test: 로드맵 이름을 입력하지 않음")
+    @WithUserDetails(value = "hong@naver.com")
+    @Test
+    public void roadmap_group_update_fail_test() throws Exception {
+        // given
+        Long id = 4L;
+        RoadmapRequest.UpdateGroupRoadmapDTO requestDTO = new RoadmapRequest.UpdateGroupRoadmapDTO();
+
+        // 로드맵
+        RoadmapRequest.UpdateGroupRoadmapDTO.RoadmapDTO roadmap = new RoadmapRequest.UpdateGroupRoadmapDTO.RoadmapDTO();
+
+        roadmap.setName(null);
+        roadmap.setDescription("새로운 버젼 입니다");
+        roadmap.setCode("modifiedCode1234");
+        roadmap.setIsRecruit(false);
+        roadmap.setIsPublic(true);
+
+        requestDTO.setRoadmap(roadmap);
+
+        // 스텝
+        List<RoadmapRequest.UpdateGroupRoadmapDTO.StepDTO> steps = new ArrayList<>();
+
+        RoadmapRequest.UpdateGroupRoadmapDTO.StepDTO step1 = new RoadmapRequest.UpdateGroupRoadmapDTO.StepDTO();
+        step1.setId(4L);
+        step1.setTitle("다형성(Polymorphism)");
+        step1.setDescription("수정된 step description 입니다");
+
+        // step1의 참조
+        RoadmapRequest.UpdateGroupRoadmapDTO.StepDTO.ReferenceDTOs references1 = new RoadmapRequest.UpdateGroupRoadmapDTO.StepDTO.ReferenceDTOs();
+
+        // step1의 참조 - youtube
+        List<RoadmapRequest.UpdateGroupRoadmapDTO.StepDTO.ReferenceDTOs.ReferenceDTO> youtubeReferences = new ArrayList<>();
+
+        RoadmapRequest.UpdateGroupRoadmapDTO.StepDTO.ReferenceDTOs.ReferenceDTO youtubeReference1 = new RoadmapRequest.UpdateGroupRoadmapDTO.StepDTO.ReferenceDTOs.ReferenceDTO();
+        youtubeReference1.setId(1L);
+        youtubeReference1.setLink("https://www.youtube.com/watch?v=수정된 주소");
+        youtubeReferences.add(youtubeReference1);
+
+        references1.setYoutube(youtubeReferences); // references1의 youtube 설정
+
+        // step1의 참조 - web
+        List<RoadmapRequest.UpdateGroupRoadmapDTO.StepDTO.ReferenceDTOs.ReferenceDTO> webReferences = new ArrayList<>();
+
+        RoadmapRequest.UpdateGroupRoadmapDTO.StepDTO.ReferenceDTOs.ReferenceDTO webReference1 = new RoadmapRequest.UpdateGroupRoadmapDTO.StepDTO.ReferenceDTOs.ReferenceDTO();
+        webReference1.setId(4L);
+        webReference1.setLink("https://blog.naver.com/hoyai-/수정된 주소");
+        webReferences.add(webReference1);
+
+        references1.setWeb(webReferences); // references1의 web 설정
+
+        step1.setReferences(references1); // step1의 references 설정
+
+        steps.add(step1);
+        requestDTO.setSteps(steps); // requestDTO의 steps 설정
+
+        String requestBody = om.writeValueAsString(requestDTO);
+
+        // when
+        ResultActions result = mvc.perform(
+                post("/roadmaps/"+ id)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(requestBody)
         );
 
         // then

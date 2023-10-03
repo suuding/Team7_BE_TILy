@@ -172,7 +172,6 @@ public class RoadmapService {
         }
     }
 
-
     private static String generateRandomCode() {
         String upperAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         String lowerAlphabet = "abcdefghijklmnopqrstuvwxyz";
