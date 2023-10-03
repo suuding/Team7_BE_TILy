@@ -23,6 +23,7 @@ public class StepResponse {
         private List<YoutubeDTO> youtubes;
         private List<ReferenceDTO> references;
 
+        @Getter @Setter
         public static class YoutubeDTO {
             private Long id;
             private String link;
@@ -33,6 +34,7 @@ public class StepResponse {
             }
         }
 
+        @Getter @Setter
         public static class ReferenceDTO {
             private Long id;
             private String link;

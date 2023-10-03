@@ -104,24 +104,20 @@ public class StepControllerTest {
     @WithUserDetails(value = "hong@naver.com")
     @Test
     public void find_reference_success_test() throws Exception {
-
         // given
-        Long id = 5L;
-
-        String title = "스프링 시큐리티 - 세팅";
-        StepRequest.CreateIndividualStepDTO requestDTO = new StepRequest.CreateIndividualStepDTO();
-        requestDTO.setTitle(title);
-
-        String requestBody = om.writeValueAsString(requestDTO);
+        Long stepId = 4L;
+        Long roadmapsId = 1L;
 
         // when
         ResultActions result = mvc.perform(
-                post("/roadmaps/individual/"+ id +"/steps")
+                post("/roadmaps/" + roadmapsId + "/steps/"+ stepId +"/references")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(requestBody)
         );
 
         // then
-        result.andExpect(jsonPath("$.success").value("false"));
+        result.andExpect(jsonPath("$.success").value("true"));
+
+        String responseBody = result.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : "+responseBody);
     }
 }
