@@ -40,6 +40,8 @@ public class Til {
     @Column
     private boolean isPersonal;
 
+
+
     @Builder
     public Til(Long id, Step step, String title, String content, String submitContent, LocalDateTime submitDate, int commentNum, boolean isPersonal) {
         this.id = id;

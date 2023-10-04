@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
 
 public class TilRequest {
 
@@ -23,5 +24,7 @@ public class TilRequest {
     public static class SubmitTilDTO {
         @NotBlank(message = "TIL 내용을 입력해주세요.")
         private String submitContent;
+
+        private LocalDateTime submitDate;
     }
 }
