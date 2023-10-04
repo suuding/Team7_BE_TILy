@@ -4,6 +4,8 @@ import com.example.tily.roadmap.Roadmap;
 import com.example.tily.roadmap.RoadmapRepository;
 import com.example.tily.step.Step;
 import com.example.tily.step.StepRepository;
+import com.example.tily.til.Til;
+import com.example.tily.til.TilRepository;
 import com.example.tily.user.Role;
 import com.example.tily.user.User;
 import com.example.tily.user.UserRepository;
@@ -27,7 +29,7 @@ public class TiLyApplication {
 
 	@Profile("local")
 	@Bean
-	CommandLineRunner localServerStart(UserRepository userRepository, RoadmapRepository roadmapRepository, StepRepository stepRepository, PasswordEncoder passwordEncoder) {
+	CommandLineRunner localServerStart(UserRepository userRepository, RoadmapRepository roadmapRepository, StepRepository stepRepository, PasswordEncoder passwordEncoder, TilRepository tilRepository) {
 		return args -> {
 			userRepository.saveAll(Arrays.asList(newUser("hong@naver.com", "hong", passwordEncoder)));
 			roadmapRepository.saveAll(Arrays.asList(
@@ -36,6 +38,12 @@ public class TiLyApplication {
 					newIndividualRoadmap("sam-mae","individual", "자바 reflection", 10L),
 					newGroupRoadmap("hong", "group", "JAVA 입문 수업 - 생활 코딩", "생활 코딩님의 로드맵입니다!", true, 3L, "pnu1234", true, 3L),
 					newGroupRoadmap("puuding", "group", "JPA 스터디", "김영한 강사님의 JPA를 공부하는 스터디 ^^", false, 10L, "ashfkc", true, 10L)
+			));
+			stepRepository.saveAll(Arrays.asList(
+					newIndividualStep(1L, "스프링 시큐리티")
+			));
+			tilRepository.saveAll(Arrays.asList(
+					newTil(1L, "스프링 시큐리티", "이것은 내용", true)
 			));
 		};
 	}
@@ -72,10 +80,18 @@ public class TiLyApplication {
 				.build();
 	}
 
-	private Step newIndividualStep(Roadmap roadmap, String title) {
+	private Step newIndividualStep(Long id, String title) {
 		return Step.builder()
-				.roadmap(roadmap)
 				.title(title)
+				.build();
+	}
+
+	private Til newTil(Long id, String title, String content, boolean isPersonal) {
+		return Til.builder()
+				.id(id)
+				.title(title)
+				.content(content)
+				.isPersonal(isPersonal)
 				.build();
 	}
 }
