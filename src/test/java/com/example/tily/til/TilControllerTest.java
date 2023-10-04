@@ -47,7 +47,7 @@ public class TilControllerTest {
 
         //then
         result.andExpect(jsonPath("$.success").value("true"));
-        result.andExpect(jsonPath("$.result.id").value(1));
+        result.andExpect(jsonPath("$.result.id").value(2));
 
     }
 
@@ -126,7 +126,7 @@ public class TilControllerTest {
         //then
         result.andExpect(jsonPath("$.success").value("true"));
         result.andExpect(jsonPath("$.result.stepId").value(1L));
-        result.andExpect(jsonPath("$.result.stepTitle").value("스프링 시큐리티"));
+        result.andExpect(jsonPath("$.result.stepTitle").value("스프링 시큐리티를 사용하는 이유"));
         result.andExpect(jsonPath("$.result.content").value("이것은 내용"));
         result.andExpect(jsonPath("$.result.personal").value("true"));
 

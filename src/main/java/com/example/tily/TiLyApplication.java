@@ -1,5 +1,6 @@
 package com.example.tily;
 
+import com.example.tily.roadmap.Category;
 import com.example.tily.roadmap.Roadmap;
 import com.example.tily.roadmap.RoadmapRepository;
 import com.example.tily.step.Step;
@@ -35,12 +36,13 @@ public class TiLyApplication {
 	CommandLineRunner localServerStart(UserRepository userRepository, RoadmapRepository roadmapRepository, StepRepository stepRepository, ReferenceRepository referenceRepository, TilRepository tilRepository, PasswordEncoder passwordEncoder) {
 		return args -> {
 			userRepository.saveAll(Arrays.asList(newUser("hong@naver.com", "hong", passwordEncoder)));
+			userRepository.saveAll(Arrays.asList(newUser("test@test.com", "hongHong", passwordEncoder)));
 			roadmapRepository.saveAll(Arrays.asList(
-					newIndividualRoadmap("hong","individual", "스프링 시큐리티", 10L),
-					newIndividualRoadmap("puuding","individual", "JPA 입문", 10L),
-					newIndividualRoadmap("sam-mae","individual", "자바 reflection", 10L),
-					newGroupRoadmap("hong", "group", "JAVA 입문 수업 - 생활 코딩", "생활 코딩님의 로드맵입니다!", true, 3L, "pnu1234", true, 3L),
-					newGroupRoadmap("puuding", "group", "JPA 스터디", "김영한 강사님의 JPA를 공부하는 스터디 ^^", false, 10L, "ashfkc", true, 10L)
+					newIndividualRoadmap("hong",Category.CATEGORY_INDIVIDUAL, "스프링 시큐리티", 10L),
+					newIndividualRoadmap("puuding",Category.CATEGORY_INDIVIDUAL, "JPA 입문", 10L),
+					newIndividualRoadmap("sam-mae",Category.CATEGORY_INDIVIDUAL, "자바 reflection", 10L),
+					newGroupRoadmap("hong", Category.CATEGORY_GROUP, "JAVA 입문 수업 - 생활 코딩", "생활 코딩님의 로드맵입니다!", true, 3L, "pnu1234", true, 3L),
+					newGroupRoadmap("puuding", Category.CATEGORY_GROUP, "JPA 스터디", "김영한 강사님의 JPA를 공부하는 스터디 ^^", false, 10L, "ashfkc", true, 10L)
 			));
 			stepRepository.saveAll(Arrays.asList(
 					newIndividualStep(Roadmap.builder().id(1L).build(), "스프링 시큐리티를 사용하는 이유"),
@@ -48,8 +50,7 @@ public class TiLyApplication {
 					newIndividualStep(Roadmap.builder().id(1L).build(), "인증된 사용자 권한 부족 예외처리"),
 					newGroupStep(Roadmap.builder().id(4L).build(),"다형성(Polymorphism)", "Day1", LocalDateTime.of(2023, 10, 1, 23 ,59) ),
 					newGroupStep(Roadmap.builder().id(4L).build(),"람다식(lambda expression)", "Day2", LocalDateTime.of(2023, 10, 3, 23 ,59) ),
-					newGroupStep(Roadmap.builder().id(5L).build(),"스트림(lambda expression)", "Day3", LocalDateTime.of(2023, 10, 5, 23 ,59) ),
-          newIndividualStep(1L, "스프링 시큐리티")
+					newGroupStep(Roadmap.builder().id(5L).build(),"스트림(lambda expression)", "Day3", LocalDateTime.of(2023, 10, 5, 23 ,59) )
 			));
 			referenceRepository.saveAll(Arrays.asList(
 					newReference(Step.builder().id(4L).build(), "youtube", "https://www.youtube.com/watch?v=0L6QWKC1a6k"),
@@ -60,7 +61,7 @@ public class TiLyApplication {
 					newReference(Step.builder().id(6L).build(), "web", "https://velog.io/@skydoves/open-source-machenism")
 			));
 			tilRepository.saveAll(Arrays.asList(
-					newTil(1L, "스프링 시큐리티", "이것은 내용", true)
+					newTil("스프링 시큐리티", "이것은 내용", true)
 			));
 		};
 	}
@@ -74,7 +75,7 @@ public class TiLyApplication {
 				.build();
 	}
 
-	private Roadmap newIndividualRoadmap(String creator, String category, String name, Long stepNum){
+	private Roadmap newIndividualRoadmap(String creator, Category category, String name, Long stepNum){
 		return Roadmap.builder()
 				.creator(creator)
 				.category(category)
@@ -83,7 +84,7 @@ public class TiLyApplication {
 				.build();
 	}
 
-	private Roadmap newGroupRoadmap(String creator, String category, String name, String description, boolean isPublic, Long currentNum, String code, boolean isRecruit,Long stepNum) {
+	private Roadmap newGroupRoadmap(String creator, Category category, String name, String description, boolean isPublic, Long currentNum, String code, boolean isRecruit,Long stepNum) {
 		return Roadmap.builder()
 				.creator(creator)
 				.category(category)
@@ -97,8 +98,9 @@ public class TiLyApplication {
 				.build();
 	}
 
-	private Step newIndividualStep(Long id, String title) {
+	private Step newIndividualStep(Roadmap roadmap, String title) {
 		return Step.builder()
+				.roadmap(roadmap)
 				.title(title)
 				.build();
 	}
@@ -117,12 +119,11 @@ public class TiLyApplication {
 				.step(step)
 				.category(category)
 				.link(link)
-        .build();
-  }
+        		.build();
+  	}
   
-	private Til newTil(Long id, String title, String content, boolean isPersonal) {
+	private Til newTil(String title, String content, boolean isPersonal) {
 		return Til.builder()
-				.id(id)
 				.title(title)
 				.content(content)
 				.isPersonal(isPersonal)
