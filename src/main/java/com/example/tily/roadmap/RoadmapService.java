@@ -26,7 +26,7 @@ public class RoadmapService {
     @Transactional
     public RoadmapResponse.CreateRoadmapDTO createIndividualRoadmap(RoadmapRequest.CreateIndividualRoadmapDTO requestDTO, User user){
         String creator = user.getName();
-        String category = "individual";
+        Category category = Category.CATEGORY_INDIVIDUAL;
         String name = requestDTO.getName();
         Long stepNum = 0L;
 
@@ -41,7 +41,7 @@ public class RoadmapService {
     public RoadmapResponse.CreateRoadmapDTO createGroupRoadmap(RoadmapRequest.CreateGroupRoadmapDTO requestDTO, User user){
         // repository 저장
         String creator = user.getName();
-        String category = "group";
+        Category category = Category.CATEGORY_GROUP;
         String name = requestDTO.getRoadmap().getName();
         String roadmapDescription = requestDTO.getRoadmap().getDescription();
         Boolean isPublic = requestDTO.getRoadmap().getIsPublic();
