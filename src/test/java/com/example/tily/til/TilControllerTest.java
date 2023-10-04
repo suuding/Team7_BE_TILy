@@ -11,6 +11,8 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.time.LocalDateTime;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
@@ -164,8 +166,11 @@ public class TilControllerTest {
         Long tilId = 1L;
 
         String submitContent = "제출할 내용입니다.";
+        LocalDateTime submitDate = LocalDateTime.now();
+
         TilRequest.SubmitTilDTO reqeustDTO = new TilRequest.SubmitTilDTO();
         reqeustDTO.setSubmitContent(submitContent);
+        reqeustDTO.setSubmitDate(submitDate);
 
         String requestBody = om.writeValueAsString(reqeustDTO);
         //when
@@ -175,7 +180,8 @@ public class TilControllerTest {
                         .content(requestBody)
         );
 
-        System.out.println("테스트 ---------------------------------- "+submitContent);
+        System.out.println("테스트 ---------------------------------- " + submitContent);
+        System.out.println("테스트 ---------------------------------- " + submitDate);
         //then
         result.andExpect(jsonPath("$.success").value("true"));
 
@@ -202,5 +208,4 @@ public class TilControllerTest {
         result.andExpect(jsonPath("$.success").value("true"));
 
     }
-
 }

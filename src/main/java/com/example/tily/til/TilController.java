@@ -33,21 +33,19 @@ public class TilController {
         ApiUtils.ApiResult<?> apiResult= ApiUtils.success(responseDTO);
 
         return ResponseEntity.ok(apiResult);
-
     }
+
     @PostMapping("/roadmaps/{roadmapId}/steps/{stepId}/tils/{tilId}")
     public ResponseEntity<?> submitTil(@PathVariable("roadmapId") Long roadmapId, @PathVariable("stepId")Long stepId, @PathVariable("tilId") Long tilId, @RequestBody @Valid TilRequest.SubmitTilDTO requestDTO) {
 
         tilService.submitTil(requestDTO, tilId);
         return ResponseEntity.ok().body(ApiUtils.success(null));
-
     }
+
     @DeleteMapping("/roadmaps/{roadmapId}/steps/{stepId}/tils/{tilId}")
     public ResponseEntity<?> deleteTil(@PathVariable("roadmapId") Long roadmapId, @PathVariable("stepId")Long stepId, @PathVariable("tilId") Long tilId) {
 
         tilService.deleteTil(tilId);
         return ResponseEntity.ok().body(ApiUtils.success(null));
-
     }
-
 }

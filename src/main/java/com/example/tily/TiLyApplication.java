@@ -61,7 +61,7 @@ public class TiLyApplication {
 					newReference(Step.builder().id(6L).build(), "web", "https://velog.io/@skydoves/open-source-machenism")
 			));
 			tilRepository.saveAll(Arrays.asList(
-					newTil("스프링 시큐리티", "이것은 내용", true)
+					newTil(Step.builder().id(1L).build(), "10월 1일의 TIL", "이것은 내용입니다.", false, "이것은 제출할 내용입니다.")
 			));
 		};
 	}
@@ -122,11 +122,13 @@ public class TiLyApplication {
         		.build();
   	}
   
-	private Til newTil(String title, String content, boolean isPersonal) {
+	private Til newTil(Step step, String title, String content, boolean isPersonal, String subContent) {
 		return Til.builder()
+				.step(step)
 				.title(title)
 				.content(content)
 				.isPersonal(isPersonal)
+				.submitContent(subContent)
 				.build();
 	}
 }
