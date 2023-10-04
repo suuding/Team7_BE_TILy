@@ -6,6 +6,8 @@ import com.example.tily.step.Step;
 import com.example.tily.step.StepRepository;
 import com.example.tily.step.reference.Reference;
 import com.example.tily.step.reference.ReferenceRepository;
+import com.example.tily.til.Til;
+import com.example.tily.til.TilRepository;
 import com.example.tily.user.Role;
 import com.example.tily.user.User;
 import com.example.tily.user.UserRepository;
@@ -30,7 +32,7 @@ public class TiLyApplication {
 
 	@Profile("local")
 	@Bean
-	CommandLineRunner localServerStart(UserRepository userRepository, RoadmapRepository roadmapRepository, StepRepository stepRepository, ReferenceRepository referenceRepository, PasswordEncoder passwordEncoder) {
+	CommandLineRunner localServerStart(UserRepository userRepository, RoadmapRepository roadmapRepository, StepRepository stepRepository, ReferenceRepository referenceRepository, TilRepository tilRepository, PasswordEncoder passwordEncoder) {
 		return args -> {
 			userRepository.saveAll(Arrays.asList(newUser("hong@naver.com", "hong", passwordEncoder)));
 			roadmapRepository.saveAll(Arrays.asList(
@@ -46,7 +48,8 @@ public class TiLyApplication {
 					newIndividualStep(Roadmap.builder().id(1L).build(), "인증된 사용자 권한 부족 예외처리"),
 					newGroupStep(Roadmap.builder().id(4L).build(),"다형성(Polymorphism)", "Day1", LocalDateTime.of(2023, 10, 1, 23 ,59) ),
 					newGroupStep(Roadmap.builder().id(4L).build(),"람다식(lambda expression)", "Day2", LocalDateTime.of(2023, 10, 3, 23 ,59) ),
-					newGroupStep(Roadmap.builder().id(5L).build(),"스트림(lambda expression)", "Day3", LocalDateTime.of(2023, 10, 5, 23 ,59) )
+					newGroupStep(Roadmap.builder().id(5L).build(),"스트림(lambda expression)", "Day3", LocalDateTime.of(2023, 10, 5, 23 ,59) ),
+          newIndividualStep(1L, "스프링 시큐리티")
 			));
 			referenceRepository.saveAll(Arrays.asList(
 					newReference(Step.builder().id(4L).build(), "youtube", "https://www.youtube.com/watch?v=0L6QWKC1a6k"),
@@ -55,6 +58,9 @@ public class TiLyApplication {
 					newReference(Step.builder().id(4L).build(), "web", "https://blog.naver.com/hoyai-/1234"),
 					newReference(Step.builder().id(5L).build(), "web", "https://blog.naver.com/cestlavie_01/1234"),
 					newReference(Step.builder().id(6L).build(), "web", "https://velog.io/@skydoves/open-source-machenism")
+			));
+			tilRepository.saveAll(Arrays.asList(
+					newTil(1L, "스프링 시큐리티", "이것은 내용", true)
 			));
 		};
 	}
@@ -91,9 +97,8 @@ public class TiLyApplication {
 				.build();
 	}
 
-	private Step newIndividualStep(Roadmap roadmap, String title) {
+	private Step newIndividualStep(Long id, String title) {
 		return Step.builder()
-				.roadmap(roadmap)
 				.title(title)
 				.build();
 	}
@@ -112,6 +117,15 @@ public class TiLyApplication {
 				.step(step)
 				.category(category)
 				.link(link)
+        .build();
+  }
+  
+	private Til newTil(Long id, String title, String content, boolean isPersonal) {
+		return Til.builder()
+				.id(id)
+				.title(title)
+				.content(content)
+				.isPersonal(isPersonal)
 				.build();
 	}
 }
