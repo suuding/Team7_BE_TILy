@@ -4,6 +4,8 @@ import com.example.tily.roadmap.Roadmap;
 import com.example.tily.roadmap.RoadmapRepository;
 import com.example.tily.step.Step;
 import com.example.tily.step.StepRepository;
+import com.example.tily.step.reference.Reference;
+import com.example.tily.step.reference.ReferenceRepository;
 import com.example.tily.til.Til;
 import com.example.tily.til.TilRepository;
 import com.example.tily.user.Role;
@@ -17,6 +19,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 
 @EnableJpaAuditing
@@ -29,7 +32,7 @@ public class TiLyApplication {
 
 	@Profile("local")
 	@Bean
-	CommandLineRunner localServerStart(UserRepository userRepository, RoadmapRepository roadmapRepository, StepRepository stepRepository, PasswordEncoder passwordEncoder, TilRepository tilRepository) {
+	CommandLineRunner localServerStart(UserRepository userRepository, RoadmapRepository roadmapRepository, StepRepository stepRepository, ReferenceRepository referenceRepository, TilRepository tilRepository, PasswordEncoder passwordEncoder) {
 		return args -> {
 			userRepository.saveAll(Arrays.asList(newUser("hong@naver.com", "hong", passwordEncoder)));
 			roadmapRepository.saveAll(Arrays.asList(
@@ -40,7 +43,21 @@ public class TiLyApplication {
 					newGroupRoadmap("puuding", "group", "JPA 스터디", "김영한 강사님의 JPA를 공부하는 스터디 ^^", false, 10L, "ashfkc", true, 10L)
 			));
 			stepRepository.saveAll(Arrays.asList(
-					newIndividualStep(1L, "스프링 시큐리티")
+					newIndividualStep(Roadmap.builder().id(1L).build(), "스프링 시큐리티를 사용하는 이유"),
+					newIndividualStep(Roadmap.builder().id(1L).build(), "OAuth 2.0으로 로그인 기능 구현하기"),
+					newIndividualStep(Roadmap.builder().id(1L).build(), "인증된 사용자 권한 부족 예외처리"),
+					newGroupStep(Roadmap.builder().id(4L).build(),"다형성(Polymorphism)", "Day1", LocalDateTime.of(2023, 10, 1, 23 ,59) ),
+					newGroupStep(Roadmap.builder().id(4L).build(),"람다식(lambda expression)", "Day2", LocalDateTime.of(2023, 10, 3, 23 ,59) ),
+					newGroupStep(Roadmap.builder().id(5L).build(),"스트림(lambda expression)", "Day3", LocalDateTime.of(2023, 10, 5, 23 ,59) ),
+          newIndividualStep(1L, "스프링 시큐리티")
+			));
+			referenceRepository.saveAll(Arrays.asList(
+					newReference(Step.builder().id(4L).build(), "youtube", "https://www.youtube.com/watch?v=0L6QWKC1a6k"),
+					newReference(Step.builder().id(5L).build(), "youtube", "https://www.youtube.com/watch?v=U8LVCTaS3mQ"),
+					newReference(Step.builder().id(6L).build(), "youtube", "https://www.youtube.com/watch?v=1OLy4Dj_zCg"),
+					newReference(Step.builder().id(4L).build(), "web", "https://blog.naver.com/hoyai-/1234"),
+					newReference(Step.builder().id(5L).build(), "web", "https://blog.naver.com/cestlavie_01/1234"),
+					newReference(Step.builder().id(6L).build(), "web", "https://velog.io/@skydoves/open-source-machenism")
 			));
 			tilRepository.saveAll(Arrays.asList(
 					newTil(1L, "스프링 시큐리티", "이것은 내용", true)
@@ -86,6 +103,23 @@ public class TiLyApplication {
 				.build();
 	}
 
+	private Step newGroupStep(Roadmap roadmap, String title, String description, LocalDateTime dueDate){
+		return Step.builder()
+				.roadmap(roadmap)
+				.title(title)
+				.description(description)
+				.dueDate(dueDate)
+				.build();
+	}
+
+	private Reference newReference(Step step, String category, String link){
+		return Reference.builder()
+				.step(step)
+				.category(category)
+				.link(link)
+        .build();
+  }
+  
 	private Til newTil(Long id, String title, String content, boolean isPersonal) {
 		return Til.builder()
 				.id(id)

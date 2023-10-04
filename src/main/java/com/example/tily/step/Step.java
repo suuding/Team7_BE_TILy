@@ -37,4 +37,9 @@ public class Step {
         this.description = description;
         this.dueDate = dueDate;
     }
+
+    public void update(String title, String description){
+        this.title = title;
+        this.description = description;
+    }
 }

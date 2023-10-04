@@ -22,7 +22,7 @@ public class Roadmap {
     @Column(nullable = false)
     private String creator;
     @Column(nullable = false)
-    private String category;
+    private Category category;
     @Column(nullable = false)
     private String name;
     @Column
@@ -39,7 +39,7 @@ public class Roadmap {
     private Long stepNum;
 
     @Builder
-    public Roadmap(Long id, String creator, String category, String name, String description, Boolean isPublic, Long currentNum, String code, Boolean isRecruit, Long stepNum) {
+    public Roadmap(Long id, String creator, Category category, String name, String description, Boolean isPublic, Long currentNum, String code, Boolean isRecruit, Long stepNum) {
         this.id = id;
         this.creator = creator;
         this.category = category;
@@ -50,5 +50,13 @@ public class Roadmap {
         this.code = code;
         this.isRecruit = isRecruit;
         this.stepNum = stepNum;
+    }
+
+    public void update(String name, String description, String code, Boolean isPublic, Boolean isRecruit){
+        this.name = name;
+        this.description = description;
+        this.code = code;
+        this.isPublic = isPublic;
+        this.isRecruit = isRecruit;
     }
 }

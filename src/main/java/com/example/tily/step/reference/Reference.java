@@ -27,9 +27,14 @@ public class Reference {
     private String link;
 
     @Builder
-    public Reference(Long id, String category, String link) {
+    public Reference(Step step, Long id, String category, String link) {
+        this.step = step;
         this.id = id;
         this.category = category;
+        this.link = link;
+    }
+
+    public void update(String link){
         this.link = link;
     }
 }

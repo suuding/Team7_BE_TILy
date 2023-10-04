@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
-import java.util.Map;
 
 public class StepResponse {
     @Getter @Setter
@@ -20,34 +19,36 @@ public class StepResponse {
         private Long id;
         private String description;
 
-        private List<YoutubeLink> youtubeLinks;
-        private List<ReferenceLink> referenceLinks;
+        private List<YoutubeDTO> youtubes;
+        private List<WebDTO> references;
 
-        public static class YoutubeLink {
+        @Getter @Setter
+        public static class YoutubeDTO {
             private Long id;
             private String link;
 
-            public YoutubeLink(Long id, String link){
+            public YoutubeDTO(Long id, String link){
                 this.id = id;
                 this.link = link;
             }
         }
 
-        public static class ReferenceLink {
+        @Getter @Setter
+        public static class WebDTO {
             private Long id;
             private String link;
 
-            public ReferenceLink(Long id, String link){
+            public WebDTO(Long id, String link){
                 this.id = id;
                 this.link = link;
             }
         }
 
-        public FindReferenceDTO(Step step, List<YoutubeLink> youtubeLinks, List<ReferenceLink> referenceLinks){
+        public FindReferenceDTO(Step step, List<YoutubeDTO> youtubeLinks, List<WebDTO> referenceLinks){
             this.id = step.getId();
             this.description = step.getDescription();
-            this.youtubeLinks = youtubeLinks;
-            this.referenceLinks = referenceLinks;
+            this.youtubes = youtubeLinks;
+            this.references = referenceLinks;
         }
     }
 }

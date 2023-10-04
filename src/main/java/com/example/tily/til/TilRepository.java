@@ -6,6 +6,8 @@ import java.util.Optional;
 
 public interface TilRepository extends JpaRepository<Til, Long>{
 
+    Til findFirstByOrderBySubmitDateDesc();
+
     Til findTilById(Long id);
     Optional<Til> findById(Long id);
 }
