@@ -1,5 +1,6 @@
 package com.example.tily.roadmap;
 
+import com.example.tily.step.UserStepRelation;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,6 +10,8 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -18,6 +21,9 @@ public class Roadmap {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @OneToMany(mappedBy =  "roadmap")
+    private List<UserRoadmapRelation> userRoadmapRelations = new ArrayList<>();
 
     @Column(nullable = false)
     private String creator;
