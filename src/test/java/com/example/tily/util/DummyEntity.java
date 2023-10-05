@@ -6,6 +6,7 @@ import com.example.tily.step.Step;
 import com.example.tily.til.Til;
 import com.example.tily.user.Role;
 import com.example.tily.user.User;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
@@ -13,7 +14,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class DummyEntity {
-    protected User newUser(String email, String name, PasswordEncoder passwordEncoder){
+    protected User newUser(String email, String name){
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         return User.builder()
                 .email(email)
                 .name(name)
@@ -71,35 +73,24 @@ public class DummyEntity {
                 .commentNum(commentNum)
                 .build();
     }
-
-    protected List<Roadmap> individualRoadmapDummyList(){
+    protected List<Roadmap> roadmapDummyList(){
         return Arrays.asList(
                 newIndividualRoadmap("hong",Category.CATEGORY_INDIVIDUAL, "스프링 시큐리티", 10L),
                 newIndividualRoadmap("puuding",Category.CATEGORY_INDIVIDUAL, "JPA 입문", 10L),
-                newIndividualRoadmap("sam-mae",Category.CATEGORY_INDIVIDUAL, "자바 reflection", 10L)
-        );
-    }
-
-    protected List<Roadmap> groupRoadmapDummyList(){
-        return Arrays.asList(
+                newIndividualRoadmap("sam-mae",Category.CATEGORY_INDIVIDUAL, "자바 reflection", 10L),
                 newGroupRoadmap("hong", Category.CATEGORY_GROUP, "JAVA 입문 수업 - 생활 코딩", "생활 코딩님의 로드맵입니다!", true, 3L, "pnu1234", true, 3L),
                 newGroupRoadmap("puuding", Category.CATEGORY_GROUP, "JPA 스터디", "김영한 강사님의 JPA를 공부하는 스터디 ^^", false, 10L, "ashfkc", true, 10L)
         );
     }
 
-    protected List<Step> individualStepDummyList(List<Roadmap> roadmapListPS){
+    protected List<Step> stepDummyList(List<Roadmap> roadmapListPS){
         return Arrays.asList(
-                newIndividualStep(roadmapListPS.get(0), "알고리즘 Day1"),
-                newIndividualStep(roadmapListPS.get(0), "알고리즘 Day2"),
-                newIndividualStep(roadmapListPS.get(0), "알고리즘 Day3")
-        );
-    }
-
-    protected List<Step> groupStepDummyList(List<Roadmap> roadmapListPS){
-        return Arrays.asList(
-                newGroupStep(roadmapListPS.get(0), "JPA - step1" ,"JPA란?" ,LocalDateTime.of(2023, 10, 1, 23 ,59)),
-                newGroupStep(roadmapListPS.get(0), "JPA - step2" ,"JPA 사용해보기?" ,LocalDateTime.of(2023, 10, 2, 23 ,59)),
-                newGroupStep(roadmapListPS.get(0), "JPA - step3" ,"JPA 코드 예제?" ,LocalDateTime.of(2023, 10, 3, 23 ,59))
+                newIndividualStep(roadmapListPS.get(0), "스프링 시큐리티를 사용하는 이유"),
+                newIndividualStep(roadmapListPS.get(0), "OAuth 2.0으로 로그인 기능 구현하기"),
+                newIndividualStep(roadmapListPS.get(0), "인증된 사용자 권한 부족 예외처리"),
+                newGroupStep(roadmapListPS.get(3),"다형성(Polymorphism)", "Day1", LocalDateTime.of(2023, 10, 1, 23 ,59) ),
+                newGroupStep(roadmapListPS.get(3),"람다식(lambda expression)", "Day2", LocalDateTime.of(2023, 10, 3, 23 ,59) ),
+                newGroupStep(roadmapListPS.get(4),"스트림(lambda expression)", "Day3", LocalDateTime.of(2023, 10, 5, 23 ,59) )
         );
     }
 
