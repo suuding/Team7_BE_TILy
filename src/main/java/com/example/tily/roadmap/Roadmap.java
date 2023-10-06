@@ -44,9 +44,11 @@ public class Roadmap {
     private Boolean isRecruit;
     @Column
     private Long stepNum;
+    @Column
+    private String image;
 
     @Builder
-    public Roadmap(Long id, User creator, Category category, String name, String description, Boolean isPublic, Long currentNum, String code, Boolean isRecruit, Long stepNum) {
+    public Roadmap(Long id, User creator, Category category, String name, String description, Boolean isPublic, Long currentNum, String code, Boolean isRecruit, Long stepNum, String image) {
         this.id = id;
         this.creator = creator;
         this.category = category;
@@ -57,6 +59,7 @@ public class Roadmap {
         this.code = code;
         this.isRecruit = isRecruit;
         this.stepNum = stepNum;
+        this.image = image;
     }
 
     public void update(String name, String description, String code, Boolean isPublic, Boolean isRecruit){
