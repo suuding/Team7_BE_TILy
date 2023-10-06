@@ -19,10 +19,10 @@ public class UserRoadmap {
     private Long id;
 
     @ManyToOne
-    Roadmap roadmap;
+    private Roadmap roadmap;
 
     @ManyToOne
-    User user;
+    private User user;
 
     @Column
     private String content;
