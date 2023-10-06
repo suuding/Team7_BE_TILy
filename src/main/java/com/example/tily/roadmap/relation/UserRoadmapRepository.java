@@ -9,5 +9,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface UserRoadmapRepository extends JpaRepository<UserRoadmap, Long> {
-    
+
+    @Query("select ur.roadmap from UserRoadmap ur where ur.user.id=:userId")
+    List<Roadmap> findByUserId(@Param("userId") Long userId);
 }
