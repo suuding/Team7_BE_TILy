@@ -45,4 +45,12 @@ public class RoadmapController {
 
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
+
+    // 나의 로드맵 전체 목록 조회하기
+    @GetMapping("/roadmaps/my")
+    public ResponseEntity<?> findAllMyRoadmaps(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        RoadmapResponse.FindAllMyRoadmapDTO responseDTO = roadmapService.findAllMyRoadmaps(userDetails.getUser());
+        return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
+    }
+
 }
