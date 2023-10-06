@@ -4,6 +4,7 @@ import com.example.tily.roadmap.Roadmap;
 import com.example.tily.user.Role;
 import com.example.tily.user.User;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -19,9 +20,11 @@ public class UserRoadmap {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "roadmap_id")
     private Roadmap roadmap;
 
     @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
     @Column
@@ -29,7 +32,17 @@ public class UserRoadmap {
     @Column
     private Boolean isAccept;
     @Column(nullable = false)
-    private Role role;
+    private String role;
     @Column(nullable = false)
     private int progress;
+
+    @Builder
+    public UserRoadmap(Roadmap roadmap, User user, String content, Boolean isAccept, String role, int progress) {
+        this.roadmap = roadmap;
+        this.user = user;
+        this.content = content;
+        this.isAccept = isAccept;
+        this.role = role;
+        this.progress = progress;
+    }
 }
