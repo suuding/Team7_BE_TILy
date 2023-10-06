@@ -96,4 +96,87 @@ public class RoadmapResponse {
             }
         }
     }
+
+    @Getter @Setter
+    public static class FindAllMyRoadmapDTO {
+        private List<CategoryDTO> categories;
+        private RoadmapDTO roadmaps;
+
+        public FindAllMyRoadmapDTO(List<Roadmap> categories, List<Roadmap> roadmaps) {
+            this.categories = categories.stream().map(CategoryDTO::new).collect(Collectors.toList());
+            this.roadmaps = new RoadmapDTO(roadmaps);
+        }
+
+        @Getter @Setter
+        public class CategoryDTO {
+            private Long id;
+            private String name;
+
+            public CategoryDTO(Roadmap roadmap) {
+                this.id = roadmap.getId();
+                this.name = roadmap.getName();
+            }
+        }
+
+        @Getter @Setter
+        public class RoadmapDTO {
+            private List<TilyDTO> tilys;
+            private List<GroupDTO> groups;
+
+            public RoadmapDTO(List<Roadmap> roadmaps) {
+                this.tilys = roadmaps.stream()
+                        .filter(roadmap -> roadmap.getCategory().equals(Category.CATEGORY_TILLY))
+                        .map(TilyDTO::new)
+                        .collect(Collectors.toList());
+                this.groups = roadmaps.stream()
+                        .filter(roadmap -> roadmap.getCategory().equals(Category.CATEGORY_GROUP))
+                        .map(GroupDTO::new)
+                        .collect(Collectors.toList());
+            }
+
+            @Getter @Setter
+            public class TilyDTO {
+                private Long id;
+                private String name;
+                private Long stepNum;
+
+                public TilyDTO(Roadmap roadmap) {
+                    this.id = roadmap.getId();
+                    this.name = roadmap.getName();
+                    this.stepNum = roadmap.getStepNum();
+                }
+            }
+
+            @Getter @Setter
+            public class GroupDTO {
+                private Long id;
+                private String name;
+                private Long stepNum;
+                private String image;
+                private Creator creator;
+
+                public GroupDTO(Roadmap roadmap) {
+                    this.id = roadmap.getId();
+                    this.name = roadmap.getName();
+                    this.stepNum = roadmap.getStepNum();
+                    this.image = roadmap.getImage();
+                    this.creator = new Creator(roadmap.getCreator());
+                }
+
+                @Getter @Setter
+                public class Creator {
+                    private Long id;
+                    private String name;
+                    private String image;
+
+                    public Creator(User user) {
+                        this.id = user.getId();
+                        this.name = user.getName();
+                        this.image = user.getImage();
+                    }
+                }
+            }
+        }
+    }
+
 }
