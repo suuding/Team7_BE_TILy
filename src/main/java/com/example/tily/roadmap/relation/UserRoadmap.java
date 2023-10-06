@@ -1,5 +1,6 @@
-package com.example.tily.roadmap;
+package com.example.tily.roadmap.relation;
 
+import com.example.tily.roadmap.Roadmap;
 import com.example.tily.user.Role;
 import com.example.tily.user.User;
 import lombok.AccessLevel;
@@ -11,8 +12,8 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name="userRoadmapRelation_tb")
-public class UserRoadmapRelation {
+@Table(name="user_roadmap_tb")
+public class UserRoadmap {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

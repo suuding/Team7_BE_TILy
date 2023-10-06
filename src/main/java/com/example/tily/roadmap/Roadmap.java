@@ -1,15 +1,12 @@
 package com.example.tily.roadmap;
 
-import com.example.tily.step.UserStepRelation;
+import com.example.tily.roadmap.relation.UserRoadmap;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +20,7 @@ public class Roadmap {
     private Long id;
 
     @OneToMany(mappedBy =  "roadmap")
-    private List<UserRoadmapRelation> userRoadmapRelations = new ArrayList<>();
+    private List<UserRoadmap> userRoadmaps = new ArrayList<>();
 
     @Column(nullable = false)
     private String creator;
