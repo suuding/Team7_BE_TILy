@@ -1,6 +1,7 @@
 package com.example.tily.step;
 
 import com.example.tily.roadmap.Roadmap;
+import com.example.tily.step.relation.UserStep;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,7 +23,7 @@ public class Step {
     private Long id;
 
     @OneToMany(mappedBy =  "step")
-    private List<UserStepRelation> userStepRelations = new ArrayList<>();
+    private List<UserStep> userSteps = new ArrayList<>();
 
     @ManyToOne
     private Roadmap roadmap;
