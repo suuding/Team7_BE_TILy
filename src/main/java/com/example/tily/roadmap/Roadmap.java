@@ -1,6 +1,7 @@
 package com.example.tily.roadmap;
 
 import com.example.tily.roadmap.relation.UserRoadmap;
+import com.example.tily.user.User;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,8 +23,11 @@ public class Roadmap {
     @OneToMany(mappedBy =  "roadmap")
     private List<UserRoadmap> userRoadmaps = new ArrayList<>();
 
-    @Column(nullable = false)
-    private String creator;
+    @ManyToOne
+    @JoinColumn(name = "creator_id")
+    private User creator;
+
+    @Enumerated(value = EnumType.STRING)
     @Column(nullable = false)
     private Category category;
     @Column(nullable = false)
@@ -42,7 +46,7 @@ public class Roadmap {
     private Long stepNum;
 
     @Builder
-    public Roadmap(Long id, String creator, Category category, String name, String description, Boolean isPublic, Long currentNum, String code, Boolean isRecruit, Long stepNum) {
+    public Roadmap(Long id, User creator, Category category, String name, String description, Boolean isPublic, Long currentNum, String code, Boolean isRecruit, Long stepNum) {
         this.id = id;
         this.creator = creator;
         this.category = category;
