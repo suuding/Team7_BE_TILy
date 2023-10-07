@@ -191,4 +191,12 @@ public class RoadmapService {
 
         return sb.toString();
     }
+
+    @Transactional
+    public RoadmapResponse.FindAllMyRoadmapDTO findAllMyRoadmaps(User user) {
+
+        //List<Roadmap> individualRoadmaps = roadmapRepository.findByUserId(user.getId(), Category.CATEGORY_INDIVIDUAL); // 내가 생성한 개인 로드맵 조회
+        List<Roadmap> roadmaps = userRoadmapRepository.findByUserId(user.getId(), true);      // 내가 속한 로드맵 조회
+        return new RoadmapResponse.FindAllMyRoadmapDTO(roadmaps);
+    }
 }
