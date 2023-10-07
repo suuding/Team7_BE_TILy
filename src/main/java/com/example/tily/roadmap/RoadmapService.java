@@ -49,18 +49,18 @@ public class RoadmapService {
 
     @Transactional
     public RoadmapResponse.CreateRoadmapDTO createGroupRoadmap(RoadmapRequest.CreateGroupRoadmapDTO requestDTO, User user){
-        // repository 저장
-        User creator = user;
-        Category category = Category.CATEGORY_GROUP;
-        String name = requestDTO.getRoadmap().getName();
-        String roadmapDescription = requestDTO.getRoadmap().getDescription();
-        Boolean isPublic = requestDTO.getRoadmap().getIsPublic();
-        Long currentNum = 1L; // 현재 인원수는 creator 한 명
-        String code = generateRandomCode();
-        Boolean isRecruit = true; // 그룹 로드맵이기 때문
-        Long stepNum = (long) requestDTO.getSteps().size();
 
-        Roadmap roadmap = Roadmap.builder().creator(creator).category(category).name(name).description(roadmapDescription).isPublic(isPublic).currentNum(currentNum).code(code).isRecruit(isRecruit).stepNum(stepNum).build();
+        Roadmap roadmap = Roadmap.builder()
+                .creator(user)
+                .category(Category.CATEGORY_GROUP)
+                .name(requestDTO.getRoadmap().getName())
+                .description(requestDTO.getRoadmap().getDescription())
+                .isPublic(requestDTO.getRoadmap().getIsPublic())
+                .currentNum(1L)
+                .code(generateRandomCode())
+                .isRecruit(true)
+                .stepNum((long) requestDTO.getSteps().size())
+                .build();
         roadmapRepository.save(roadmap);
 
         List<RoadmapRequest.CreateGroupRoadmapDTO.StepDTO> stepDTOS = requestDTO.getSteps();
