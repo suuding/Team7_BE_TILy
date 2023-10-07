@@ -6,6 +6,8 @@ import com.example.tily.user.Role;
 import com.example.tily.user.User;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Slice;
 
 import java.util.List;
 import java.util.Map;
@@ -122,13 +124,13 @@ public class RoadmapResponse {
         }
 
         @Getter @Setter
-        public class RoadmapDTO {
+        public static class RoadmapDTO {
             private List<TilyDTO> tilys;
             private List<GroupDTO> groups;
 
             public RoadmapDTO(List<Roadmap> roadmaps) {
                 this.tilys = roadmaps.stream()
-                        .filter(roadmap -> roadmap.getCategory().equals(Category.CATEGORY_TILLY))
+                        .filter(roadmap -> roadmap.getCategory().equals(Category.CATEGORY_TILY))
                         .map(TilyDTO::new)
                         .collect(Collectors.toList());
                 this.groups = roadmaps.stream()
@@ -151,7 +153,7 @@ public class RoadmapResponse {
             }
 
             @Getter @Setter
-            public class GroupDTO {
+            public static class GroupDTO {
                 private Long id;
                 private String name;
                 private Long stepNum;
@@ -167,7 +169,7 @@ public class RoadmapResponse {
                 }
 
                 @Getter @Setter
-                public class Creator {
+                public static class Creator {
                     private Long id;
                     private String name;
                     private String image;
@@ -178,6 +180,34 @@ public class RoadmapResponse {
                         this.image = user.getImage();
                     }
                 }
+            }
+        }
+    }
+
+    @Getter @Setter
+    public static class FindRoadmapByQueryDTO {
+        private String category;
+        private List<RoadmapDTO> roadmaps;
+        private Boolean hasNext;
+
+        public FindRoadmapByQueryDTO(Category category, Slice<Roadmap> roadmaps) {
+            this.category = category.getValue();
+            this.roadmaps = roadmaps.getContent().stream().map(RoadmapDTO::new).collect(Collectors.toList());
+            this.hasNext = roadmaps.hasNext();
+        }
+
+        @Getter @Setter
+        public class RoadmapDTO {
+            private Long id;
+            private String name;
+            private Long stepNum;
+            private FindAllMyRoadmapDTO.RoadmapDTO.GroupDTO.Creator creator;
+
+            public RoadmapDTO(Roadmap roadmap) {
+                this.id = roadmap.getId();
+                this.name = roadmap.getName();
+                this.stepNum = roadmap.getStepNum();
+                this.creator = new FindAllMyRoadmapDTO.RoadmapDTO.GroupDTO.Creator(roadmap.getCreator());
             }
         }
     }
