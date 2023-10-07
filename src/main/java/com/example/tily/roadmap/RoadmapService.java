@@ -22,17 +22,25 @@ public class RoadmapService {
     private final StepRepository stepRepository;
     private final ReferenceRepository referenceRepository;
     private final TilRepository tilRepository;
+    private final UserRoadmapRepository userRoadmapRepository;
 
     @Transactional
     public RoadmapResponse.CreateRoadmapDTO createIndividualRoadmap(RoadmapRequest.CreateIndividualRoadmapDTO requestDTO, User user){
-        User creator = user;
-        Category category = Category.CATEGORY_INDIVIDUAL;
-        String name = requestDTO.getName();
-        Long stepNum = 0L;
 
-        Roadmap roadmap = Roadmap.builder().creator(creator).category(category).name(name).stepNum(stepNum).build();
-
+        Roadmap roadmap = Roadmap.builder()
+                .creator(user)
+                .category(Category.CATEGORY_INDIVIDUAL)
+                .name(requestDTO.getName())
+                .stepNum(0L)
+                .build();
         roadmapRepository.save(roadmap);
+
+        UserRoadmap userRoadmap = UserRoadmap.builder()
+                .roadmap(roadmap)
+                .user(user)
+                .role("master")
+                .build();
+        userRoadmapRepository.save(userRoadmap);
 
         return new RoadmapResponse.CreateRoadmapDTO(roadmap);
     }
