@@ -102,8 +102,11 @@ public class RoadmapResponse {
         private List<CategoryDTO> categories;
         private RoadmapDTO roadmaps;
 
-        public FindAllMyRoadmapDTO(List<Roadmap> categories, List<Roadmap> roadmaps) {
-            this.categories = categories.stream().map(CategoryDTO::new).collect(Collectors.toList());
+        public FindAllMyRoadmapDTO(List<Roadmap> roadmaps) {
+            this.categories = roadmaps.stream()
+                    .filter(roadmap -> roadmap.getCategory().equals(Category.CATEGORY_INDIVIDUAL))
+                    .map(CategoryDTO::new)
+                    .collect(Collectors.toList());
             this.roadmaps = new RoadmapDTO(roadmaps);
         }
 
