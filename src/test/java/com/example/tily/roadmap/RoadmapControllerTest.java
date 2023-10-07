@@ -390,4 +390,27 @@ public class RoadmapControllerTest {
         // then
         result.andExpect(jsonPath("$.success").value("false"));
     }
+
+    @DisplayName("내가 속한 로드맵 전체 목록_조회_성공_test")
+    @WithUserDetails(value = "tngus@test.com")
+    @Test
+    public void roadmap_my_find_success_test () throws Exception {
+
+        // given
+
+        // when
+        ResultActions result = mvc.perform(
+                get("/roadmaps/my")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+
+        String responseBody = result.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : "+responseBody);
+
+        // then
+        result.andExpect(jsonPath("$.success").value("true"));
+        result.andExpect(jsonPath("$.result.categories[0].id").value(1L));
+        result.andExpect(jsonPath("$.result.roadmaps.tilys[0].id").value(4L));
+        result.andExpect(jsonPath("$.result.roadmaps.groups[0].id").value(6L));
+    }
 }
