@@ -53,4 +53,15 @@ public class RoadmapController {
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
 
+    // 로드맵 조회하기
+    @GetMapping("/roadmaps")
+    public ResponseEntity<?> findRoadmapByQuery(@RequestParam(value="category", defaultValue = "tily") String category,
+                                                @RequestParam(value="name", required = false) String name,
+                                                @RequestParam(value="page", defaultValue = "0") int page,
+                                                @RequestParam(value="size", defaultValue = "9") int size,
+                                                @AuthenticationPrincipal CustomUserDetails userDetails) {
+        RoadmapResponse.FindRoadmapByQueryDTO responseDTO  = roadmapService.findAll(category, name, page, size);
+        return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
+    }
+
 }
