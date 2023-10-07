@@ -1,5 +1,6 @@
 package com.example.tily.roadmap;
 
+import com.example.tily.BaseTimeEntity;
 import com.example.tily.roadmap.relation.UserRoadmap;
 import com.example.tily.user.User;
 import lombok.AccessLevel;
@@ -15,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name="roadmap_tb")
-public class Roadmap {
+public class Roadmap extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
