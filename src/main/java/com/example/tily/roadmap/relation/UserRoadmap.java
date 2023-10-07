@@ -23,7 +23,7 @@ public class UserRoadmap {
     @JoinColumn(name = "roadmap_id")
     private Roadmap roadmap;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
