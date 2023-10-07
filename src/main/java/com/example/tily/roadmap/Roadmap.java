@@ -20,8 +20,8 @@ public class Roadmap {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy =  "roadmap")
-    private List<UserRoadmap> userRoadmaps = new ArrayList<>();
+//    @OneToMany(mappedBy =  "roadmap")
+//    private List<UserRoadmap> userRoadmaps = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "creator_id")
