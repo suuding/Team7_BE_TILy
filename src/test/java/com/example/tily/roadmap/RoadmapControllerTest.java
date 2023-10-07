@@ -141,7 +141,7 @@ public class RoadmapControllerTest {
 
         // then
         result.andExpect(jsonPath("$.success").value("true"));
-        result.andExpect(jsonPath("$.result.id").value(6));
+        result.andExpect(jsonPath("$.result.id").value(9));
     }
 
     // 실패 케이스는 화면을 바탕으로 만듦
@@ -217,7 +217,7 @@ public class RoadmapControllerTest {
     @Test
     public void roadmap_group_find_success_test() throws Exception {
         // given
-        Long id = 4L;
+        Long id = 7L;
 
         // when
         ResultActions result = mvc.perform(
@@ -228,10 +228,10 @@ public class RoadmapControllerTest {
         // then
         result.andExpect(jsonPath("$.success").value("true"));
         result.andExpect(jsonPath("$.result.creator.name").value("hong"));
-        result.andExpect(jsonPath("$.result.name").value("JAVA 입문 수업 - 생활 코딩"));
-        result.andExpect(jsonPath("$.result.code").value("pnu1234"));
-        result.andExpect(jsonPath("$.result.steps[0].title").value("다형성(Polymorphism)"));
-        result.andExpect(jsonPath("$.result.steps[0].references.youtube[0].link").value("https://www.youtube.com/watch?v=0L6QWKC1a6k"));
+        result.andExpect(jsonPath("$.result.name").value("JPA 스터디"));
+        result.andExpect(jsonPath("$.result.code").value("ashfkc"));
+        result.andExpect(jsonPath("$.result.steps[0].title").value("스트림(lambda expression)"));
+        result.andExpect(jsonPath("$.result.steps[0].references.youtube[0].link").value("https://www.youtube.com/watch?v=1OLy4Dj_zCg"));
 
         String responseBody = result.andReturn().getResponse().getContentAsString();
         System.out.println("테스트 : "+responseBody);

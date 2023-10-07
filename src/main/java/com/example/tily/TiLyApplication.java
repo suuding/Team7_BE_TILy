@@ -72,15 +72,15 @@ public class TiLyApplication {
 					newIndividualStep(Roadmap.builder().id(1L).build(), "인증된 사용자 권한 부족 예외처리"),
 					newGroupStep(Roadmap.builder().id(4L).build(),"다형성(Polymorphism)", "Day1", LocalDateTime.of(2023, 10, 1, 23 ,59) ),
 					newGroupStep(Roadmap.builder().id(4L).build(),"람다식(lambda expression)", "Day2", LocalDateTime.of(2023, 10, 3, 23 ,59) ),
-					newGroupStep(Roadmap.builder().id(5L).build(),"스트림(lambda expression)", "Day3", LocalDateTime.of(2023, 10, 5, 23 ,59) )
+					newGroupStep(Roadmap.builder().id(7L).build(),"스트림(lambda expression)", "Day3", LocalDateTime.of(2023, 10, 5, 23 ,59) )
 			));
 			referenceRepository.saveAll(Arrays.asList(
 					newReference(Step.builder().id(4L).build(), "youtube", "https://www.youtube.com/watch?v=0L6QWKC1a6k"),
-					newReference(Step.builder().id(5L).build(), "youtube", "https://www.youtube.com/watch?v=U8LVCTaS3mQ"),
+					newReference(Step.builder().id(4L).build(), "youtube", "https://www.youtube.com/watch?v=U8LVCTaS3mQ"),
 					newReference(Step.builder().id(6L).build(), "youtube", "https://www.youtube.com/watch?v=1OLy4Dj_zCg"),
 					newReference(Step.builder().id(4L).build(), "web", "https://blog.naver.com/hoyai-/1234"),
 					newReference(Step.builder().id(5L).build(), "web", "https://blog.naver.com/cestlavie_01/1234"),
-					newReference(Step.builder().id(6L).build(), "web", "https://velog.io/@skydoves/open-source-machenism")
+					newReference(Step.builder().id(5L).build(), "web", "https://velog.io/@skydoves/open-source-machenism")
 			));
 			tilRepository.saveAll(Arrays.asList(
 					newTil(Step.builder().id(1L).build(), "10월 1일의 TIL", "이것은 내용입니다.", false, "이것은 제출할 내용입니다.")
