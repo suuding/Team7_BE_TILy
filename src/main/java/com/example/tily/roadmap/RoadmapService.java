@@ -1,6 +1,8 @@
 package com.example.tily.roadmap;
 
 import com.example.tily._core.errors.exception.Exception404;
+import com.example.tily.roadmap.relation.UserRoadmap;
+import com.example.tily.roadmap.relation.UserRoadmapRepository;
 import com.example.tily.step.Step;
 import com.example.tily.step.StepRepository;
 import com.example.tily.step.reference.Reference;
@@ -92,6 +94,14 @@ public class RoadmapService {
                 referenceRepository.save(reference);
             }
         }
+
+        UserRoadmap userRoadmap = UserRoadmap.builder()
+                .roadmap(roadmap)
+                .user(user)
+                .role("master")
+                .progress(0)
+                .build();
+        userRoadmapRepository.save(userRoadmap);
 
         return new RoadmapResponse.CreateRoadmapDTO(roadmap);
     }
