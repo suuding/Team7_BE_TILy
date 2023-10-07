@@ -8,6 +8,6 @@ import lombok.Getter;
 public enum Category {
     CATEGORY_INDIVIDUAL("individual"),
     CATEGORY_GROUP("group"),
-    CATEGORY_TILLY("tilly");
+    CATEGORY_TILY("tily");
     private String value;
 }
