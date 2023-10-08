@@ -1,8 +1,10 @@
 package com.example.tily.til;
 
+import com.example.tily._core.security.CustomUserDetails;
 import com.example.tily._core.utils.ApiUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -48,4 +50,16 @@ public class TilController {
         tilService.deleteTil(tilId);
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
+
+    // 나의 틸 목록 전체 조회하기
+    @GetMapping("/tils/my")
+    public ResponseEntity<?> findAllMyTil(@RequestParam(value = "roadmapId", required = false) Long roadmapId,
+                                          @RequestParam(value = "date", required = false) String date,
+                                          @RequestParam(value = "title", required = false) String title,
+                                          @RequestParam(value = "page", defaultValue = "0") int page,
+                                          @RequestParam(value = "size", defaultValue = "9") int size, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        TilResponse.FindAllDTO responseDTO = tilService.findAllMyTil(roadmapId, date, title, page, size, userDetails.getUser());
+        return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
+    }
+
 }
