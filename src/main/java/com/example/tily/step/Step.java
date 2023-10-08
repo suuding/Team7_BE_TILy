@@ -22,10 +22,8 @@ public class Step {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy =  "step")
-    private List<UserStep> userSteps = new ArrayList<>();
-
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "roadmap_id")
     private Roadmap roadmap;
 
     @Column(nullable = false)
@@ -36,7 +34,7 @@ public class Step {
     private LocalDateTime dueDate;
 
     @Builder
-    public Step(Long id, Roadmap roadmap,String title, String description, LocalDateTime dueDate) {
+    public Step(Long id, Roadmap roadmap, String title, String description, LocalDateTime dueDate) {
         this.id = id;
         this.roadmap = roadmap;
         this.title = title;
