@@ -1,5 +1,6 @@
-package com.example.tily.step;
+package com.example.tily.step.relation;
 
+import com.example.tily.step.Step;
 import com.example.tily.user.User;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -10,8 +11,8 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name="userStepRelation_tb")
-public class UserStepRelation {
+@Table(name="user_step_tb")
+public class UserStep {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

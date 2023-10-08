@@ -1,8 +1,8 @@
 package com.example.tily.user;
 
 import com.example.tily.BaseTimeEntity;
-import com.example.tily.roadmap.UserRoadmapRelation;
-import com.example.tily.step.UserStepRelation;
+import com.example.tily.roadmap.relation.UserRoadmap;
+import com.example.tily.step.relation.UserStep;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,11 +22,11 @@ public class User extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy =  "user")
-    private List<UserRoadmapRelation> userRoadmapRelations = new ArrayList<>();
+//    @OneToMany(mappedBy =  "user")
+//    private List<UserRoadmap> userRoadmaps = new ArrayList<>();
 
     @OneToMany(mappedBy =  "user")
-    private List<UserStepRelation> userStepRelations = new ArrayList<>();
+    private List<UserStep> userSteps = new ArrayList<>();
 
     @Column(length = 50, nullable = false, unique = true)
     private String email;

@@ -1,6 +1,8 @@
 package com.example.tily.roadmap;
 
 import com.example.tily._core.errors.exception.Exception404;
+import com.example.tily.roadmap.relation.UserRoadmap;
+import com.example.tily.roadmap.relation.UserRoadmapRepository;
 import com.example.tily.step.Step;
 import com.example.tily.step.StepRepository;
 import com.example.tily.step.reference.Reference;
@@ -9,6 +11,7 @@ import com.example.tily.til.Til;
 import com.example.tily.til.TilRepository;
 import com.example.tily.user.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,35 +25,43 @@ public class RoadmapService {
     private final StepRepository stepRepository;
     private final ReferenceRepository referenceRepository;
     private final TilRepository tilRepository;
+    private final UserRoadmapRepository userRoadmapRepository;
 
     @Transactional
     public RoadmapResponse.CreateRoadmapDTO createIndividualRoadmap(RoadmapRequest.CreateIndividualRoadmapDTO requestDTO, User user){
-        String creator = user.getName();
-        Category category = Category.CATEGORY_INDIVIDUAL;
-        String name = requestDTO.getName();
-        Long stepNum = 0L;
 
-        Roadmap roadmap = Roadmap.builder().creator(creator).category(category).name(name).stepNum(stepNum).build();
-
+        Roadmap roadmap = Roadmap.builder()
+                .creator(user)
+                .category(Category.CATEGORY_INDIVIDUAL)
+                .name(requestDTO.getName())
+                .stepNum(0L)
+                .build();
         roadmapRepository.save(roadmap);
+
+        UserRoadmap userRoadmap = UserRoadmap.builder()
+                .roadmap(roadmap)
+                .user(user)
+                .role("master")
+                .build();
+        userRoadmapRepository.save(userRoadmap);
 
         return new RoadmapResponse.CreateRoadmapDTO(roadmap);
     }
 
     @Transactional
     public RoadmapResponse.CreateRoadmapDTO createGroupRoadmap(RoadmapRequest.CreateGroupRoadmapDTO requestDTO, User user){
-        // repository 저장
-        String creator = user.getName();
-        Category category = Category.CATEGORY_GROUP;
-        String name = requestDTO.getRoadmap().getName();
-        String roadmapDescription = requestDTO.getRoadmap().getDescription();
-        Boolean isPublic = requestDTO.getRoadmap().getIsPublic();
-        Long currentNum = 1L; // 현재 인원수는 creator 한 명
-        String code = generateRandomCode();
-        Boolean isRecruit = true; // 그룹 로드맵이기 때문
-        Long stepNum = (long) requestDTO.getSteps().size();
 
-        Roadmap roadmap = Roadmap.builder().creator(creator).category(category).name(name).description(roadmapDescription).isPublic(isPublic).currentNum(currentNum).code(code).isRecruit(isRecruit).stepNum(stepNum).build();
+        Roadmap roadmap = Roadmap.builder()
+                .creator(user)
+                .category(Category.CATEGORY_GROUP)
+                .name(requestDTO.getRoadmap().getName())
+                .description(requestDTO.getRoadmap().getDescription())
+                .isPublic(requestDTO.getRoadmap().getIsPublic())
+                .currentNum(1L)
+                .code(generateRandomCode())
+                .isRecruit(true)
+                .stepNum((long) requestDTO.getSteps().size())
+                .build();
         roadmapRepository.save(roadmap);
 
         List<RoadmapRequest.CreateGroupRoadmapDTO.StepDTO> stepDTOS = requestDTO.getSteps();
@@ -84,6 +95,14 @@ public class RoadmapService {
                 referenceRepository.save(reference);
             }
         }
+
+        UserRoadmap userRoadmap = UserRoadmap.builder()
+                .roadmap(roadmap)
+                .user(user)
+                .role("master")
+                .progress(0)
+                .build();
+        userRoadmapRepository.save(userRoadmap);
 
         return new RoadmapResponse.CreateRoadmapDTO(roadmap);
     }
@@ -190,5 +209,22 @@ public class RoadmapService {
         }
 
         return sb.toString();
+    }
+
+    @Transactional
+    public RoadmapResponse.FindAllMyRoadmapDTO findAllMyRoadmaps(User user) {
+
+        List<Roadmap> roadmaps = userRoadmapRepository.findByUserId(user.getId(), true);      // 내가 속한 로드맵 조회
+        return new RoadmapResponse.FindAllMyRoadmapDTO(roadmaps);
+    }
+
+    @Transactional
+    public RoadmapResponse.FindRoadmapByQueryDTO findAll(String category, String name, int page, int size) {
+
+        // 생성일자를 기준으로 내림차순
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdDate"));
+
+        Slice<Roadmap> roadmaps = roadmapRepository.findAllByOrderByCreatedDateDesc(Category.getCategory(category), name, pageable);
+        return new RoadmapResponse.FindRoadmapByQueryDTO(Category.getCategory(category), roadmaps);
     }
 }

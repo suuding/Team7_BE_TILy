@@ -1,15 +1,14 @@
 package com.example.tily.roadmap;
 
-import com.example.tily.step.UserStepRelation;
+import com.example.tily.BaseTimeEntity;
+import com.example.tily.roadmap.relation.UserRoadmap;
+import com.example.tily.user.User;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,16 +16,19 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name="roadmap_tb")
-public class Roadmap {
+public class Roadmap extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy =  "roadmap")
-    private List<UserRoadmapRelation> userRoadmapRelations = new ArrayList<>();
+//    @OneToMany(mappedBy =  "roadmap")
+//    private List<UserRoadmap> userRoadmaps = new ArrayList<>();
 
-    @Column(nullable = false)
-    private String creator;
+    @ManyToOne
+    @JoinColumn(name = "creator_id")
+    private User creator;
+
+    @Enumerated(value = EnumType.STRING)
     @Column(nullable = false)
     private Category category;
     @Column(nullable = false)
@@ -43,9 +45,11 @@ public class Roadmap {
     private Boolean isRecruit;
     @Column
     private Long stepNum;
+    @Column
+    private String image;
 
     @Builder
-    public Roadmap(Long id, String creator, Category category, String name, String description, Boolean isPublic, Long currentNum, String code, Boolean isRecruit, Long stepNum) {
+    public Roadmap(Long id, User creator, Category category, String name, String description, Boolean isPublic, Long currentNum, String code, Boolean isRecruit, Long stepNum, String image) {
         this.id = id;
         this.creator = creator;
         this.category = category;
@@ -56,6 +60,7 @@ public class Roadmap {
         this.code = code;
         this.isRecruit = isRecruit;
         this.stepNum = stepNum;
+        this.image = image;
     }
 
     public void update(String name, String description, String code, Boolean isPublic, Boolean isRecruit){

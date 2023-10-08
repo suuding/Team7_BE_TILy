@@ -6,6 +6,8 @@ import com.example.tily.user.Role;
 import com.example.tily.user.User;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Slice;
 
 import java.util.List;
 import java.util.Map;
@@ -96,4 +98,118 @@ public class RoadmapResponse {
             }
         }
     }
+
+    @Getter @Setter
+    public static class FindAllMyRoadmapDTO {
+        private List<CategoryDTO> categories;
+        private RoadmapDTO roadmaps;
+
+        public FindAllMyRoadmapDTO(List<Roadmap> roadmaps) {
+            this.categories = roadmaps.stream()
+                    .filter(roadmap -> roadmap.getCategory().equals(Category.CATEGORY_INDIVIDUAL))
+                    .map(CategoryDTO::new)
+                    .collect(Collectors.toList());
+            this.roadmaps = new RoadmapDTO(roadmaps);
+        }
+
+        @Getter @Setter
+        public class CategoryDTO {
+            private Long id;
+            private String name;
+
+            public CategoryDTO(Roadmap roadmap) {
+                this.id = roadmap.getId();
+                this.name = roadmap.getName();
+            }
+        }
+
+        @Getter @Setter
+        public static class RoadmapDTO {
+            private List<TilyDTO> tilys;
+            private List<GroupDTO> groups;
+
+            public RoadmapDTO(List<Roadmap> roadmaps) {
+                this.tilys = roadmaps.stream()
+                        .filter(roadmap -> roadmap.getCategory().equals(Category.CATEGORY_TILY))
+                        .map(TilyDTO::new)
+                        .collect(Collectors.toList());
+                this.groups = roadmaps.stream()
+                        .filter(roadmap -> roadmap.getCategory().equals(Category.CATEGORY_GROUP))
+                        .map(GroupDTO::new)
+                        .collect(Collectors.toList());
+            }
+
+            @Getter @Setter
+            public class TilyDTO {
+                private Long id;
+                private String name;
+                private Long stepNum;
+
+                public TilyDTO(Roadmap roadmap) {
+                    this.id = roadmap.getId();
+                    this.name = roadmap.getName();
+                    this.stepNum = roadmap.getStepNum();
+                }
+            }
+
+            @Getter @Setter
+            public static class GroupDTO {
+                private Long id;
+                private String name;
+                private Long stepNum;
+                private String image;
+                private Creator creator;
+
+                public GroupDTO(Roadmap roadmap) {
+                    this.id = roadmap.getId();
+                    this.name = roadmap.getName();
+                    this.stepNum = roadmap.getStepNum();
+                    this.image = roadmap.getImage();
+                    this.creator = new Creator(roadmap.getCreator());
+                }
+
+                @Getter @Setter
+                public static class Creator {
+                    private Long id;
+                    private String name;
+                    private String image;
+
+                    public Creator(User user) {
+                        this.id = user.getId();
+                        this.name = user.getName();
+                        this.image = user.getImage();
+                    }
+                }
+            }
+        }
+    }
+
+    @Getter @Setter
+    public static class FindRoadmapByQueryDTO {
+        private String category;
+        private List<RoadmapDTO> roadmaps;
+        private Boolean hasNext;
+
+        public FindRoadmapByQueryDTO(Category category, Slice<Roadmap> roadmaps) {
+            this.category = category.getValue();
+            this.roadmaps = roadmaps.getContent().stream().map(RoadmapDTO::new).collect(Collectors.toList());
+            this.hasNext = roadmaps.hasNext();
+        }
+
+        @Getter @Setter
+        public class RoadmapDTO {
+            private Long id;
+            private String name;
+            private Long stepNum;
+            private FindAllMyRoadmapDTO.RoadmapDTO.GroupDTO.Creator creator;
+
+            public RoadmapDTO(Roadmap roadmap) {
+                this.id = roadmap.getId();
+                this.name = roadmap.getName();
+                this.stepNum = roadmap.getStepNum();
+                this.creator = new FindAllMyRoadmapDTO.RoadmapDTO.GroupDTO.Creator(roadmap.getCreator());
+            }
+        }
+    }
+
 }

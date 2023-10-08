@@ -14,9 +14,11 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
@@ -141,7 +143,7 @@ public class RoadmapControllerTest {
 
         // then
         result.andExpect(jsonPath("$.success").value("true"));
-        result.andExpect(jsonPath("$.result.id").value(6));
+        result.andExpect(jsonPath("$.result.id").value(15));
     }
 
     // 실패 케이스는 화면을 바탕으로 만듦
@@ -217,7 +219,7 @@ public class RoadmapControllerTest {
     @Test
     public void roadmap_group_find_success_test() throws Exception {
         // given
-        Long id = 4L;
+        Long id = 12L;
 
         // when
         ResultActions result = mvc.perform(
@@ -228,10 +230,10 @@ public class RoadmapControllerTest {
         // then
         result.andExpect(jsonPath("$.success").value("true"));
         result.andExpect(jsonPath("$.result.creator.name").value("hong"));
-        result.andExpect(jsonPath("$.result.name").value("JAVA 입문 수업 - 생활 코딩"));
-        result.andExpect(jsonPath("$.result.code").value("pnu1234"));
+        result.andExpect(jsonPath("$.result.name").value("JPA 스터디"));
+        result.andExpect(jsonPath("$.result.code").value("ashfkc"));
         result.andExpect(jsonPath("$.result.steps[0].title").value("다형성(Polymorphism)"));
-        result.andExpect(jsonPath("$.result.steps[0].references.youtube[0].link").value("https://www.youtube.com/watch?v=0L6QWKC1a6k"));
+        result.andExpect(jsonPath("$.result.steps[0].references.youtube[0].id").value(1L));
 
         String responseBody = result.andReturn().getResponse().getContentAsString();
         System.out.println("테스트 : "+responseBody);
@@ -242,7 +244,7 @@ public class RoadmapControllerTest {
     @Test
     public void roadmap_group_find_fail_test() throws Exception {
         // given
-        Long id = 10L;
+        Long id = 20L;
 
         // when
         ResultActions result = mvc.perform(
@@ -389,5 +391,76 @@ public class RoadmapControllerTest {
 
         // then
         result.andExpect(jsonPath("$.success").value("false"));
+    }
+
+    @DisplayName("내가 속한 로드맵 전체 목록_조회_성공_test")
+    @WithUserDetails(value = "tngus@test.com")
+    @Test
+    public void roadmap_my_find_success_test () throws Exception {
+
+        // given
+
+        // when
+        ResultActions result = mvc.perform(
+                get("/roadmaps/my")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+
+        String responseBody = result.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : "+responseBody);
+
+        // then
+        result.andExpect(jsonPath("$.success").value("true"));
+        result.andExpect(jsonPath("$.result.categories[0].id").value(1L));
+        result.andExpect(jsonPath("$.result.roadmaps.tilys[0].id").value(4L));
+        result.andExpect(jsonPath("$.result.roadmaps.groups[0].id").value(13L));
+    }
+
+    @DisplayName("로드맵_조회_성공_test")
+    @WithUserDetails(value = "tngus@test.com")
+    @Test
+    public void roadmap_find_success_test() throws Exception {
+
+        // given
+
+        // when
+        ResultActions result = mvc.perform(
+                get("/roadmaps")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+
+        String responseBody = result.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : "+responseBody);
+
+        // then
+        result.andExpect(jsonPath("$.success").value("true"));
+        result.andExpect(jsonPath("$.result.category").value("tily"));
+        result.andExpect(jsonPath("$.result.roadmaps[0].id").value(9L));
+    }
+
+    @DisplayName("로드맵_조회_파라미터_성공_test")
+    @WithUserDetails(value = "tngus@test.com")
+    @Test
+    public void roadmap_find_paging_success_test() throws Exception {
+
+        // given
+        String category = "group";
+        String name = "JAVA 입문 수업 - 생활 코딩";
+
+        // when
+        ResultActions result = mvc.perform(
+                get("/roadmaps")
+                        .param("category", category)
+                        .param("name", name)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+
+        String responseBody = result.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : "+responseBody);
+
+        // then
+        result.andExpect(jsonPath("$.success").value("true"));
+        result.andExpect(jsonPath("$.result.category").value("group"));
+        result.andExpect(jsonPath("$.result.roadmaps[0].name").value("JAVA 입문 수업 - 생활 코딩"));
     }
 }
