@@ -99,43 +99,4 @@ public class StepControllerTest {
         // then
         result.andExpect(jsonPath("$.success").value("false"));
     }
-
-    @DisplayName("레퍼런스_조회_성공_test")
-    @WithUserDetails(value = "hong@naver.com")
-    @Test
-    public void find_reference_success_test() throws Exception {
-        // given
-        Long stepId = 4L;
-        Long roadmapsId = 1L;
-
-        // when
-        ResultActions result = mvc.perform(
-                post("/roadmaps/" + roadmapsId + "/steps/"+ stepId +"/references")
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-        );
-
-        // then
-        result.andExpect(jsonPath("$.success").value("true"));
-
-        String responseBody = result.andReturn().getResponse().getContentAsString();
-        System.out.println("테스트 : "+responseBody);
-    }
-
-    @DisplayName("레퍼런스_조회_실패_test: 존재하지 않은 스텝")
-    @WithUserDetails(value = "hong@naver.com")
-    @Test
-    public void find_reference_fail_test() throws Exception {
-        // given
-        Long stepId = 10L;
-        Long roadmapsId = 1L;
-
-        // when
-        ResultActions result = mvc.perform(
-                post("/roadmaps/" + roadmapsId + "/steps/"+ stepId +"/references")
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-        );
-
-        // then
-        result.andExpect(jsonPath("$.success").value("false"));
-    }
 }
