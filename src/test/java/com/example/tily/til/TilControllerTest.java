@@ -208,4 +208,90 @@ public class TilControllerTest {
         result.andExpect(jsonPath("$.success").value("true"));
 
     }
+
+    @DisplayName("나의 틸 전체 목록 조회 성공 test")
+    @WithUserDetails(value = "tngus@test.com")
+    @Test
+    public void find_til_success_test() throws Exception {
+        // given
+
+        // when
+        ResultActions result = mvc.perform(
+                get("/tils/my")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+
+        String responseBody = result.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : " + responseBody);
+
+        // then
+        result.andExpect(jsonPath("$.success").value("true"));
+        result.andExpect(jsonPath("$.result.tils[0].id").value(7L));
+    }
+
+    @DisplayName("나의 틸 목록 조회 성공 test:제목으로 검색")
+    @WithUserDetails(value = "tngus@test.com")
+    @Test
+    public void find_til_param_success_test_1() throws Exception {
+        // given
+        String title = "사용";
+
+        // when
+        ResultActions result = mvc.perform(
+                get("/tils/my")
+                        .param("title", title)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+
+        String responseBody = result.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : " + responseBody);
+
+        // then
+        result.andExpect(jsonPath("$.success").value("true"));
+        result.andExpect(jsonPath("$.result.tils[0].step.title").value("소셜 로그인 사용하기"));
+    }
+
+    @DisplayName("나의 틸 목록 조회 성공 test:로드맵id로 검색")
+    @WithUserDetails(value = "tngus@test.com")
+    @Test
+    public void find_til_param_success_test_2() throws Exception {
+        // given
+        Long roadmapId = 1L;
+
+        // when
+        ResultActions result = mvc.perform(
+                get("/tils/my")
+                        .param("roadmapId", roadmapId.toString())
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+
+        String responseBody = result.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : " + responseBody);
+
+        // then
+        result.andExpect(jsonPath("$.success").value("true"));
+        result.andExpect(jsonPath("$.result.tils[0].roadmap.id").value(1L));
+    }
+
+    @DisplayName("나의 틸 목록 조회 실패 test:잘못된 날짜 형식")
+    @WithUserDetails("tngus@test.com")
+    @Test
+    public void find_til_param_fail_test() throws Exception {
+        // given
+        String date = "12345";
+
+        // when
+        ResultActions result = mvc.perform(
+                get("/tils/my")
+                        .param("date", date)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+
+        String responseBody = result.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : " + responseBody);
+
+        // then
+        result.andExpect(jsonPath("$.success").value("false"));
+        result.andExpect(jsonPath("$.message").value("입력한 날짜를 찾을 수 없습니다."));
+    }
 }
