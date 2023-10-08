@@ -1,16 +1,12 @@
 package com.example.tily.user;
 
 import com.example.tily.BaseTimeEntity;
-import com.example.tily.roadmap.relation.UserRoadmap;
-import com.example.tily.step.relation.UserStep;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -21,12 +17,6 @@ public class User extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-//    @OneToMany(mappedBy =  "user")
-//    private List<UserRoadmap> userRoadmaps = new ArrayList<>();
-
-    @OneToMany(mappedBy =  "user")
-    private List<UserStep> userSteps = new ArrayList<>();
 
     @Column(length = 50, nullable = false, unique = true)
     private String email;
