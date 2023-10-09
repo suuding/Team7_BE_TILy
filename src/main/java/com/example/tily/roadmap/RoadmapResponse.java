@@ -212,4 +212,10 @@ public class RoadmapResponse {
         }
     }
 
+    @Getter @Setter
+    public static class ParticipateRoadmapDTO{
+        private Long id;
+
+        public ParticipateRoadmapDTO(Roadmap roadmap){ this.id = roadmap.getId(); }
+    }
 }

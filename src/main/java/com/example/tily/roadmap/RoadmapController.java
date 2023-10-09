@@ -67,9 +67,17 @@ public class RoadmapController {
 
     // 특정 로드맵에 참여 신청하기
     @PostMapping("/roadmaps/{id}/apply")
-    public ResponseEntity<?> applyRoadmap(@RequestBody @Valid RoadmapRequest.ApplyRoadmapDTO requestDTO , @PathVariable Long id, @AuthenticationPrincipal CustomUserDetails userDetails){
+    public ResponseEntity<?> applyRoadmap(@RequestBody @Valid RoadmapRequest.ApplyRoadmapDTO requestDTO, @PathVariable Long id, @AuthenticationPrincipal CustomUserDetails userDetails){
         roadmapService.applyRoadmap(requestDTO, id, userDetails.getUser());
 
         return ResponseEntity.ok().body(ApiUtils.success(null));
+    }
+
+    // 참가 코드로 로드맵 참여하기
+    @PostMapping("/roadmaps/groups/participate")
+    public ResponseEntity<?> participateRoadmap(@RequestBody @Valid RoadmapRequest.ParticipateRoadmapDTO requestDTO, @AuthenticationPrincipal CustomUserDetails userDetails){
+        RoadmapResponse.ParticipateRoadmapDTO responseDTO = roadmapService.participateRoadmap(requestDTO, userDetails.getUser());
+
+        return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
 }

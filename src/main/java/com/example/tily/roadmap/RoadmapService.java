@@ -244,4 +244,24 @@ public class RoadmapService {
 
         userRoadmapRepository.save(userRoadmap);
     }
+
+    @Transactional
+    public RoadmapResponse.ParticipateRoadmapDTO participateRoadmap(RoadmapRequest.ParticipateRoadmapDTO requestDTO, User user){
+        String code = requestDTO.getCode();
+        Roadmap roadmap = roadmapRepository.findByCode(code)
+                .orElseThrow(() -> new Exception404("해당 로드맵을 찾을 수 없습니다"));
+
+        UserRoadmap userRoadmap = UserRoadmap.builder()
+                .roadmap(roadmap)
+                .user(user)
+                .role("member")
+                .content(null)
+                .isAccept(true)
+                .progress(0)
+                .build();
+
+        userRoadmapRepository.save(userRoadmap);
+
+        return new RoadmapResponse.ParticipateRoadmapDTO(roadmap);
+    }
 }

@@ -94,4 +94,11 @@ public class RoadmapRequest {
         @NotBlank(message="소개를 입력해주세요.")
         private String content;
     }
+
+    @Getter @Setter
+    public static class ParticipateRoadmapDTO{
+        @NotBlank(message="이름을 입력해주세요.")
+        @Size(min=8, max=8, message = "코드는 8자여야 합니다.")
+        private String code;
+    }
 }
