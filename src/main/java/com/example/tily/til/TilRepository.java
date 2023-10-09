@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 public interface TilRepository extends JpaRepository<Til, Long>{
@@ -34,4 +35,6 @@ public interface TilRepository extends JpaRepository<Til, Long>{
                                                @Param("endDate") LocalDateTime endDate,
                                                @Param("title") String title,
                                                Pageable pageable);
+
+    List<Til> findByWriter_Id(Long writerId);
 }

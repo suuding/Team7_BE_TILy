@@ -2,7 +2,6 @@ package com.example.tily.roadmap;
 
 import com.example.tily._core.security.CustomUserDetails;
 import com.example.tily._core.utils.ApiUtils;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -84,7 +83,7 @@ public class RoadmapController {
     // 로드맵의 구성원 전체 조회하기
     @GetMapping("/roadmaps/groups/{id}/members")
     public ResponseEntity<?> findRoadmapMembers(@PathVariable Long id){
-        RoadmapResponse.findRoadmapMembersDTO responseDTO = roadmapService.findRoadmapMembers(id);
+        RoadmapResponse.FindRoadmapMembersDTO responseDTO = roadmapService.findRoadmapMembers(id);
 
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
@@ -108,7 +107,7 @@ public class RoadmapController {
     // 로드맵에 신청한 사람들 목록 조회하기
     @GetMapping("/roadmaps/groups/{id}/members/apply")
     public ResponseEntity<?> findAppliedUsers(@PathVariable Long id, @AuthenticationPrincipal CustomUserDetails userDetails){
-        RoadmapResponse.findAppliedUsersDTO responseDTO = roadmapService.findAppliedUsers(id, userDetails.getUser());
+        RoadmapResponse.FindAppliedUsersDTO responseDTO = roadmapService.findAppliedUsers(id, userDetails.getUser());
 
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
@@ -127,5 +126,16 @@ public class RoadmapController {
         roadmapService.rejectApplication(groupsId, membersId);
 
         return ResponseEntity.ok().body(ApiUtils.success(null));
+    }
+
+    //  로드맵의 특정 step의 틸 목록 조회
+    @GetMapping("/roadmaps/groups/{groupsId}/steps/{stepsId}/tils")
+    public ResponseEntity<?> findTilOfStep(@PathVariable Long groupsId, @PathVariable Long stepsId,
+                                           @RequestParam(value="isSubmit", defaultValue = "true") Boolean isSubmit,
+                                           @RequestParam(value="isMember", defaultValue = "true") Boolean isMember,
+                                           @RequestParam(value="name", required = false) String name){
+
+        RoadmapResponse.FindTilOfStepDTO responseDTO = roadmapService.findTilOfStep(groupsId, stepsId, isSubmit, isMember, name);
+        return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
 }

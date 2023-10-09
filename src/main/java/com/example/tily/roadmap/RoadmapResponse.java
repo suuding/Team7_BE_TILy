@@ -4,11 +4,13 @@ import com.example.tily.roadmap.relation.GroupRole;
 import com.example.tily.roadmap.relation.UserRoadmap;
 import com.example.tily.step.Step;
 import com.example.tily.step.reference.Reference;
+import com.example.tily.til.Til;
 import com.example.tily.user.Role;
 import com.example.tily.user.User;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.util.Pair;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -222,10 +224,10 @@ public class RoadmapResponse {
     }
 
     @Getter @Setter
-    public static class findRoadmapMembersDTO{
+    public static class FindRoadmapMembersDTO {
         private List<UserDTO> users;
 /////////////////////////////////////////// userID에 대한 고민
-        public findRoadmapMembersDTO(List<UserRoadmap> userRoadmaps){
+        public FindRoadmapMembersDTO(List<UserRoadmap> userRoadmaps){
             this.users = userRoadmaps.stream()
                     .map(userRoadmap -> new UserDTO(userRoadmap.getUser().getId(), userRoadmap.getUser().getName(), userRoadmap.getUser().getImage(), userRoadmap.getRole()))
                     .collect(Collectors.toList());
@@ -248,11 +250,11 @@ public class RoadmapResponse {
     }
 
     @Getter @Setter
-    public static class findAppliedUsersDTO{
+    public static class FindAppliedUsersDTO {
         private List<UserDTO> users;
         private GroupRole myRole;
 
-        public findAppliedUsersDTO(List<UserRoadmap> userRoadmaps, GroupRole myRole){
+        public FindAppliedUsersDTO(List<UserRoadmap> userRoadmaps, GroupRole myRole){
             this.users = userRoadmaps.stream()
                     .map(userRoadmap -> new UserDTO(userRoadmap.getUser().getId(), userRoadmap.getUser().getName(), userRoadmap.getUser().getImage(), userRoadmap.getCreatedDate().toLocalDate(), userRoadmap.getContent()))
                     .collect(Collectors.toList());
@@ -273,6 +275,36 @@ public class RoadmapResponse {
                 this.image = image;
                 this.date = date;
                 this.content = content;
+            }
+        }
+    }
+
+    @Getter @Setter
+    public static class FindTilOfStepDTO {
+        private List<MemberDTO> members;
+
+        public FindTilOfStepDTO(List<Pair<Til, User>> pairs){
+            this.members = pairs.stream()
+                    .map(pair -> new MemberDTO(pair.getFirst().getId(), pair.getSecond().getName(), pair.getSecond().getImage(), pair.getFirst().getContent(), pair.getFirst().getSubmitDate().toLocalDate(), pair.getFirst().getCommentNum()))
+                    .collect(Collectors.toList());
+        }
+
+        @Getter @Setter
+        public class MemberDTO{
+            private Long tilId;
+            private String name;
+            private String image;
+            private String content;
+            private LocalDate submitDate;
+            private int commentNum;
+
+            public MemberDTO(Long tilId, String name, String image, String content, LocalDate submitDate, int commentNum ){
+                this.tilId = tilId;
+                this.name = name;
+                this.image = image;
+                this.content = content;
+                this.submitDate = submitDate;
+                this.commentNum = commentNum;
             }
         }
     }
