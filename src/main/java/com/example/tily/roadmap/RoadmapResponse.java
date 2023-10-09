@@ -1,5 +1,7 @@
 package com.example.tily.roadmap;
 
+import com.example.tily.roadmap.relation.GroupRole;
+import com.example.tily.roadmap.relation.UserRoadmap;
 import com.example.tily.step.Step;
 import com.example.tily.step.reference.Reference;
 import com.example.tily.user.Role;
@@ -217,5 +219,31 @@ public class RoadmapResponse {
         private Long id;
 
         public ParticipateRoadmapDTO(Roadmap roadmap){ this.id = roadmap.getId(); }
+    }
+
+    @Getter @Setter
+    public static class findRoadmapMembersDTO{
+        private List<UserDTO> users;
+
+        public findRoadmapMembersDTO(List<UserRoadmap> userRoadmaps){
+            this.users = userRoadmaps.stream()
+                    .map(userRoadmap -> new UserDTO(userRoadmap.getId(), userRoadmap.getUser().getName(), userRoadmap.getUser().getImage(), userRoadmap.getRole()))
+                    .collect(Collectors.toList());
+        }
+
+        @Getter @Setter
+        public class UserDTO{
+            private Long id;
+            private String name;
+            private String image; // 추후에 리팩토링 필수
+            private GroupRole role;
+
+            public UserDTO(Long id, String name, String image, GroupRole role){
+                this.id = id;
+                this.name = name;
+                this.image = image;
+                this.role = role;
+            }
+        }
     }
 }

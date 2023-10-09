@@ -80,4 +80,12 @@ public class RoadmapController {
 
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
+
+    // 로드맵의 구성원 전체 조회하기
+    @GetMapping("/roadmaps/groups/{id}/members")
+    public ResponseEntity<?> findRoadmapMembers(@PathVariable Long id){
+        RoadmapResponse.findRoadmapMembersDTO responseDTO = roadmapService.findRoadmapMembers(id);
+
+        return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
+    }
 }

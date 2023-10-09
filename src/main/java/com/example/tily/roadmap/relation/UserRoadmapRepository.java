@@ -13,4 +13,6 @@ public interface UserRoadmapRepository extends JpaRepository<UserRoadmap, Long> 
 
     @Query("select ur.roadmap from UserRoadmap ur where ur.user.id=:userId and (ur.isAccept=:isAccept or ur.isAccept=null)")
     List<Roadmap> findByUserId(@Param("userId") Long userId, @Param("isAccept") Boolean isAccept);
+
+    List<UserRoadmap> findByRoadmap_Id(Long roadmapId);
 }

@@ -265,4 +265,11 @@ public class RoadmapService {
 
         return new RoadmapResponse.ParticipateRoadmapDTO(roadmap);
     }
+
+    @Transactional
+    public RoadmapResponse.findRoadmapMembersDTO findRoadmapMembers(Long id){
+        List<UserRoadmap> userRoadmaps = userRoadmapRepository.findByRoadmap_Id(id);
+
+        return new RoadmapResponse.findRoadmapMembersDTO(userRoadmaps);
+    }
 }
