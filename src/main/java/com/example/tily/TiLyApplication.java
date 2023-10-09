@@ -3,6 +3,7 @@ package com.example.tily;
 import com.example.tily.roadmap.Category;
 import com.example.tily.roadmap.Roadmap;
 import com.example.tily.roadmap.RoadmapRepository;
+import com.example.tily.roadmap.relation.GroupRole;
 import com.example.tily.roadmap.relation.UserRoadmap;
 import com.example.tily.roadmap.relation.UserRoadmapRepository;
 import com.example.tily.step.Step;
@@ -66,28 +67,28 @@ public class TiLyApplication {
 
 					));
 			userRoadmapRepository.saveAll(Arrays.asList(
-					newUserRoadmapRelation(Roadmap.builder().id(1L).build(), User.builder().id(1L).build(), null, null, "master", 0),
-					newUserRoadmapRelation(Roadmap.builder().id(2L).build(), User.builder().id(2L).build(), null, null, "master", 0),
-					newUserRoadmapRelation(Roadmap.builder().id(3L).build(), User.builder().id(3L).build(), null, null, "master", 0),
+					newUserRoadmapRelation(Roadmap.builder().id(1L).build(), User.builder().id(1L).build(), null, null, GroupRole.ROLE_MASTER, 0),
+					newUserRoadmapRelation(Roadmap.builder().id(2L).build(), User.builder().id(2L).build(), null, null, GroupRole.ROLE_MASTER, 0),
+					newUserRoadmapRelation(Roadmap.builder().id(3L).build(), User.builder().id(3L).build(), null, null, GroupRole.ROLE_MASTER, 0),
 
-					newUserRoadmapRelation(Roadmap.builder().id(4L).build(), User.builder().id(4L).build(), null, true, "master", 10),
-					newUserRoadmapRelation(Roadmap.builder().id(4L).build(), User.builder().id(1L).build(), null, true, "member", 10),
-					newUserRoadmapRelation(Roadmap.builder().id(4L).build(), User.builder().id(2L).build(), null, true, "member", 20),
-					newUserRoadmapRelation(Roadmap.builder().id(4L).build(), User.builder().id(3L).build(), null, true, "member", 100),
-					newUserRoadmapRelation(Roadmap.builder().id(5L).build(), User.builder().id(4L).build(), null, true, "master", 0),
-					newUserRoadmapRelation(Roadmap.builder().id(6L).build(), User.builder().id(4L).build(), null, true, "master", 0),
-					newUserRoadmapRelation(Roadmap.builder().id(7L).build(), User.builder().id(4L).build(), null, true, "master", 0),
-					newUserRoadmapRelation(Roadmap.builder().id(7L).build(), User.builder().id(1L).build(), null, true, "member", 100),
-					newUserRoadmapRelation(Roadmap.builder().id(7L).build(), User.builder().id(2L).build(), null, true, "member", 20),
-					newUserRoadmapRelation(Roadmap.builder().id(7L).build(), User.builder().id(3L).build(), null, true, "member", 100),
-					newUserRoadmapRelation(Roadmap.builder().id(8L).build(), User.builder().id(4L).build(), null, true, "master", 0),
-					newUserRoadmapRelation(Roadmap.builder().id(9L).build(), User.builder().id(4L).build(), null, true, "master", 0),
+					newUserRoadmapRelation(Roadmap.builder().id(4L).build(), User.builder().id(4L).build(), null, true, GroupRole.ROLE_MASTER, 10),
+					newUserRoadmapRelation(Roadmap.builder().id(4L).build(), User.builder().id(1L).build(), null, true, GroupRole.ROLE_MEMBER, 10),
+					newUserRoadmapRelation(Roadmap.builder().id(4L).build(), User.builder().id(2L).build(), null, true, GroupRole.ROLE_MEMBER, 20),
+					newUserRoadmapRelation(Roadmap.builder().id(4L).build(), User.builder().id(3L).build(), null, true, GroupRole.ROLE_MEMBER, 100),
+					newUserRoadmapRelation(Roadmap.builder().id(5L).build(), User.builder().id(4L).build(), null, true, GroupRole.ROLE_MASTER, 0),
+					newUserRoadmapRelation(Roadmap.builder().id(6L).build(), User.builder().id(4L).build(), null, true, GroupRole.ROLE_MASTER, 0),
+					newUserRoadmapRelation(Roadmap.builder().id(7L).build(), User.builder().id(4L).build(), null, true, GroupRole.ROLE_MASTER, 0),
+					newUserRoadmapRelation(Roadmap.builder().id(7L).build(), User.builder().id(1L).build(), null, true, GroupRole.ROLE_MEMBER, 100),
+					newUserRoadmapRelation(Roadmap.builder().id(7L).build(), User.builder().id(2L).build(), null, true, GroupRole.ROLE_MEMBER, 20),
+					newUserRoadmapRelation(Roadmap.builder().id(7L).build(), User.builder().id(3L).build(), null, true, GroupRole.ROLE_MEMBER, 100),
+					newUserRoadmapRelation(Roadmap.builder().id(8L).build(), User.builder().id(4L).build(), null, true, GroupRole.ROLE_MASTER, 0),
+					newUserRoadmapRelation(Roadmap.builder().id(9L).build(), User.builder().id(4L).build(), null, true, GroupRole.ROLE_MASTER, 0),
 
-					newUserRoadmapRelation(Roadmap.builder().id(10L).build(), User.builder().id(2L).build(), "자바 공부하고싶습니다!", true, "member", 10),
-					newUserRoadmapRelation(Roadmap.builder().id(10L).build(), User.builder().id(3L).build(), "자바 공부하고싶습니다!", true, "member", 10),
-					newUserRoadmapRelation(Roadmap.builder().id(12L).build(), User.builder().id(1L).build(), "열심히 하겠습니다!", true, "member", 0),
-					newUserRoadmapRelation(Roadmap.builder().id(12L).build(), User.builder().id(3L).build(), "열심히 하겠습니다!", true, "member", 0),
-					newUserRoadmapRelation(Roadmap.builder().id(13L).build(), User.builder().id(1L).build(), "열심히 하겠습니다!", false, "none", 20)
+					newUserRoadmapRelation(Roadmap.builder().id(10L).build(), User.builder().id(2L).build(), "자바 공부하고싶습니다!", true, GroupRole.ROLE_MEMBER, 10),
+					newUserRoadmapRelation(Roadmap.builder().id(10L).build(), User.builder().id(3L).build(), "자바 공부하고싶습니다!", true, GroupRole.ROLE_MEMBER, 10),
+					newUserRoadmapRelation(Roadmap.builder().id(12L).build(), User.builder().id(1L).build(), "열심히 하겠습니다!", true, GroupRole.ROLE_MEMBER, 0),
+					newUserRoadmapRelation(Roadmap.builder().id(12L).build(), User.builder().id(3L).build(), "열심히 하겠습니다!", true, GroupRole.ROLE_MEMBER, 0),
+					newUserRoadmapRelation(Roadmap.builder().id(13L).build(), User.builder().id(1L).build(), "열심히 하겠습니다!", false, GroupRole.ROLE_NONE, 20)
 					));
 			stepRepository.saveAll(Arrays.asList(
 					newIndividualStep(Roadmap.builder().id(1L).build(), "스프링 시큐리티를 사용하는 이유"),
@@ -165,7 +166,7 @@ public class TiLyApplication {
 				.build();
 	}
 
-	private UserRoadmap newUserRoadmapRelation(Roadmap roadmap, User user, String content, Boolean isAccept, String role, int progress) {
+	private UserRoadmap newUserRoadmapRelation(Roadmap roadmap, User user, String content, Boolean isAccept, GroupRole role, int progress) {
 		return UserRoadmap.builder()
 				.roadmap(roadmap)
 				.user(user)

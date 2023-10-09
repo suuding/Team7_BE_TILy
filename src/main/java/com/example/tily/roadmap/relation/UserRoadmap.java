@@ -1,7 +1,6 @@
 package com.example.tily.roadmap.relation;
 
 import com.example.tily.roadmap.Roadmap;
-import com.example.tily.user.Role;
 import com.example.tily.user.User;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -32,12 +31,12 @@ public class UserRoadmap {
     @Column
     private Boolean isAccept;
     @Column(nullable = false)
-    private String role;
+    private GroupRole role;
     @Column(nullable = false)
     private int progress;
 
     @Builder
-    public UserRoadmap(Roadmap roadmap, User user, String content, Boolean isAccept, String role, int progress) {
+    public UserRoadmap(Roadmap roadmap, User user, String content, Boolean isAccept, GroupRole role, int progress) {
         this.roadmap = roadmap;
         this.user = user;
         this.content = content;

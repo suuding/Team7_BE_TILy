@@ -1,6 +1,7 @@
 package com.example.tily.roadmap;
 
 import com.example.tily._core.errors.exception.Exception404;
+import com.example.tily.roadmap.relation.GroupRole;
 import com.example.tily.roadmap.relation.UserRoadmap;
 import com.example.tily.roadmap.relation.UserRoadmapRepository;
 import com.example.tily.step.Step;
@@ -41,7 +42,7 @@ public class RoadmapService {
         UserRoadmap userRoadmap = UserRoadmap.builder()
                 .roadmap(roadmap)
                 .user(user)
-                .role("master")
+                .role(GroupRole.ROLE_MASTER)
                 .build();
         userRoadmapRepository.save(userRoadmap);
 
@@ -99,7 +100,7 @@ public class RoadmapService {
         UserRoadmap userRoadmap = UserRoadmap.builder()
                 .roadmap(roadmap)
                 .user(user)
-                .role("master")
+                .role(GroupRole.ROLE_MASTER)
                 .progress(0)
                 .build();
         userRoadmapRepository.save(userRoadmap);
@@ -236,7 +237,7 @@ public class RoadmapService {
         UserRoadmap userRoadmap = UserRoadmap.builder()
                 .roadmap(roadmap)
                 .user(user)
-                .role("member")
+                .role(GroupRole.ROLE_MEMBER)
                 .content(requestDTO.getContent())
                 .isAccept(false)
                 .progress(0)
@@ -254,7 +255,7 @@ public class RoadmapService {
         UserRoadmap userRoadmap = UserRoadmap.builder()
                 .roadmap(roadmap)
                 .user(user)
-                .role("member")
+                .role(GroupRole.ROLE_MEMBER)
                 .content(null)
                 .isAccept(true)
                 .progress(0)
