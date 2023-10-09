@@ -237,7 +237,7 @@ public class RoadmapService {
         UserRoadmap userRoadmap = UserRoadmap.builder()
                 .roadmap(roadmap)
                 .user(user)
-                .role(GroupRole.ROLE_MEMBER)
+                .role(GroupRole.ROLE_NONE)
                 .content(requestDTO.getContent())
                 .isAccept(false)
                 .progress(0)
@@ -293,10 +293,20 @@ public class RoadmapService {
     public RoadmapResponse.findAppliedUsersDTO findAppliedUsers(Long id, User user){
         List<UserRoadmap> userRoadmaps = userRoadmapRepository.findByRoadmap_IdAndIsAcceptFalse(id);
 
+        // 해당 페이지로 들어온 사용자 찾기
         Long groupsId = id; Long membersId = user.getId();
-        UserRoadmap currentMember = userRoadmapRepository.findByRoadmap_IdAndUser_IdAndIsAcceptTrue(groupsId, membersId)
+        UserRoadmap userRoadmap = userRoadmapRepository.findByRoadmap_IdAndUser_IdAndIsAcceptTrue(groupsId, membersId)
                 .orElseThrow(() -> new Exception404("해당 사용자를 찾을 수 없습니다"));
 
-        return new RoadmapResponse.findAppliedUsersDTO(userRoadmaps, currentMember.getRole());
+        return new RoadmapResponse.findAppliedUsersDTO(userRoadmaps, userRoadmap.getRole());
+    }
+
+    @Transactional
+    public void acceptApplication(Long groupsId, Long membersId){
+        UserRoadmap userRoadmap = userRoadmapRepository.findByRoadmap_IdAndUser_IdAndIsAcceptFalse(groupsId, membersId)
+                .orElseThrow(() -> new Exception404("해당 사용자를 찾을 수 없습니다"));
+
+        userRoadmap.updateRole(GroupRole.ROLE_MEMBER);
+        userRoadmap.updateIsAccept(true);
     }
 }

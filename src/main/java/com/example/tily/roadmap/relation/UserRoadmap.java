@@ -1,6 +1,5 @@
 package com.example.tily.roadmap.relation;
 
-import com.example.tily.BaseTimeEntity;
 import com.example.tily.roadmap.Roadmap;
 import com.example.tily.user.User;
 import lombok.AccessLevel;
@@ -14,7 +13,7 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name="user_roadmap_tb")
-public class UserRoadmap extends BaseTimeEntity {
+public class UserRoadmap {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -47,4 +46,6 @@ public class UserRoadmap extends BaseTimeEntity {
     }
 
     public void updateRole(GroupRole role) { this.role = role; }
+
+    public void updateIsAccept(Boolean isAccept) { this.isAccept = isAccept; }
 }
