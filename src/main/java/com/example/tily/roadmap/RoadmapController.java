@@ -114,9 +114,17 @@ public class RoadmapController {
     }
 
     // 로드맵 참여 신청 승인
-    @PostMapping("/roadmaps/groups/{id}/members/{id}/accept")
+    @PostMapping("/roadmaps/groups/{groupsId}/members/{membersId}/accept")
     public ResponseEntity<?> acceptApplication(@PathVariable Long groupsId, @PathVariable Long membersId){
         roadmapService.acceptApplication(groupsId, membersId);
+
+        return ResponseEntity.ok().body(ApiUtils.success(null));
+    }
+
+    // 로드맵 참여 신청 거절
+    @PostMapping("/roadmaps/groups/{groupsId}/members/{membersId}/reject")
+    public ResponseEntity<?> rejectApplication(@PathVariable Long groupsId, @PathVariable Long membersId){
+        roadmapService.rejectApplication(groupsId, membersId);
 
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
