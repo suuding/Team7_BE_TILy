@@ -1,10 +1,12 @@
 package com.example.tily.roadmap;
 
+import com.example.tily.roadmap.relation.GroupRole;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
 
@@ -100,5 +102,11 @@ public class RoadmapRequest {
         @NotBlank(message="이름을 입력해주세요.")
         @Size(min=8, max=8, message = "코드는 8자여야 합니다.")
         private String code;
+    }
+
+    @Getter @Setter
+    public static class ChangeMemberRoleDTO{
+        @NotNull(message="역할을 선택해주세요.")
+        private GroupRole role;
     }
 }

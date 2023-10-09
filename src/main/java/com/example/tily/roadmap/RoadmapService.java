@@ -268,8 +268,16 @@ public class RoadmapService {
 
     @Transactional
     public RoadmapResponse.findRoadmapMembersDTO findRoadmapMembers(Long id){
-        List<UserRoadmap> userRoadmaps = userRoadmapRepository.findByRoadmap_Id(id);
+        List<UserRoadmap> userRoadmaps = userRoadmapRepository.findByRoadmap_IdAndIsAcceptTrue(id);
 
         return new RoadmapResponse.findRoadmapMembersDTO(userRoadmaps);
+    }
+
+    @Transactional
+    public void changMemberRole(RoadmapRequest.ChangeMemberRoleDTO requestDTO, Long groupsId, Long membersId){
+        UserRoadmap userRoadmap = userRoadmapRepository.findByRoadmap_IdAndUser_IdAndIsAcceptTrue(groupsId, membersId)
+                .orElseThrow(() -> new Exception404("해당 유저를을 찾을 수 없습니다"));
+
+        userRoadmap.updateRole(requestDTO.getRole()); // 더티 체킹
     }
 }

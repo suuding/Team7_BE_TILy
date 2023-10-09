@@ -44,4 +44,6 @@ public class UserRoadmap {
         this.role = role;
         this.progress = progress;
     }
+
+    public void updateRole(GroupRole role) { this.role = role; }
 }

@@ -88,4 +88,12 @@ public class RoadmapController {
 
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
+
+    // 로드맵의 구성원 역할 바꾸기
+    @PatchMapping("/roadmaps/groups/{groupsId}/members/{membersId}")
+    public ResponseEntity<?> changeMemberRole(@RequestBody @Valid RoadmapRequest.ChangeMemberRoleDTO requestDTO, @PathVariable Long groupsId, @PathVariable Long membersId){
+        roadmapService.changMemberRole(requestDTO, groupsId, membersId);
+
+        return ResponseEntity.ok().body(ApiUtils.success(null));
+    }
 }
