@@ -2,7 +2,6 @@ package com.example.tily.roadmap;
 
 import com.example.tily._core.security.CustomUserDetails;
 import com.example.tily._core.utils.ApiUtils;
-import com.example.tily.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -92,8 +91,18 @@ public class RoadmapController {
     // 로드맵의 구성원 역할 바꾸기
     @PatchMapping("/roadmaps/groups/{groupsId}/members/{membersId}")
     public ResponseEntity<?> changeMemberRole(@RequestBody @Valid RoadmapRequest.ChangeMemberRoleDTO requestDTO, @PathVariable Long groupsId, @PathVariable Long membersId){
-        roadmapService.changMemberRole(requestDTO, groupsId, membersId);
+        roadmapService.changeMemberRole(requestDTO, groupsId, membersId);
 
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
+
+    // 로드맵의 구성원 강퇴하기
+    @DeleteMapping("/roadmaps/groups/{groupsId}/members/{membersId}")
+    public ResponseEntity<?> dismissMember(@PathVariable Long groupsId, @PathVariable Long membersId){
+        roadmapService.dismissMember(groupsId, membersId);
+
+        return ResponseEntity.ok().body(ApiUtils.success(null));
+    }
+
+    
 }

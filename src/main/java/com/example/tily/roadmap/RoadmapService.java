@@ -274,10 +274,18 @@ public class RoadmapService {
     }
 
     @Transactional
-    public void changMemberRole(RoadmapRequest.ChangeMemberRoleDTO requestDTO, Long groupsId, Long membersId){
+    public void changeMemberRole(RoadmapRequest.ChangeMemberRoleDTO requestDTO, Long groupsId, Long membersId){
         UserRoadmap userRoadmap = userRoadmapRepository.findByRoadmap_IdAndUser_IdAndIsAcceptTrue(groupsId, membersId)
-                .orElseThrow(() -> new Exception404("해당 유저를을 찾을 수 없습니다"));
+                .orElseThrow(() -> new Exception404("해당 사용자를 찾을 수 없습니다"));
 
         userRoadmap.updateRole(requestDTO.getRole()); // 더티 체킹
+    }
+
+    @Transactional
+    public void dismissMember(Long groupsId, Long membersId){
+        UserRoadmap userRoadmap = userRoadmapRepository.findByRoadmap_IdAndUser_IdAndIsAcceptTrue(groupsId, membersId)
+                .orElseThrow(() -> new Exception404("해당 사용자를 찾을 수 없습니다"));
+
+        userRoadmap.updateRole(GroupRole.ROLE_NONE);
     }
 }
