@@ -226,7 +226,7 @@ public class RoadmapResponse {
     @Getter @Setter
     public static class FindRoadmapMembersDTO {
         private List<UserDTO> users;
-/////////////////////////////////////////// userID에 대한 고민
+
         public FindRoadmapMembersDTO(List<UserRoadmap> userRoadmaps){
             this.users = userRoadmaps.stream()
                     .map(userRoadmap -> new UserDTO(userRoadmap.getUser().getId(), userRoadmap.getUser().getName(), userRoadmap.getUser().getImage(), userRoadmap.getRole()))
@@ -237,7 +237,7 @@ public class RoadmapResponse {
         public class UserDTO{
             private Long id;
             private String name;
-            private String image; // 추후에 리팩토링 필수
+            private String image;
             private GroupRole role;
 
             public UserDTO(Long id, String name, String image, GroupRole role){

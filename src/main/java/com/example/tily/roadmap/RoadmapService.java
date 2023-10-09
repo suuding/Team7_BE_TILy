@@ -283,7 +283,7 @@ public class RoadmapService {
         UserRoadmap userRoadmap = userRoadmapRepository.findByRoadmap_IdAndUser_IdAndIsAcceptTrue(groupsId, membersId)
                 .orElseThrow(() -> new Exception404("해당 사용자를 찾을 수 없습니다"));
 
-        userRoadmap.updateRole(requestDTO.getRole()); // 더티 체킹
+        userRoadmap.updateRole(requestDTO.getRole());
     }
 
     @Transactional
@@ -295,14 +295,14 @@ public class RoadmapService {
     }
 
     @Transactional
-    public RoadmapResponse.FindAppliedUsersDTO findAppliedUsers(Long id, User user){
-        List<UserRoadmap> userRoadmaps = userRoadmapRepository.findByRoadmap_IdAndIsAcceptFalse(id);
+    public RoadmapResponse.FindAppliedUsersDTO findAppliedUsers(Long groupsId, User user){
+        List<UserRoadmap> userRoadmaps = userRoadmapRepository.findByRoadmap_IdAndIsAcceptFalse(groupsId);
 
         // 해당 페이지로 들어온 사용자 찾기
-        UserRoadmap userRoadmap = userRoadmapRepository.findByRoadmap_IdAndUser_IdAndIsAcceptTrue(id, user.getId())
+        UserRoadmap currentUser = userRoadmapRepository.findByRoadmap_IdAndUser_IdAndIsAcceptTrue(groupsId, user.getId())
                 .orElseThrow(() -> new Exception404("해당 사용자를 찾을 수 없습니다"));
 
-        return new RoadmapResponse.FindAppliedUsersDTO(userRoadmaps, userRoadmap.getRole());
+        return new RoadmapResponse.FindAppliedUsersDTO(userRoadmaps, currentUser.getRole());
     }
 
     @Transactional
@@ -323,23 +323,17 @@ public class RoadmapService {
 
     @Transactional
     public RoadmapResponse.FindTilOfStepDTO findTilOfStep(Long groupsId, Long stepsId, Boolean isSubmit, Boolean isMember, String name){
-        // userStep의 isSubmited userRoadmap의 isMember, name은 검색용 (user name)
-        // isSubmit, isMember, name
-
-        List<UserStep> userSteps = userStepRepository.findByStep_Id(stepsId);
         List<UserRoadmap> userRoadmaps = userRoadmapRepository.findByRoadmap_Id(groupsId);
-
-        Map<Long, Step> userStepMap = userSteps.stream()
-                .collect(Collectors.toMap(userStep -> userStep.getUser().getId(), UserStep::getStep));
-
-        List<User> userStepUsers = userSteps.stream()
-                .filter(userStep -> Objects.equals(userStep.getIsSubmit(), isSubmit))
-                .map(UserStep::getUser)
-                .collect(Collectors.toList());
+        List<UserStep> userSteps = userStepRepository.findByStep_Id(stepsId);
 
         List<User> userRoadmapUsers = userRoadmaps.stream()
                 .filter(userRoadmap -> Objects.equals(GroupRole.ROLE_MEMBER.equals(userRoadmap.getRole()), isMember))
                 .map(UserRoadmap::getUser)
+                .collect(Collectors.toList());
+
+        List<User> userStepUsers = userSteps.stream()
+                .filter(userStep -> Objects.equals(userStep.getIsSubmit(), isSubmit))
+                .map(UserStep::getUser)
                 .collect(Collectors.toList());
 
         List<User> users = userStepUsers.stream()
@@ -347,72 +341,22 @@ public class RoadmapService {
                 .distinct()
                 .collect(Collectors.toList());
 
+        if(name != null){
+            users = users.stream()
+                    .filter(user -> user.getName().equals(name))
+                    .collect(Collectors.toList());
+        }
+
         List<Pair<Til, User>> pairs = new ArrayList<>();
 
-        for(User user : users){
-            Til til = tilRepository.findByWriter_Id(user.getId()).get(0);
-            Pair<Til, User> pair = Pair.of(til, user); // 그룹 로드맵에서 개인은 스텝당 TIL을 한 개만 작성한다.
-            pairs.add(pair);
+        for(User user : users){ // stream으로 해보니 가독성이 떨어져서, for문을 선택
+            List<Til> tils = tilRepository.findByWriter_Id(user.getId());
+
+            for(Til til : tils){
+                Pair<Til, User> pair = Pair.of(til, user);
+                pairs.add(pair);
+            }
         }
-
-
-        /*
-        List<Til> tils = tilRepository.
-        for (Til til : tils) {
-            User user = til.getWriter();
-
-            Pair<Til, User> pair = Pair.of(til, user);
-            pairs.add(pair);
-        }
-*/
         return new RoadmapResponse.FindTilOfStepDTO(pairs);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-    /*
-    public RoadmapResponse.FindGroupRoadmapDTO findGroupRoadmap(Long id, User user){
-        Roadmap roadmap = roadmapRepository.findById(id).orElseThrow(
-                () -> new Exception404("해당 로드맵을 찾을 수 없습니다")
-        );
-
-        List<Step> stepList = stepRepository.findByRoadmapId(id);
-
-        Map<Long, List<Reference>> youtubeMap = new HashMap<>();
-        Map<Long, List<Reference>> webMap = new HashMap<>();
-
-        for(Step step : stepList){
-            List<Reference> referenceList = referenceRepository.findByStepId(step.getId());
-
-            List<Reference> youtubeList = new ArrayList<>();
-            List<Reference> webList = new ArrayList<>();
-
-            for(Reference reference : referenceList){
-                if(reference.getCategory().equals("youtube")){
-                    youtubeList.add(reference);
-                }
-                else if(reference.getCategory().equals("web")){
-                    webList.add(reference);
-                }
-            }
-
-            youtubeMap.put(step.getId(), youtubeList);
-            webMap.put(step.getId(), webList);
-        }
-
-        Til latestTil = tilRepository.findFirstByOrderBySubmitDateDesc();
-        Long recentTilId = latestTil != null ? latestTil.getId() : null;
-
-        return new RoadmapResponse.FindGroupRoadmapDTO(roadmap, stepList, youtubeMap, webMap, user, recentTilId);
-    }
-     */
 }
