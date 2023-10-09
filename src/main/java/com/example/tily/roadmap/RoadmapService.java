@@ -227,4 +227,21 @@ public class RoadmapService {
         Slice<Roadmap> roadmaps = roadmapRepository.findAllByOrderByCreatedDateDesc(Category.getCategory(category), name, pageable);
         return new RoadmapResponse.FindRoadmapByQueryDTO(Category.getCategory(category), roadmaps);
     }
+
+    @Transactional
+    public void applyRoadmap(RoadmapRequest.ApplyRoadmapDTO requestDTO, Long id, User user){
+        Roadmap roadmap = roadmapRepository.findById(id).
+                orElseThrow(() -> new Exception404("해당 로드맵을 찾을 수 없습니다"));
+
+        UserRoadmap userRoadmap = UserRoadmap.builder()
+                .roadmap(roadmap)
+                .user(user)
+                .role("member")
+                .content(requestDTO.getContent())
+                .isAccept(false)
+                .progress(0)
+                .build();
+
+        userRoadmapRepository.save(userRoadmap);
+    }
 }

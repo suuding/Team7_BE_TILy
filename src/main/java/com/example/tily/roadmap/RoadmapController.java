@@ -2,6 +2,7 @@ package com.example.tily.roadmap;
 
 import com.example.tily._core.security.CustomUserDetails;
 import com.example.tily._core.utils.ApiUtils;
+import com.example.tily.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -64,4 +65,11 @@ public class RoadmapController {
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
 
+    // 특정 로드맵에 참여 신청하기
+    @PostMapping("/roadmaps/{id}/apply")
+    public ResponseEntity<?> applyRoadmap(@RequestBody @Valid RoadmapRequest.ApplyRoadmapDTO requestDTO , @PathVariable Long id, @AuthenticationPrincipal CustomUserDetails userDetails){
+        roadmapService.applyRoadmap(requestDTO, id, userDetails.getUser());
+
+        return ResponseEntity.ok().body(ApiUtils.success(null));
+    }
 }

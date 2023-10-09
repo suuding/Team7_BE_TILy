@@ -2,6 +2,7 @@ package com.example.tily.roadmap;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -86,5 +87,11 @@ public class RoadmapRequest {
                 }
             }
         }
+    }
+
+    @Getter @Setter
+    public static class ApplyRoadmapDTO{
+        @NotBlank(message="소개를 입력해주세요.")
+        private String content;
     }
 }
