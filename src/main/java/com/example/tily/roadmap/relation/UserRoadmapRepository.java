@@ -18,4 +18,6 @@ public interface UserRoadmapRepository extends JpaRepository<UserRoadmap, Long> 
     List<UserRoadmap> findByRoadmap_IdAndIsAcceptTrue(Long roadmapId);
 
     Optional<UserRoadmap> findByRoadmap_IdAndUser_IdAndIsAcceptTrue(Long roadmapId, Long userId);
+
+    List<UserRoadmap> findByRoadmap_IdAndIsAcceptFalse(Long roadmapId);
 }

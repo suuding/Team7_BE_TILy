@@ -288,4 +288,15 @@ public class RoadmapService {
 
         userRoadmap.updateRole(GroupRole.ROLE_NONE);
     }
+
+    @Transactional
+    public RoadmapResponse.findAppliedUsersDTO findAppliedUsers(Long id, User user){
+        List<UserRoadmap> userRoadmaps = userRoadmapRepository.findByRoadmap_IdAndIsAcceptFalse(id);
+
+        Long groupsId = id; Long membersId = user.getId();
+        UserRoadmap currentMember = userRoadmapRepository.findByRoadmap_IdAndUser_IdAndIsAcceptTrue(groupsId, membersId)
+                .orElseThrow(() -> new Exception404("해당 사용자를 찾을 수 없습니다"));
+
+        return new RoadmapResponse.findAppliedUsersDTO(userRoadmaps, currentMember.getRole());
+    }
 }

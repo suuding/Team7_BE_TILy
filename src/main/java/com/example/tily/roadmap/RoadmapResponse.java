@@ -8,9 +8,9 @@ import com.example.tily.user.Role;
 import com.example.tily.user.User;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Slice;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -224,10 +224,10 @@ public class RoadmapResponse {
     @Getter @Setter
     public static class findRoadmapMembersDTO{
         private List<UserDTO> users;
-
+/////////////////////////////////////////// userID에 대한 고민
         public findRoadmapMembersDTO(List<UserRoadmap> userRoadmaps){
             this.users = userRoadmaps.stream()
-                    .map(userRoadmap -> new UserDTO(userRoadmap.getId(), userRoadmap.getUser().getName(), userRoadmap.getUser().getImage(), userRoadmap.getRole()))
+                    .map(userRoadmap -> new UserDTO(userRoadmap.getUser().getId(), userRoadmap.getUser().getName(), userRoadmap.getUser().getImage(), userRoadmap.getRole()))
                     .collect(Collectors.toList());
         }
 
@@ -243,6 +243,36 @@ public class RoadmapResponse {
                 this.name = name;
                 this.image = image;
                 this.role = role;
+            }
+        }
+    }
+
+    @Getter @Setter
+    public static class findAppliedUsersDTO{
+        private List<UserDTO> users;
+        private GroupRole myRole;
+
+        public findAppliedUsersDTO(List<UserRoadmap> userRoadmaps, GroupRole myRole){
+            this.users = userRoadmaps.stream()
+                    .map(userRoadmap -> new UserDTO(userRoadmap.getUser().getId(), userRoadmap.getUser().getName(), userRoadmap.getUser().getImage(), userRoadmap.getCreatedDate().toLocalDate(), userRoadmap.getContent()))
+                    .collect(Collectors.toList());
+            this.myRole = myRole;
+        }
+
+        @Getter @Setter
+        public class UserDTO{
+            private Long id;
+            private String name;
+            private String image;
+            private LocalDate date;
+            private String content;
+
+            public UserDTO(Long id, String name, String image, LocalDate date, String content){
+                this.id = id;
+                this.name = name;
+                this.image = image;
+                this.date = date;
+                this.content = content;
             }
         }
     }
