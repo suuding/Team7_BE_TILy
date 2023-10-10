@@ -42,7 +42,7 @@ public class TilService {
                 () -> new Exception400("해당 스텝을 찾을 수 없습니다")
         );
 
-        String title = requestDTO.getTitle();
+        String title = step.getTitle();
         Til til = Til.builder().roadmap(roadmap).step(step).title(title).build();
         tilRepository.save(til);
 
