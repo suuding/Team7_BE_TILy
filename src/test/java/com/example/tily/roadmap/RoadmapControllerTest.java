@@ -760,7 +760,57 @@ public class RoadmapControllerTest {
         result.andExpect(jsonPath("$.success").value("false"));
     }
 
-    
+    @DisplayName("신청_승인_성공_test")
+    @WithUserDetails(value = "hong@naver.com")
+    @Test
+    public void application_accept_success_test() throws Exception {
+        // given
+        Long groupsId = 10L;
+        Long membersId = 5L;
 
+        // when
+        ResultActions result = mvc.perform(
+                post("/roadmaps/groups/"+ groupsId +"/members/"+ membersId +"/accept")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
 
+        // then
+        result.andExpect(jsonPath("$.success").value("true"));
+    }
+
+    @DisplayName("신청_승인_실패1_test: 존재하지 않은 유저")
+    @WithUserDetails(value = "hong@naver.com")
+    @Test
+    public void application_accept_fail_test_1() throws Exception {
+        // given
+        Long groupsId = 10L;
+        Long membersId = 10L;
+
+        // when
+        ResultActions result = mvc.perform(
+                post("/roadmaps/groups/"+ groupsId +"/members/"+ membersId +"/accept")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+
+        // then
+        result.andExpect(jsonPath("$.success").value("false"));
+    }
+
+    @DisplayName("신청_승인_실패2_test: 존재하지 않은 로드맵")
+    @WithUserDetails(value = "hong@naver.com")
+    @Test
+    public void application_accept_fail_test_2() throws Exception {
+        // given
+        Long groupsId = 20L;
+        Long membersId = 10L;
+
+        // when
+        ResultActions result = mvc.perform(
+                post("/roadmaps/groups/"+ groupsId +"/members/"+ membersId +"/accept")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+
+        // then
+        result.andExpect(jsonPath("$.success").value("false"));
+    }
 }
