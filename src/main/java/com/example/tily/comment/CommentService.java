@@ -7,6 +7,7 @@ import com.example.tily.step.Step;
 import com.example.tily.step.StepRepository;
 import com.example.tily.til.Til;
 import com.example.tily.til.TilRepository;
+import com.example.tily.til.TilRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,5 +42,19 @@ public class CommentService {
         commentRepository.save(comment);
 
         return new CommentResponse.CreateCommentDTO(comment);
+    }
+
+    @Transactional
+    public void updateComment(CommentRequest.UpdateCommentDTO requestDTO, Long commentId) {
+
+        Comment comment = commentRepository.findById(commentId).orElseThrow(
+                () -> new Exception400("해당 댓글을 찾을 수 없습니다")
+        );
+
+        String content = requestDTO.getContent();
+        if(content == null){
+            throw new Exception400("댓글 내용을 입력해주세요.");
+        }
+        comment.updateComment(content);
     }
 }
