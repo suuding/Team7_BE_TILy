@@ -261,7 +261,6 @@ public class RoadmapService {
                 .roadmap(roadmap)
                 .user(user)
                 .role(GroupRole.ROLE_MEMBER)
-                .content(null)
                 .isAccept(true)
                 .progress(0)
                 .build();

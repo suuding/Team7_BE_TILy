@@ -463,4 +463,53 @@ public class RoadmapControllerTest {
         result.andExpect(jsonPath("$.result.category").value("group"));
         result.andExpect(jsonPath("$.result.roadmaps[0].name").value("JAVA 입문 수업 - 생활 코딩"));
     }
+
+    @DisplayName("로드맵_신청하기_성공_test")
+    @WithUserDetails(value = "tngus@test.com")
+    @Test
+    public void roadmap_apply_success_test() throws Exception{
+        // given
+        Long id = 10L;
+
+        RoadmapRequest.ApplyRoadmapDTO requestDTO = new RoadmapRequest.ApplyRoadmapDTO();
+        String content = "안녕하세요, 반갑습니다~";
+        requestDTO.setContent(content);
+
+        String requestBody = om.writeValueAsString(requestDTO);
+
+        // when
+        ResultActions result = mvc.perform(
+                post("/roadmaps/" + id + "/apply")
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+
+        );
+
+        // then
+        result.andExpect(jsonPath("$.success").value("true"));
+    }
+
+    @DisplayName("로드맵_신청하기_실패_test: 존재하지 않은 로드맵")
+    @WithUserDetails(value = "tngus@test.com")
+    @Test
+    public void roadmap_apply_fail_test() throws Exception{
+        // given
+        Long id = 20L;
+
+        RoadmapRequest.ApplyRoadmapDTO requestDTO = new RoadmapRequest.ApplyRoadmapDTO();
+        String content = "안녕하세요, 반갑습니다~";
+        requestDTO.setContent(content);
+
+        String requestBody = om.writeValueAsString(requestDTO);
+
+        // when
+        ResultActions result = mvc.perform(
+                post("/roadmaps/" + id + "/apply")
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+
+        // then
+        result.andExpect(jsonPath("$.success").value("false"));
+    }
 }
