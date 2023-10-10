@@ -5,10 +5,7 @@ import com.example.tily.til.TilRequest;
 import com.example.tily.til.TilResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -23,5 +20,11 @@ public class CommentController {
         CommentResponse.CreateCommentDTO responseDTO = commentService.createComment(requestDTO, roadmapId, stepId, tilId);
 
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
+    }
+
+    @PatchMapping("/roadmaps/{roadmapId}/steps/{stepId}/tils/{tilId}/comments/{commentId}")
+    public ResponseEntity<?> updateTil(@PathVariable("roadmapId") Long roadmapId, @PathVariable("stepId") Long stepId, @PathVariable("tilId") Long tilId, @PathVariable("commentId") Long commentId, @RequestBody @Valid CommentRequest.UpdateCommentDTO requestDTO) {
+        commentService.updateComment(requestDTO, commentId);
+        return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 }
