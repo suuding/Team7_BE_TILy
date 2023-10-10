@@ -214,14 +214,4 @@ public class TiLyApplication {
 				.build();
 	}
 
-	private UserRoadmap newUserRoadmap(Roadmap roadmap, User user, String content, Boolean isAccept, GroupRole role, int progress){
-		return UserRoadmap.builder()
-				.roadmap(roadmap)
-				.user(user)
-				.content(content)
-				.isAccept(isAccept)
-				.role(role)
-				.progress(progress)
-				.build();
-	}
 }
