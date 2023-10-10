@@ -1,0 +1,40 @@
+package com.example.tily.comment;
+
+import com.example.tily.til.Til;
+import com.example.tily.user.User;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
+@Table(name="comment_tb")
+public class Comment {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "til_id")
+    private Til til;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="writer_id")
+    private User writer;
+
+    private String content;
+
+
+    @Builder
+    public Comment (Long id, Til til, User writer, String content) {
+        this.id = id;
+        this.til = til;
+        this.writer = writer;
+        this.content = content;
+    }
+}
