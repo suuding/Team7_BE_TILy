@@ -721,7 +721,7 @@ public class RoadmapControllerTest {
         result.andExpect(jsonPath("$.success").value("false"));
     }
 
-    @DisplayName("신청자_조회_성공_test")
+    @DisplayName("신청자_조회하기_성공_test")
     @WithUserDetails(value = "hong@naver.com")
     @Test
     public void applied_user_find_success_test() throws Exception {
@@ -743,7 +743,7 @@ public class RoadmapControllerTest {
         System.out.println("테스트 : "+responseBody);
     }
 
-    @DisplayName("신청자_조회_실패_test: 존재하지 않는 로드맵")
+    @DisplayName("신청자_조회하기_실패_test: 존재하지 않는 로드맵")
     @WithUserDetails(value = "hong@naver.com")
     @Test
     public void applied_user_find_fail_test() throws Exception {
@@ -760,7 +760,7 @@ public class RoadmapControllerTest {
         result.andExpect(jsonPath("$.success").value("false"));
     }
 
-    @DisplayName("신청_승인_성공_test")
+    @DisplayName("신청_승인하기_성공_test")
     @WithUserDetails(value = "hong@naver.com")
     @Test
     public void application_accept_success_test() throws Exception {
@@ -778,7 +778,7 @@ public class RoadmapControllerTest {
         result.andExpect(jsonPath("$.success").value("true"));
     }
 
-    @DisplayName("신청_승인_실패1_test: 존재하지 않은 유저")
+    @DisplayName("신청_승인하기_실패1_test: 존재하지 않은 유저")
     @WithUserDetails(value = "hong@naver.com")
     @Test
     public void application_accept_fail_test_1() throws Exception {
@@ -796,7 +796,7 @@ public class RoadmapControllerTest {
         result.andExpect(jsonPath("$.success").value("false"));
     }
 
-    @DisplayName("신청_승인_실패2_test: 존재하지 않은 로드맵")
+    @DisplayName("신청_승인하기_실패2_test: 존재하지 않은 로드맵")
     @WithUserDetails(value = "hong@naver.com")
     @Test
     public void application_accept_fail_test_2() throws Exception {
@@ -814,7 +814,7 @@ public class RoadmapControllerTest {
         result.andExpect(jsonPath("$.success").value("false"));
     }
 
-    @DisplayName("신청_거절_성공_test")
+    @DisplayName("신청_거절하기_성공_test")
     @WithUserDetails(value = "hong@naver.com")
     @Test
     public void application_reject_success_test() throws Exception {
@@ -832,7 +832,7 @@ public class RoadmapControllerTest {
         result.andExpect(jsonPath("$.success").value("true"));
     }
 
-    @DisplayName("신청_거절_실패1_test: 존재하지 않은 유저")
+    @DisplayName("신청_거절하기_실패1_test: 존재하지 않은 유저")
     @WithUserDetails(value = "hong@naver.com")
     @Test
     public void application_reject_fail_test_1() throws Exception {
@@ -850,7 +850,7 @@ public class RoadmapControllerTest {
         result.andExpect(jsonPath("$.success").value("false"));
     }
 
-    @DisplayName("신청_거절_실패2_test: 존재하지 않은 로드맵")
+    @DisplayName("신청_거절하기_실패2_test: 존재하지 않은 로드맵")
     @WithUserDetails(value = "hong@naver.com")
     @Test
     public void application_reject_fail_test_2() throws Exception {

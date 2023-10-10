@@ -104,6 +104,12 @@ public class TiLyApplication {
 					newGroupStep(Roadmap.builder().id(12L).build(),"람다식(lambda expression)", "Day2", LocalDateTime.of(2023, 10, 3, 23 ,59) ),
 					newGroupStep(Roadmap.builder().id(12L).build(),"스트림(lambda expression)", "Day3", LocalDateTime.of(2023, 10, 5, 23 ,59) )
 			));
+			userStepRepository.saveAll(Arrays.asList(
+					newUserStepRelation(Step.builder().id(5L).build(), User.builder().id(1L).build(), true),
+					newUserStepRelation(Step.builder().id(6L).build(), User.builder().id(1L).build(), false),
+					newUserStepRelation(Step.builder().id(5L).build(), User.builder().id(2L).build(), true),
+					newUserStepRelation(Step.builder().id(6L).build(), User.builder().id(2L).build(), true)
+			));
 			referenceRepository.saveAll(Arrays.asList(
 					newReference(Step.builder().id(4L).build(), "youtube", "https://www.youtube.com/watch?v=0L6QWKC1a6k"),
 					newReference(Step.builder().id(4L).build(), "youtube", "https://www.youtube.com/watch?v=U8LVCTaS3mQ"),
@@ -120,8 +126,9 @@ public class TiLyApplication {
 
 					newTil(Roadmap.builder().id(12L).build(), Step.builder().id(5L).build(), User.builder().id(1L).build(), "다형성(Polymorphism)", "이것은 내용입니다.", false, "이것은 제출할 내용입니다."),
 					newTil(Roadmap.builder().id(12L).build(), Step.builder().id(6L).build(), User.builder().id(1L).build(), "람다식(lambda expression)", "이것은 내용입니다.", false, "이것은 제출할 내용입니다."),
-					newTil(Roadmap.builder().id(12L).build(), Step.builder().id(7L).build(), User.builder().id(1L).build(), "스트림(lambda expression)", "이것은 내용입니다.", false, "이것은 제출할 내용입니다.")
-
+					newTil(Roadmap.builder().id(12L).build(), Step.builder().id(7L).build(), User.builder().id(1L).build(), "스트림(lambda expression)", "이것은 내용입니다.", false, "이것은 제출할 내용입니다."),
+					newTil(Roadmap.builder().id(12L).build(), Step.builder().id(5L).build(), User.builder().id(2L).build(), "다형성에 대해", "다형성은 객체지향의 핵심입니다.", false, "다형성에 관해 제출한 내용."),
+					newTil(Roadmap.builder().id(12L).build(), Step.builder().id(6L).build(), User.builder().id(2L).build(), "스트림에 대해", "스트림은 자바의 강력한 도구입니다.", false, "스트림에 관해 제출할 내용.")
 			));
 		};
 	}
@@ -197,6 +204,14 @@ public class TiLyApplication {
 				.build();
 	}
 
+	private UserStep newUserStepRelation(Step step, User user, Boolean isSubmit){
+		return UserStep.builder()
+				.step(step)
+				.user(user)
+				.isSubmit(isSubmit)
+				.build();
+	}
+
 	private Reference newReference(Step step, String category, String link){
 		return Reference.builder()
 				.step(step)
@@ -214,14 +229,6 @@ public class TiLyApplication {
 				.content(content)
 				.isPersonal(isPersonal)
 				.submitContent(subContent)
-				.build();
-	}
-
-	private UserStep newUserStepRelation(Step step, User user, Boolean isSubmit){
-		return UserStep.builder()
-				.step(step)
-				.user(user)
-				.isSubmit(isSubmit)
 				.build();
 	}
 }
