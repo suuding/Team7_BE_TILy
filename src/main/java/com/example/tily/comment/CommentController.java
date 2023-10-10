@@ -27,4 +27,11 @@ public class CommentController {
         commentService.updateComment(requestDTO, commentId);
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
+
+    @DeleteMapping("/roadmaps/{roadmapId}/steps/{stepId}/tils/{tilId}")
+    public ResponseEntity<?> deleteTil(@PathVariable("roadmapId") Long roadmapId, @PathVariable("stepId")Long stepId, @PathVariable("tilId") Long tilId, @PathVariable("commentId") Long commentId) {
+
+        commentService.deleteComment(commentId);
+        return ResponseEntity.ok().body(ApiUtils.success(null));
+    }
 }
