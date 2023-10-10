@@ -1,5 +1,6 @@
 package com.example.tily.roadmap;
 
+import com.example.tily.roadmap.relation.GroupRole;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,8 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 
@@ -588,11 +588,85 @@ public class RoadmapControllerTest {
 
         // when
         ResultActions result = mvc.perform(
-                get("/roadmaps/groups/"+id+"/members")
+                get("/roadmaps/groups/"+ id +"/members")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
         );
 
         // then
         result.andExpect(jsonPath("$.success").value("false"));
     }
+
+    @DisplayName("구성원_역할_변경하기_성공_test")
+    @WithUserDetails(value = "hong@naver.com")
+    @Test
+    public void member_role_change_success_test() throws Exception{
+        // given
+        Long groupsId = 10L;
+        Long usersId = 2L;
+        GroupRole role = GroupRole.ROLE_MANAGER;
+        RoadmapRequest.ChangeMemberRoleDTO requestDTO = new RoadmapRequest.ChangeMemberRoleDTO();
+        requestDTO.setRole(role);
+
+        String requestBody = om.writeValueAsString(requestDTO);
+
+        // when
+        ResultActions result = mvc.perform(
+                patch("/roadmaps/groups/"+ groupsId +"/members/"+ usersId)
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+
+        // then
+        result.andExpect(jsonPath("$.success").value("true"));
+    }
+
+    @DisplayName("구성원_역할_변경하기_실패_test1: 존재하지 않은 유저")
+    @WithUserDetails(value = "hong@naver.com")
+    @Test
+    public void member_role_change_fail_test_1() throws Exception{
+        // given
+        Long groupsId = 10L;
+        Long usersId = 10L;
+        GroupRole role = GroupRole.ROLE_MANAGER;
+        RoadmapRequest.ChangeMemberRoleDTO requestDTO = new RoadmapRequest.ChangeMemberRoleDTO();
+        requestDTO.setRole(role);
+
+        String requestBody = om.writeValueAsString(requestDTO);
+
+        // when
+        ResultActions result = mvc.perform(
+                patch("/roadmaps/groups/"+ groupsId +"/members/"+ usersId)
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+
+        // then
+        result.andExpect(jsonPath("$.success").value("false"));
+    }
+
+    @DisplayName("구성원_역할_변경하기_실패_test2: 존재하지 않은 로드맵")
+    @WithUserDetails(value = "hong@naver.com")
+    @Test
+    public void member_role_change_fail_test_2() throws Exception{
+        // given
+        Long groupsId = 20L;
+        Long usersId = 2L;
+        GroupRole role = GroupRole.ROLE_MANAGER;
+        RoadmapRequest.ChangeMemberRoleDTO requestDTO = new RoadmapRequest.ChangeMemberRoleDTO();
+        requestDTO.setRole(role);
+
+        String requestBody = om.writeValueAsString(requestDTO);
+
+        // when
+        ResultActions result = mvc.perform(
+                patch("/roadmaps/groups/"+ groupsId +"/members/"+ usersId)
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+
+        // then
+        result.andExpect(jsonPath("$.success").value("false"));
+    }
+
+    
 }
