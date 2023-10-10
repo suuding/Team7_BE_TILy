@@ -283,23 +283,32 @@ public class RoadmapResponse {
     public static class FindTilOfStepDTO {
         private List<MemberDTO> members;
 
-        public FindTilOfStepDTO(List<Pair<Til, User>> pairs){
-            this.members = pairs.stream()
-                    .map(pair -> new MemberDTO(pair.getFirst().getId(), pair.getSecond().getName(), pair.getSecond().getImage(), pair.getFirst().getContent(), pair.getFirst().getSubmitDate().toLocalDate(), pair.getFirst().getCommentNum()))
-                    .collect(Collectors.toList());
+        public FindTilOfStepDTO(List<Pair<Til, User>> pairs, Boolean isSubmit){
+            if(isSubmit) {
+                this.members = pairs.stream()
+                        .map(pair -> new MemberDTO(pair.getFirst().getId(), pair.getSecond().getId(),pair.getSecond().getName(), pair.getSecond().getImage(), pair.getFirst().getContent(), pair.getFirst().getSubmitDate().toLocalDate(), pair.getFirst().getCommentNum()))
+                        .collect(Collectors.toList());
+            }
+            else{
+                this.members = pairs.stream()
+                        .map(pair -> new MemberDTO(null, pair.getSecond().getId(), pair.getSecond().getName(), null, null, null, 0))
+                        .collect(Collectors.toList());
+            }
         }
 
         @Getter @Setter
         public class MemberDTO{
             private Long tilId;
+            private Long userId;
             private String name;
             private String image;
             private String content;
             private LocalDate submitDate;
             private int commentNum;
 
-            public MemberDTO(Long tilId, String name, String image, String content, LocalDate submitDate, int commentNum ){
+            public MemberDTO(Long tilId, Long userId,String name, String image, String content, LocalDate submitDate, int commentNum ){
                 this.tilId = tilId;
+                this.userId = userId;
                 this.name = name;
                 this.image = image;
                 this.content = content;

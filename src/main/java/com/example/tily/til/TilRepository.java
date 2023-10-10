@@ -36,5 +36,5 @@ public interface TilRepository extends JpaRepository<Til, Long>{
                                                @Param("title") String title,
                                                Pageable pageable);
 
-    List<Til> findByWriter_Id(Long writerId);
+    List<Til> findByStep_Id(Long stepId);
 }

@@ -867,4 +867,108 @@ public class RoadmapControllerTest {
         // then
         result.andExpect(jsonPath("$.success").value("false"));
     }
+
+    @DisplayName("특정스텝_틸_조회하기_성공_test1: isSubmit이 true인 케이스")
+    @WithUserDetails(value = "hong@naver.com")
+    @Test
+    public void til_find_success_test_1() throws Exception {
+        // given
+        Long groupsId = 12L;
+        Long stepsId = 5L;
+
+        String isSubmit = "true";
+        String isMember = "true";
+
+        // when
+        ResultActions result = mvc.perform(
+                get("/roadmaps/groups/"+ groupsId +"/steps/"+ stepsId +"/tils")
+                        .param("isSubmit", isSubmit)
+                        .param("isMember", isMember)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+
+        // then
+        result.andExpect(jsonPath("$.success").value("true"));
+        result.andExpect(jsonPath("$.result.members[0].name").value("su"));
+        result.andExpect(jsonPath("$.result.members[0].content").value("이것은 내용입니다1."));
+        result.andExpect(jsonPath("$.result.members[1].submitDate").value("2023-10-10"));
+        result.andExpect(jsonPath("$.result.members[1].commentNum").value("2"));
+
+        String responseBody = result.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : "+responseBody);
+    }
+
+    @DisplayName("특정스텝_틸_조회하기_성공2_test: isSubmit이 false인 케이스")
+    @WithUserDetails(value = "hong@naver.com")
+    @Test
+    public void til_find_success_test_2() throws Exception {
+        // given
+        Long groupsId = 12L;
+        Long stepsId = 6L;
+
+        String isSubmit = "false";
+        String isMember = "true";
+
+        // when
+        ResultActions result = mvc.perform(
+                get("/roadmaps/groups/"+ groupsId +"/steps/"+ stepsId +"/tils")
+                        .param("isSubmit", isSubmit)
+                        .param("isMember", isMember)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+
+        // then
+        result.andExpect(jsonPath("$.success").value("true"));
+        result.andExpect(jsonPath("$.result.members[0].name").value("su"));
+    }
+
+    @DisplayName("특정스텝_틸_조회하기_성공3_test: name 쿼리 사용")
+    @WithUserDetails(value = "hong@naver.com")
+    @Test
+    public void til_find_success_test_3() throws Exception {
+        // given
+        Long groupsId = 12L;
+        Long stepsId = 6L;
+        String name = "hong";
+
+        String isSubmit = "true";
+        String isMember = "true";
+
+        // when
+        ResultActions result = mvc.perform(
+                get("/roadmaps/groups/"+ groupsId +"/steps/"+ stepsId +"/tils")
+                        .param("isSubmit", isSubmit)
+                        .param("isMember", isMember)
+                        .param("name", name)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+
+        // then
+        result.andExpect(jsonPath("$.success").value("true"));
+        result.andExpect(jsonPath("$.result.members[0].name").value("hong"));
+    }
+
+    @DisplayName("특정스텝_틸_조회하기_성공4_test: isMember가 false, 즉 매니저를 포함해서 모든 사람의 til 반환")
+    @WithUserDetails(value = "hong@naver.com")
+    @Test
+    public void til_find_success_test_4() throws Exception {
+        // given
+        Long groupsId = 12L;
+        Long stepsId = 6L;
+
+        String isSubmit = "true";
+        String isMember = "false";
+
+        // when
+        ResultActions result = mvc.perform(
+                get("/roadmaps/groups/"+ groupsId +"/steps/"+ stepsId +"/tils")
+                        .param("isSubmit", isSubmit)
+                        .param("isMember", isMember)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+
+        // then
+        result.andExpect(jsonPath("$.success").value("true"));
+        result.andExpect(jsonPath("$.result.members[1].name").value("masterHong"));
+    }
 }
