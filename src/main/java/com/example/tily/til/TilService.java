@@ -1,6 +1,8 @@
 package com.example.tily.til;
 
 import com.example.tily._core.errors.exception.Exception400;
+import com.example.tily.roadmap.Roadmap;
+import com.example.tily.roadmap.RoadmapRepository;
 import com.example.tily.step.Step;
 import com.example.tily.step.StepRepository;
 import com.example.tily.user.User;
@@ -27,12 +29,21 @@ import java.util.Optional;
 public class TilService {
     private final TilRepository tilRepository;
     private final StepRepository stepRepository;
+    private final RoadmapRepository roadmapRepository;
 
     @Transactional
-    public TilResponse.CreateTilDTO createTil(TilRequest.CreateTilDTO requestDTO){
+    public TilResponse.CreateTilDTO createTil(TilRequest.CreateTilDTO requestDTO, Long roadmapId, Long stepId) {
+
+        Roadmap roadmap = roadmapRepository.findById(roadmapId).orElseThrow(
+                () -> new Exception400("해당 로드맵을 찾을 수 없습니다")
+        );
+
+        Step step = stepRepository.findById(stepId).orElseThrow(
+                () -> new Exception400("해당 스텝을 찾을 수 없습니다")
+        );
 
         String title = requestDTO.getTitle();
-        Til til = Til.builder().title(title).build();
+        Til til = Til.builder().roadmap(roadmap).step(step).title(title).build();
         tilRepository.save(til);
 
         return new TilResponse.CreateTilDTO(til);
@@ -53,7 +64,9 @@ public class TilService {
     }
 
     public TilResponse.ViewDTO viewTil(Long tilId, Long stepId) {
-        Til til = tilRepository.findTilById(tilId);
+        Til til = tilRepository.findById(tilId).orElseThrow(
+                () -> new Exception400("해당 TIL을 찾을 수 없습니다. ")
+        );
         Step step = stepRepository.findById(stepId).orElseThrow(
                 () -> new Exception400("해당 스텝을 찾을 수 없습니다. ")
         );
