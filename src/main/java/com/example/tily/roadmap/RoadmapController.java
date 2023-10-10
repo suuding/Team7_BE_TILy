@@ -121,7 +121,7 @@ public class RoadmapController {
     }
 
     // 로드맵 참여 신청 거절
-    @PostMapping("/roadmaps/groups/{groupsId}/members/{membersId}/reject")
+    @DeleteMapping("/roadmaps/groups/{groupsId}/members/{membersId}/reject")
     public ResponseEntity<?> rejectApplication(@PathVariable Long groupsId, @PathVariable Long membersId){
         roadmapService.rejectApplication(groupsId, membersId);
 
