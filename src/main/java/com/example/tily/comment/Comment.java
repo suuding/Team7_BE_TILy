@@ -1,5 +1,7 @@
 package com.example.tily.comment;
 
+import com.example.tily.roadmap.Roadmap;
+import com.example.tily.step.Step;
 import com.example.tily.til.Til;
 import com.example.tily.user.User;
 import lombok.AccessLevel;
@@ -31,7 +33,7 @@ public class Comment {
 
 
     @Builder
-    public Comment (Long id, Til til, User writer, String content) {
+    public Comment (Long id, Roadmap roadmap, Step step, Til til, User writer, String content) {
         this.id = id;
         this.til = til;
         this.writer = writer;
