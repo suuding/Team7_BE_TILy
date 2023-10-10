@@ -47,7 +47,8 @@ public class TiLyApplication {
 					newUser("tngus@test.com", "su", passwordEncoder, Role.ROLE_USER),
 					newUser("hong@naver.com", "hong", passwordEncoder, Role.ROLE_USER),
 					newUser("test@test.com", "test", passwordEncoder, Role.ROLE_USER),
-					newUser("admin@test.com", "admin", passwordEncoder, Role.ROLE_ADMIN)
+					newUser("admin@test.com", "admin", passwordEncoder, Role.ROLE_ADMIN),
+					newUser("hoyai@test.com", "hoyai", passwordEncoder, Role.ROLE_USER)
 			));
 			roadmapRepository.saveAll(Arrays.asList(
 					newIndividualRoadmap(User.builder().id(1L).build(), Category.CATEGORY_INDIVIDUAL, "스프링 시큐리티", 10L), //1
@@ -88,9 +89,10 @@ public class TiLyApplication {
 
 					newUserRoadmapRelation(Roadmap.builder().id(10L).build(), User.builder().id(2L).build(), "자바 공부하고싶습니다!", true, GroupRole.ROLE_MEMBER, 10),
 					newUserRoadmapRelation(Roadmap.builder().id(10L).build(), User.builder().id(3L).build(), "자바 공부하고싶습니다!", true, GroupRole.ROLE_MEMBER, 10),
+					newUserRoadmapRelation(Roadmap.builder().id(10L).build(), User.builder().id(5L).build(), "메롱", false, GroupRole.ROLE_MEMBER, 0),
 					newUserRoadmapRelation(Roadmap.builder().id(12L).build(), User.builder().id(1L).build(), "열심히 하겠습니다!", true, GroupRole.ROLE_MEMBER, 0),
 					newUserRoadmapRelation(Roadmap.builder().id(12L).build(), User.builder().id(3L).build(), "열심히 하겠습니다!", true, GroupRole.ROLE_MEMBER, 0),
-					newUserRoadmapRelation(Roadmap.builder().id(13L).build(), User.builder().id(1L).build(), "열심히 하겠습니다!", false, GroupRole.ROLE_NONE, 20)
+					newUserRoadmapRelation(Roadmap.builder().id(13L).build(), User.builder().id(1L).build(), "열심히 하겠습니다!", false, GroupRole.ROLE_NONE, 0)
 					));
 			stepRepository.saveAll(Arrays.asList(
 					newIndividualStep(Roadmap.builder().id(1L).build(), "스프링 시큐리티를 사용하는 이유"),

@@ -17,8 +17,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
@@ -721,4 +720,47 @@ public class RoadmapControllerTest {
         // then
         result.andExpect(jsonPath("$.success").value("false"));
     }
+
+    @DisplayName("신청자_조회_성공_test")
+    @WithUserDetails(value = "hong@naver.com")
+    @Test
+    public void applied_user_find_success_test() throws Exception {
+        // given
+        Long groupsId = 10L;
+
+        // when
+        ResultActions result = mvc.perform(
+                get("/roadmaps/groups/"+ groupsId +"/members/apply")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+
+        // then
+        result.andExpect(jsonPath("$.success").value("true"));
+        result.andExpect(jsonPath("$.result.users[0].name").value("hoyai"));
+        result.andExpect(jsonPath("$.result.users[0].content").value("메롱"));
+
+        String responseBody = result.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : "+responseBody);
+    }
+
+    @DisplayName("신청자_조회_실패_test: 존재하지 않는 로드맵")
+    @WithUserDetails(value = "hong@naver.com")
+    @Test
+    public void applied_user_find_fail_test() throws Exception {
+        // given
+        Long groupsId = 20L;
+
+        // when
+        ResultActions result = mvc.perform(
+                get("/roadmaps/groups/"+ groupsId +"/members/apply")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+
+        // then
+        result.andExpect(jsonPath("$.success").value("false"));
+    }
+
+    
+
+
 }
