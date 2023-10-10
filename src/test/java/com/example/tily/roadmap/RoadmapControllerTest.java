@@ -465,7 +465,7 @@ public class RoadmapControllerTest {
     }
 
     @DisplayName("로드맵_신청하기_성공_test")
-    @WithUserDetails(value = "tngus@test.com")
+    @WithUserDetails(value = "hong@naver.com")
     @Test
     public void roadmap_apply_success_test() throws Exception{
         // given
@@ -490,7 +490,7 @@ public class RoadmapControllerTest {
     }
 
     @DisplayName("로드맵_신청하기_실패_test: 존재하지 않은 로드맵")
-    @WithUserDetails(value = "tngus@test.com")
+    @WithUserDetails(value = "hong@naver.com")
     @Test
     public void roadmap_apply_fail_test() throws Exception{
         // given
@@ -512,4 +512,66 @@ public class RoadmapControllerTest {
         // then
         result.andExpect(jsonPath("$.success").value("false"));
     }
+
+    @DisplayName("로드맵_참여하기_성공_test")
+    @WithUserDetails(value = "hong@naver.com")
+    @Test
+    public void roadmap_participate_success_test() throws Exception{
+        // given
+        String code = "pnu12345";
+        RoadmapRequest.ParticipateRoadmapDTO requestDTO = new RoadmapRequest.ParticipateRoadmapDTO();
+        requestDTO.setCode(code);
+
+        String requestBody = om.writeValueAsString(requestDTO);
+
+        // when
+        ResultActions result = mvc.perform(
+                post("/roadmaps/groups/participate")
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+
+        // then
+        result.andExpect(jsonPath("$.success").value("true"));
+    }
+
+    @DisplayName("로드맵_참여하기_실패_test: 존재하지 않은 로드맵")
+    @WithUserDetails(value = "hong@naver.com")
+    @Test
+    public void roadmap_participate_fail_test() throws Exception{
+        // given
+        String code = "pnu12347";
+        RoadmapRequest.ParticipateRoadmapDTO requestDTO = new RoadmapRequest.ParticipateRoadmapDTO();
+        requestDTO.setCode(code);
+
+        String requestBody = om.writeValueAsString(requestDTO);
+
+        // when
+        ResultActions result = mvc.perform(
+                post("/roadmaps/groups/participate")
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+
+        // then
+        result.andExpect(jsonPath("$.success").value("false"));
+    }
+
+    @DisplayName("로드맵_구성원_전체조회_성공_test")
+    @WithUserDetails(value = "hong@naver.com")
+    @Test
+    public void roadmap_members_find_success_test() throws Exception{
+        // given
+        Long id = 1L;
+
+        // when
+        ResultActions result = mvc.perform(
+                post("/roadmaps/groups/"+id+"/members")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+
+        // then
+        result.andExpect(jsonPath("$.success").value("true"));
+    }
+
 }
