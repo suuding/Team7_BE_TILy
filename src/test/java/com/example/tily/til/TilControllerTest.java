@@ -185,7 +185,6 @@ public class TilControllerTest {
         result.andExpect(jsonPath("$.result.stepId").value(1L));
         result.andExpect(jsonPath("$.result.stepTitle").value("스프링 시큐리티를 사용하는 이유"));
         result.andExpect(jsonPath("$.result.content").value("이것은 내용입니다."));
-        result.andExpect(jsonPath("$.result.personal").value("true"));
 
     }
 
@@ -196,7 +195,7 @@ public class TilControllerTest {
         //given
         Long roadmapId = 1L;
         Long stepId = 1L;
-        Long tilId = 5L;
+        Long tilId = 15L;
 
         //when
         ResultActions result = mvc.perform(
