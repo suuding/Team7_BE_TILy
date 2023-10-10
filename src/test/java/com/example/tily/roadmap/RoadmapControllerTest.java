@@ -557,5 +557,42 @@ public class RoadmapControllerTest {
         result.andExpect(jsonPath("$.success").value("false"));
     }
 
+    @DisplayName("로드맵_구성원_전체조회_성공_test")
+    @WithUserDetails(value = "hong@naver.com")
+    @Test
+    public void roadmap_members_find_success_test() throws Exception{
+        // given
+        Long id = 10L;
 
+        // when
+        ResultActions result = mvc.perform(
+                get("/roadmaps/groups/"+id+"/members")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+
+        // then
+        result.andExpect(jsonPath("$.success").value("true"));
+        result.andExpect(jsonPath("$.result.users[0].name").value("hong"));
+        result.andExpect(jsonPath("$.result.users[0].role").value("ROLE_MEMBER"));
+
+        String responseBody = result.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : "+responseBody);
+    }
+
+    @DisplayName("로드맵_구성원_전체조회_실패_test: 존재하지 않은 로드맵")
+    @WithUserDetails(value = "hong@naver.com")
+    @Test
+    public void roadmap_members_find_fail_test() throws Exception{
+        // given
+        Long id = 20L;
+
+        // when
+        ResultActions result = mvc.perform(
+                get("/roadmaps/groups/"+id+"/members")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+
+        // then
+        result.andExpect(jsonPath("$.success").value("false"));
+    }
 }
