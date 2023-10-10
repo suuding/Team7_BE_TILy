@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Service
@@ -56,5 +58,13 @@ public class CommentService {
             throw new Exception400("댓글 내용을 입력해주세요.");
         }
         comment.updateComment(content);
+    }
+
+    @Transactional
+    public void deleteComment(Long id) {
+        Comment comment = commentRepository.findById(id).orElseThrow(
+                () -> new Exception400("해당 댓글을 찾을 수 없습니다")
+        );
+        commentRepository.deleteById(id);
     }
 }
