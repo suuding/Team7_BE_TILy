@@ -274,6 +274,10 @@ public class RoadmapService {
     public RoadmapResponse.FindRoadmapMembersDTO findRoadmapMembers(Long groupsId){
         List<UserRoadmap> userRoadmaps = userRoadmapRepository.findByRoadmap_IdAndIsAcceptTrue(groupsId);
 
+        if(userRoadmaps.isEmpty()){
+            throw new Exception404("해당 사용자를 찾을 수 없습니다");
+        }
+
         return new RoadmapResponse.FindRoadmapMembersDTO(userRoadmaps);
     }
 
