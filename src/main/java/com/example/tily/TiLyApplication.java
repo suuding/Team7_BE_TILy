@@ -11,6 +11,7 @@ import com.example.tily.step.StepRepository;
 import com.example.tily.step.reference.Reference;
 import com.example.tily.step.reference.ReferenceRepository;
 import com.example.tily.step.relation.UserStep;
+import com.example.tily.step.relation.UserStepRepository;
 import com.example.tily.til.Til;
 import com.example.tily.til.TilRepository;
 import com.example.tily.user.Role;
@@ -40,7 +41,7 @@ public class TiLyApplication {
 	@Profile("local")
 	@Bean
 	CommandLineRunner localServerStart(UserRepository userRepository, RoadmapRepository roadmapRepository, StepRepository stepRepository, ReferenceRepository referenceRepository, TilRepository tilRepository, PasswordEncoder passwordEncoder,
-									   UserRoadmapRepository userRoadmapRepository) {
+									   UserRoadmapRepository userRoadmapRepository, UserStepRepository userStepRepository) {
 		return args -> {
 			userRepository.saveAll(Arrays.asList(
 					newUser("tngus@test.com", "su", passwordEncoder, Role.ROLE_USER),
@@ -214,4 +215,11 @@ public class TiLyApplication {
 				.build();
 	}
 
+	private UserStep newUserStepRelation(Step step, User user, Boolean isSubmit){
+		return UserStep.builder()
+				.step(step)
+				.user(user)
+				.isSubmit(isSubmit)
+				.build();
+	}
 }

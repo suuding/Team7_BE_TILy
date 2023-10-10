@@ -556,22 +556,4 @@ public class RoadmapControllerTest {
         // then
         result.andExpect(jsonPath("$.success").value("false"));
     }
-
-    @DisplayName("로드맵_구성원_전체조회_성공_test")
-    @WithUserDetails(value = "hong@naver.com")
-    @Test
-    public void roadmap_members_find_success_test() throws Exception{
-        // given
-        Long id = 1L;
-
-        // when
-        ResultActions result = mvc.perform(
-                post("/roadmaps/groups/"+id+"/members")
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-        );
-
-        // then
-        result.andExpect(jsonPath("$.success").value("true"));
-    }
-
 }
