@@ -106,7 +106,7 @@ public class TilControllerTest {
 
     }
 
-    @DisplayName("틸 저장(수정) 성공 test - 잘못된 tilId")
+    @DisplayName("틸 저장(수정) 성공 test")
     @WithUserDetails(value = "hong@naver.com")
     @Test
     public void update_til_test() throws Exception {
@@ -164,7 +164,7 @@ public class TilControllerTest {
     }
 
     @DisplayName("틸 조회 성공 test")
-    @WithUserDetails(value = "hong@naver.com")
+    @WithUserDetails(value = "tngus@test.com")
     @Test
     public void view_til_success_test() throws Exception {
         //given
@@ -186,6 +186,8 @@ public class TilControllerTest {
         result.andExpect(jsonPath("$.result.stepTitle").value("스프링 시큐리티를 사용하는 이유"));
         result.andExpect(jsonPath("$.result.content").value("이것은 내용입니다."));
         result.andExpect(jsonPath("$.result.personal").value("true"));
+        result.andExpect(jsonPath("$.result.comments[0].id").value(1L));
+        result.andExpect(jsonPath("$.result.comments[0].name").value("su"));
 
     }
 

@@ -1,5 +1,7 @@
 package com.example.tily;
 
+import com.example.tily.comment.Comment;
+import com.example.tily.comment.CommentRepository;
 import com.example.tily.roadmap.Category;
 import com.example.tily.roadmap.Roadmap;
 import com.example.tily.roadmap.RoadmapRepository;
@@ -38,7 +40,7 @@ public class TiLyApplication {
 	@Profile("local")
 	@Bean
 	CommandLineRunner localServerStart(UserRepository userRepository, RoadmapRepository roadmapRepository, StepRepository stepRepository, ReferenceRepository referenceRepository, TilRepository tilRepository, PasswordEncoder passwordEncoder,
-									   UserRoadmapRepository userRoadmapRepository) {
+									   UserRoadmapRepository userRoadmapRepository, CommentRepository commentRepository) {
 		return args -> {
 			userRepository.saveAll(Arrays.asList(
 					newUser("tngus@test.com", "su", passwordEncoder, Role.ROLE_USER),
@@ -116,6 +118,12 @@ public class TiLyApplication {
 					newTil(Roadmap.builder().id(12L).build(), Step.builder().id(5L).build(), User.builder().id(1L).build(), "다형성(Polymorphism)", "이것은 내용입니다.", false, "이것은 제출할 내용입니다."),
 					newTil(Roadmap.builder().id(12L).build(), Step.builder().id(6L).build(), User.builder().id(1L).build(), "람다식(lambda expression)", "이것은 내용입니다.", false, "이것은 제출할 내용입니다."),
 					newTil(Roadmap.builder().id(12L).build(), Step.builder().id(7L).build(), User.builder().id(1L).build(), "스트림(lambda expression)", "이것은 내용입니다.", false, "이것은 제출할 내용입니다.")
+
+			));
+
+			commentRepository.saveAll(Arrays.asList(
+					newComment(Roadmap.builder().id(1L).build(), Step.builder().id(1L).build(),Til.builder().id(1L).build(),User.builder().id(1L).build(), "이것은 댓글입니다."),
+					newComment(Roadmap.builder().id(1L).build(), Step.builder().id(1L).build(),Til.builder().id(1L).build(),User.builder().id(2L).build(), "이것도 댓글입니다.")
 
 			));
 		};
@@ -211,4 +219,15 @@ public class TiLyApplication {
 				.submitContent(subContent)
 				.build();
 	}
+
+	private Comment newComment(Roadmap roadmap, Step step, Til til, User writer, String content) {
+		return Comment.builder()
+				.roadmap(roadmap)
+				.step(step)
+				.til(til)
+				.writer(writer)
+				.content(content)
+				.build();
+	}
+
 }

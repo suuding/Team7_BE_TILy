@@ -2,8 +2,6 @@ package com.example.tily.comment;
 
 import com.example.tily._core.security.CustomUserDetails;
 import com.example.tily._core.utils.ApiUtils;
-import com.example.tily.til.TilRequest;
-import com.example.tily.til.TilResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -37,7 +35,7 @@ public class CommentController {
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 
-    @DeleteMapping("/roadmaps/{roadmapId}/steps/{stepId}/tils/{tilId}")
+    @DeleteMapping("/roadmaps/{roadmapId}/steps/{stepId}/tils/{tilId}/comments/{commentId}")
     public ResponseEntity<?> deleteComment(@PathVariable("roadmapId") Long roadmapId, @PathVariable("stepId")Long stepId,
                                        @PathVariable("tilId") Long tilId, @PathVariable("commentId") Long commentId,
                                        @AuthenticationPrincipal CustomUserDetails userDetails) {

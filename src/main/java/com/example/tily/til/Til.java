@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity

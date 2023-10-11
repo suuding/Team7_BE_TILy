@@ -1,6 +1,8 @@
 package com.example.tily.til;
 
 import com.example.tily._core.errors.exception.Exception400;
+import com.example.tily.comment.Comment;
+import com.example.tily.comment.CommentRepository;
 import com.example.tily.roadmap.Roadmap;
 import com.example.tily.roadmap.RoadmapRepository;
 import com.example.tily.step.Step;
@@ -11,7 +13,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +21,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Transactional(readOnly = true)
@@ -30,6 +34,7 @@ public class TilService {
     private final TilRepository tilRepository;
     private final StepRepository stepRepository;
     private final RoadmapRepository roadmapRepository;
+    private final CommentRepository commentRepository;
 
     @Transactional
     public TilResponse.CreateTilDTO createTil(TilRequest.CreateTilDTO requestDTO, Long roadmapId, Long stepId) {
@@ -70,8 +75,15 @@ public class TilService {
         Step step = stepRepository.findById(stepId).orElseThrow(
                 () -> new Exception400("해당 스텝을 찾을 수 없습니다. ")
         );
+        List<Comment> comments = commentRepository.findByTilId(tilId);
+        for (Comment comment : comments) {
+            Long commentId = comment.getId();
+            String writerName = comment.getWriter().getName();
+            String writerImage = comment.getWriter().getImage();
 
-        return new TilResponse.ViewDTO(step, til);
+        }
+
+        return new TilResponse.ViewDTO(step, til, comments);
     }
 
     @Transactional

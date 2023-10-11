@@ -32,6 +32,7 @@ public class Comment {
     private String content;
 
 
+
     @Builder
     public Comment (Long id, Roadmap roadmap, Step step, Til til, User writer, String content) {
         this.id = id;
