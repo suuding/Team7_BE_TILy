@@ -7,7 +7,7 @@ import com.example.tily.step.Step;
 import com.example.tily.step.StepRepository;
 import com.example.tily.til.Til;
 import com.example.tily.til.TilRepository;
-import com.example.tily.til.TilRequest;
+import com.example.tily.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +24,8 @@ public class CommentService {
     private final CommentRepository commentRepository;
 
     @Transactional
-    public CommentResponse.CreateCommentDTO createComment(CommentRequest.CreateCommentDTO requestDTO, Long roadmapId, Long stepId, Long tilId) {
+    public CommentResponse.CreateCommentDTO createComment(CommentRequest.CreateCommentDTO requestDTO,
+                                                          Long roadmapId, Long stepId, Long tilId, User user) {
 
         Roadmap roadmap = roadmapRepository.findById(roadmapId).orElseThrow(
                 () -> new Exception400("해당 로드맵을 찾을 수 없습니다")
@@ -47,11 +48,14 @@ public class CommentService {
     }
 
     @Transactional
-    public void updateComment(CommentRequest.UpdateCommentDTO requestDTO, Long commentId) {
+    public void updateComment(CommentRequest.UpdateCommentDTO requestDTO, Long commentId, User user) {
 
         Comment comment = commentRepository.findById(commentId).orElseThrow(
                 () -> new Exception400("해당 댓글을 찾을 수 없습니다")
         );
+        if(comment.getWriter().getId() != user.getId()) {
+            throw new Exception400("해당 댓글을 수정할 권한이 없습니다.");
+        }
 
         String content = requestDTO.getContent();
         if(content == null){
@@ -61,10 +65,14 @@ public class CommentService {
     }
 
     @Transactional
-    public void deleteComment(Long id) {
+    public void deleteComment(Long id, User user) {
         Comment comment = commentRepository.findById(id).orElseThrow(
                 () -> new Exception400("해당 댓글을 찾을 수 없습니다")
         );
+
+        if(comment.getWriter().getId() != user.getId()) {
+            throw new Exception400("해당 댓글을 삭제할 권한이 없습니다.");
+        }
         commentRepository.deleteById(id);
     }
 }
