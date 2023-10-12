@@ -3,12 +3,15 @@ package com.example.tily;
 import com.example.tily.roadmap.Category;
 import com.example.tily.roadmap.Roadmap;
 import com.example.tily.roadmap.RoadmapRepository;
+import com.example.tily.roadmap.relation.GroupRole;
 import com.example.tily.roadmap.relation.UserRoadmap;
 import com.example.tily.roadmap.relation.UserRoadmapRepository;
 import com.example.tily.step.Step;
 import com.example.tily.step.StepRepository;
 import com.example.tily.step.reference.Reference;
 import com.example.tily.step.reference.ReferenceRepository;
+import com.example.tily.step.relation.UserStep;
+import com.example.tily.step.relation.UserStepRepository;
 import com.example.tily.til.Til;
 import com.example.tily.til.TilRepository;
 import com.example.tily.user.Role;
@@ -22,9 +25,8 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.time.Month;
 import java.util.Arrays;
 
 @EnableJpaAuditing
@@ -38,13 +40,14 @@ public class TiLyApplication {
 	@Profile("local")
 	@Bean
 	CommandLineRunner localServerStart(UserRepository userRepository, RoadmapRepository roadmapRepository, StepRepository stepRepository, ReferenceRepository referenceRepository, TilRepository tilRepository, PasswordEncoder passwordEncoder,
-									   UserRoadmapRepository userRoadmapRepository) {
+									   UserRoadmapRepository userRoadmapRepository, UserStepRepository userStepRepository) {
 		return args -> {
 			userRepository.saveAll(Arrays.asList(
 					newUser("tngus@test.com", "su", passwordEncoder, Role.ROLE_USER),
 					newUser("hong@naver.com", "hong", passwordEncoder, Role.ROLE_USER),
 					newUser("test@test.com", "test", passwordEncoder, Role.ROLE_USER),
-					newUser("admin@test.com", "admin", passwordEncoder, Role.ROLE_ADMIN)
+					newUser("admin@test.com", "admin", passwordEncoder, Role.ROLE_ADMIN),
+					newUser("hoyai@test.com", "masterHong", passwordEncoder, Role.ROLE_USER)
 			));
 			roadmapRepository.saveAll(Arrays.asList(
 					newIndividualRoadmap(User.builder().id(1L).build(), Category.CATEGORY_INDIVIDUAL, "스프링 시큐리티", 10L), //1
@@ -58,36 +61,38 @@ public class TiLyApplication {
 					newTilyRoadmap(User.builder().id(4L).build(), Category.CATEGORY_TILY, "Spring JPA - 중급편", "틸리에서 제공하는 Spring JPA 중급자를 위한 로드맵입니다.", 80L, 20L , "image.jpg"),
 					newTilyRoadmap(User.builder().id(4L).build(), Category.CATEGORY_TILY, "Spring JPA - 고급편", "틸리에서 제공하는 Spring JPA 고급자를 위한 로드맵입니다.", 50L, 20L , "image.jpg"),
 
-					newGroupRoadmap(User.builder().id(1L).build(), Category.CATEGORY_GROUP, "JAVA 입문 수업 - 생활 코딩", "생활 코딩님의 로드맵입니다!", true, 5L, "pnu1234", true, 10L), // 10
-					newGroupRoadmap(User.builder().id(1L).build(), Category.CATEGORY_GROUP, "spring boot 스터디", "같이 spring boot 공부해봐요!", true, 3L, "pnu1234", true, 10L),
-					newGroupRoadmap(User.builder().id(2L).build(), Category.CATEGORY_GROUP, "JPA 스터디", "김영한 강사님의 JPA를 공부하는 스터디 ^^", false, 5L, "ashfkc", false, 20L),
-					newGroupRoadmap(User.builder().id(2L).build(), Category.CATEGORY_GROUP, "데이터베이스 스터디", "데이터베이스 공부합시다", true, 8L, "asdf", true, 15L),
-					newGroupRoadmap(User.builder().id(3L).build(), Category.CATEGORY_GROUP, "카카오테크캠퍼스 1단계", "카카오테크캠퍼스 1단계입니다.", false, 50L, "kakao", true, 20L)
+					newGroupRoadmap(User.builder().id(1L).build(), Category.CATEGORY_GROUP, "JAVA 입문 수업 - 생활 코딩", "생활 코딩님의 로드맵입니다!", true, 5L, "pnu12345", true, 10L), // 10
+					newGroupRoadmap(User.builder().id(1L).build(), Category.CATEGORY_GROUP, "spring boot 스터디", "같이 spring boot 공부해봐요!", true, 3L, "pnu54321", true, 10L),
+					newGroupRoadmap(User.builder().id(2L).build(), Category.CATEGORY_GROUP, "JPA 스터디", "김영한 강사님의 JPA를 공부하는 스터디 ^^", false, 5L, "hoyai123", false, 20L),
+					newGroupRoadmap(User.builder().id(2L).build(), Category.CATEGORY_GROUP, "데이터베이스 스터디", "데이터베이스 공부합시다", true, 8L, "hoyoung1", true, 15L),
+					newGroupRoadmap(User.builder().id(3L).build(), Category.CATEGORY_GROUP, "카카오테크캠퍼스 1단계", "카카오테크캠퍼스 1단계입니다.", false, 50L, "kakao123", true, 20L)
 
 					));
 			userRoadmapRepository.saveAll(Arrays.asList(
-					newUserRoadmapRelation(Roadmap.builder().id(1L).build(), User.builder().id(1L).build(), null, null, "master", 0),
-					newUserRoadmapRelation(Roadmap.builder().id(2L).build(), User.builder().id(2L).build(), null, null, "master", 0),
-					newUserRoadmapRelation(Roadmap.builder().id(3L).build(), User.builder().id(3L).build(), null, null, "master", 0),
+					newUserRoadmapRelation(Roadmap.builder().id(1L).build(), User.builder().id(1L).build(), null, null, GroupRole.ROLE_MASTER, 0),
+					newUserRoadmapRelation(Roadmap.builder().id(2L).build(), User.builder().id(2L).build(), null, null, GroupRole.ROLE_MASTER, 0),
+					newUserRoadmapRelation(Roadmap.builder().id(3L).build(), User.builder().id(3L).build(), null, null, GroupRole.ROLE_MASTER, 0),
 
-					newUserRoadmapRelation(Roadmap.builder().id(4L).build(), User.builder().id(4L).build(), null, true, "master", 10),
-					newUserRoadmapRelation(Roadmap.builder().id(4L).build(), User.builder().id(1L).build(), null, true, "member", 10),
-					newUserRoadmapRelation(Roadmap.builder().id(4L).build(), User.builder().id(2L).build(), null, true, "member", 20),
-					newUserRoadmapRelation(Roadmap.builder().id(4L).build(), User.builder().id(3L).build(), null, true, "member", 100),
-					newUserRoadmapRelation(Roadmap.builder().id(5L).build(), User.builder().id(4L).build(), null, true, "master", 0),
-					newUserRoadmapRelation(Roadmap.builder().id(6L).build(), User.builder().id(4L).build(), null, true, "master", 0),
-					newUserRoadmapRelation(Roadmap.builder().id(7L).build(), User.builder().id(4L).build(), null, true, "master", 0),
-					newUserRoadmapRelation(Roadmap.builder().id(7L).build(), User.builder().id(1L).build(), null, true, "member", 100),
-					newUserRoadmapRelation(Roadmap.builder().id(7L).build(), User.builder().id(2L).build(), null, true, "member", 20),
-					newUserRoadmapRelation(Roadmap.builder().id(7L).build(), User.builder().id(3L).build(), null, true, "member", 100),
-					newUserRoadmapRelation(Roadmap.builder().id(8L).build(), User.builder().id(4L).build(), null, true, "master", 0),
-					newUserRoadmapRelation(Roadmap.builder().id(9L).build(), User.builder().id(4L).build(), null, true, "master", 0),
+					newUserRoadmapRelation(Roadmap.builder().id(4L).build(), User.builder().id(4L).build(), null, true, GroupRole.ROLE_MASTER, 10),
+					newUserRoadmapRelation(Roadmap.builder().id(4L).build(), User.builder().id(1L).build(), null, true, GroupRole.ROLE_MEMBER, 10),
+					newUserRoadmapRelation(Roadmap.builder().id(4L).build(), User.builder().id(2L).build(), null, true, GroupRole.ROLE_MEMBER, 20),
+					newUserRoadmapRelation(Roadmap.builder().id(4L).build(), User.builder().id(3L).build(), null, true, GroupRole.ROLE_MEMBER, 100),
+					newUserRoadmapRelation(Roadmap.builder().id(5L).build(), User.builder().id(4L).build(), null, true, GroupRole.ROLE_MASTER, 0),
+					newUserRoadmapRelation(Roadmap.builder().id(6L).build(), User.builder().id(4L).build(), null, true, GroupRole.ROLE_MASTER, 0),
+					newUserRoadmapRelation(Roadmap.builder().id(7L).build(), User.builder().id(4L).build(), null, true, GroupRole.ROLE_MASTER, 0),
+					newUserRoadmapRelation(Roadmap.builder().id(7L).build(), User.builder().id(1L).build(), null, true, GroupRole.ROLE_MEMBER, 100),
+					newUserRoadmapRelation(Roadmap.builder().id(7L).build(), User.builder().id(2L).build(), null, true, GroupRole.ROLE_MEMBER, 20),
+					newUserRoadmapRelation(Roadmap.builder().id(7L).build(), User.builder().id(3L).build(), null, true, GroupRole.ROLE_MEMBER, 100),
+					newUserRoadmapRelation(Roadmap.builder().id(8L).build(), User.builder().id(4L).build(), null, true, GroupRole.ROLE_MASTER, 0),
+					newUserRoadmapRelation(Roadmap.builder().id(9L).build(), User.builder().id(4L).build(), null, true, GroupRole.ROLE_MASTER, 0),
 
-					newUserRoadmapRelation(Roadmap.builder().id(10L).build(), User.builder().id(2L).build(), "자바 공부하고싶습니다!", true, "member", 10),
-					newUserRoadmapRelation(Roadmap.builder().id(10L).build(), User.builder().id(3L).build(), "자바 공부하고싶습니다!", true, "member", 10),
-					newUserRoadmapRelation(Roadmap.builder().id(12L).build(), User.builder().id(1L).build(), "열심히 하겠습니다!", true, "member", 0),
-					newUserRoadmapRelation(Roadmap.builder().id(12L).build(), User.builder().id(3L).build(), "열심히 하겠습니다!", true, "member", 0),
-					newUserRoadmapRelation(Roadmap.builder().id(13L).build(), User.builder().id(1L).build(), "열심히 하겠습니다!", false, "none", 20)
+					newUserRoadmapRelation(Roadmap.builder().id(10L).build(), User.builder().id(2L).build(), "자바 공부하고싶습니다!", true, GroupRole.ROLE_MEMBER, 10),
+					newUserRoadmapRelation(Roadmap.builder().id(10L).build(), User.builder().id(3L).build(), "자바 공부하고싶습니다!", true, GroupRole.ROLE_MEMBER, 10),
+					newUserRoadmapRelation(Roadmap.builder().id(12L).build(), User.builder().id(1L).build(), "열심히 하겠습니다!", true, GroupRole.ROLE_MEMBER, 0),
+					newUserRoadmapRelation(Roadmap.builder().id(12L).build(), User.builder().id(2L).build(), "열심히 하겠습니다2!", true, GroupRole.ROLE_MEMBER, 0),
+					newUserRoadmapRelation(Roadmap.builder().id(13L).build(), User.builder().id(1L).build(), "열심히 하겠습니다!", false, GroupRole.ROLE_NONE, 0),
+					newUserRoadmapRelation(Roadmap.builder().id(12L).build(), User.builder().id(5L).build(), "매니저", true, GroupRole.ROLE_MANAGER, 0)
+
 					));
 			stepRepository.saveAll(Arrays.asList(
 					newIndividualStep(Roadmap.builder().id(1L).build(), "스프링 시큐리티를 사용하는 이유"),
@@ -99,6 +104,13 @@ public class TiLyApplication {
 					newGroupStep(Roadmap.builder().id(12L).build(),"람다식(lambda expression)", "Day2", LocalDateTime.of(2023, 10, 3, 23 ,59) ),
 					newGroupStep(Roadmap.builder().id(12L).build(),"스트림(lambda expression)", "Day3", LocalDateTime.of(2023, 10, 5, 23 ,59) )
 			));
+			userStepRepository.saveAll(Arrays.asList(
+					newUserStepRelation(Step.builder().id(5L).build(), User.builder().id(1L).build(), true),
+					newUserStepRelation(Step.builder().id(5L).build(), User.builder().id(2L).build(), true),
+					newUserStepRelation(Step.builder().id(6L).build(), User.builder().id(1L).build(), false),
+					newUserStepRelation(Step.builder().id(6L).build(), User.builder().id(2L).build(), true),
+					newUserStepRelation(Step.builder().id(6L).build(), User.builder().id(5L).build(), true)
+			));
 			referenceRepository.saveAll(Arrays.asList(
 					newReference(Step.builder().id(4L).build(), "youtube", "https://www.youtube.com/watch?v=0L6QWKC1a6k"),
 					newReference(Step.builder().id(4L).build(), "youtube", "https://www.youtube.com/watch?v=U8LVCTaS3mQ"),
@@ -108,15 +120,16 @@ public class TiLyApplication {
 					newReference(Step.builder().id(5L).build(), "web", "https://velog.io/@skydoves/open-source-machenism")
 			));
 			tilRepository.saveAll(Arrays.asList(
-					newTil(Roadmap.builder().id(1L).build(), Step.builder().id(1L).build(), User.builder().id(1L).build(), "스프링 시큐리티를 사용하는 이유", "이것은 내용입니다.", true, null),
-					newTil(Roadmap.builder().id(1L).build(), Step.builder().id(2L).build(), User.builder().id(1L).build(), "OAuth 2.0으로 로그인 기능 구현하기", "이것은 내용입니다.", true, null),
-					newTil(Roadmap.builder().id(1L).build(), Step.builder().id(3L).build(), User.builder().id(1L).build(), "인증된 사용자 권한 부족 예외처리", "이것은 내용입니다.", true, null),
-					newTil(Roadmap.builder().id(1L).build(), Step.builder().id(4L).build(), User.builder().id(1L).build(), "소셜 로그인 사용하기", "이것은 내용입니다.", true, null),
+					newIndividualTil(Roadmap.builder().id(1L).build(), Step.builder().id(1L).build(), User.builder().id(1L).build(), "스프링 시큐리티를 사용하는 이유", "이것은 내용입니다.", true, null),
+					newIndividualTil(Roadmap.builder().id(1L).build(), Step.builder().id(2L).build(), User.builder().id(1L).build(), "OAuth 2.0으로 로그인 기능 구현하기", "이것은 내용입니다.", true, null),
+					newIndividualTil(Roadmap.builder().id(1L).build(), Step.builder().id(3L).build(), User.builder().id(1L).build(), "인증된 사용자 권한 부족 예외처리", "이것은 내용입니다.", true, null),
+					newIndividualTil(Roadmap.builder().id(1L).build(), Step.builder().id(4L).build(), User.builder().id(1L).build(), "소셜 로그인 사용하기", "이것은 내용입니다.", true, null),
 
-					newTil(Roadmap.builder().id(12L).build(), Step.builder().id(5L).build(), User.builder().id(1L).build(), "다형성(Polymorphism)", "이것은 내용입니다.", false, "이것은 제출할 내용입니다."),
-					newTil(Roadmap.builder().id(12L).build(), Step.builder().id(6L).build(), User.builder().id(1L).build(), "람다식(lambda expression)", "이것은 내용입니다.", false, "이것은 제출할 내용입니다."),
-					newTil(Roadmap.builder().id(12L).build(), Step.builder().id(7L).build(), User.builder().id(1L).build(), "스트림(lambda expression)", "이것은 내용입니다.", false, "이것은 제출할 내용입니다.")
-
+					newGroupTil(Roadmap.builder().id(12L).build(), Step.builder().id(5L).build(), User.builder().id(1L).build(), "다형성(Polymorphism)", "이것은 내용입니다1.", "이것은 제출할 내용입니다.", LocalDateTime.of(2023, Month.OCTOBER, 10, 1, 0, 0), 1,false ),
+					newGroupTil(Roadmap.builder().id(12L).build(), Step.builder().id(5L).build(), User.builder().id(2L).build(), "람다식(lambda expression)", "이것은 내용입니다2.", "이것은 제출할 내용입니다.", LocalDateTime.of(2023, Month.OCTOBER, 10, 2, 0, 0), 2,false ),
+					newGroupTil(Roadmap.builder().id(12L).build(), Step.builder().id(6L).build(), User.builder().id(1L).build(), "스트림(lambda expression)", "이것은 내용입니다3.", "이것은 제출할 내용입니다.", null, 3,false ),
+					newGroupTil(Roadmap.builder().id(12L).build(), Step.builder().id(6L).build(), User.builder().id(2L).build(), "다형성2(Polymorphism)", "이것은 내용입니다4.", "이것은 제출할 내용입니다.", LocalDateTime.of(2023, Month.OCTOBER, 10, 4, 0, 0), 4,false ),
+					newGroupTil(Roadmap.builder().id(12L).build(), Step.builder().id(6L).build(), User.builder().id(5L).build(), "매니저의 글", "이것은 내용입니다5.", "이것은 제출할 내용입니다.", LocalDateTime.of(2023, Month.OCTOBER, 10, 4, 0, 0), 4,false )
 			));
 		};
 	}
@@ -165,7 +178,7 @@ public class TiLyApplication {
 				.build();
 	}
 
-	private UserRoadmap newUserRoadmapRelation(Roadmap roadmap, User user, String content, Boolean isAccept, String role, int progress) {
+	private UserRoadmap newUserRoadmapRelation(Roadmap roadmap, User user, String content, Boolean isAccept, GroupRole role, int progress) {
 		return UserRoadmap.builder()
 				.roadmap(roadmap)
 				.user(user)
@@ -192,6 +205,14 @@ public class TiLyApplication {
 				.build();
 	}
 
+	private UserStep newUserStepRelation(Step step, User user, Boolean isSubmit){
+		return UserStep.builder()
+				.step(step)
+				.user(user)
+				.isSubmit(isSubmit)
+				.build();
+	}
+
 	private Reference newReference(Step step, String category, String link){
 		return Reference.builder()
 				.step(step)
@@ -199,8 +220,8 @@ public class TiLyApplication {
 				.link(link)
         		.build();
   	}
-  
-	private Til newTil(Roadmap roadmap, Step step, User writer, String title, String content, boolean isPersonal, String subContent) {
+
+	private Til newIndividualTil(Roadmap roadmap, Step step, User writer, String title, String content, boolean isPersonal, String subContent) {
 		return Til.builder()
 				.roadmap(roadmap)
 				.step(step)
@@ -209,6 +230,20 @@ public class TiLyApplication {
 				.content(content)
 				.isPersonal(isPersonal)
 				.submitContent(subContent)
+				.build();
+	}
+
+	private Til newGroupTil(Roadmap roadmap, Step step, User writer, String title, String content, String subContent, LocalDateTime submitDate, int commentNum, boolean isPersonal) {
+		return Til.builder()
+				.roadmap(roadmap)
+				.step(step)
+				.writer(writer)
+				.title(title)
+				.content(content)
+				.submitContent(subContent)
+				.submitDate(submitDate)
+				.commentNum(commentNum)
+				.isPersonal(isPersonal)
 				.build();
 	}
 }

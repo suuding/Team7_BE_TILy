@@ -3,6 +3,7 @@ package com.example.tily.step.relation;
 import com.example.tily.step.Step;
 import com.example.tily.user.User;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -25,4 +26,11 @@ public class UserStep {
 
     @Column(nullable = false)
     private Boolean isSubmit;
+
+    @Builder
+    public UserStep(Step step, User user, Boolean isSubmit){
+        this.step = step;
+        this.user = user;
+        this.isSubmit = isSubmit;
+    }
 }

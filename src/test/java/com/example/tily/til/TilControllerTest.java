@@ -49,8 +49,7 @@ public class TilControllerTest {
 
         //then
         result.andExpect(jsonPath("$.success").value("true"));
-        result.andExpect(jsonPath("$.result.id").value(8));
-
+        result.andExpect(jsonPath("$.result.id").value(9));
     }
 
     @DisplayName("틸 생성 실패 test - 제목 미입력")
@@ -185,7 +184,6 @@ public class TilControllerTest {
         result.andExpect(jsonPath("$.result.stepId").value(1L));
         result.andExpect(jsonPath("$.result.stepTitle").value("스프링 시큐리티를 사용하는 이유"));
         result.andExpect(jsonPath("$.result.content").value("이것은 내용입니다."));
-
     }
 
     @DisplayName("틸 조회 실패 test")

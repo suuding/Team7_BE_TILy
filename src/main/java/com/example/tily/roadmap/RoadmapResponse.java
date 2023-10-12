@@ -1,14 +1,18 @@
 package com.example.tily.roadmap;
 
+import com.example.tily.roadmap.relation.GroupRole;
+import com.example.tily.roadmap.relation.UserRoadmap;
 import com.example.tily.step.Step;
 import com.example.tily.step.reference.Reference;
+import com.example.tily.til.Til;
 import com.example.tily.user.Role;
 import com.example.tily.user.User;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.util.Pair;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -212,4 +216,105 @@ public class RoadmapResponse {
         }
     }
 
+    @Getter @Setter
+    public static class ParticipateRoadmapDTO{
+        private Long id;
+
+        public ParticipateRoadmapDTO(Roadmap roadmap){ this.id = roadmap.getId(); }
+    }
+
+    @Getter @Setter
+    public static class FindRoadmapMembersDTO {
+        private List<UserDTO> users;
+
+        public FindRoadmapMembersDTO(List<UserRoadmap> userRoadmaps){
+            this.users = userRoadmaps.stream()
+                    .map(userRoadmap -> new UserDTO(userRoadmap.getUser().getId(), userRoadmap.getUser().getName(), userRoadmap.getUser().getImage(), userRoadmap.getRole()))
+                    .collect(Collectors.toList());
+        }
+
+        @Getter @Setter
+        public class UserDTO{
+            private Long id;
+            private String name;
+            private String image;
+            private GroupRole role;
+
+            public UserDTO(Long id, String name, String image, GroupRole role){
+                this.id = id;
+                this.name = name;
+                this.image = image;
+                this.role = role;
+            }
+        }
+    }
+
+    @Getter @Setter
+    public static class FindAppliedUsersDTO {
+        private List<UserDTO> users;
+        private GroupRole myRole;
+
+        public FindAppliedUsersDTO(List<UserRoadmap> userRoadmaps, GroupRole myRole){
+            this.users = userRoadmaps.stream()
+                    .map(userRoadmap -> new UserDTO(userRoadmap.getUser().getId(), userRoadmap.getUser().getName(), userRoadmap.getUser().getImage(), userRoadmap.getCreatedDate().toLocalDate(), userRoadmap.getContent()))
+                    .collect(Collectors.toList());
+            this.myRole = myRole;
+        }
+
+        @Getter @Setter
+        public class UserDTO{
+            private Long id;
+            private String name;
+            private String image;
+            private LocalDate date;
+            private String content;
+
+            public UserDTO(Long id, String name, String image, LocalDate date, String content){
+                this.id = id;
+                this.name = name;
+                this.image = image;
+                this.date = date;
+                this.content = content;
+            }
+        }
+    }
+
+    @Getter @Setter
+    public static class FindTilOfStepDTO {
+        private List<MemberDTO> members;
+
+        public FindTilOfStepDTO(List<Pair<Til, User>> pairs, Boolean isSubmit){
+            if(isSubmit) {
+                this.members = pairs.stream()
+                        .map(pair -> new MemberDTO(pair.getFirst().getId(), pair.getSecond().getId(),pair.getSecond().getName(), pair.getSecond().getImage(), pair.getFirst().getContent(), pair.getFirst().getSubmitDate().toLocalDate(), pair.getFirst().getCommentNum()))
+                        .collect(Collectors.toList());
+            }
+            else{
+                this.members = pairs.stream()
+                        .map(pair -> new MemberDTO(null, pair.getSecond().getId(), pair.getSecond().getName(), null, null, null, 0))
+                        .collect(Collectors.toList());
+            }
+        }
+
+        @Getter @Setter
+        public class MemberDTO{
+            private Long tilId;
+            private Long userId;
+            private String name;
+            private String image;
+            private String content;
+            private LocalDate submitDate;
+            private int commentNum;
+
+            public MemberDTO(Long tilId, Long userId,String name, String image, String content, LocalDate submitDate, int commentNum ){
+                this.tilId = tilId;
+                this.userId = userId;
+                this.name = name;
+                this.image = image;
+                this.content = content;
+                this.submitDate = submitDate;
+                this.commentNum = commentNum;
+            }
+        }
+    }
 }
