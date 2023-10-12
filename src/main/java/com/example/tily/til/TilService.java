@@ -1,8 +1,9 @@
 package com.example.tily.til;
 
 import com.example.tily._core.errors.exception.Exception400;
-import com.example.tily.comment.Comment;
+
 import com.example.tily.comment.CommentRepository;
+import com.example.tily._core.errors.exception.Exception403;
 import com.example.tily.roadmap.Roadmap;
 import com.example.tily.roadmap.RoadmapRepository;
 import com.example.tily.step.Step;
@@ -75,29 +76,27 @@ public class TilService {
         Step step = stepRepository.findById(stepId).orElseThrow(
                 () -> new Exception400("해당 스텝을 찾을 수 없습니다. ")
         );
-        List<Comment> comments = commentRepository.findByTilId(tilId);
-        for (Comment comment : comments) {
-            Long commentId = comment.getId();
-            String writerName = comment.getWriter().getName();
-            String writerImage = comment.getWriter().getImage();
-
-        }
 
         return new TilResponse.ViewDTO(step, til, comments);
     }
 
     @Transactional
-    public void submitTil(TilRequest.SubmitTilDTO requestDTO, Long id) {
+    public void submitTil(TilRequest.SubmitTilDTO requestDTO, Long id, User user) {
 
         Til til = tilRepository.findById(id).orElseThrow(
                 () -> new Exception400("해당 til을 찾을 수 없습니다.")
         );
 
+        if (til.getWriter().getId() != user.getId()) {
+            throw new Exception403("til을 제출할 권한이 없습니다.");
+        }
+
         String submitContent = requestDTO.getSubmitContent();
         if(submitContent == null){
             throw new Exception400("TIL 내용을 입력해주세요.");
         }
-
+        // 제출 내용을 저장 내용에도 저장
+        til.submitTil(submitContent);
     }
 
     @Transactional

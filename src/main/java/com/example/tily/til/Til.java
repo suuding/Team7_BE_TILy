@@ -4,16 +4,12 @@ import com.example.tily.BaseTimeEntity;
 import com.example.tily.roadmap.Roadmap;
 import com.example.tily.step.Step;
 import com.example.tily.user.User;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-
-@Getter
+@Getter @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name="til_tb")
@@ -72,4 +68,9 @@ public class Til extends BaseTimeEntity {
         this.content  = content;
     }
 
+    public void submitTil(String submitContent) {
+        this.content  = submitContent;
+        this.submitContent = submitContent;
+        this.submitDate = LocalDateTime.now();
+    }
 }
