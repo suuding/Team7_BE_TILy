@@ -106,8 +106,8 @@ public class TilControllerTest {
 
     }
 
-    @DisplayName("틸 저장(수정) 성공 test - 잘못된 tilId")
-    @WithUserDetails(value = "hong@naver.com")
+    @DisplayName("틸 저장(수정) 성공 test")
+    @WithUserDetails(value = "tngus@test.com")
     @Test
     public void update_til_test() throws Exception {
 
@@ -211,7 +211,7 @@ public class TilControllerTest {
     }
 
     @DisplayName("틸 제출 성공 test")
-    @WithUserDetails(value = "hong@naver.com")
+    @WithUserDetails(value = "tngus@test.com")
     @Test
     public void submit_til_test() throws Exception {
         //given
@@ -224,7 +224,6 @@ public class TilControllerTest {
 
         TilRequest.SubmitTilDTO reqeustDTO = new TilRequest.SubmitTilDTO();
         reqeustDTO.setSubmitContent(submitContent);
-        reqeustDTO.setSubmitDate(submitDate);
 
         String requestBody = om.writeValueAsString(reqeustDTO);
         //when
@@ -249,7 +248,7 @@ public class TilControllerTest {
         //given
         Long roadmapId = 1L;
         Long stepId = 1L;
-        Long tilId = 1L;
+        Long tilId = 2L;
 
         //when
         ResultActions result = mvc.perform(
