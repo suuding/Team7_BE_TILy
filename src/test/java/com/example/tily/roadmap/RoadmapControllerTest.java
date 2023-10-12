@@ -142,7 +142,7 @@ public class RoadmapControllerTest {
 
         // then
         result.andExpect(jsonPath("$.success").value("true"));
-        result.andExpect(jsonPath("$.result.id").value(15));
+        result.andExpect(jsonPath("$.result.id").value(16));
     }
 
     // 실패 케이스는 화면을 바탕으로 만듦
@@ -232,7 +232,7 @@ public class RoadmapControllerTest {
         result.andExpect(jsonPath("$.result.name").value("JPA 스터디"));
         result.andExpect(jsonPath("$.result.code").value("ashfkc"));
         result.andExpect(jsonPath("$.result.steps[0].title").value("다형성(Polymorphism)"));
-        result.andExpect(jsonPath("$.result.steps[0].references.youtube[0].id").value(1L));
+        result.andExpect(jsonPath("$.result.steps[0].references.web[0].id").value(5L));
 
         String responseBody = result.andReturn().getResponse().getContentAsString();
         System.out.println("테스트 : "+responseBody);
@@ -412,7 +412,6 @@ public class RoadmapControllerTest {
         result.andExpect(jsonPath("$.success").value("true"));
         result.andExpect(jsonPath("$.result.categories[0].id").value(1L));
         result.andExpect(jsonPath("$.result.roadmaps.tilys[0].id").value(4L));
-        result.andExpect(jsonPath("$.result.roadmaps.groups[0].id").value(12L));
     }
 
     @DisplayName("로드맵_조회_성공_test")

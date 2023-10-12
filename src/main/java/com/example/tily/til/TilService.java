@@ -1,6 +1,9 @@
 package com.example.tily.til;
 
 import com.example.tily._core.errors.exception.Exception400;
+import com.example.tily._core.errors.exception.Exception403;
+import com.example.tily.roadmap.Roadmap;
+import com.example.tily.roadmap.RoadmapRepository;
 import com.example.tily.step.Step;
 import com.example.tily.step.StepRepository;
 import com.example.tily.user.User;
@@ -27,12 +30,21 @@ import java.util.Optional;
 public class TilService {
     private final TilRepository tilRepository;
     private final StepRepository stepRepository;
+    private final RoadmapRepository roadmapRepository;
 
     @Transactional
-    public TilResponse.CreateTilDTO createTil(TilRequest.CreateTilDTO requestDTO){
+    public TilResponse.CreateTilDTO createTil(TilRequest.CreateTilDTO requestDTO, Long roadmapId, Long stepId) {
 
-        String title = requestDTO.getTitle();
-        Til til = Til.builder().title(title).build();
+        Roadmap roadmap = roadmapRepository.findById(roadmapId).orElseThrow(
+                () -> new Exception400("해당 로드맵을 찾을 수 없습니다")
+        );
+
+        Step step = stepRepository.findById(stepId).orElseThrow(
+                () -> new Exception400("해당 스텝을 찾을 수 없습니다")
+        );
+
+        String title = step.getTitle();
+        Til til = Til.builder().roadmap(roadmap).step(step).title(title).build();
         tilRepository.save(til);
 
         return new TilResponse.CreateTilDTO(til);
@@ -53,7 +65,9 @@ public class TilService {
     }
 
     public TilResponse.ViewDTO viewTil(Long tilId, Long stepId) {
-        Til til = tilRepository.findTilById(tilId);
+        Til til = tilRepository.findById(tilId).orElseThrow(
+                () -> new Exception400("해당 TIL을 찾을 수 없습니다. ")
+        );
         Step step = stepRepository.findById(stepId).orElseThrow(
                 () -> new Exception400("해당 스텝을 찾을 수 없습니다. ")
         );
@@ -62,17 +76,22 @@ public class TilService {
     }
 
     @Transactional
-    public void submitTil(TilRequest.SubmitTilDTO requestDTO, Long id) {
+    public void submitTil(TilRequest.SubmitTilDTO requestDTO, Long id, User user) {
 
         Til til = tilRepository.findById(id).orElseThrow(
                 () -> new Exception400("해당 til을 찾을 수 없습니다.")
         );
 
+        if (til.getWriter().getId() != user.getId()) {
+            throw new Exception403("til을 제출할 권한이 없습니다.");
+        }
+
         String submitContent = requestDTO.getSubmitContent();
         if(submitContent == null){
             throw new Exception400("TIL 내용을 입력해주세요.");
         }
-
+        // 제출 내용을 저장 내용에도 저장
+        til.submitTil(submitContent);
     }
 
     @Transactional

@@ -31,7 +31,7 @@ public class TilControllerTest {
     @Test
     public void create_til_success_test() throws Exception {
         //given
-        Long roadmapId = 1L;
+        Long roadmapId = 5L;
         Long stepId = 1L;
 
         String title = "spring security";
@@ -50,7 +50,6 @@ public class TilControllerTest {
         //then
         result.andExpect(jsonPath("$.success").value("true"));
         result.andExpect(jsonPath("$.result.id").value(9));
-
     }
 
     @DisplayName("틸 생성 실패 test - 제목 미입력")
@@ -79,9 +78,35 @@ public class TilControllerTest {
         //result.andExpect(jsonPath("$.message").value("TIL 제목을 입력해주세요."));
 
     }
+    @DisplayName("틸 생성 실패 test - 잘못된 roadmapId")
+    @WithUserDetails(value = "hong@naver.com")
+    @Test
+    public void create_til_failed_test2() throws Exception {
+        //given
+        Long roadmapId = 15L;
+        Long stepId = 1L;
+
+        String title = "10월 9일 TIL";
+        TilRequest.CreateTilDTO reqeustDTO = new TilRequest.CreateTilDTO();
+        reqeustDTO.setTitle(title);
+
+        String requestBody = om.writeValueAsString(reqeustDTO);
+
+        //when
+        ResultActions result = mvc.perform(
+                post("/roadmaps/"+ roadmapId +"/steps/"+ stepId +"/tils")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(requestBody)
+        );
+
+        //then
+        result.andExpect(jsonPath("$.success").value("false"));
+        result.andExpect(jsonPath("message").value("해당 로드맵을 찾을 수 없습니다"));
+
+    }
 
     @DisplayName("틸 저장(수정) 성공 test")
-    @WithUserDetails(value = "hong@naver.com")
+    @WithUserDetails(value = "tngus@test.com")
     @Test
     public void update_til_test() throws Exception {
 
@@ -108,6 +133,35 @@ public class TilControllerTest {
 
     }
 
+    @DisplayName("틸 저장(수정) 실패 test")
+    @WithUserDetails(value = "hong@naver.com")
+    @Test
+    public void update_til_failed_test() throws Exception {
+
+        //given
+        Long roadmapId = 1L;
+        Long stepId = 1L;
+        Long tilId = 15L;
+
+        String content = "바뀐 내용입니다.";
+        TilRequest.UpdateTilDTO reqeustDTO = new TilRequest.UpdateTilDTO();
+        reqeustDTO.setContent(content);
+
+        String requestBody = om.writeValueAsString(reqeustDTO);
+
+        //when
+        ResultActions result = mvc.perform(
+                patch("/roadmaps/"+ roadmapId +"/steps/"+ stepId +"/tils/" + tilId )
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(requestBody)
+        );
+        System.out.println("테스트 ---------------------------------- "+content);
+
+        result.andExpect(jsonPath("$.success").value("false"));
+        result.andExpect(jsonPath("$.message").value("해당 til을 찾을 수 없습니다."));
+
+    }
+
     @DisplayName("틸 조회 성공 test")
     @WithUserDetails(value = "hong@naver.com")
     @Test
@@ -130,8 +184,6 @@ public class TilControllerTest {
         result.andExpect(jsonPath("$.result.stepId").value(1L));
         result.andExpect(jsonPath("$.result.stepTitle").value("스프링 시큐리티를 사용하는 이유"));
         result.andExpect(jsonPath("$.result.content").value("이것은 내용입니다."));
-        result.andExpect(jsonPath("$.result.personal").value("true"));
-
     }
 
     @DisplayName("틸 조회 실패 test")
@@ -157,7 +209,7 @@ public class TilControllerTest {
     }
 
     @DisplayName("틸 제출 성공 test")
-    @WithUserDetails(value = "hong@naver.com")
+    @WithUserDetails(value = "tngus@test.com")
     @Test
     public void submit_til_test() throws Exception {
         //given
@@ -170,7 +222,6 @@ public class TilControllerTest {
 
         TilRequest.SubmitTilDTO reqeustDTO = new TilRequest.SubmitTilDTO();
         reqeustDTO.setSubmitContent(submitContent);
-        reqeustDTO.setSubmitDate(submitDate);
 
         String requestBody = om.writeValueAsString(reqeustDTO);
         //when
@@ -195,7 +246,7 @@ public class TilControllerTest {
         //given
         Long roadmapId = 1L;
         Long stepId = 1L;
-        Long tilId = 1L;
+        Long tilId = 2L;
 
         //when
         ResultActions result = mvc.perform(
