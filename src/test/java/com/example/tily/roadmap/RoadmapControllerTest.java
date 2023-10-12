@@ -230,9 +230,9 @@ public class RoadmapControllerTest {
         result.andExpect(jsonPath("$.success").value("true"));
         result.andExpect(jsonPath("$.result.creator.name").value("hong"));
         result.andExpect(jsonPath("$.result.name").value("JPA 스터디"));
-        result.andExpect(jsonPath("$.result.code").value("ashfkc"));
+        result.andExpect(jsonPath("$.result.code").value("hoyai123"));
         result.andExpect(jsonPath("$.result.steps[0].title").value("다형성(Polymorphism)"));
-        result.andExpect(jsonPath("$.result.steps[0].references.youtube[0].id").value(1L));
+        result.andExpect(jsonPath("$.result.steps[0].references.web[0].id").value(5L));
 
         String responseBody = result.andReturn().getResponse().getContentAsString();
         System.out.println("테스트 : "+responseBody);
@@ -736,8 +736,8 @@ public class RoadmapControllerTest {
 
         // then
         result.andExpect(jsonPath("$.success").value("true"));
-        result.andExpect(jsonPath("$.result.users[0].name").value("hoyai"));
-        result.andExpect(jsonPath("$.result.users[0].content").value("메롱"));
+        result.andExpect(jsonPath("$.result.users[0].name").value("applier"));
+        result.andExpect(jsonPath("$.result.users[0].content").value("참가 신청합니다"));
 
         String responseBody = result.andReturn().getResponse().getContentAsString();
         System.out.println("테스트 : "+responseBody);
@@ -766,7 +766,7 @@ public class RoadmapControllerTest {
     public void application_accept_success_test() throws Exception {
         // given
         Long groupsId = 10L;
-        Long membersId = 5L;
+        Long membersId = 6L;
 
         // when
         ResultActions result = mvc.perform(
@@ -820,7 +820,7 @@ public class RoadmapControllerTest {
     public void application_reject_success_test() throws Exception {
         // given
         Long groupsId = 10L;
-        Long membersId = 5L;
+        Long membersId = 6L;
 
         // when
         ResultActions result = mvc.perform(
@@ -850,7 +850,7 @@ public class RoadmapControllerTest {
         result.andExpect(jsonPath("$.success").value("false"));
     }
 
-    @DisplayName("신청_거절하기_실패2_test: 존재하지 않은 로드맵")
+    @DisplayName("신청_거절하기_않은 로드맵")
     @WithUserDetails(value = "hong@naver.com")
     @Test
     public void application_reject_fail_test_2() throws Exception {

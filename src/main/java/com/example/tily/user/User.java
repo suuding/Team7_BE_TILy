@@ -22,9 +22,6 @@ public class User extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @OneToMany(mappedBy =  "user")
-//    private List<UserRoadmap> userRoadmaps = new ArrayList<>();
-
     @OneToMany(mappedBy =  "user")
     private List<UserStep> userSteps = new ArrayList<>();
 

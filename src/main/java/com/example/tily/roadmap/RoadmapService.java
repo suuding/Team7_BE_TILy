@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -273,14 +272,18 @@ public class RoadmapService {
 
     @Transactional
     public RoadmapResponse.FindRoadmapMembersDTO findRoadmapMembers(Long groupsId){
-        List<UserRoadmap> userRoadmaps = userRoadmapRepository.findByRoadmap_IdAndIsAcceptTrue(groupsId);
+        List<UserRoadmap> userRoadmaps = userRoadmapRepository.findByRoadmapIdAndIsAcceptTrue(groupsId);
+
+        if (userRoadmaps.isEmpty()) {
+            throw new RuntimeException("로드맵의 사용자들을 찾을 수 없습니다");
+        }
 
         return new RoadmapResponse.FindRoadmapMembersDTO(userRoadmaps);
     }
 
     @Transactional
     public void changeMemberRole(RoadmapRequest.ChangeMemberRoleDTO requestDTO, Long groupsId, Long membersId){
-        UserRoadmap userRoadmap = userRoadmapRepository.findByRoadmap_IdAndUser_IdAndIsAcceptTrue(groupsId, membersId)
+        UserRoadmap userRoadmap = userRoadmapRepository.findByRoadmapIdAndUserIdAndIsAcceptTrue(groupsId, membersId)
                 .orElseThrow(() -> new Exception404("해당 사용자를 찾을 수 없습니다"));
 
         userRoadmap.updateRole(requestDTO.getRole());
@@ -288,7 +291,7 @@ public class RoadmapService {
 
     @Transactional
     public void dismissMember(Long groupsId, Long membersId){
-        UserRoadmap userRoadmap = userRoadmapRepository.findByRoadmap_IdAndUser_IdAndIsAcceptTrue(groupsId, membersId)
+        UserRoadmap userRoadmap = userRoadmapRepository.findByRoadmapIdAndUserIdAndIsAcceptTrue(groupsId, membersId)
                 .orElseThrow(() -> new Exception404("해당 사용자를 찾을 수 없습니다"));
 
         userRoadmap.updateRole(GroupRole.ROLE_NONE);
@@ -296,10 +299,10 @@ public class RoadmapService {
 
     @Transactional
     public RoadmapResponse.FindAppliedUsersDTO findAppliedUsers(Long groupsId, User user){
-        List<UserRoadmap> userRoadmaps = userRoadmapRepository.findByRoadmap_IdAndIsAcceptFalse(groupsId);
+        List<UserRoadmap> userRoadmaps = userRoadmapRepository.findByRoadmapIdAndIsAcceptFalse(groupsId);
 
         // 해당 페이지로 들어온 사용자 찾기
-        UserRoadmap currentUser = userRoadmapRepository.findByRoadmap_IdAndUser_IdAndIsAcceptTrue(groupsId, user.getId())
+        UserRoadmap currentUser = userRoadmapRepository.findByRoadmapIdAndUserIdAndIsAcceptTrue(groupsId, user.getId())
                 .orElseThrow(() -> new Exception404("해당 사용자를 찾을 수 없습니다"));
 
         return new RoadmapResponse.FindAppliedUsersDTO(userRoadmaps, currentUser.getRole());
@@ -307,7 +310,7 @@ public class RoadmapService {
 
     @Transactional
     public void acceptApplication(Long groupsId, Long membersId){
-        UserRoadmap userRoadmap = userRoadmapRepository.findByRoadmap_IdAndUser_IdAndIsAcceptFalse(groupsId, membersId)
+        UserRoadmap userRoadmap = userRoadmapRepository.findByRoadmapIdAndUserIdAndIsAcceptFalse(groupsId, membersId)
                 .orElseThrow(() -> new Exception404("해당 사용자를 찾을 수 없습니다"));
 
         userRoadmap.updateIsAccept(true);
@@ -315,7 +318,7 @@ public class RoadmapService {
 
     @Transactional
     public void rejectApplication(Long groupsId, Long membersId){
-        UserRoadmap userRoadmap = userRoadmapRepository.findByRoadmap_IdAndUser_IdAndIsAcceptFalse(groupsId, membersId)
+        UserRoadmap userRoadmap = userRoadmapRepository.findByRoadmapIdAndUserIdAndIsAcceptFalse(groupsId, membersId)
                 .orElseThrow(() -> new Exception404("해당 사용자를 찾을 수 없습니다"));
 
         userRoadmap.updateRole(GroupRole.ROLE_NONE);
@@ -330,8 +333,8 @@ public class RoadmapService {
             User user = til.getWriter();
 
             // 어떤 틸이 존재한다면, 해당 틸은 반드시 틸이 속한 Step과 Roadmap 그리고 User를 가진다 => userStep 관계와 userRoadmap 관계는 반드시 존재한다. => 존재하지 않은 것에 대한 예외처리 필요 X
-            UserStep userStep = userStepRepository.findByUser_idAndStep_id(user.getId(), stepsId).get();
-            UserRoadmap userRoadmap = userRoadmapRepository.findByRoadmap_IdAndUser_Id(groupsId, user.getId()).get();
+            UserStep userStep = userStepRepository.findByUserIdAndStepId(user.getId(), stepsId).get();
+            UserRoadmap userRoadmap = userRoadmapRepository.findByRoadmapIdAndUserId(groupsId, user.getId()).get();
 
             if((isSubmit == userStep.getIsSubmit())  && (name == null || name.equals(user.getName()))){
                 // isMember가 false => 운영자를 포함해서 모든 til을 반환, isMember가 true => 운영자의 til을 제외하고 반환한다
