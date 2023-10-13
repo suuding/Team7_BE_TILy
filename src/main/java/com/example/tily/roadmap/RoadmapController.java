@@ -40,8 +40,8 @@ public class RoadmapController {
 
     // 그룹 로드맵 정보 수정하기
     @PostMapping("/roadmaps/{id}")
-    public ResponseEntity<?> updateGroupRoadmap(@PathVariable Long id, @RequestBody @Valid RoadmapRequest.UpdateGroupRoadmapDTO requestDTO){
-        roadmapService.updateGroupRoadmap(id, requestDTO);
+    public ResponseEntity<?> updateGroupRoadmap(@PathVariable Long id, @RequestBody @Valid RoadmapRequest.UpdateGroupRoadmapDTO requestDTO, @AuthenticationPrincipal CustomUserDetails userDetails){
+        roadmapService.updateGroupRoadmap(id, requestDTO, userDetails.getUser());
 
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }

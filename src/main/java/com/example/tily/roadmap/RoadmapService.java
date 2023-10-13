@@ -149,7 +149,9 @@ public class RoadmapService {
     }
 
     @Transactional
-    public void updateGroupRoadmap(Long id, RoadmapRequest.UpdateGroupRoadmapDTO requestDTO){
+    public void updateGroupRoadmap(Long id, RoadmapRequest.UpdateGroupRoadmapDTO requestDTO, User user){
+        checkManagerPermission(id ,user);
+
         // 로드맵 업데이트
         Roadmap roadmap = roadmapRepository.findById(id).orElseThrow(
                 () -> new Exception404("해당 로드맵을 찾을 수 없습니다")

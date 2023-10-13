@@ -47,7 +47,7 @@ public class TiLyApplication {
 					newUser("hong@naver.com", "hong", passwordEncoder, Role.ROLE_USER),
 					newUser("test@test.com", "test", passwordEncoder, Role.ROLE_USER),
 					newUser("admin@test.com", "admin", passwordEncoder, Role.ROLE_ADMIN),
-					newUser("hoyai@test.com", "masterHong", passwordEncoder, Role.ROLE_USER),
+					newUser("hoyai@naver.com", "masterHong", passwordEncoder, Role.ROLE_USER),
 					newUser("applier@test.com", "applier", passwordEncoder, Role.ROLE_USER)
 			));
 			roadmapRepository.saveAll(Arrays.asList(
@@ -87,7 +87,7 @@ public class TiLyApplication {
 					newUserRoadmapRelation(Roadmap.builder().id(8L).build(), User.builder().id(4L).build(), null, true, GroupRole.ROLE_MASTER, 0),
 					newUserRoadmapRelation(Roadmap.builder().id(9L).build(), User.builder().id(4L).build(), null, true, GroupRole.ROLE_MASTER, 0),
 
-					newUserRoadmapRelation(Roadmap.builder().id(10L).build(), User.builder().id(2L).build(), "자바 공부하고싶습니다!", true, GroupRole.ROLE_MEMBER, 10),
+					newUserRoadmapRelation(Roadmap.builder().id(10L).build(), User.builder().id(2L).build(), "자바 공부하고싶습니다!", true, GroupRole.ROLE_MANAGER, 10),
 					newUserRoadmapRelation(Roadmap.builder().id(10L).build(), User.builder().id(3L).build(), "자바 공부하고싶습니다!", true, GroupRole.ROLE_MEMBER, 10),
 					newUserRoadmapRelation(Roadmap.builder().id(12L).build(), User.builder().id(1L).build(), "열심히 하겠습니다!", true, GroupRole.ROLE_MEMBER, 0),
 					newUserRoadmapRelation(Roadmap.builder().id(12L).build(), User.builder().id(2L).build(), "열심히 하겠습니다2!", true, GroupRole.ROLE_MEMBER, 0),
