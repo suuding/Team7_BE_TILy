@@ -848,7 +848,7 @@ public class RoadmapControllerTest {
         result.andExpect(jsonPath("$.success").value("false"));
     }
 
-    @DisplayName("신청_거절하기_않은 로드맵")
+    @DisplayName("신청_거절하기_실패1_test2: 존재하지 않은 로드맵")
     @WithUserDetails(value = "hong@naver.com")
     @Test
     public void application_reject_fail_test_2() throws Exception {
