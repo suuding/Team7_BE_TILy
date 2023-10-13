@@ -40,8 +40,8 @@ public class RoadmapController {
 
     // 그룹 로드맵 정보 수정하기
     @PostMapping("/roadmaps/{id}")
-    public ResponseEntity<?> updateGroupRoadmap(@PathVariable Long id, @RequestBody @Valid RoadmapRequest.UpdateGroupRoadmapDTO requestDTO){
-        roadmapService.updateGroupRoadmap(id, requestDTO);
+    public ResponseEntity<?> updateGroupRoadmap(@PathVariable Long id, @RequestBody @Valid RoadmapRequest.UpdateGroupRoadmapDTO requestDTO, @AuthenticationPrincipal CustomUserDetails userDetails){
+        roadmapService.updateGroupRoadmap(id, requestDTO, userDetails.getUser());
 
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
@@ -82,24 +82,24 @@ public class RoadmapController {
 
     // 로드맵의 구성원 전체 조회하기
     @GetMapping("/roadmaps/groups/{id}/members")
-    public ResponseEntity<?> findRoadmapMembers(@PathVariable Long id){
-        RoadmapResponse.FindRoadmapMembersDTO responseDTO = roadmapService.findRoadmapMembers(id);
+    public ResponseEntity<?> findRoadmapMembers(@PathVariable Long id, @AuthenticationPrincipal CustomUserDetails userDetails){
+        RoadmapResponse.FindRoadmapMembersDTO responseDTO = roadmapService.findRoadmapMembers(id, userDetails.getUser());
 
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
 
     // 로드맵의 구성원 역할 바꾸기
     @PatchMapping("/roadmaps/groups/{groupsId}/members/{membersId}")
-    public ResponseEntity<?> changeMemberRole(@RequestBody @Valid RoadmapRequest.ChangeMemberRoleDTO requestDTO, @PathVariable Long groupsId, @PathVariable Long membersId){
-        roadmapService.changeMemberRole(requestDTO, groupsId, membersId);
+    public ResponseEntity<?> changeMemberRole(@RequestBody @Valid RoadmapRequest.ChangeMemberRoleDTO requestDTO, @PathVariable Long groupsId, @PathVariable Long membersId, @AuthenticationPrincipal CustomUserDetails userDetails){
+        roadmapService.changeMemberRole(requestDTO, groupsId, membersId, userDetails.getUser());
 
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 
     // 로드맵의 구성원 강퇴하기
     @DeleteMapping("/roadmaps/groups/{groupsId}/members/{membersId}")
-    public ResponseEntity<?> dismissMember(@PathVariable Long groupsId, @PathVariable Long membersId){
-        roadmapService.dismissMember(groupsId, membersId);
+    public ResponseEntity<?> dismissMember(@PathVariable Long groupsId, @PathVariable Long membersId, @AuthenticationPrincipal CustomUserDetails userDetails){
+        roadmapService.dismissMember(groupsId, membersId, userDetails.getUser());
 
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
@@ -114,16 +114,16 @@ public class RoadmapController {
 
     // 로드맵 참여 신청 승인
     @PostMapping("/roadmaps/groups/{groupsId}/members/{membersId}/accept")
-    public ResponseEntity<?> acceptApplication(@PathVariable Long groupsId, @PathVariable Long membersId){
-        roadmapService.acceptApplication(groupsId, membersId);
+    public ResponseEntity<?> acceptApplication(@PathVariable Long groupsId, @PathVariable Long membersId, @AuthenticationPrincipal CustomUserDetails userDetails){
+        roadmapService.acceptApplication(groupsId, membersId, userDetails.getUser());
 
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 
     // 로드맵 참여 신청 거절
     @DeleteMapping("/roadmaps/groups/{groupsId}/members/{membersId}/reject")
-    public ResponseEntity<?> rejectApplication(@PathVariable Long groupsId, @PathVariable Long membersId){
-        roadmapService.rejectApplication(groupsId, membersId);
+    public ResponseEntity<?> rejectApplication(@PathVariable Long groupsId, @PathVariable Long membersId, @AuthenticationPrincipal CustomUserDetails userDetails){
+        roadmapService.rejectApplication(groupsId, membersId, userDetails.getUser());
 
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }

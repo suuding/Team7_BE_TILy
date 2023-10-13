@@ -142,7 +142,6 @@ public class RoadmapControllerTest {
 
         // then
         result.andExpect(jsonPath("$.success").value("true"));
-        result.andExpect(jsonPath("$.result.id").value(16));
     }
 
     // 실패 케이스는 화면을 바탕으로 만듦
@@ -230,7 +229,7 @@ public class RoadmapControllerTest {
         result.andExpect(jsonPath("$.success").value("true"));
         result.andExpect(jsonPath("$.result.creator.name").value("hong"));
         result.andExpect(jsonPath("$.result.name").value("JPA 스터디"));
-        result.andExpect(jsonPath("$.result.code").value("ashfkc"));
+        result.andExpect(jsonPath("$.result.code").value("hoyai123"));
         result.andExpect(jsonPath("$.result.steps[0].title").value("다형성(Polymorphism)"));
         result.andExpect(jsonPath("$.result.steps[0].references.web[0].id").value(5L));
 
@@ -571,7 +570,7 @@ public class RoadmapControllerTest {
         // then
         result.andExpect(jsonPath("$.success").value("true"));
         result.andExpect(jsonPath("$.result.users[0].name").value("hong"));
-        result.andExpect(jsonPath("$.result.users[0].role").value("ROLE_MEMBER"));
+        result.andExpect(jsonPath("$.result.users[0].role").value("ROLE_MANAGER"));
 
         String responseBody = result.andReturn().getResponse().getContentAsString();
         System.out.println("테스트 : "+responseBody);
@@ -595,11 +594,11 @@ public class RoadmapControllerTest {
     }
 
     @DisplayName("구성원_역할_변경하기_성공_test")
-    @WithUserDetails(value = "hong@naver.com")
+    @WithUserDetails(value = "hoyai@naver.com")
     @Test
     public void member_role_change_success_test() throws Exception{
         // given
-        Long groupsId = 10L;
+        Long groupsId = 12L;
         Long usersId = 2L;
         GroupRole role = GroupRole.ROLE_MANAGER;
         RoadmapRequest.ChangeMemberRoleDTO requestDTO = new RoadmapRequest.ChangeMemberRoleDTO();
@@ -619,11 +618,11 @@ public class RoadmapControllerTest {
     }
 
     @DisplayName("구성원_역할_변경하기_실패_test1: 존재하지 않은 유저")
-    @WithUserDetails(value = "hong@naver.com")
+    @WithUserDetails(value = "hoyai@naver.com")
     @Test
     public void member_role_change_fail_test_1() throws Exception{
         // given
-        Long groupsId = 10L;
+        Long groupsId = 12L;
         Long usersId = 10L;
         GroupRole role = GroupRole.ROLE_MANAGER;
         RoadmapRequest.ChangeMemberRoleDTO requestDTO = new RoadmapRequest.ChangeMemberRoleDTO();
@@ -643,7 +642,7 @@ public class RoadmapControllerTest {
     }
 
     @DisplayName("구성원_역할_변경하기_실패_test2: 존재하지 않은 로드맵")
-    @WithUserDetails(value = "hong@naver.com")
+    @WithUserDetails(value = "hoyai@naver.com")
     @Test
     public void member_role_change_fail_test_2() throws Exception{
         // given
@@ -667,12 +666,12 @@ public class RoadmapControllerTest {
     }
 
     @DisplayName("구성원_강퇴하기_성공_test")
-    @WithUserDetails(value = "hong@naver.com")
+    @WithUserDetails(value = "hoyai@naver.com")
     @Test
     public void member_dismiss_success_test() throws Exception {
         // given
-        Long groupsId = 10L;
-        Long usersId = 2L;
+        Long groupsId = 12L;
+        Long usersId = 1L;
 
         // when
         ResultActions result = mvc.perform(
@@ -685,11 +684,11 @@ public class RoadmapControllerTest {
     }
 
     @DisplayName("구성원_강퇴하기_실패_test1: 존재하지 않는 유저")
-    @WithUserDetails(value = "hong@naver.com")
+    @WithUserDetails(value = "hoyai@naver.com")
     @Test
     public void member_dismiss_fail_test_1() throws Exception {
         // given
-        Long groupsId = 10L;
+        Long groupsId = 12L;
         Long usersId = 10L;
 
         // when
@@ -703,12 +702,12 @@ public class RoadmapControllerTest {
     }
 
     @DisplayName("구성원_강퇴하기_실패_test2: 존재하지 않는 로드맵")
-    @WithUserDetails(value = "hong@naver.com")
+    @WithUserDetails(value = "hoyai@naver.com")
     @Test
     public void member_dismiss_fail_test_2() throws Exception {
         // given
         Long groupsId = 20L;
-        Long usersId = 2L;
+        Long usersId = 1L;
 
         // when
         ResultActions result = mvc.perform(
@@ -735,8 +734,8 @@ public class RoadmapControllerTest {
 
         // then
         result.andExpect(jsonPath("$.success").value("true"));
-        result.andExpect(jsonPath("$.result.users[0].name").value("hoyai"));
-        result.andExpect(jsonPath("$.result.users[0].content").value("메롱"));
+        result.andExpect(jsonPath("$.result.users[0].name").value("applier"));
+        result.andExpect(jsonPath("$.result.users[0].content").value("참가 신청합니다"));
 
         String responseBody = result.andReturn().getResponse().getContentAsString();
         System.out.println("테스트 : "+responseBody);
@@ -765,7 +764,7 @@ public class RoadmapControllerTest {
     public void application_accept_success_test() throws Exception {
         // given
         Long groupsId = 10L;
-        Long membersId = 5L;
+        Long membersId = 6L;
 
         // when
         ResultActions result = mvc.perform(
@@ -819,7 +818,7 @@ public class RoadmapControllerTest {
     public void application_reject_success_test() throws Exception {
         // given
         Long groupsId = 10L;
-        Long membersId = 5L;
+        Long membersId = 6L;
 
         // when
         ResultActions result = mvc.perform(
@@ -849,7 +848,7 @@ public class RoadmapControllerTest {
         result.andExpect(jsonPath("$.success").value("false"));
     }
 
-    @DisplayName("신청_거절하기_실패2_test: 존재하지 않은 로드맵")
+    @DisplayName("신청_거절하기_실패1_test2: 존재하지 않은 로드맵")
     @WithUserDetails(value = "hong@naver.com")
     @Test
     public void application_reject_fail_test_2() throws Exception {

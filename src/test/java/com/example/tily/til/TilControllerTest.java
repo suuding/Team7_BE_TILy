@@ -49,7 +49,7 @@ public class TilControllerTest {
 
         //then
         result.andExpect(jsonPath("$.success").value("true"));
-        result.andExpect(jsonPath("$.result.id").value(9));
+        result.andExpect(jsonPath("$.result.id").value(10));
     }
 
     @DisplayName("틸 생성 실패 test - 제목 미입력")

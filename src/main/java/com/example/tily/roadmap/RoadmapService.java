@@ -1,5 +1,6 @@
 package com.example.tily.roadmap;
 
+import com.example.tily._core.errors.exception.Exception403;
 import com.example.tily._core.errors.exception.Exception404;
 import com.example.tily.roadmap.relation.GroupRole;
 import com.example.tily.roadmap.relation.UserRoadmap;
@@ -20,7 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -149,7 +149,9 @@ public class RoadmapService {
     }
 
     @Transactional
-    public void updateGroupRoadmap(Long id, RoadmapRequest.UpdateGroupRoadmapDTO requestDTO){
+    public void updateGroupRoadmap(Long id, RoadmapRequest.UpdateGroupRoadmapDTO requestDTO, User user){
+        checkManagerPermission(id ,user);
+
         // 로드맵 업데이트
         Roadmap roadmap = roadmapRepository.findById(id).orElseThrow(
                 () -> new Exception404("해당 로드맵을 찾을 수 없습니다")
@@ -239,6 +241,7 @@ public class RoadmapService {
         Roadmap roadmap = roadmapRepository.findById(id).
                 orElseThrow(() -> new Exception404("해당 로드맵을 찾을 수 없습니다"));
 
+        // 지원하면 ROLE_MEMBER이지만 isAccep가 false이다. 즉 예비 맴버라는 의미
         UserRoadmap userRoadmap = UserRoadmap.builder()
                 .roadmap(roadmap)
                 .user(user)
@@ -257,6 +260,7 @@ public class RoadmapService {
         Roadmap roadmap = roadmapRepository.findByCode(code)
                 .orElseThrow(() -> new Exception404("해당 로드맵을 찾을 수 없습니다"));
 
+        // 코드로 참여시 승인없이 바로 맴버가 된다
         UserRoadmap userRoadmap = UserRoadmap.builder()
                 .roadmap(roadmap)
                 .user(user)
@@ -272,50 +276,68 @@ public class RoadmapService {
     }
 
     @Transactional
-    public RoadmapResponse.FindRoadmapMembersDTO findRoadmapMembers(Long groupsId){
-        List<UserRoadmap> userRoadmaps = userRoadmapRepository.findByRoadmap_IdAndIsAcceptTrue(groupsId);
+    public RoadmapResponse.FindRoadmapMembersDTO findRoadmapMembers(Long groupsId, User user){
+        // 해당 그룹에 속한 사람만 구성원들을 확인할 수 있다 (메니저 이외에 일반 유저들도 접근할 수 있는 데이터)
+        checkUserPermission(groupsId, user);
+
+        List<UserRoadmap> userRoadmaps = userRoadmapRepository.findByRoadmapIdAndIsAcceptTrue(groupsId);
+
+        if (userRoadmaps.isEmpty()) {
+            throw new Exception404("로드맵의 사용자들을 찾을 수 없습니다");
+        }
 
         return new RoadmapResponse.FindRoadmapMembersDTO(userRoadmaps);
     }
 
     @Transactional
-    public void changeMemberRole(RoadmapRequest.ChangeMemberRoleDTO requestDTO, Long groupsId, Long membersId){
-        UserRoadmap userRoadmap = userRoadmapRepository.findByRoadmap_IdAndUser_IdAndIsAcceptTrue(groupsId, membersId)
+    public void changeMemberRole(RoadmapRequest.ChangeMemberRoleDTO requestDTO, Long groupsId, Long membersId, User user){
+        checkManagerPermission(groupsId, user);
+
+        UserRoadmap userRoadmap = userRoadmapRepository.findByRoadmapIdAndUserIdAndIsAcceptTrue(groupsId, membersId)
                 .orElseThrow(() -> new Exception404("해당 사용자를 찾을 수 없습니다"));
 
         userRoadmap.updateRole(requestDTO.getRole());
     }
 
     @Transactional
-    public void dismissMember(Long groupsId, Long membersId){
-        UserRoadmap userRoadmap = userRoadmapRepository.findByRoadmap_IdAndUser_IdAndIsAcceptTrue(groupsId, membersId)
+    public void dismissMember(Long groupsId, Long membersId, User user){
+        checkManagerPermission(groupsId, user);
+
+        UserRoadmap userRoadmap = userRoadmapRepository.findByRoadmapIdAndUserIdAndIsAcceptTrue(groupsId, membersId)
                 .orElseThrow(() -> new Exception404("해당 사용자를 찾을 수 없습니다"));
 
+        // 방출하면 Role을 NONE으로
         userRoadmap.updateRole(GroupRole.ROLE_NONE);
     }
 
     @Transactional
     public RoadmapResponse.FindAppliedUsersDTO findAppliedUsers(Long groupsId, User user){
-        List<UserRoadmap> userRoadmaps = userRoadmapRepository.findByRoadmap_IdAndIsAcceptFalse(groupsId);
+        checkManagerPermission(groupsId, user);
+
+        List<UserRoadmap> userRoadmaps = userRoadmapRepository.findByRoadmapIdAndIsAcceptFalse(groupsId);
 
         // 해당 페이지로 들어온 사용자 찾기
-        UserRoadmap currentUser = userRoadmapRepository.findByRoadmap_IdAndUser_IdAndIsAcceptTrue(groupsId, user.getId())
+        UserRoadmap currentUser = userRoadmapRepository.findByRoadmapIdAndUserIdAndIsAcceptTrue(groupsId, user.getId())
                 .orElseThrow(() -> new Exception404("해당 사용자를 찾을 수 없습니다"));
 
         return new RoadmapResponse.FindAppliedUsersDTO(userRoadmaps, currentUser.getRole());
     }
 
     @Transactional
-    public void acceptApplication(Long groupsId, Long membersId){
-        UserRoadmap userRoadmap = userRoadmapRepository.findByRoadmap_IdAndUser_IdAndIsAcceptFalse(groupsId, membersId)
+    public void acceptApplication(Long groupsId, Long membersId, User user){
+        checkManagerPermission(groupsId, user);
+
+        UserRoadmap userRoadmap = userRoadmapRepository.findByRoadmapIdAndUserIdAndIsAcceptFalse(groupsId, membersId)
                 .orElseThrow(() -> new Exception404("해당 사용자를 찾을 수 없습니다"));
 
         userRoadmap.updateIsAccept(true);
     }
 
     @Transactional
-    public void rejectApplication(Long groupsId, Long membersId){
-        UserRoadmap userRoadmap = userRoadmapRepository.findByRoadmap_IdAndUser_IdAndIsAcceptFalse(groupsId, membersId)
+    public void rejectApplication(Long groupsId, Long membersId, User user){
+        checkManagerPermission(groupsId, user);
+
+        UserRoadmap userRoadmap = userRoadmapRepository.findByRoadmapIdAndUserIdAndIsAcceptFalse(groupsId, membersId)
                 .orElseThrow(() -> new Exception404("해당 사용자를 찾을 수 없습니다"));
 
         userRoadmap.updateRole(GroupRole.ROLE_NONE);
@@ -330,8 +352,8 @@ public class RoadmapService {
             User user = til.getWriter();
 
             // 어떤 틸이 존재한다면, 해당 틸은 반드시 틸이 속한 Step과 Roadmap 그리고 User를 가진다 => userStep 관계와 userRoadmap 관계는 반드시 존재한다. => 존재하지 않은 것에 대한 예외처리 필요 X
-            UserStep userStep = userStepRepository.findByUser_idAndStep_id(user.getId(), stepsId).get();
-            UserRoadmap userRoadmap = userRoadmapRepository.findByRoadmap_IdAndUser_Id(groupsId, user.getId()).get();
+            UserStep userStep = userStepRepository.findByUserIdAndStepId(user.getId(), stepsId).get();
+            UserRoadmap userRoadmap = userRoadmapRepository.findByRoadmapIdAndUserId(groupsId, user.getId()).get();
 
             if((isSubmit == userStep.getIsSubmit())  && (name == null || name.equals(user.getName()))){
                 // isMember가 false => 운영자를 포함해서 모든 til을 반환, isMember가 true => 운영자의 til을 제외하고 반환한다
@@ -343,5 +365,23 @@ public class RoadmapService {
         }
 
         return new RoadmapResponse.FindTilOfStepDTO(pairs, isSubmit);
+    }
+
+    private void checkManagerPermission(Long groupsId, User user) {
+        UserRoadmap currentUserRoadmap = userRoadmapRepository.findByRoadmapIdAndUserIdAndIsAcceptTrue(groupsId, user.getId())
+                .orElseThrow(() -> new Exception403("잘못된 접근입니다"));
+
+        if(currentUserRoadmap.getRole() != GroupRole.ROLE_MASTER && currentUserRoadmap.getRole() != GroupRole.ROLE_MANAGER){
+            throw new Exception403("권한이 없습니다");
+        }
+    }
+
+    private void checkUserPermission(Long groupsId, User user) {
+        UserRoadmap currentUserRoadmap = userRoadmapRepository.findByRoadmapIdAndUserIdAndIsAcceptTrue(groupsId, user.getId())
+                .orElseThrow(() -> new Exception403("잘못된 접근입니다"));
+
+        if(currentUserRoadmap.getRole() == GroupRole.ROLE_NONE){
+            throw new Exception403("권한이 없습니다");
+        }
     }
 }
