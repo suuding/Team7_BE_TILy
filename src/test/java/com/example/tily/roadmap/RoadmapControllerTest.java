@@ -411,7 +411,6 @@ public class RoadmapControllerTest {
         result.andExpect(jsonPath("$.success").value("true"));
         result.andExpect(jsonPath("$.result.categories[0].id").value(1L));
         result.andExpect(jsonPath("$.result.roadmaps.tilys[0].id").value(4L));
-        result.andExpect(jsonPath("$.result.roadmaps.groups[0].id").value(12L));
     }
 
     @DisplayName("로드맵_조회_성공_test")

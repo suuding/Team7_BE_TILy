@@ -17,10 +17,9 @@ public class TilController {
 
     @PostMapping("/roadmaps/{roadmapId}/steps/{stepId}/tils")
     public ResponseEntity<?> createTil(@PathVariable("roadmapId") Long roadmapId, @PathVariable("stepId") Long stepId, @RequestBody @Valid TilRequest.CreateTilDTO requestDTO) {
-        TilResponse.CreateTilDTO responseDTO = tilService.createTil(requestDTO);
-        ApiUtils.ApiResult<?> apiResult= ApiUtils.success(responseDTO);
+        TilResponse.CreateTilDTO responseDTO = tilService.createTil(requestDTO, roadmapId, stepId);
 
-        return ResponseEntity.ok(apiResult);
+        return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
 
     @PatchMapping("/roadmaps/{roadmapId}/steps/{stepId}/tils/{tilId}")
@@ -38,9 +37,12 @@ public class TilController {
     }
 
     @PostMapping("/roadmaps/{roadmapId}/steps/{stepId}/tils/{tilId}")
-    public ResponseEntity<?> submitTil(@PathVariable("roadmapId") Long roadmapId, @PathVariable("stepId")Long stepId, @PathVariable("tilId") Long tilId, @RequestBody @Valid TilRequest.SubmitTilDTO requestDTO) {
+    public ResponseEntity<?> submitTil(@PathVariable("roadmapId") Long roadmapId,
+                                       @PathVariable("stepId")Long stepId,
+                                       @PathVariable("tilId") Long tilId,
+                                       @RequestBody @Valid TilRequest.SubmitTilDTO requestDTO, @AuthenticationPrincipal CustomUserDetails userDetails) {
 
-        tilService.submitTil(requestDTO, tilId);
+        tilService.submitTil(requestDTO, tilId, userDetails.getUser());
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 

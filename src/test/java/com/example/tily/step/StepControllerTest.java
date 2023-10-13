@@ -47,7 +47,7 @@ public class StepControllerTest {
 
         // then
         result.andExpect(jsonPath("$.success").value("true"));
-        result.andExpect(jsonPath("$.result.id").value(8));
+        result.andExpect(jsonPath("$.result.id").value(8L));
     }
 
     @DisplayName("개인 로드맵 스텝_생성_실패_test_1: 존재하지 않은 로드맵")
@@ -56,7 +56,7 @@ public class StepControllerTest {
     public void individual_step_create_fail_test_1() throws Exception {
 
         // given
-        Long id = 20L;
+        Long id = 50L;
 
         String title = "스프링 시큐리티 - 세팅";
         StepRequest.CreateIndividualStepDTO requestDTO = new StepRequest.CreateIndividualStepDTO();
