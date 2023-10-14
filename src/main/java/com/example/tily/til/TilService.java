@@ -1,6 +1,8 @@
 package com.example.tily.til;
 
 import com.example.tily._core.errors.exception.Exception400;
+
+import com.example.tily.comment.CommentRepository;
 import com.example.tily._core.errors.exception.Exception403;
 import com.example.tily.roadmap.Roadmap;
 import com.example.tily.roadmap.RoadmapRepository;
@@ -12,7 +14,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +22,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Transactional(readOnly = true)
@@ -31,6 +35,7 @@ public class TilService {
     private final TilRepository tilRepository;
     private final StepRepository stepRepository;
     private final RoadmapRepository roadmapRepository;
+    private final CommentRepository commentRepository;
 
     @Transactional
     public TilResponse.CreateTilDTO createTil(TilRequest.CreateTilDTO requestDTO, Long roadmapId, Long stepId) {
@@ -72,7 +77,7 @@ public class TilService {
                 () -> new Exception400("해당 스텝을 찾을 수 없습니다. ")
         );
 
-        return new TilResponse.ViewDTO(step, til);
+        return new TilResponse.ViewDTO(step, til, comments);
     }
 
     @Transactional

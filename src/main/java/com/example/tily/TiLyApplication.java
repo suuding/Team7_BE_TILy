@@ -1,5 +1,7 @@
 package com.example.tily;
 
+import com.example.tily.comment.Comment;
+import com.example.tily.comment.CommentRepository;
 import com.example.tily.roadmap.Category;
 import com.example.tily.roadmap.Roadmap;
 import com.example.tily.roadmap.RoadmapRepository;
@@ -40,7 +42,8 @@ public class TiLyApplication {
 	@Profile("local")
 	@Bean
 	CommandLineRunner localServerStart(UserRepository userRepository, RoadmapRepository roadmapRepository, StepRepository stepRepository, ReferenceRepository referenceRepository, TilRepository tilRepository, PasswordEncoder passwordEncoder,
-									   UserRoadmapRepository userRoadmapRepository, UserStepRepository userStepRepository) {
+									   UserRoadmapRepository userRoadmapRepository, UserStepRepository userStepRepository, CommentRepository commentRepository) {
+
 		return args -> {
 			userRepository.saveAll(Arrays.asList(
 					newUser("tngus@test.com", "su", passwordEncoder, Role.ROLE_USER),
@@ -131,6 +134,12 @@ public class TiLyApplication {
 					newGroupTil(Roadmap.builder().id(12L).build(), Step.builder().id(6L).build(), User.builder().id(1L).build(), "스트림(lambda expression)", "이것은 내용입니다3.", "이것은 제출할 내용입니다.", null, 3,false ),
 					newGroupTil(Roadmap.builder().id(12L).build(), Step.builder().id(6L).build(), User.builder().id(2L).build(), "다형성2(Polymorphism)", "이것은 내용입니다4.", "이것은 제출할 내용입니다.", LocalDateTime.of(2023, Month.OCTOBER, 10, 4, 0, 0), 4,false ),
 					newGroupTil(Roadmap.builder().id(12L).build(), Step.builder().id(6L).build(), User.builder().id(5L).build(), "매니저의 글", "이것은 내용입니다5.", "이것은 제출할 내용입니다.", LocalDateTime.of(2023, Month.OCTOBER, 10, 4, 0, 0), 4,false )
+			));
+
+			commentRepository.saveAll(Arrays.asList(
+					newComment(Roadmap.builder().id(1L).build(), Step.builder().id(1L).build(),Til.builder().id(1L).build(),User.builder().id(1L).build(), "이것은 댓글입니다."),
+					newComment(Roadmap.builder().id(1L).build(), Step.builder().id(1L).build(),Til.builder().id(1L).build(),User.builder().id(2L).build(), "이것도 댓글입니다.")
+
 			));
 		};
 	}
@@ -234,6 +243,17 @@ public class TiLyApplication {
 				.build();
 	}
 
+	private Comment newComment(Roadmap roadmap, Step step, Til til, User writer, String content) {
+		return Comment.builder()
+				.roadmap(roadmap)
+				.step(step)
+				.til(til)
+				.writer(writer)
+				.content(content)
+				.build();
+	}
+
+
 	private Til newGroupTil(Roadmap roadmap, Step step, User writer, String title, String content, String subContent, LocalDateTime submitDate, int commentNum, boolean isPersonal) {
 		return Til.builder()
 				.roadmap(roadmap)
@@ -247,4 +267,5 @@ public class TiLyApplication {
 				.isPersonal(isPersonal)
 				.build();
 	}
+
 }
