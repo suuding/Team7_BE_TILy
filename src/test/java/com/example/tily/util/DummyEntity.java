@@ -2,6 +2,7 @@ package com.example.tily.util;
 
 import com.example.tily.roadmap.Category;
 import com.example.tily.roadmap.Roadmap;
+import com.example.tily.roadmap.relation.GroupRole;
 import com.example.tily.roadmap.relation.UserRoadmap;
 import com.example.tily.step.Step;
 import com.example.tily.til.Til;
@@ -60,7 +61,7 @@ public class DummyEntity {
                 .build();
     }
 
-    private UserRoadmap newUserRoadmapRelation(Roadmap roadmap, User user, String content, Boolean isAccept, String role, int progress) {
+    private UserRoadmap newUserRoadmapRelation(Roadmap roadmap, User user, String content, Boolean isAccept, GroupRole role, int progress) {
         return UserRoadmap.builder()
                 .roadmap(roadmap)
                 .user(user)
@@ -120,19 +121,19 @@ public class DummyEntity {
 
     protected List<UserRoadmap> userRoadmapDummyList(List<Roadmap> roadmapListPS, List<User> userListPS) {
         return Arrays.asList(
-                newUserRoadmapRelation(roadmapListPS.get(0), userListPS.get(0), null, null, "master", 0),
-                newUserRoadmapRelation(roadmapListPS.get(1), userListPS.get(1), null, null, "master", 0),
-                newUserRoadmapRelation(roadmapListPS.get(2), userListPS.get(2), null, null, "master", 0),
-                newUserRoadmapRelation(roadmapListPS.get(3), userListPS.get(3), null, true, "master", 0),
-                newUserRoadmapRelation(roadmapListPS.get(4), userListPS.get(3), null, true, "master", 0),
-                newUserRoadmapRelation(roadmapListPS.get(4), userListPS.get(1), null, true, "member", 20),
-                newUserRoadmapRelation(roadmapListPS.get(4), userListPS.get(2), null, true, "member", 100),
-                newUserRoadmapRelation(roadmapListPS.get(5), userListPS.get(0), null, true, "master", 10),
-                newUserRoadmapRelation(roadmapListPS.get(5), userListPS.get(1), "자바 공부하고싶습니다!", true, "member", 10),
-                newUserRoadmapRelation(roadmapListPS.get(5), userListPS.get(2), "자바 공부하고싶습니다!", true, "member", 10),
-                newUserRoadmapRelation(roadmapListPS.get(6), userListPS.get(1), null, true, "master", 10),
-                newUserRoadmapRelation(roadmapListPS.get(6), userListPS.get(0), "자바 공부하고싶습니다!", true, "member", 0),
-                newUserRoadmapRelation(roadmapListPS.get(6), userListPS.get(2), "자바 공부하고싶습니다!", null, "none", 0)
+                newUserRoadmapRelation(roadmapListPS.get(0), userListPS.get(0), null, null, GroupRole.ROLE_MASTER, 0),
+                newUserRoadmapRelation(roadmapListPS.get(1), userListPS.get(1), null, null, GroupRole.ROLE_MASTER, 0),
+                newUserRoadmapRelation(roadmapListPS.get(2), userListPS.get(2), null, null, GroupRole.ROLE_MASTER, 0),
+                newUserRoadmapRelation(roadmapListPS.get(3), userListPS.get(3), null, true, GroupRole.ROLE_MASTER, 0),
+                newUserRoadmapRelation(roadmapListPS.get(4), userListPS.get(3), null, true, GroupRole.ROLE_MASTER, 0),
+                newUserRoadmapRelation(roadmapListPS.get(4), userListPS.get(1), null, true, GroupRole.ROLE_MEMBER, 20),
+                newUserRoadmapRelation(roadmapListPS.get(4), userListPS.get(2), null, true, GroupRole.ROLE_MEMBER, 100),
+                newUserRoadmapRelation(roadmapListPS.get(5), userListPS.get(0), null, true, GroupRole.ROLE_MASTER, 10),
+                newUserRoadmapRelation(roadmapListPS.get(5), userListPS.get(1), "자바 공부하고싶습니다!", true, GroupRole.ROLE_MEMBER, 10),
+                newUserRoadmapRelation(roadmapListPS.get(5), userListPS.get(2), "자바 공부하고싶습니다!", true, GroupRole.ROLE_MEMBER, 10),
+                newUserRoadmapRelation(roadmapListPS.get(6), userListPS.get(1), null, true, GroupRole.ROLE_MASTER, 10),
+                newUserRoadmapRelation(roadmapListPS.get(6), userListPS.get(0), "자바 공부하고싶습니다!", true, GroupRole.ROLE_MEMBER, 0),
+                newUserRoadmapRelation(roadmapListPS.get(6), userListPS.get(2), "자바 공부하고싶습니다!", null, GroupRole.ROLE_NONE, 0)
         );
     }
 
