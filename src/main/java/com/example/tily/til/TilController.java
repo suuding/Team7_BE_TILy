@@ -16,21 +16,28 @@ public class TilController {
     private final TilService tilService;
 
     @PostMapping("/roadmaps/{roadmapId}/steps/{stepId}/tils")
-    public ResponseEntity<?> createTil(@PathVariable("roadmapId") Long roadmapId, @PathVariable("stepId") Long stepId, @RequestBody @Valid TilRequest.CreateTilDTO requestDTO, @AuthenticationPrincipal CustomUserDetails userDetails) {
+    public ResponseEntity<?> createTil(@PathVariable("roadmapId") Long roadmapId,
+                                       @PathVariable("stepId") Long stepId,
+                                       @RequestBody @Valid TilRequest.CreateTilDTO requestDTO, @AuthenticationPrincipal CustomUserDetails userDetails) {
         TilResponse.CreateTilDTO responseDTO = tilService.createTil(requestDTO, roadmapId, stepId, userDetails.getUser());
 
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
 
     @PatchMapping("/roadmaps/{roadmapId}/steps/{stepId}/tils/{tilId}")
-    public ResponseEntity<?> updateTil(@PathVariable("roadmapId") Long roadmapId, @PathVariable("stepId") Long stepId, @PathVariable("tilId") Long tilId, @RequestBody @Valid TilRequest.UpdateTilDTO requestDTO, @AuthenticationPrincipal CustomUserDetails userDetails) {
+    public ResponseEntity<?> updateTil(@PathVariable("roadmapId") Long roadmapId,
+                                       @PathVariable("stepId") Long stepId,
+                                       @PathVariable("tilId") Long tilId,
+                                       @RequestBody @Valid TilRequest.UpdateTilDTO requestDTO, @AuthenticationPrincipal CustomUserDetails userDetails) {
         tilService.updateTil(requestDTO, tilId, userDetails.getUser());
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 
     @GetMapping("/roadmaps/{roadmapId}/steps/{stepId}/tils/{tilId}")
-    public ResponseEntity<?> viewTil(@PathVariable("roadmapId") Long roadmapId, @PathVariable("stepId")Long stepId, @PathVariable("tilId") Long tilId) {
-        TilResponse.ViewDTO responseDTO = tilService.viewTil(tilId, stepId);
+    public ResponseEntity<?> viewTil(@PathVariable("roadmapId") Long roadmapId,
+                                     @PathVariable("stepId")Long stepId,
+                                     @PathVariable("tilId") Long tilId, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        TilResponse.ViewDTO responseDTO = tilService.viewTil(tilId, stepId, userDetails.getUser());
         ApiUtils.ApiResult<?> apiResult= ApiUtils.success(responseDTO);
 
         return ResponseEntity.ok(apiResult);
@@ -47,9 +54,11 @@ public class TilController {
     }
 
     @DeleteMapping("/roadmaps/{roadmapId}/steps/{stepId}/tils/{tilId}")
-    public ResponseEntity<?> deleteTil(@PathVariable("roadmapId") Long roadmapId, @PathVariable("stepId")Long stepId, @PathVariable("tilId") Long tilId) {
+    public ResponseEntity<?> deleteTil(@PathVariable("roadmapId") Long roadmapId,
+                                       @PathVariable("stepId")Long stepId,
+                                       @PathVariable("tilId") Long tilId, @AuthenticationPrincipal CustomUserDetails userDetails) {
 
-        tilService.deleteTil(tilId);
+        tilService.deleteTil(tilId, userDetails.getUser());
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 
