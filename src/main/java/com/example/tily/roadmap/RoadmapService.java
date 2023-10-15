@@ -40,7 +40,7 @@ public class RoadmapService {
                 .creator(user)
                 .category(Category.CATEGORY_INDIVIDUAL)
                 .name(requestDTO.getName())
-                .stepNum(0L)
+                .stepNum(0)
                 .build();
         roadmapRepository.save(roadmap);
 
@@ -66,7 +66,7 @@ public class RoadmapService {
                 .currentNum(1L)
                 .code(generateRandomCode())
                 .isRecruit(true)
-                .stepNum((long) requestDTO.getSteps().size())
+                .stepNum(requestDTO.getSteps().size())
                 .build();
         roadmapRepository.save(roadmap);
 

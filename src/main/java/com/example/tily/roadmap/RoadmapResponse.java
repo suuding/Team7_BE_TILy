@@ -147,7 +147,7 @@ public class RoadmapResponse {
             public class TilyDTO {
                 private Long id;
                 private String name;
-                private Long stepNum;
+                private int stepNum;
 
                 public TilyDTO(Roadmap roadmap) {
                     this.id = roadmap.getId();
@@ -160,7 +160,7 @@ public class RoadmapResponse {
             public static class GroupDTO {
                 private Long id;
                 private String name;
-                private Long stepNum;
+                private int stepNum;
                 private String image;
                 private Creator creator;
 
@@ -204,7 +204,7 @@ public class RoadmapResponse {
         public class RoadmapDTO {
             private Long id;
             private String name;
-            private Long stepNum;
+            private int stepNum;
             private FindAllMyRoadmapDTO.RoadmapDTO.GroupDTO.Creator creator;
 
             public RoadmapDTO(Roadmap roadmap) {
