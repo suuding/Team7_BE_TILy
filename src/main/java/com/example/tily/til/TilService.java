@@ -99,7 +99,7 @@ public class TilService {
         til.updateContent(content);
     }
 
-    public TilResponse.ViewDTO viewTil(Long tilId, Long stepId) {
+    public TilResponse.ViewDTO viewTil(Long tilId, Long stepId, User user) {
         Til til = tilRepository.findById(tilId).orElseThrow(
                 () -> new Exception400("해당 TIL을 찾을 수 없습니다. ")
         );
@@ -107,17 +107,20 @@ public class TilService {
                 () -> new Exception400("해당 스텝을 찾을 수 없습니다. ")
         );
 
+        List<Comment> comments = commentRepository.findByTilId(tilId);
+
         return new TilResponse.ViewDTO(step, til, comments);
     }
 
-    @Transactional
-    public void submitTil(TilRequest.SubmitTilDTO requestDTO, Long id, User user) {
 
-        Til til = tilRepository.findById(id).orElseThrow(
+    @Transactional
+    public void submitTil(TilRequest.SubmitTilDTO requestDTO, Long roadmapId, Long stepId, Long tilId, User user) {
+
+        Til til = tilRepository.findById(tilId).orElseThrow(
                 () -> new Exception400("해당 til을 찾을 수 없습니다.")
         );
 
-        if (til.getWriter().getId() != user.getId()) {
+        if (!Objects.equals(til.getWriter().getId(), user.getId())) {
             throw new Exception403("til을 제출할 권한이 없습니다.");
         }
 
@@ -125,17 +128,35 @@ public class TilService {
         if(submitContent == null){
             throw new Exception400("TIL 내용을 입력해주세요.");
         }
+
         // 제출 내용을 저장 내용에도 저장
         til.submitTil(submitContent);
+
+        // 제출 여부(완료) 저장
+        UserStep userstep = userStepRepository.findByStepId(stepId);
+        if (userstep.getIsSubmit().equals(true)) {
+            throw new Exception400("이미 한번 제출하였습니다.");
+        }
+        userstep.submit();
+
+        UserRoadmap userRoadmap = userRoadmapRepository.findByRoadmapIdAndUserId(roadmapId, user.getId()).orElseThrow(
+                () -> new Exception403("해당 로드맵에 속하지 않았습니다.")
+        );
+        int progress = calProgress(roadmapId, user.getId());
+
+        userRoadmap.updateProgress(progress);
     }
 
     @Transactional
-    public void deleteTil(Long id) {
-        Optional<Til> til = tilRepository.findById(id);
+    public void deleteTil(Long id, User user) {
+        Til til = tilRepository.findById(id).orElseThrow(
+                () -> new Exception404("존재하지 않는 til입니다.")
+        );
 
-        if(til.isPresent()) {
-            tilRepository.deleteById(id);
+        if (!til.getWriter().equals(user)) {
+            throw new Exception403("해당 til을 삭제할 권한이 없습니다.");
         }
+        tilRepository.deleteById(id);
     }
 
     @Transactional
@@ -158,5 +179,16 @@ public class TilService {
             Slice<Til> tils = tilRepository.findAllByOrderByCreatedDateDesc(user.getId(), roadmapId, title, pageable);
             return new TilResponse.FindAllDTO(tils);
         }
+    }
+
+    public int calProgress(Long roadmapId, Long userId) {
+
+        List<UserStep> userSteps = userStepRepository.findByUserIdAndRoadmapId(userId, roadmapId);
+        int sumNum = userSteps.size();
+        int submitNum = 0;
+        for (UserStep userStep : userSteps) {
+            if (userStep.getIsSubmit())  submitNum++;
+        }
+        return (int)(((double)submitNum/(double)sumNum)*100.0);
     }
 }
