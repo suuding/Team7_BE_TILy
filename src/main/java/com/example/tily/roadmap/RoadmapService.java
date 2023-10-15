@@ -331,6 +331,14 @@ public class RoadmapService {
                 .orElseThrow(() -> new Exception404("해당 사용자를 찾을 수 없습니다"));
 
         userRoadmap.updateIsAccept(true);
+
+        // 허가하면 수강생이 해당 roadmap에 속한다 -> 제출 여부 관리를 위한 userstep에 다 넣어줘야 함
+        // 로드맵의 모든 step에 대해 userstep에 넣어줘야 한다
+        List<Step> steps = stepRepository.findByRoadmapId(groupsId);
+        for (Step step : steps) {
+            UserStep userStep = UserStep.builder().roadmap(step.getRoadmap()).step(step).user(userRoadmap.getUser()).isSubmit(false).build();
+            userStepRepository.save(userStep);
+        }
     }
 
     @Transactional
