@@ -21,5 +21,6 @@ public interface UserRoadmapRepository extends JpaRepository<UserRoadmap, Long> 
 
     Optional<UserRoadmap> findByRoadmapIdAndUserIdAndIsAcceptFalse(Long roadmapId, Long userId);
 
-    Optional<UserRoadmap> findByRoadmapIdAndUserId(Long roadmapId, Long userId);
+    @Query("select ur from UserRoadmap ur where ur.roadmap.id=:roadmapId and ur.user.id=:userId")
+    Optional<UserRoadmap> findByRoadmapIdAndUserId(@Param("roadmapId") Long roadmapId,@Param("userId") Long userId);
 }

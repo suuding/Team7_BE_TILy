@@ -60,57 +60,57 @@ public class TilResponse {
 
     }
 
+    @Getter
+    @Setter
+    public static class FindAllDTO {
+        private List<TilDTO> tils;
+        private Boolean hasNext;
+
+        public FindAllDTO(Slice<Til> tils) {
+            this.tils = tils.getContent().stream()
+                    .map(til -> new TilDTO(til, til.getStep(), til.getRoadmap()))
+                    .collect(Collectors.toList());
+            this.hasNext = tils.hasNext();
+        }
+
         @Getter
         @Setter
-        public static class FindAllDTO {
-            private List<TilDTO> tils;
-            private Boolean hasNext;
+        public class TilDTO {
+            private Long id;
+            private String createDate;
+            private StepDTO step;
+            private RoadmapDTO roadmap;
 
-            public FindAllDTO(Slice<Til> tils) {
-                this.tils = tils.getContent().stream()
-                        .map(til -> new TilDTO(til, til.getStep(), til.getRoadmap()))
-                        .collect(Collectors.toList());
-                this.hasNext = tils.hasNext();
+            public TilDTO(Til til, Step step, Roadmap roadmap) {
+                this.id = til.getId();
+                this.createDate = til.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                this.step = new StepDTO(step);
+                this.roadmap = new RoadmapDTO(roadmap);
             }
 
             @Getter
             @Setter
-            public class TilDTO {
+            public class StepDTO {
                 private Long id;
-                private String createDate;
-                private StepDTO step;
-                private RoadmapDTO roadmap;
+                private String title;
 
-                public TilDTO(Til til, Step step, Roadmap roadmap) {
-                    this.id = til.getId();
-                    this.createDate = til.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-                    this.step = new StepDTO(step);
-                    this.roadmap = new RoadmapDTO(roadmap);
+                public StepDTO(Step step) {
+                    this.id = step.getId();
+                    this.title = step.getTitle();
                 }
+            }
 
-                @Getter
-                @Setter
-                public class StepDTO {
-                    private Long id;
-                    private String title;
+            @Getter
+            @Setter
+            public class RoadmapDTO {
+                private Long id;
+                private String name;
 
-                    public StepDTO(Step step) {
-                        this.id = step.getId();
-                        this.title = step.getTitle();
-                    }
-                }
-
-                @Getter
-                @Setter
-                public class RoadmapDTO {
-                    private Long id;
-                    private String name;
-
-                    public RoadmapDTO(Roadmap roadmap) {
-                        this.id = roadmap.getId();
-                        this.name = roadmap.getName();
-                    }
+                public RoadmapDTO(Roadmap roadmap) {
+                    this.id = roadmap.getId();
+                    this.name = roadmap.getName();
                 }
             }
         }
+    }
 }

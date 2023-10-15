@@ -5,6 +5,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,6 +16,8 @@ public interface TilRepository extends JpaRepository<Til, Long>{
     Til findFirstByOrderBySubmitDateDesc();
 
     Til findTilById(Long id);
+
+    @Query("select t from Til t join fetch t.writer where t.id=:id")
     Optional<Til> findById(Long id);
 
     @Query("select t from Til t where t.writer.id=:userId " +
@@ -37,4 +40,11 @@ public interface TilRepository extends JpaRepository<Til, Long>{
                                                Pageable pageable);
 
     List<Til> findByStep_Id(Long stepId);
+
+    @Query("select t from Til t where t.writer.id=:userId and t.step.id=:stepId")
+    Til findByStepIdAndUserId(@Param("stepId") Long stepId, @Param("userId") Long userId);
+
+    @Query("select t from Til t where t.roadmap.id=:roadmapId")
+    List<Til> findByRoadmapId(@Param("roadmapId") Long roadmapId);
+
 }
