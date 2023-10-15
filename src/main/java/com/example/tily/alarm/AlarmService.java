@@ -21,4 +21,16 @@ public class AlarmService {
         List<Alarm> alarms = alarmRepository.findAllByReceiverId(user.getId(), sort);
         return new AlarmResponse.FindAllDTO(alarms);
     }
+    
+    @Transactional
+    public void readAlarm(AlarmRequest.ReadAlarmDTO requestDTO) {
+        // 요청DTO에 있는 모든 알림 id에 대해 true로 처리
+        List<AlarmRequest.ReadAlarmDTO.AlarmDTO> alarms = requestDTO.getAlarms();
+        for (AlarmRequest.ReadAlarmDTO.AlarmDTO alarm : alarms) {
+            Alarm a = alarmRepository.findById(alarm.getId()).orElseThrow(
+                    () -> new Exception400("해당 알림이 존재하지 않습니다.")
+            );
+            a.readAlarm();
+        }
+    }
 }
