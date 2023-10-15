@@ -16,15 +16,15 @@ public class TilController {
     private final TilService tilService;
 
     @PostMapping("/roadmaps/{roadmapId}/steps/{stepId}/tils")
-    public ResponseEntity<?> createTil(@PathVariable("roadmapId") Long roadmapId, @PathVariable("stepId") Long stepId, @RequestBody @Valid TilRequest.CreateTilDTO requestDTO) {
-        TilResponse.CreateTilDTO responseDTO = tilService.createTil(requestDTO, roadmapId, stepId);
+    public ResponseEntity<?> createTil(@PathVariable("roadmapId") Long roadmapId, @PathVariable("stepId") Long stepId, @RequestBody @Valid TilRequest.CreateTilDTO requestDTO, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        TilResponse.CreateTilDTO responseDTO = tilService.createTil(requestDTO, roadmapId, stepId, userDetails.getUser());
 
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
 
     @PatchMapping("/roadmaps/{roadmapId}/steps/{stepId}/tils/{tilId}")
-    public ResponseEntity<?> updateTil(@PathVariable("roadmapId") Long roadmapId, @PathVariable("stepId") Long stepId, @PathVariable("tilId") Long tilId, @RequestBody @Valid TilRequest.UpdateTilDTO requestDTO) {
-        tilService.updateTil(requestDTO, tilId);
+    public ResponseEntity<?> updateTil(@PathVariable("roadmapId") Long roadmapId, @PathVariable("stepId") Long stepId, @PathVariable("tilId") Long tilId, @RequestBody @Valid TilRequest.UpdateTilDTO requestDTO, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        tilService.updateTil(requestDTO, tilId, userDetails.getUser());
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 
@@ -42,7 +42,7 @@ public class TilController {
                                        @PathVariable("tilId") Long tilId,
                                        @RequestBody @Valid TilRequest.SubmitTilDTO requestDTO, @AuthenticationPrincipal CustomUserDetails userDetails) {
 
-        tilService.submitTil(requestDTO, tilId, userDetails.getUser());
+        tilService.submitTil(requestDTO, roadmapId, stepId, tilId, userDetails.getUser());
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 
