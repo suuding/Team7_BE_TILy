@@ -54,22 +54,22 @@ public class TiLyApplication {
 					newUser("applier@test.com", "applier", passwordEncoder, Role.ROLE_USER)
 			));
 			roadmapRepository.saveAll(Arrays.asList(
-					newIndividualRoadmap(User.builder().id(1L).build(), Category.CATEGORY_INDIVIDUAL, "스프링 시큐리티", 10L), //1
-					newIndividualRoadmap(User.builder().id(2L).build(),Category.CATEGORY_INDIVIDUAL, "JPA 입문", 10L),
-					newIndividualRoadmap(User.builder().id(3L).build(),Category.CATEGORY_INDIVIDUAL, "자바 reflection", 10L),
+					newIndividualRoadmap(User.builder().id(1L).build(), Category.CATEGORY_INDIVIDUAL, "스프링 시큐리티", 10), //1
+					newIndividualRoadmap(User.builder().id(2L).build(),Category.CATEGORY_INDIVIDUAL, "JPA 입문", 10),
+					newIndividualRoadmap(User.builder().id(3L).build(),Category.CATEGORY_INDIVIDUAL, "자바 reflection", 10),
 
-					newTilyRoadmap(User.builder().id(4L).build(), Category.CATEGORY_TILY, "spring boot - 초급편", "틸리에서 제공하는 spring boot 초급자를 위한 로드맵입니다.", 100L, 20L, "image.jpg"), //4
-					newTilyRoadmap(User.builder().id(4L).build(), Category.CATEGORY_TILY, "spring boot - 중급편", "틸리에서 제공하는 spring boot 중급자를 위한 로드맵입니다.", 80L, 30L , "image.jpg"),
-					newTilyRoadmap(User.builder().id(4L).build(), Category.CATEGORY_TILY, "spring boot - 고급편", "틸리에서 제공하는 spring boot 고급자를 위한 로드맵입니다.", 50L, 30L , "image.jpg"),
-					newTilyRoadmap(User.builder().id(4L).build(), Category.CATEGORY_TILY, "Spring JPA - 초급편", "틸리에서 제공하는 Spring JPA 초급자를 위한 로드맵입니다.", 100L, 20L , "image.jpg"),
-					newTilyRoadmap(User.builder().id(4L).build(), Category.CATEGORY_TILY, "Spring JPA - 중급편", "틸리에서 제공하는 Spring JPA 중급자를 위한 로드맵입니다.", 80L, 20L , "image.jpg"),
-					newTilyRoadmap(User.builder().id(4L).build(), Category.CATEGORY_TILY, "Spring JPA - 고급편", "틸리에서 제공하는 Spring JPA 고급자를 위한 로드맵입니다.", 50L, 20L , "image.jpg"),
+					newTilyRoadmap(User.builder().id(4L).build(), Category.CATEGORY_TILY, "spring boot - 초급편", "틸리에서 제공하는 spring boot 초급자를 위한 로드맵입니다.", 100L, 20, "image.jpg"), //4
+					newTilyRoadmap(User.builder().id(4L).build(), Category.CATEGORY_TILY, "spring boot - 중급편", "틸리에서 제공하는 spring boot 중급자를 위한 로드맵입니다.", 80L, 30 , "image.jpg"),
+					newTilyRoadmap(User.builder().id(4L).build(), Category.CATEGORY_TILY, "spring boot - 고급편", "틸리에서 제공하는 spring boot 고급자를 위한 로드맵입니다.", 50L, 30 , "image.jpg"),
+					newTilyRoadmap(User.builder().id(4L).build(), Category.CATEGORY_TILY, "Spring JPA - 초급편", "틸리에서 제공하는 Spring JPA 초급자를 위한 로드맵입니다.", 100L, 20 , "image.jpg"),
+					newTilyRoadmap(User.builder().id(4L).build(), Category.CATEGORY_TILY, "Spring JPA - 중급편", "틸리에서 제공하는 Spring JPA 중급자를 위한 로드맵입니다.", 80L, 20 , "image.jpg"),
+					newTilyRoadmap(User.builder().id(4L).build(), Category.CATEGORY_TILY, "Spring JPA - 고급편", "틸리에서 제공하는 Spring JPA 고급자를 위한 로드맵입니다.", 50L, 20 , "image.jpg"),
 
-					newGroupRoadmap(User.builder().id(1L).build(), Category.CATEGORY_GROUP, "JAVA 입문 수업 - 생활 코딩", "생활 코딩님의 로드맵입니다!", true, 5L, "pnu12345", true, 10L), // 10
-					newGroupRoadmap(User.builder().id(1L).build(), Category.CATEGORY_GROUP, "spring boot 스터디", "같이 spring boot 공부해봐요!", true, 3L, "pnu54321", true, 10L),
-					newGroupRoadmap(User.builder().id(2L).build(), Category.CATEGORY_GROUP, "JPA 스터디", "김영한 강사님의 JPA를 공부하는 스터디 ^^", false, 5L, "hoyai123", false, 20L),
-					newGroupRoadmap(User.builder().id(2L).build(), Category.CATEGORY_GROUP, "데이터베이스 스터디", "데이터베이스 공부합시다", true, 8L, "hoyoung1", true, 15L),
-					newGroupRoadmap(User.builder().id(3L).build(), Category.CATEGORY_GROUP, "카카오테크캠퍼스 1단계", "카카오테크캠퍼스 1단계입니다.", false, 50L, "kakao123", true, 20L)
+					newGroupRoadmap(User.builder().id(1L).build(), Category.CATEGORY_GROUP, "JAVA 입문 수업 - 생활 코딩", "생활 코딩님의 로드맵입니다!", true, 5L, "pnu12345", true, 10), // 10
+					newGroupRoadmap(User.builder().id(1L).build(), Category.CATEGORY_GROUP, "spring boot 스터디", "같이 spring boot 공부해봐요!", true, 3L, "pnu54321", true, 10),
+					newGroupRoadmap(User.builder().id(2L).build(), Category.CATEGORY_GROUP, "JPA 스터디", "김영한 강사님의 JPA를 공부하는 스터디 ^^", false, 5L, "hoyai123", false, 20),
+					newGroupRoadmap(User.builder().id(2L).build(), Category.CATEGORY_GROUP, "데이터베이스 스터디", "데이터베이스 공부합시다", true, 8L, "hoyoung1", true, 15),
+					newGroupRoadmap(User.builder().id(3L).build(), Category.CATEGORY_GROUP, "카카오테크캠퍼스 1단계", "카카오테크캠퍼스 1단계입니다.", false, 50L, "kakao123", true, 20)
 
 					));
 			userRoadmapRepository.saveAll(Arrays.asList(
@@ -106,7 +106,11 @@ public class TiLyApplication {
 
 					newGroupStep(Roadmap.builder().id(12L).build(),"다형성(Polymorphism)", "Day1", LocalDateTime.of(2023, 10, 1, 23 ,59) ),
 					newGroupStep(Roadmap.builder().id(12L).build(),"람다식(lambda expression)", "Day2", LocalDateTime.of(2023, 10, 3, 23 ,59) ),
-					newGroupStep(Roadmap.builder().id(12L).build(),"스트림(lambda expression)", "Day3", LocalDateTime.of(2023, 10, 5, 23 ,59) )
+					newGroupStep(Roadmap.builder().id(12L).build(),"스트림(lambda expression)", "Day3", LocalDateTime.of(2023, 10, 5, 23 ,59) ),
+
+					newGroupStep(Roadmap.builder().id(5L).build(),"spring boot 1일차", "Day1", LocalDateTime.of(2023, 10, 1, 23 ,59) ),
+					newGroupStep(Roadmap.builder().id(5L).build(),"spring boot 2일차", "Day2", LocalDateTime.of(2023, 10, 3, 23 ,59) ),
+					newGroupStep(Roadmap.builder().id(5L).build(),"spring boot 3일차", "Day3", LocalDateTime.of(2023, 10, 5, 23 ,59) )
 			));
 			userStepRepository.saveAll(Arrays.asList(
 					newUserStepRelation(Step.builder().id(5L).build(), User.builder().id(1L).build(), true),
@@ -114,6 +118,9 @@ public class TiLyApplication {
 					newUserStepRelation(Step.builder().id(6L).build(), User.builder().id(1L).build(), false),
 					newUserStepRelation(Step.builder().id(6L).build(), User.builder().id(2L).build(), true),
 					newUserStepRelation(Step.builder().id(6L).build(), User.builder().id(5L).build(), true)
+//					newUserStepRelation(Step.builder().id(5L).build(), User.builder().id(1L).build(), false),
+//					newUserStepRelation(Step.builder().id(6L).build(), User.builder().id(1L).build(), false),
+//					newUserStepRelation(Step.builder().id(7L).build(), User.builder().id(1L).build(), false)
 			));
 			referenceRepository.saveAll(Arrays.asList(
 					newReference(Step.builder().id(4L).build(), "youtube", "https://www.youtube.com/watch?v=0L6QWKC1a6k"),
@@ -153,7 +160,7 @@ public class TiLyApplication {
 				.build();
 	}
 
-	private Roadmap newIndividualRoadmap(User creator, Category category, String name, Long stepNum){
+	private Roadmap newIndividualRoadmap(User creator, Category category, String name, int stepNum){
 		return Roadmap.builder()
 				.creator(creator)
 				.category(category)
@@ -162,7 +169,7 @@ public class TiLyApplication {
 				.build();
 	}
 
-	public Roadmap newTilyRoadmap(User creator, Category category, String name, String description, Long currentNum, Long stepNum, String image) {
+	public Roadmap newTilyRoadmap(User creator, Category category, String name, String description, Long currentNum, int stepNum, String image) {
 		return Roadmap.builder()
 				.creator(creator)
 				.category(category)
@@ -174,7 +181,7 @@ public class TiLyApplication {
 				.build();
 	}
 
-	private Roadmap newGroupRoadmap(User creator, Category category, String name, String description, boolean isPublic, Long currentNum, String code, boolean isRecruit,Long stepNum) {
+	private Roadmap newGroupRoadmap(User creator, Category category, String name, String description, boolean isPublic, Long currentNum, String code, boolean isRecruit,int stepNum) {
 		return Roadmap.builder()
 				.creator(creator)
 				.category(category)

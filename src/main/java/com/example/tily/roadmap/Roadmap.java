@@ -44,12 +44,12 @@ public class Roadmap extends BaseTimeEntity {
     @Column
     private Boolean isRecruit;
     @Column
-    private Long stepNum;
+    private int stepNum;
     @Column
     private String image;
 
     @Builder
-    public Roadmap(Long id, User creator, Category category, String name, String description, Boolean isPublic, Long currentNum, String code, Boolean isRecruit, Long stepNum, String image) {
+    public Roadmap(Long id, User creator, Category category, String name, String description, Boolean isPublic, Long currentNum, String code, Boolean isRecruit, int stepNum, String image) {
         this.id = id;
         this.creator = creator;
         this.category = category;
