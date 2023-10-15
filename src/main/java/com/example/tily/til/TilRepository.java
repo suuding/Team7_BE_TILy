@@ -40,4 +40,11 @@ public interface TilRepository extends JpaRepository<Til, Long>{
                                                Pageable pageable);
 
     List<Til> findByStep_Id(Long stepId);
+
+    @Query("select t from Til t where t.writer.id=:userId and t.step.id=:stepId")
+    Til findByStepIdAndUserId(@Param("stepId") Long stepId, @Param("userId") Long userId);
+
+    @Query("select t from Til t where t.roadmap.id=:roadmapId")
+    List<Til> findByRoadmapId(@Param("roadmapId") Long roadmapId);
+
 }
