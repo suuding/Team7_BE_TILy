@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface RoadmapRepository extends JpaRepository<Roadmap, Long> {
 
@@ -16,4 +17,6 @@ public interface RoadmapRepository extends JpaRepository<Roadmap, Long> {
 
     @Query("select r from Roadmap r where r.category=:category and (:name is null or r.name=:name) and (r.isPublic=true or r.isPublic is null) and (r.isRecruit=true or r.isRecruit is null)")
     Slice<Roadmap> findAllByOrderByCreatedDateDesc(@Param("category") Category category, @Param("name") String name, Pageable pageable);
+
+    Optional<Roadmap> findByCode(String code);
 }

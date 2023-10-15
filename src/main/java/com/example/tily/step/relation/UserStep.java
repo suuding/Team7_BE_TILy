@@ -1,8 +1,10 @@
 package com.example.tily.step.relation;
 
+import com.example.tily.roadmap.Roadmap;
 import com.example.tily.step.Step;
 import com.example.tily.user.User;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -17,12 +19,30 @@ public class UserStep {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    Step step;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "roadmap_id")
+    private Roadmap roadmap;
 
-    @ManyToOne
-    User user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "step_id")
+    private Step step;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Column(nullable = false)
     private Boolean isSubmit;
+
+    @Builder
+    public UserStep(Roadmap roadmap, Step step, User user, Boolean isSubmit){
+        this.roadmap = roadmap;
+        this.step = step;
+        this.user = user;
+        this.isSubmit = isSubmit;
+    }
+
+    public void submit() {
+        this.isSubmit = true;
+    }
 }
