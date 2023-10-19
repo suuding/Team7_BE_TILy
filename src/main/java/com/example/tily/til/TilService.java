@@ -28,9 +28,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -107,9 +105,16 @@ public class TilService {
                 () -> new Exception400("해당 스텝을 찾을 수 없습니다. ")
         );
 
+        UserStep userStep = userStepRepository.findByUserIdAndStepId(til.getWriter().getId(), stepId).orElseThrow(
+                () -> new Exception403("권한이 없습니다.")
+        );
+        Map<Comment, Boolean> maps = new HashMap<>();
         List<Comment> comments = commentRepository.findByTilId(tilId);
+        for (Comment comment : comments) {
+            maps.put(comment, user.getId().equals(comment.getWriter().getId()));
+        }
 
-        return new TilResponse.ViewDTO(step, til, comments);
+        return new TilResponse.ViewDTO(step, til, userStep.getIsSubmit(), comments, maps);
     }
 
 

@@ -1,6 +1,9 @@
 package com.example.tily.comment;
 
 import com.example.tily._core.errors.exception.Exception400;
+import com.example.tily.alarm.Alarm;
+import com.example.tily.alarm.AlarmRepository;
+import com.example.tily.alarm.AlarmResponse;
 import com.example.tily.roadmap.Roadmap;
 import com.example.tily.roadmap.RoadmapRepository;
 import com.example.tily.step.Step;
@@ -22,6 +25,7 @@ public class CommentService {
     private final StepRepository stepRepository;
     private final TilRepository tilRepository;
     private final CommentRepository commentRepository;
+    private final AlarmRepository alarmRepository;
 
     @Transactional
     public CommentResponse.CreateCommentDTO createComment(CommentRequest.CreateCommentDTO requestDTO,
@@ -41,8 +45,12 @@ public class CommentService {
 
         String content = requestDTO.getContent();
 
-        Comment comment = Comment.builder().roadmap(roadmap).step(step).til(til).content(content).build();
+        Comment comment = Comment.builder().roadmap(roadmap).step(step).writer(user).til(til).content(content).build();
         commentRepository.save(comment);
+
+        // 댓글 작성하면 알림 생성
+        Alarm alarm = Alarm.builder().til(til).receiver(til.getWriter()).comment(comment).isChecked(false).build();
+        alarmRepository.save(alarm);
 
         return new CommentResponse.CreateCommentDTO(comment);
     }

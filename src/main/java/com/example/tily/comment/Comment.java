@@ -1,5 +1,6 @@
 package com.example.tily.comment;
 
+import com.example.tily.BaseTimeEntity;
 import com.example.tily.roadmap.Roadmap;
 import com.example.tily.step.Step;
 import com.example.tily.til.Til;
@@ -15,7 +16,7 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name="comment_tb")
-public class Comment {
+public class Comment extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
