@@ -9,8 +9,10 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.domain.Slice;
 
+import javax.swing.text.StyledEditorKit;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class TilResponse {
@@ -25,22 +27,28 @@ public class TilResponse {
 
     @Getter @Setter
     public static class ViewDTO {
-        private Long id;
-        private Long stepId;
-        private String stepTitle;
         private String content;
-        private boolean isPersonal;
+        private Boolean isPersonal;
+        private Boolean isCompleted;
+        private StepDTO step;
         private List<CommentDTO> comments;
 
-        public ViewDTO(Step step, Til til, List<Comment> comments) {
-            this.id = til.getId();
-            this.stepId = step.getId();
-            this.stepTitle = step.getTitle();
+        public ViewDTO(Step step, Til til, Boolean isCompleted, List<Comment> comments, Map<Comment, Boolean> maps) {
             this.content = til.getContent();
             this.isPersonal = til.isPersonal();
-            this.comments = comments.stream()
-                    .map(comment -> new CommentDTO(comment))
-                    .collect(Collectors.toList());
+            this.isCompleted = isCompleted;
+            this.step = new StepDTO(step);
+            this.comments = comments.stream().map(c -> new CommentDTO(c, maps.get(c))).collect(Collectors.toList());
+        }
+
+        @Getter @Setter
+        public class StepDTO {
+            private Long id;
+            private String title;
+            public StepDTO(Step step) {
+                this.id = step.getId();
+                this.title = step.getTitle();
+            }
         }
         @Getter @Setter
         public class CommentDTO {
@@ -48,12 +56,16 @@ public class TilResponse {
             private String content;
             private String name;
             private String image;
+            private Boolean isOwner;
+            private String createDate;
 
-            public CommentDTO(Comment comment){
+            public CommentDTO(Comment comment, Boolean isOwner){
                 this.id = comment.getId();
                 this.content = comment.getContent();
                 this.name = comment.getWriter().getName();
                 this.image = comment.getWriter().getImage();
+                this.isOwner = isOwner;
+                this.createDate = comment.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             }
 
         }
