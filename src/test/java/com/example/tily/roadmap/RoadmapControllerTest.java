@@ -99,7 +99,7 @@ public class RoadmapControllerTest {
         RoadmapRequest.CreateGroupRoadmapDTO.StepDTO step1 = new RoadmapRequest.CreateGroupRoadmapDTO.StepDTO();
         step1.setTitle("데드락(Deadlock)");
         step1.setDescription("스텝 1");
-        step1.setDueDate(LocalDate.of(2023, 10, 20));
+        step1.setDueDate(LocalDateTime.of(2023, 10, 1, 19 ,28));
 
         // step1의 참조
         RoadmapRequest.CreateGroupRoadmapDTO.StepDTO.ReferenceDTOs references1 = new RoadmapRequest.CreateGroupRoadmapDTO.StepDTO.ReferenceDTOs();
@@ -169,7 +169,7 @@ public class RoadmapControllerTest {
         RoadmapRequest.CreateGroupRoadmapDTO.StepDTO step1 = new RoadmapRequest.CreateGroupRoadmapDTO.StepDTO();
         step1.setTitle("데드락(Deadlock)");
         step1.setDescription("스텝 1");
-        step1.setDueDate(LocalDate.of(2023, 10, 20));
+        step1.setDueDate(LocalDateTime.of(2023, 10, 1, 19 ,28));
 
         // step1의 참조
         RoadmapRequest.CreateGroupRoadmapDTO.StepDTO.ReferenceDTOs references1 = new RoadmapRequest.CreateGroupRoadmapDTO.StepDTO.ReferenceDTOs();

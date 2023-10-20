@@ -8,7 +8,6 @@ import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -40,7 +39,7 @@ public class RoadmapRequest {
             private String title;
             private String description;
             private ReferenceDTOs references;
-            private LocalDate dueDate;
+            private LocalDateTime dueDate;
 
             @Getter @Setter
             public static class ReferenceDTOs {
