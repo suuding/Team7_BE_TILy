@@ -255,7 +255,7 @@ public class RoadmapControllerTest {
     }
 
     @DisplayName("그룹 로드맵_수정_성공_test")
-    @WithUserDetails(value = "hong@naver.com")
+    @WithUserDetails(value = "admin@test.com")
     @Test
     public void roadmap_group_update_success_test() throws Exception {
         // given
