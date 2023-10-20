@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
 
 @Transactional(readOnly = true)
@@ -77,7 +78,7 @@ public class RoadmapService {
             // step 저장
             String title = stepDTO.getTitle() ;
             String stepDescription = stepDTO.getDescription();
-            LocalDateTime dueDate = stepDTO.getDueDate();
+            LocalDateTime dueDate =  LocalDateTime.of(stepDTO.getDueDate(), LocalTime.of(23,59));
 
             Step step = Step.builder().roadmap(roadmap).title(title).description(stepDescription).dueDate(dueDate).build();
             stepRepository.save(step);

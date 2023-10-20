@@ -12,6 +12,8 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -97,6 +99,7 @@ public class RoadmapControllerTest {
         RoadmapRequest.CreateGroupRoadmapDTO.StepDTO step1 = new RoadmapRequest.CreateGroupRoadmapDTO.StepDTO();
         step1.setTitle("데드락(Deadlock)");
         step1.setDescription("스텝 1");
+        step1.setDueDate(LocalDate.of(2023, 10, 20));
 
         // step1의 참조
         RoadmapRequest.CreateGroupRoadmapDTO.StepDTO.ReferenceDTOs references1 = new RoadmapRequest.CreateGroupRoadmapDTO.StepDTO.ReferenceDTOs();
@@ -166,6 +169,7 @@ public class RoadmapControllerTest {
         RoadmapRequest.CreateGroupRoadmapDTO.StepDTO step1 = new RoadmapRequest.CreateGroupRoadmapDTO.StepDTO();
         step1.setTitle("데드락(Deadlock)");
         step1.setDescription("스텝 1");
+        step1.setDueDate(LocalDate.of(2023, 10, 20));
 
         // step1의 참조
         RoadmapRequest.CreateGroupRoadmapDTO.StepDTO.ReferenceDTOs references1 = new RoadmapRequest.CreateGroupRoadmapDTO.StepDTO.ReferenceDTOs();
@@ -255,7 +259,7 @@ public class RoadmapControllerTest {
     }
 
     @DisplayName("그룹 로드맵_수정_성공_test")
-    @WithUserDetails(value = "admin@test.com")
+    @WithUserDetails(value = "hong@test.com")
     @Test
     public void roadmap_group_update_success_test() throws Exception {
         // given
