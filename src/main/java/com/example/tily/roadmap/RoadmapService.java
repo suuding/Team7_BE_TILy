@@ -20,6 +20,7 @@ import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Transactional(readOnly = true)
@@ -76,8 +77,9 @@ public class RoadmapService {
             // step 저장
             String title = stepDTO.getTitle() ;
             String stepDescription = stepDTO.getDescription();
+            LocalDateTime dueDate =  stepDTO.getDueDate();
 
-            Step step = Step.builder().roadmap(roadmap).title(title).description(stepDescription).build();
+            Step step = Step.builder().roadmap(roadmap).title(title).description(stepDescription).dueDate(dueDate).build();
             stepRepository.save(step);
 
             // reference 저장
@@ -277,8 +279,7 @@ public class RoadmapService {
 
     @Transactional
     public RoadmapResponse.FindRoadmapMembersDTO findRoadmapMembers(Long groupsId, User user){
-        // 해당 그룹에 속한 사람만 구성원들을 확인할 수 있다 (메니저 이외에 일반 유저들도 접근할 수 있는 데이터)
-        checkUserPermission(groupsId, user);
+        checkManagerPermission(groupsId, user);
 
         List<UserRoadmap> userRoadmaps = userRoadmapRepository.findByRoadmapIdAndIsAcceptTrue(groupsId);
 
@@ -375,7 +376,7 @@ public class RoadmapService {
         return new RoadmapResponse.FindTilOfStepDTO(pairs, isSubmit);
     }
 
-    private void checkManagerPermission(Long groupsId, User user) {
+    private void checkManagerPermission(Long groupsId, User user) { // 매니저급만 접근
         UserRoadmap currentUserRoadmap = userRoadmapRepository.findByRoadmapIdAndUserIdAndIsAcceptTrue(groupsId, user.getId())
                 .orElseThrow(() -> new Exception403("잘못된 접근입니다"));
 
@@ -384,7 +385,7 @@ public class RoadmapService {
         }
     }
 
-    private void checkUserPermission(Long groupsId, User user) {
+    private void checkUserPermission(Long groupsId, User user) { // 추후에 사용할지 몰라 남겨둠, 유저만 접근
         UserRoadmap currentUserRoadmap = userRoadmapRepository.findByRoadmapIdAndUserIdAndIsAcceptTrue(groupsId, user.getId())
                 .orElseThrow(() -> new Exception403("잘못된 접근입니다"));
 

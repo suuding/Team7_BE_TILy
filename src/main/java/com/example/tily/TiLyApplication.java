@@ -1,5 +1,7 @@
 package com.example.tily;
 
+import com.example.tily.alarm.Alarm;
+import com.example.tily.alarm.AlarmRepository;
 import com.example.tily.comment.Comment;
 import com.example.tily.comment.CommentRepository;
 import com.example.tily.roadmap.Category;
@@ -42,7 +44,7 @@ public class TiLyApplication {
 	@Profile("local")
 	@Bean
 	CommandLineRunner localServerStart(UserRepository userRepository, RoadmapRepository roadmapRepository, StepRepository stepRepository, ReferenceRepository referenceRepository, TilRepository tilRepository, PasswordEncoder passwordEncoder,
-									   UserRoadmapRepository userRoadmapRepository, UserStepRepository userStepRepository, CommentRepository commentRepository) {
+									   UserRoadmapRepository userRoadmapRepository, UserStepRepository userStepRepository, CommentRepository commentRepository, AlarmRepository alarmRepository) {
 
 		return args -> {
 			userRepository.saveAll(Arrays.asList(
@@ -147,6 +149,10 @@ public class TiLyApplication {
 					newComment(Roadmap.builder().id(1L).build(), Step.builder().id(1L).build(),Til.builder().id(1L).build(),User.builder().id(1L).build(), "이것은 댓글입니다."),
 					newComment(Roadmap.builder().id(1L).build(), Step.builder().id(1L).build(),Til.builder().id(1L).build(),User.builder().id(2L).build(), "이것도 댓글입니다.")
 
+			));
+
+			alarmRepository.saveAll(Arrays.asList(
+				newAlarm(Til.builder().id(5L).build(), User.builder().id(1L).build(), false)
 			));
 		};
 	}
@@ -272,6 +278,14 @@ public class TiLyApplication {
 				.submitDate(submitDate)
 				.commentNum(commentNum)
 				.isPersonal(isPersonal)
+				.build();
+	}
+
+	private Alarm newAlarm(Til til, User receiver, Boolean isChecked) {
+		return Alarm.builder()
+				.til(til)
+				.receiver(receiver)
+				.isChecked(false)
 				.build();
 	}
 
