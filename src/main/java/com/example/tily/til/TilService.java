@@ -161,6 +161,7 @@ public class TilService {
         if (!til.getWriter().equals(user)) {
             throw new Exception403("해당 til을 삭제할 권한이 없습니다.");
         }
+
         tilRepository.deleteById(id);
     }
 

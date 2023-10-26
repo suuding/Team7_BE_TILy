@@ -1,11 +1,15 @@
 package com.example.tily.user;
 
+import com.example.tily._core.security.CustomUserDetails;
 import com.example.tily._core.security.JWTProvider;
 import com.example.tily._core.utils.ApiUtils;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -57,6 +61,12 @@ public class UserController {
     public ResponseEntity<?> changePassword(@RequestBody @Valid UserRequest.ChangePwdDTO requestDTO, Errors errors) {
         userService.changePassword(requestDTO);
         return ResponseEntity.ok().body(ApiUtils.success(null));
+    }
+
+    @GetMapping("/gardens")
+    public ResponseEntity<?> gardens(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        UserResponse.ViewGardensDTO responseDTO = userService.viewGardens(userDetails.getUser());
+        return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
 
 }

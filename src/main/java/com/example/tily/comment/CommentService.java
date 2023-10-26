@@ -1,6 +1,7 @@
 package com.example.tily.comment;
 
 import com.example.tily._core.errors.exception.Exception400;
+import com.example.tily._core.errors.exception.Exception403;
 import com.example.tily.alarm.Alarm;
 import com.example.tily.alarm.AlarmRepository;
 import com.example.tily.alarm.AlarmResponse;
@@ -62,7 +63,7 @@ public class CommentService {
                 () -> new Exception400("해당 댓글을 찾을 수 없습니다")
         );
         if(comment.getWriter().getId() != user.getId()) {
-            throw new Exception400("해당 댓글을 수정할 권한이 없습니다.");
+            throw new Exception403("해당 댓글을 수정할 권한이 없습니다.");
         }
 
         String content = requestDTO.getContent();
@@ -79,7 +80,7 @@ public class CommentService {
         );
 
         if(comment.getWriter().getId() != user.getId()) {
-            throw new Exception400("해당 댓글을 삭제할 권한이 없습니다.");
+            throw new Exception403("해당 댓글을 삭제할 권한이 없습니다.");
         }
         commentRepository.deleteById(id);
     }

@@ -7,9 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
@@ -300,6 +302,23 @@ public class UserControllerTest {
         // then
         result.andExpect(jsonPath("$.success").value("false"));
         result.andExpect(jsonPath("$.message").value("올바른 비밀번호 형식을 입력해주세요."));
+    }
+
+    @DisplayName("장미밭 조회 성공 test")
+    @WithUserDetails(value = "tngus@test.com")
+    @Test
+    public void view_gardens_test() throws Exception {
+
+
+        ResultActions result = mvc.perform(
+                get("/gardens")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+
+        String responseBody = result.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : " + responseBody);
+
+        result.andExpect(jsonPath("$.success").value("true"));
     }
     
 }
