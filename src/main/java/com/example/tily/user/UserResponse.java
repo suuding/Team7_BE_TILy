@@ -13,4 +13,22 @@ public class UserResponse {
             this.email = email;
         }
     }
+
+    @Getter @Setter
+    public static class LoginDTO {
+        private String accessToken;
+        public LoginDTO(String accessToken) {
+            this.accessToken = accessToken;
+        }
+    }
+
+    @Getter @Setter
+    public static class TokenDTO {
+        private String accessToken;
+        private String refreshToken;
+        public TokenDTO(String accessToken, String refreshToken) {
+            this.accessToken = accessToken;
+            this.refreshToken = refreshToken;
+        }
+    }
 }
