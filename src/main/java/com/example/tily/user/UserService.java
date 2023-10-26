@@ -155,4 +155,14 @@ public class UserService {
         return content;
     }
 
+    public UserResponse.TokenDTO createToken(User user) {
+
+        String newRefreshToken = JWTProvider.createRefreshToken(user);
+        String newAccessToken = JWTProvider.createAccessToken(user);
+        redisUtils.deleteData(user.getId().toString());
+        redisUtils.setDataExpire(user.getId().toString(), newRefreshToken, JWTProvider.REFRESH_EXP);
+
+        return new UserResponse.TokenDTO(newAccessToken, newRefreshToken);
+    }
+
 }
