@@ -3,9 +3,13 @@ package com.example.tily.user;
 import com.example.tily._core.security.JWTProvider;
 import com.example.tily._core.utils.ApiUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -61,6 +65,16 @@ public class UserController {
     public ResponseEntity<?> changePassword(@RequestBody @Valid UserRequest.ChangePwdDTO requestDTO, Errors errors) {
         userService.changePassword(requestDTO);
         return ResponseEntity.ok().body(ApiUtils.success(null));
+    }
+
+    @GetMapping("/refresh")
+    public ResponseEntity<?> refresh(@CookieValue String refreshToken) {
+        UserResponse.TokenDTO responseDTO = userService.refresh(refreshToken);
+        ResponseCookie responseCookie = setRefreshTokenCookie(responseDTO.getRefreshToken());
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
+                .body(ApiUtils.success(new UserResponse.LoginDTO(responseDTO.getAccessToken())));
     }
 
 }
