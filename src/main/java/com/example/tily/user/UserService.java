@@ -87,7 +87,7 @@ public class UserService {
     }
 
     @Transactional
-    public String login(UserRequest.LoginDTO requestDTO) {
+    public UserResponse.TokenDTO login(UserRequest.LoginDTO requestDTO) {
         User user = userRepository.findByEmail(requestDTO.getEmail()).orElseThrow(
                 () -> new Exception404("해당 이메일을 찾을 수 없습니다 : "+requestDTO.getEmail())
         );
@@ -97,6 +97,7 @@ public class UserService {
         }
 
         return JWTProvider.create(user);
+        return createToken(user);
     }
 
     @Transactional
