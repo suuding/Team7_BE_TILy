@@ -48,8 +48,12 @@ public class UserController {
     // 로그인
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserRequest.LoginDTO requestDTO, Errors errors) {
-        String jwt = userService.login(requestDTO);
-        return ResponseEntity.ok().header(JWTProvider.HEADER, jwt).body(ApiUtils.success(null));
+        UserResponse.TokenDTO responseDTO = userService.login(requestDTO);
+        ResponseCookie responseCookie = setRefreshTokenCookie(responseDTO.getRefreshToken());
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
+                .body(ApiUtils.success(new UserResponse.LoginDTO(responseDTO.getAccessToken())));
     }
 
     // 비밀번호 재설정
