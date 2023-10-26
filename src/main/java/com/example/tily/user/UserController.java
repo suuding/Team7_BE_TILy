@@ -77,4 +77,13 @@ public class UserController {
                 .body(ApiUtils.success(new UserResponse.LoginDTO(responseDTO.getAccessToken())));
     }
 
+    public ResponseCookie setRefreshTokenCookie(String refreshToken) {
+        return ResponseCookie.from("refreshToken", refreshToken)
+                .httpOnly(true)
+                .secure(true)
+                .sameSite("None")
+                .maxAge(JWTProvider.REFRESH_EXP)
+                .build();
+    }
+
 }
