@@ -1,7 +1,7 @@
 package com.example.tily.step;
 
-import com.example.tily._core.errors.exception.Exception403;
-import com.example.tily._core.errors.exception.Exception404;
+import com.example.tily._core.errors.exception.ExceptionCode;
+import com.example.tily._core.errors.exception.CustomException;
 import com.example.tily.roadmap.Roadmap;
 import com.example.tily.roadmap.RoadmapRepository;
 import com.example.tily.roadmap.relation.UserRoadmap;
@@ -34,13 +34,11 @@ public class StepService {
 
     @Transactional
     public StepResponse.CreateIndividualStepDTO createIndividualStep(Long id, StepRequest.CreateIndividualStepDTO requestDTO){
-        Roadmap roadmap = roadmapRepository.findById(id).orElseThrow(
-                () -> new Exception404("해당 로드맵을 찾을 수 없습니다")
-        );
+        Roadmap roadmap = roadmapRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_NOT_FOUND));
         String title = requestDTO.getTitle();
 
         Step step = Step.builder().roadmap(roadmap).title(title).build();
-
         stepRepository.save(step);
 
         return new StepResponse.CreateIndividualStepDTO(step);
@@ -48,9 +46,8 @@ public class StepService {
 
     @Transactional
     public StepResponse.FindReferenceDTO findReference(Long stepId){
-        Step step = stepRepository.findById(stepId).orElseThrow(
-                () -> new Exception404("해당 스텝을 찾을 수 없습니다")
-        );
+        Step step = stepRepository.findById(stepId)
+                .orElseThrow(() -> new CustomException(ExceptionCode.STEP_NOT_FOUND));
 
         List<Reference> referenceList = referenceRepository.findByStepId(stepId);
 
@@ -87,9 +84,8 @@ public class StepService {
         }
 
         // 해당 페이지로 들어온 사람의 역할 (master, manager, member, none)
-        UserRoadmap userRoadmap = userRoadmapRepository.findByRoadmapIdAndUserId(roadmapId, user.getId()).orElseThrow(
-                () -> new Exception403("권한이 없습니다.")
-        );
+        UserRoadmap userRoadmap = userRoadmapRepository.findByRoadmapIdAndUserId(roadmapId, user.getId())
+                .orElseThrow(() -> new CustomException(ExceptionCode.STEP_FORBIDDEN));
 
         return new StepResponse.FindAllStepDTO(steps, maps, userRoadmap.getProgress(), userRoadmap.getRole().getValue());
     }
