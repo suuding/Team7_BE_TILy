@@ -1,6 +1,5 @@
 package com.example.tily._core.errors.exception;
 
-import com.example.tily._core.errors.ExceptionCode;
 import com.example.tily._core.utils.ApiUtils;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
