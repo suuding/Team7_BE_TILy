@@ -1,4 +1,4 @@
-package com.example.tily._core.errors;
+package com.example.tily._core.errors.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -35,6 +35,15 @@ public enum ExceptionCode {
 
     // step 관련 에러
     STEP_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 step을 찾을 수 없습니다."),
+    STEP_FORBIDDEN(HttpStatus.FORBIDDEN, "해당 step을 조회할 권한이 없습니다."),
+
+    // comment 관련 에러
+    COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 댓글을 찾을 수 없습니다."),
+    COMMENT_UPDATE_FORBIDDEN(HttpStatus.FORBIDDEN, "해당 댓글을 수정할 권한이 없습니다."),
+    COMMENT_DELETE_FORBIDDEN(HttpStatus.FORBIDDEN, "해당 댓글을 삭제할 권한이 없습니다."),
+
+    // alarm 관련 에러
+    ALARM_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 알림을 찾을 수 없습니다."),
 
     DATE_WRONG(HttpStatus.BAD_REQUEST, "입력한 날짜를 찾을 수 없습니다.");
 
