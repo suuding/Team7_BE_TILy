@@ -1,5 +1,6 @@
 package com.example.tily._core.utils;
 
+import com.example.tily._core.errors.ErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,16 +10,17 @@ import org.springframework.http.HttpStatus;
 public class ApiUtils {
 
     public static <T> ApiResult<T> success(T result) {
-        return new ApiResult<>(true, "ok", result);
+        return new ApiResult<>(true, 200, "ok", result);
     }
 
-    public static ApiResult<?> error(String message, HttpStatus status) {
-        return new ApiResult<>(false, message, null);
+    public static ApiResult<?> error(String message, HttpStatus httpStatus) {
+        return new ApiResult<>(false, httpStatus.value(),  message, null);
     }
 
     @Getter @Setter @AllArgsConstructor
     public static class ApiResult<T> {
         private final boolean success;
+        private final int code;
         private final String message;
         private final T result;
     }
