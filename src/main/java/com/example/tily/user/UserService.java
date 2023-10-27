@@ -42,9 +42,8 @@ public class UserService {
     @Transactional
     public void sendEmailCode(UserRequest.SendEmailCodeDTO requestDTO) {
 
-        User user = userRepository.findByEmail(requestDTO.getEmail()).orElseThrow(
-                () -> new CustomException(ExceptionCode.USER_EMAIL_NOT_FOUND)
-        );
+        User user = userRepository.findByEmail(requestDTO.getEmail())
+                .orElseThrow(() -> new CustomException(ExceptionCode.USER_EMAIL_NOT_FOUND));
 
         sendCode(requestDTO.getEmail());
     }
@@ -80,9 +79,8 @@ public class UserService {
 
     @Transactional
     public String login(UserRequest.LoginDTO requestDTO) {
-        User user = userRepository.findByEmail(requestDTO.getEmail()).orElseThrow(
-                () -> new CustomException(ExceptionCode.USER_EMAIL_NOT_FOUND)
-        );
+        User user = userRepository.findByEmail(requestDTO.getEmail())
+                .orElseThrow(() -> new CustomException(ExceptionCode.USER_EMAIL_NOT_FOUND));
 
         if(!passwordEncoder.matches(requestDTO.getPassword(), user.getPassword())) {
             throw new CustomException(ExceptionCode.USER_PASSWORD_WRONG);
@@ -93,9 +91,8 @@ public class UserService {
 
     @Transactional
     public void changePassword(UserRequest.ChangePwdDTO requestDTO) {
-        User user = userRepository.findByEmail(requestDTO.getEmail()).orElseThrow(
-                () -> new CustomException(ExceptionCode.USER_EMAIL_NOT_FOUND)
-        );
+        User user = userRepository.findByEmail(requestDTO.getEmail())
+                .orElseThrow(() -> new CustomException(ExceptionCode.USER_EMAIL_NOT_FOUND));
 
         String enPassword = passwordEncoder.encode(requestDTO.getPassword());
         user.updatePassword(enPassword);
