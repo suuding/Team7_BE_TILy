@@ -1,11 +1,10 @@
 package com.example.tily.til;
 
-import com.example.tily._core.errors.exception.Exception400;
+import com.example.tily._core.errors.ExceptionCode;
+import com.example.tily._core.errors.exception.CustomException;
 
-import com.example.tily._core.errors.exception.Exception404;
 import com.example.tily.comment.Comment;
 import com.example.tily.comment.CommentRepository;
-import com.example.tily._core.errors.exception.Exception403;
 import com.example.tily.roadmap.Roadmap;
 import com.example.tily.roadmap.RoadmapRepository;
 import com.example.tily.roadmap.relation.UserRoadmap;
@@ -23,13 +22,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 @Transactional(readOnly = true)
@@ -48,27 +45,27 @@ public class TilService {
     public TilResponse.CreateTilDTO createTil(TilRequest.CreateTilDTO requestDTO, Long roadmapId, Long stepId, User user) {
 
         Roadmap roadmap = roadmapRepository.findById(roadmapId).orElseThrow(
-                () -> new Exception400("해당 로드맵을 찾을 수 없습니다")
+                () -> new CustomException(ExceptionCode.ROADMAP_NOT_FOUND)
         );
 
         Step step = stepRepository.findById(stepId).orElseThrow(
-                () -> new Exception400("해당 스텝을 찾을 수 없습니다")
+                () -> new CustomException(ExceptionCode.ROADMAP_NOT_FOUND)
         );
 
         // 로드맵에 속한 step이 맞는지 확인
         if (!step.getRoadmap().equals(roadmap)) {
-            throw new Exception400("현재 로드맵에는 해당 step이 존재하지 않습니다.");
+            throw new CustomException(ExceptionCode.STEP_NOT_FOUND);
         }
 
         // 사용자가 속하지 않은 로드맵에 til을 생성하려고 할때
         userRoadmapRepository.findByRoadmapIdAndUserIdAndIsAcceptTrue(roadmapId, user.getId()).orElseThrow(
-                () -> new Exception403("해당 로드맵에 til을 생성할 권한이 없습니다.")
+                () -> new CustomException(ExceptionCode.TIL_ROADMAP_FORBIDDEN)
         );
 
         // 사용자가 이미 step에 대한 til을 생성한 경우
         Til til = tilRepository.findByStepIdAndUserId(stepId, user.getId());
         if (til != null) {
-            throw new Exception400("이미 해당 step에 대한 til이 존재합니다.");
+            throw new CustomException(ExceptionCode.TIL_STEP_EXIST);
         }
 
         String title = step.getTitle();
@@ -83,31 +80,30 @@ public class TilService {
     public void updateTil(TilRequest.UpdateTilDTO requestDTO, Long id, User user) {
 
         Til til = tilRepository.findById(id).orElseThrow(
-                () -> new Exception400("해당 til을 찾을 수 없습니다.")
+                () -> new CustomException(ExceptionCode.TIL_NOT_FOUND)
         );
 
         if (!til.getWriter().getId().equals(user.getId())) {
-            throw new Exception403("해당 til을 저장할 권한이 없습니다.");
+            throw new CustomException(ExceptionCode.TIL_UPDATE_FORBIDDEN);
         }
 
         String content = requestDTO.getContent();
         if(content == null){
-            throw new Exception400("TIL 내용을 입력해주세요.");
+            throw new CustomException(ExceptionCode.TIL_CONTENT_NULL);
         }
         til.updateContent(content);
     }
 
     public TilResponse.ViewDTO viewTil(Long tilId, Long stepId, User user) {
-        Til til = tilRepository.findById(tilId).orElseThrow(
-                () -> new Exception400("해당 TIL을 찾을 수 없습니다. ")
-        );
-        Step step = stepRepository.findById(stepId).orElseThrow(
-                () -> new Exception400("해당 스텝을 찾을 수 없습니다. ")
-        );
+        Til til = tilRepository.findById(tilId)
+                .orElseThrow(() -> new CustomException(ExceptionCode.TIL_NOT_FOUND));
 
-        UserStep userStep = userStepRepository.findByUserIdAndStepId(til.getWriter().getId(), stepId).orElseThrow(
-                () -> new Exception403("권한이 없습니다.")
-        );
+        Step step = stepRepository.findById(stepId)
+                .orElseThrow(() -> new CustomException(ExceptionCode.STEP_NOT_FOUND));
+
+        UserStep userStep = userStepRepository.findByUserIdAndStepId(til.getWriter().getId(), stepId)
+                .orElseThrow(() -> new CustomException(ExceptionCode.TIL_VIEW_FORBIDDEN));
+
         Map<Comment, Boolean> maps = new HashMap<>();
         List<Comment> comments = commentRepository.findByTilId(tilId);
         for (Comment comment : comments) {
@@ -121,17 +117,16 @@ public class TilService {
     @Transactional
     public void submitTil(TilRequest.SubmitTilDTO requestDTO, Long roadmapId, Long stepId, Long tilId, User user) {
 
-        Til til = tilRepository.findById(tilId).orElseThrow(
-                () -> new Exception400("해당 til을 찾을 수 없습니다.")
-        );
+        Til til = tilRepository.findById(tilId)
+                .orElseThrow(() -> new CustomException(ExceptionCode.TIL_NOT_FOUND));
 
         if (!Objects.equals(til.getWriter().getId(), user.getId())) {
-            throw new Exception403("til을 제출할 권한이 없습니다.");
+            throw new CustomException(ExceptionCode.TIL_SUBMIT_FORBIDDEN);
         }
 
         String submitContent = requestDTO.getSubmitContent();
         if(submitContent == null){
-            throw new Exception400("TIL 내용을 입력해주세요.");
+            throw new CustomException(ExceptionCode.TIL_CONTENT_NULL);
         }
 
         // 제출 내용을 저장 내용에도 저장
@@ -140,26 +135,24 @@ public class TilService {
         // 제출 여부(완료) 저장
         UserStep userstep = userStepRepository.findByStepId(stepId);
         if (userstep.getIsSubmit().equals(true)) {
-            throw new Exception400("이미 한번 제출하였습니다.");
+            throw new CustomException(ExceptionCode.TIL_ALREADY_SUBMIT);
         }
         userstep.submit();
 
-        UserRoadmap userRoadmap = userRoadmapRepository.findByRoadmapIdAndUserId(roadmapId, user.getId()).orElseThrow(
-                () -> new Exception403("해당 로드맵에 속하지 않았습니다.")
-        );
-        int progress = calProgress(roadmapId, user.getId());
+        UserRoadmap userRoadmap = userRoadmapRepository.findByRoadmapIdAndUserId(roadmapId, user.getId())
+                .orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_SUBMIT_FORBIDDEN));
 
+        int progress = calProgress(roadmapId, user.getId());
         userRoadmap.updateProgress(progress);
     }
 
     @Transactional
     public void deleteTil(Long id, User user) {
-        Til til = tilRepository.findById(id).orElseThrow(
-                () -> new Exception404("존재하지 않는 til입니다.")
-        );
+        Til til = tilRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ExceptionCode.TIL_NOT_FOUND));
 
         if (!til.getWriter().equals(user)) {
-            throw new Exception403("해당 til을 삭제할 권한이 없습니다.");
+            throw new CustomException(ExceptionCode.TIL_DELETE_FORBIDDEN);
         }
         tilRepository.deleteById(id);
     }
@@ -178,7 +171,7 @@ public class TilService {
                 Slice<Til> tils = tilRepository.findAllByDateByOrderByCreatedDateDesc(user.getId(), roadmapId, startDate, endDate, title, pageable);
                 return new TilResponse.FindAllDTO(tils);
             } catch (Exception e) {
-                throw new Exception400("입력한 날짜를 찾을 수 없습니다.");
+                throw new CustomException(ExceptionCode.DATE_WRONG);
             }
         } else {
             Slice<Til> tils = tilRepository.findAllByOrderByCreatedDateDesc(user.getId(), roadmapId, title, pageable);
