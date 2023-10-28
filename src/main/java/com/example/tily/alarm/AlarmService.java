@@ -1,6 +1,7 @@
 package com.example.tily.alarm;
 
-import com.example.tily._core.errors.exception.Exception400;
+import com.example.tily._core.errors.exception.ExceptionCode;
+import com.example.tily._core.errors.exception.CustomException;
 import com.example.tily.user.User;
 import lombok.RequiredArgsConstructor;
 
@@ -27,9 +28,8 @@ public class AlarmService {
         // 요청DTO에 있는 모든 알림 id에 대해 true로 처리
         List<AlarmRequest.ReadAlarmDTO.AlarmDTO> alarms = requestDTO.getAlarms();
         for (AlarmRequest.ReadAlarmDTO.AlarmDTO alarm : alarms) {
-            Alarm a = alarmRepository.findById(alarm.getId()).orElseThrow(
-                    () -> new Exception400("해당 알림이 존재하지 않습니다.")
-            );
+            Alarm a = alarmRepository.findById(alarm.getId())
+                    .orElseThrow(() -> new CustomException(ExceptionCode.ALARM_NOT_FOUND));
             a.readAlarm();
         }
     }

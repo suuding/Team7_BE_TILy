@@ -147,11 +147,13 @@ public class RoadmapResponse {
             public class TilyDTO {
                 private Long id;
                 private String name;
+                private String image;
                 private int stepNum;
 
                 public TilyDTO(Roadmap roadmap) {
                     this.id = roadmap.getId();
                     this.name = roadmap.getName();
+                    this.image = roadmap.getImage();
                     this.stepNum = roadmap.getStepNum();
                 }
             }
@@ -161,14 +163,12 @@ public class RoadmapResponse {
                 private Long id;
                 private String name;
                 private int stepNum;
-                private String image;
                 private Creator creator;
 
                 public GroupDTO(Roadmap roadmap) {
                     this.id = roadmap.getId();
                     this.name = roadmap.getName();
                     this.stepNum = roadmap.getStepNum();
-                    this.image = roadmap.getImage();
                     this.creator = new Creator(roadmap.getCreator());
                 }
 

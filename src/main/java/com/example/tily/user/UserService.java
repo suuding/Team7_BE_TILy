@@ -1,5 +1,7 @@
 package com.example.tily.user;
 
+import com.example.tily._core.errors.exception.ExceptionCode;
+import com.example.tily._core.errors.exception.CustomException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.tily._core.errors.exception.Exception400;
 import com.example.tily._core.errors.exception.Exception403;
@@ -44,7 +46,7 @@ public class UserService {
     public void checkEmail(UserRequest.CheckEmailDTO requestDTO) {
         Optional<User> user = userRepository.findByEmail(requestDTO.getEmail());
         if (user.isPresent()) {
-            throw new Exception400("이미 존재하는 이메일입니다 : " + requestDTO.getEmail());
+            throw new CustomException(ExceptionCode.USER_EMAIL_EXIST);
         }
 
         sendCode(requestDTO.getEmail());
@@ -54,9 +56,8 @@ public class UserService {
     @Transactional
     public void sendEmailCode(UserRequest.SendEmailCodeDTO requestDTO) {
 
-        User user = userRepository.findByEmail(requestDTO.getEmail()).orElseThrow(
-                () -> new Exception404("해당 이메일을 찾을 수 없습니다 : " + requestDTO.getEmail())
-        );
+        User user = userRepository.findByEmail(requestDTO.getEmail())
+                .orElseThrow(() -> new CustomException(ExceptionCode.USER_EMAIL_NOT_FOUND));
 
         sendCode(requestDTO.getEmail());
     }
@@ -66,12 +67,12 @@ public class UserService {
     public UserResponse.CheckEmailCodeDTO checkEmailCode(UserRequest.CheckEmailCodeDTO requestDTO) {
         String code = redisUtils.getData(requestDTO.getEmail()); // 이메일로 찾은 코드
 
-        if (code == null) {
-            throw new Exception400("유효기간이 만료되었습니다.");
+        if (code==null) {
+            throw new CustomException(ExceptionCode.CODE_EXPIRED);
         }
 
         if (!code.equals(requestDTO.getCode())) {
-            throw new Exception400("잘못된 인증코드입니다.");
+            throw new CustomException(ExceptionCode.CODE_WRONG);
         }
 
         redisUtils.deleteData(requestDTO.getEmail()); // 인증 완료 후 인증코드 삭제
@@ -83,25 +84,20 @@ public class UserService {
     public void join(UserRequest.JoinDTO requestDTO) {
         Optional<User> user = userRepository.findByEmail(requestDTO.getEmail());
         if (user.isPresent()) {
-            throw new Exception400("이미 존재하는 이메일입니다 : " + requestDTO.getEmail());
+            throw new CustomException(ExceptionCode.USER_EMAIL_EXIST);
         }
-
         requestDTO.setPassword(passwordEncoder.encode(requestDTO.getPassword()));
-        try {
-            userRepository.save(requestDTO.toEntity());
-        } catch (Exception e) {
-            throw new Exception500("unknown server error");
-        }
+
+        userRepository.save(requestDTO.toEntity());
     }
 
     @Transactional
     public UserResponse.TokenDTO login(UserRequest.LoginDTO requestDTO) {
-        User user = userRepository.findByEmail(requestDTO.getEmail()).orElseThrow(
-                () -> new Exception404("해당 이메일을 찾을 수 없습니다 : " + requestDTO.getEmail())
-        );
+        User user = userRepository.findByEmail(requestDTO.getEmail())
+                .orElseThrow(() -> new CustomException(ExceptionCode.USER_EMAIL_NOT_FOUND));
 
-        if (!passwordEncoder.matches(requestDTO.getPassword(), user.getPassword())) {
-            throw new Exception400("비밀번호가 일치하지 않습니다. ");
+        if(!passwordEncoder.matches(requestDTO.getPassword(), user.getPassword())) {
+            throw new CustomException(ExceptionCode.USER_PASSWORD_WRONG);
         }
 
         return createToken(user);
@@ -124,9 +120,8 @@ public class UserService {
 
     @Transactional
     public void changePassword(UserRequest.ChangePwdDTO requestDTO) {
-        User user = userRepository.findByEmail(requestDTO.getEmail()).orElseThrow(
-                () -> new Exception404("해당 이메일을 찾을 수 없습니다 : " + requestDTO.getEmail())
-        );
+        User user = userRepository.findByEmail(requestDTO.getEmail())
+                .orElseThrow(() -> new CustomException(ExceptionCode.USER_EMAIL_NOT_FOUND));
 
         String enPassword = passwordEncoder.encode(requestDTO.getPassword());
         user.updatePassword(enPassword);
@@ -151,7 +146,7 @@ public class UserService {
             // redis에 인증코드 저장 (유효기간: 5분)
             redisUtils.setDataExpire(email, code, 60 * 5L);
         } catch (Exception e) {
-            throw new Exception500("인증코드를 전송하지 못했습니다.");
+            throw new CustomException(ExceptionCode.CODE_NOT_SEND);
         }
     }
 
