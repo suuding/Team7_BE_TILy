@@ -6,6 +6,7 @@ import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.tily.user.User;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -13,26 +14,37 @@ import java.util.Date;
 
 @Component
 public class JWTProvider {
-    public static final Long EXP = 1000L * 60 * 60 * 48; // 48시간 - 테스트 하기 편함.
+    public static final Long ACCESS_EXP = 1000L * 60 * 60; // 1시간
+    public static final Long REFRESH_EXP = 1000L * 60 * 60 * 24 * 7; // 일주일
+
     public static final String TOKEN_PREFIX = "Bearer "; // 스페이스 필요함
     public static final String HEADER = "Authorization";
     public static final String SECRET = "MySecretKey";
 
-    public static String create(User user) {
-        String jwt = JWT.create()
+    // access token 생성
+    public static String createAccessToken(User user) {
+        String jwt = createToken(user, ACCESS_EXP);
+        return TOKEN_PREFIX + jwt;
+    }
+
+    // refresh token 생성
+    public static String createRefreshToken(User user) {
+        String jwt = createToken(user, REFRESH_EXP);
+        return jwt;
+    }
+
+    public static String createToken(User user, Long exp) {
+        return JWT.create()
                 .withSubject(user.getEmail())
-                .withExpiresAt(new Date(System.currentTimeMillis() + EXP))
+                .withExpiresAt(new Date(System.currentTimeMillis() + exp))
                 .withClaim("id", user.getId())
                 .withClaim("role", user.getRole().ordinal())
                 .sign(Algorithm.HMAC512(SECRET));
-        return TOKEN_PREFIX + jwt;
     }
 
     public static DecodedJWT verify(String jwt) throws SignatureVerificationException, TokenExpiredException {
         jwt = jwt.replace(JWTProvider.TOKEN_PREFIX, "");
-        DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC512(SECRET))
-                .build().verify(jwt);
-        return decodedJWT;
+        return JWT.require(Algorithm.HMAC512(SECRET)).build().verify(jwt);
     }
 
 }

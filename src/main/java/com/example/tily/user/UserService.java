@@ -1,6 +1,8 @@
 package com.example.tily.user;
 
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.tily._core.errors.exception.Exception400;
+import com.example.tily._core.errors.exception.Exception403;
 import com.example.tily._core.errors.exception.Exception404;
 import com.example.tily._core.errors.exception.Exception500;
 import com.example.tily._core.security.JWTProvider;
@@ -15,8 +17,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 import javax.mail.Message;
 import javax.mail.internet.MimeMessage;
 
-import org.springframework.mail.javamail.MimeMailMessage;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -95,7 +95,7 @@ public class UserService {
     }
 
     @Transactional
-    public String login(UserRequest.LoginDTO requestDTO) {
+    public UserResponse.TokenDTO login(UserRequest.LoginDTO requestDTO) {
         User user = userRepository.findByEmail(requestDTO.getEmail()).orElseThrow(
                 () -> new Exception404("해당 이메일을 찾을 수 없습니다 : " + requestDTO.getEmail())
         );
@@ -104,7 +104,22 @@ public class UserService {
             throw new Exception400("비밀번호가 일치하지 않습니다. ");
         }
 
-        return JWTProvider.create(user);
+        return createToken(user);
+    }
+
+    @Transactional
+    public UserResponse.TokenDTO refresh(String refreshToken) {
+        DecodedJWT decodedJWT = JWTProvider.verify(refreshToken);
+        Long userId = decodedJWT.getClaim("id").asLong();
+        if (!redisUtils.existData(userId.toString())) {
+            throw new Exception403("Refresh 토큰이 만료됐습니다.");
+        }
+
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new Exception404("해당 사용자를 찾을 수 없습니다.")
+        );
+
+        return createToken(user);
     }
 
     @Transactional
@@ -162,6 +177,16 @@ public class UserService {
         return content;
     }
 
+    public UserResponse.TokenDTO createToken(User user) {
+
+        String newRefreshToken = JWTProvider.createRefreshToken(user);
+        String newAccessToken = JWTProvider.createAccessToken(user);
+        redisUtils.deleteData(user.getId().toString());
+        redisUtils.setDataExpire(user.getId().toString(), newRefreshToken, JWTProvider.REFRESH_EXP);
+
+        return new UserResponse.TokenDTO(newAccessToken, newRefreshToken);
+    }
+  
     public UserResponse.ViewGardensDTO viewGardens(User user) {
         LocalDateTime endDateTime = LocalDateTime.now();
         LocalDateTime beginDateTime = endDateTime.minusYears(1).plusDays(1);

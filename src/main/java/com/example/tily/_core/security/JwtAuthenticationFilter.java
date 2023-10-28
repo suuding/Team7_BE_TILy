@@ -52,7 +52,7 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
         } catch (SignatureVerificationException sve) {
             log.error("토큰 검증 실패");
         } catch (TokenExpiredException tee) {
-            log.error("토큰 만료됨");
+            log.error("access 토큰 만료됨");
         } finally {
             chain.doFilter(request, response);
         }
