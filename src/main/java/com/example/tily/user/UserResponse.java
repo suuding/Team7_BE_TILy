@@ -36,7 +36,6 @@ public class UserResponse {
             private String date;
             private int value;
 
-
             public GardenDTO(String date, int value) {
                 this.date = date;
                 this.value = value;
