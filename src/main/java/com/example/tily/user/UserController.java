@@ -1,11 +1,18 @@
 package com.example.tily.user;
 
+import com.example.tily._core.security.CustomUserDetails;
 import com.example.tily._core.security.JWTProvider;
 import com.example.tily._core.utils.ApiUtils;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -48,8 +55,12 @@ public class UserController {
     // 로그인
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserRequest.LoginDTO requestDTO, Errors errors) {
-        String jwt = userService.login(requestDTO);
-        return ResponseEntity.ok().header(JWTProvider.HEADER, jwt).body(ApiUtils.success(null));
+        UserResponse.TokenDTO responseDTO = userService.login(requestDTO);
+        ResponseCookie responseCookie = setRefreshTokenCookie(responseDTO.getRefreshToken());
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
+                .body(ApiUtils.success(new UserResponse.LoginDTO(responseDTO.getAccessToken())));
     }
 
     // 비밀번호 재설정
@@ -57,6 +68,31 @@ public class UserController {
     public ResponseEntity<?> changePassword(@RequestBody @Valid UserRequest.ChangePwdDTO requestDTO, Errors errors) {
         userService.changePassword(requestDTO);
         return ResponseEntity.ok().body(ApiUtils.success(null));
+    }
+
+    @GetMapping("/refresh")
+    public ResponseEntity<?> refresh(@CookieValue String refreshToken) {
+        UserResponse.TokenDTO responseDTO = userService.refresh(refreshToken);
+        ResponseCookie responseCookie = setRefreshTokenCookie(responseDTO.getRefreshToken());
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
+                .body(ApiUtils.success(new UserResponse.LoginDTO(responseDTO.getAccessToken())));
+    }
+
+    public ResponseCookie setRefreshTokenCookie(String refreshToken) {
+        return ResponseCookie.from("refreshToken", refreshToken)
+                .httpOnly(true)
+                .secure(true)
+                .sameSite("None")
+                .maxAge(JWTProvider.REFRESH_EXP)
+                .build();
+    }
+    
+    @GetMapping("/gardens")
+    public ResponseEntity<?> gardens(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        UserResponse.ViewGardensDTO responseDTO = userService.viewGardens(userDetails.getUser());
+        return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
 
 }

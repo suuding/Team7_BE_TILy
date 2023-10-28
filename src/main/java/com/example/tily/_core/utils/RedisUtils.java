@@ -1,5 +1,6 @@
 package com.example.tily._core.utils;
 
+import com.example.tily.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -13,6 +14,7 @@ import java.time.Duration;
 public class RedisUtils {
 
     private final StringRedisTemplate stringRedisTemplate;
+    public static final Long REFRESH_EXP = 1000L * 60 * 60 * 24 * 7; // 일주일
 
     public String getData(String key) {
         ValueOperations<String, String> valueOperations = stringRedisTemplate.opsForValue();
@@ -32,4 +34,5 @@ public class RedisUtils {
     public void deleteData(String key) {
         stringRedisTemplate.delete(key);
     }
+
 }

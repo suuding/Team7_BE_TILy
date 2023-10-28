@@ -2,6 +2,9 @@ package com.example.tily.comment;
 
 import com.example.tily._core.errors.exception.ExceptionCode;
 import com.example.tily._core.errors.exception.CustomException;
+import com.example.tily._core.errors.exception.Exception400;
+import com.example.tily._core.errors.exception.Exception403;
+import com.example.tily._core.errors.exception.Exception404;
 import com.example.tily.alarm.Alarm;
 import com.example.tily.alarm.AlarmRepository;
 import com.example.tily.roadmap.Roadmap;
@@ -38,6 +41,7 @@ public class CommentService {
         Til til = tilRepository.findById(tilId)
                 .orElseThrow(() -> new CustomException(ExceptionCode.TIL_NOT_FOUND));
 
+
         String content = requestDTO.getContent();
 
         Comment comment = Comment.builder().roadmap(roadmap).step(step).writer(user).til(til).content(content).build();
@@ -56,6 +60,7 @@ public class CommentService {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new CustomException(ExceptionCode.COMMENT_NOT_FOUND));
 
+
         if(!comment.getWriter().equals(user)) {
             throw new CustomException(ExceptionCode.COMMENT_UPDATE_FORBIDDEN);
         }
@@ -70,6 +75,7 @@ public class CommentService {
 
         if(!comment.getWriter().equals(user)) {
             throw new CustomException(ExceptionCode.COMMENT_DELETE_FORBIDDEN);
+
         }
 
         commentRepository.deleteById(id);

@@ -44,13 +44,11 @@ public class TilService {
     @Transactional
     public TilResponse.CreateTilDTO createTil(TilRequest.CreateTilDTO requestDTO, Long roadmapId, Long stepId, User user) {
 
-        Roadmap roadmap = roadmapRepository.findById(roadmapId).orElseThrow(
-                () -> new CustomException(ExceptionCode.ROADMAP_NOT_FOUND)
-        );
+        Roadmap roadmap = roadmapRepository.findById(roadmapId)
+          .orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_NOT_FOUND));
 
-        Step step = stepRepository.findById(stepId).orElseThrow(
-                () -> new CustomException(ExceptionCode.ROADMAP_NOT_FOUND)
-        );
+        Step step = stepRepository.findById(stepId)
+          .orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_NOT_FOUND));
 
         // 로드맵에 속한 step이 맞는지 확인
         if (!step.getRoadmap().equals(roadmap)) {
@@ -58,9 +56,8 @@ public class TilService {
         }
 
         // 사용자가 속하지 않은 로드맵에 til을 생성하려고 할때
-        userRoadmapRepository.findByRoadmapIdAndUserIdAndIsAcceptTrue(roadmapId, user.getId()).orElseThrow(
-                () -> new CustomException(ExceptionCode.TIL_ROADMAP_FORBIDDEN)
-        );
+        userRoadmapRepository.findByRoadmapIdAndUserIdAndIsAcceptTrue(roadmapId, user.getId())
+          .orElseThrow(() -> new CustomException(ExceptionCode.TIL_ROADMAP_FORBIDDEN));
 
         // 사용자가 이미 step에 대한 til을 생성한 경우
         Til til = tilRepository.findByStepIdAndUserId(stepId, user.getId());
@@ -79,13 +76,12 @@ public class TilService {
     @Transactional
     public void updateTil(TilRequest.UpdateTilDTO requestDTO, Long id, User user) {
 
-        Til til = tilRepository.findById(id).orElseThrow(
-                () -> new CustomException(ExceptionCode.TIL_NOT_FOUND)
-        );
+        Til til = tilRepository.findById(id)
+          .orElseThrow(() -> new CustomException(ExceptionCode.TIL_NOT_FOUND));
 
         if (!til.getWriter().getId().equals(user.getId())) {
             throw new CustomException(ExceptionCode.TIL_UPDATE_FORBIDDEN);
-        }
+        );
 
         String content = requestDTO.getContent();
         if(content == null){
@@ -103,6 +99,7 @@ public class TilService {
 
         UserStep userStep = userStepRepository.findByUserIdAndStepId(til.getWriter().getId(), stepId)
                 .orElseThrow(() -> new CustomException(ExceptionCode.TIL_VIEW_FORBIDDEN));
+
 
         Map<Comment, Boolean> maps = new HashMap<>();
         List<Comment> comments = commentRepository.findByTilId(tilId);
@@ -154,6 +151,7 @@ public class TilService {
         if (!til.getWriter().equals(user)) {
             throw new CustomException(ExceptionCode.TIL_DELETE_FORBIDDEN);
         }
+
         tilRepository.deleteById(id);
     }
 
