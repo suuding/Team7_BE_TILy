@@ -1,6 +1,5 @@
 package com.example.tily._core.utils;
 
-import com.example.tily._core.errors.ErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
