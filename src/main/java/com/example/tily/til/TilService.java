@@ -81,7 +81,7 @@ public class TilService {
 
         if (!til.getWriter().getId().equals(user.getId())) {
             throw new CustomException(ExceptionCode.TIL_UPDATE_FORBIDDEN);
-        );
+        }
 
         String content = requestDTO.getContent();
         if(content == null){
@@ -90,7 +90,7 @@ public class TilService {
         til.updateContent(content);
     }
 
-    public TilResponse.ViewDTO viewTil(Long tilId, Long stepId, User user) {
+    public TilResponse.ViewDTO viewTil (Long tilId, Long stepId, User user) {
         Til til = tilRepository.findById(tilId)
                 .orElseThrow(() -> new CustomException(ExceptionCode.TIL_NOT_FOUND));
 

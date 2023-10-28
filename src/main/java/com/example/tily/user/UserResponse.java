@@ -33,10 +33,12 @@ public class UserResponse {
     public static class TokenDTO {
         private String accessToken;
         private String refreshToken;
+
         public TokenDTO(String accessToken, String refreshToken) {
             this.accessToken = accessToken;
             this.refreshToken = refreshToken;
         }
+    }
 
     public static class ViewGardensDTO {
         private List<GardenDTO> gardens;
