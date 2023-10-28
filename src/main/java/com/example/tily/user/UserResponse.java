@@ -33,12 +33,12 @@ public class UserResponse {
         @Getter
         @Setter
         public static class GardenDTO {
-            private String day;
+            private String date;
             private int value;
 
 
-            public GardenDTO(String day, int value) {
-                this.day = day;
+            public GardenDTO(String date, int value) {
+                this.date = date;
                 this.value = value;
             }
         }
