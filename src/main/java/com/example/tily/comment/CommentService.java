@@ -1,6 +1,8 @@
 package com.example.tily.comment;
 
 import com.example.tily._core.errors.exception.Exception400;
+import com.example.tily._core.errors.exception.Exception403;
+import com.example.tily._core.errors.exception.Exception404;
 import com.example.tily.alarm.Alarm;
 import com.example.tily.alarm.AlarmRepository;
 import com.example.tily.alarm.AlarmResponse;
@@ -32,15 +34,15 @@ public class CommentService {
                                                           Long roadmapId, Long stepId, Long tilId, User user) {
 
         Roadmap roadmap = roadmapRepository.findById(roadmapId).orElseThrow(
-                () -> new Exception400("해당 로드맵을 찾을 수 없습니다")
+                () -> new Exception404("해당 로드맵을 찾을 수 없습니다")
         );
 
         Step step = stepRepository.findById(stepId).orElseThrow(
-                () -> new Exception400("해당 스텝을 찾을 수 없습니다")
+                () -> new Exception404("해당 스텝을 찾을 수 없습니다")
         );
 
         Til til = tilRepository.findById(tilId).orElseThrow(
-                () -> new Exception400("해당 til을 찾을 수 없습니다")
+                () -> new Exception404("해당 TIL을 찾을 수 없습니다")
         );
 
         String content = requestDTO.getContent();
@@ -59,10 +61,10 @@ public class CommentService {
     public void updateComment(CommentRequest.UpdateCommentDTO requestDTO, Long commentId, User user) {
 
         Comment comment = commentRepository.findById(commentId).orElseThrow(
-                () -> new Exception400("해당 댓글을 찾을 수 없습니다")
+                () -> new Exception404("해당 댓글을 찾을 수 없습니다")
         );
         if(comment.getWriter().getId() != user.getId()) {
-            throw new Exception400("해당 댓글을 수정할 권한이 없습니다.");
+            throw new Exception403("해당 댓글을 수정할 권한이 없습니다.");
         }
 
         String content = requestDTO.getContent();
@@ -75,11 +77,11 @@ public class CommentService {
     @Transactional
     public void deleteComment(Long id, User user) {
         Comment comment = commentRepository.findById(id).orElseThrow(
-                () -> new Exception400("해당 댓글을 찾을 수 없습니다")
+                () -> new Exception404("해당 댓글을 찾을 수 없습니다")
         );
 
         if(comment.getWriter().getId() != user.getId()) {
-            throw new Exception400("해당 댓글을 삭제할 권한이 없습니다.");
+            throw new Exception403("해당 댓글을 삭제할 권한이 없습니다.");
         }
         commentRepository.deleteById(id);
     }

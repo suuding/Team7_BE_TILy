@@ -7,7 +7,11 @@ import com.example.tily._core.errors.exception.Exception404;
 import com.example.tily._core.errors.exception.Exception500;
 import com.example.tily._core.security.JWTProvider;
 import com.example.tily._core.utils.RedisUtils;
+import com.example.tily.til.Til;
+import com.example.tily.til.TilRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Slice;
 import org.springframework.mail.javamail.JavaMailSender;
 
 import javax.mail.Message;
@@ -17,8 +21,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-import java.util.Random;
+import java.awt.desktop.SystemEventListener;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 @Transactional
 @RequiredArgsConstructor
@@ -29,13 +37,14 @@ public class UserService {
     private final UserRepository userRepository;
     private final JavaMailSender javaMailSender;
     private final RedisUtils redisUtils;
+    private final TilRepository tilRepository;
 
     // (회원가입) 이메일 중복 체크 후 인증코드 전송
     @Transactional
     public void checkEmail(UserRequest.CheckEmailDTO requestDTO) {
         Optional<User> user = userRepository.findByEmail(requestDTO.getEmail());
         if (user.isPresent()) {
-            throw new Exception400("이미 존재하는 이메일입니다 : " +requestDTO.getEmail());
+            throw new Exception400("이미 존재하는 이메일입니다 : " + requestDTO.getEmail());
         }
 
         sendCode(requestDTO.getEmail());
@@ -46,7 +55,7 @@ public class UserService {
     public void sendEmailCode(UserRequest.SendEmailCodeDTO requestDTO) {
 
         User user = userRepository.findByEmail(requestDTO.getEmail()).orElseThrow(
-                () -> new Exception404("해당 이메일을 찾을 수 없습니다 : "+requestDTO.getEmail())
+                () -> new Exception404("해당 이메일을 찾을 수 없습니다 : " + requestDTO.getEmail())
         );
 
         sendCode(requestDTO.getEmail());
@@ -57,7 +66,7 @@ public class UserService {
     public UserResponse.CheckEmailCodeDTO checkEmailCode(UserRequest.CheckEmailCodeDTO requestDTO) {
         String code = redisUtils.getData(requestDTO.getEmail()); // 이메일로 찾은 코드
 
-        if (code==null) {
+        if (code == null) {
             throw new Exception400("유효기간이 만료되었습니다.");
         }
 
@@ -74,7 +83,7 @@ public class UserService {
     public void join(UserRequest.JoinDTO requestDTO) {
         Optional<User> user = userRepository.findByEmail(requestDTO.getEmail());
         if (user.isPresent()) {
-            throw new Exception400("이미 존재하는 이메일입니다 : " +requestDTO.getEmail());
+            throw new Exception400("이미 존재하는 이메일입니다 : " + requestDTO.getEmail());
         }
 
         requestDTO.setPassword(passwordEncoder.encode(requestDTO.getPassword()));
@@ -88,10 +97,10 @@ public class UserService {
     @Transactional
     public UserResponse.TokenDTO login(UserRequest.LoginDTO requestDTO) {
         User user = userRepository.findByEmail(requestDTO.getEmail()).orElseThrow(
-                () -> new Exception404("해당 이메일을 찾을 수 없습니다 : "+requestDTO.getEmail())
+                () -> new Exception404("해당 이메일을 찾을 수 없습니다 : " + requestDTO.getEmail())
         );
 
-        if(!passwordEncoder.matches(requestDTO.getPassword(), user.getPassword())) {
+        if (!passwordEncoder.matches(requestDTO.getPassword(), user.getPassword())) {
             throw new Exception400("비밀번호가 일치하지 않습니다. ");
         }
 
@@ -116,7 +125,7 @@ public class UserService {
     @Transactional
     public void changePassword(UserRequest.ChangePwdDTO requestDTO) {
         User user = userRepository.findByEmail(requestDTO.getEmail()).orElseThrow(
-                () -> new Exception404("해당 이메일을 찾을 수 없습니다 : "+requestDTO.getEmail())
+                () -> new Exception404("해당 이메일을 찾을 수 없습니다 : " + requestDTO.getEmail())
         );
 
         String enPassword = passwordEncoder.encode(requestDTO.getPassword());
@@ -140,7 +149,7 @@ public class UserService {
             javaMailSender.send(message);
 
             // redis에 인증코드 저장 (유효기간: 5분)
-            redisUtils.setDataExpire(email, code, 60*5L);
+            redisUtils.setDataExpire(email, code, 60 * 5L);
         } catch (Exception e) {
             throw new Exception500("인증코드를 전송하지 못했습니다.");
         }
@@ -154,7 +163,7 @@ public class UserService {
 
         Random random = new Random();
 
-        return random.ints(start, end + 1).filter(i -> (i <=57 || i >=65)).limit(codeLength)
+        return random.ints(start, end + 1).filter(i -> (i <= 57 || i >= 65)).limit(codeLength)
                 .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append).toString();
     }
 
@@ -163,7 +172,7 @@ public class UserService {
         String content = "<div style='background-color: #f8f9fa; padding: 10px 20px 50px 20px; margin: 20px'>" +
                 "<h1 style='margin: 20px'>이메일 인증</h1>" +
                 "<p>안녕하세요!<br>본인 인증을 위해 아래의 코드를 복사해 인증코드 입력 칸에 입력해주세요.<br>" +
-                "<div style='background-color:gainsboro; font-size: 30px; margin: 10px; padding: 5px; width: 250px' >"+code+"</div><br>" +
+                "<div style='background-color:gainsboro; font-size: 30px; margin: 10px; padding: 5px; width: 250px' >" + code + "</div><br>" +
                 "TIL-y 서비스를 이용해주셔서 감사합니다. <br></p></div>";
         return content;
     }
@@ -176,6 +185,29 @@ public class UserService {
         redisUtils.setDataExpire(user.getId().toString(), newRefreshToken, JWTProvider.REFRESH_EXP);
 
         return new UserResponse.TokenDTO(newAccessToken, newRefreshToken);
+    }
+  
+    public UserResponse.ViewGardensDTO viewGardens(User user) {
+        LocalDateTime endDateTime = LocalDateTime.now();
+        LocalDateTime beginDateTime = endDateTime.minusYears(1).plusDays(1);
+
+        Long userId = user.getId();
+        HashMap<String, Integer> maps = new HashMap<>();
+
+        List<Til> tils = tilRepository.findTilsByUserIdAndDateRange(userId, beginDateTime, endDateTime);
+
+        // 모든 날에 대한 작성여부 0으로 초기화.
+        for (LocalDate date = beginDateTime.toLocalDate(); !date.isAfter(endDateTime.toLocalDate()); date = date.plusDays(1)) {
+            maps.put(date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")), 0);
+        }
+
+        // TIL 존재하는 날의 작성여부만 1로 변경.
+        for (Til til : tils) {
+            LocalDate tilDate = til.getCreatedDate().toLocalDate();
+            maps.put(tilDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")), 1);
+        }
+
+        return new UserResponse.ViewGardensDTO(maps);
     }
 
 }
