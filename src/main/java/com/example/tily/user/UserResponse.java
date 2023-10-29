@@ -52,11 +52,11 @@ public class UserResponse {
         @Getter
         @Setter
         public static class GardenDTO {
-            private String date;
+            private String day;
             private int value;
 
-            public GardenDTO(String date, int value) {
-                this.date = date;
+            public GardenDTO(String day, int value) {
+                this.day = day;
                 this.value = value;
             }
         }
