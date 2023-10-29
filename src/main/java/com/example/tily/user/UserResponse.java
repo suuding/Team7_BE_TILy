@@ -40,6 +40,7 @@ public class UserResponse {
         }
     }
 
+    @Getter @Setter
     public static class ViewGardensDTO {
         private List<GardenDTO> gardens;
         public ViewGardensDTO(HashMap<String, Integer> maps){
@@ -51,14 +52,28 @@ public class UserResponse {
         @Getter
         @Setter
         public static class GardenDTO {
-            private String date;
+            private String day;
             private int value;
 
-            public GardenDTO(String date, int value) {
-                this.date = date;
+            public GardenDTO(String day, int value) {
+                this.day = day;
                 this.value = value;
             }
         }
+    }
 
+    @Getter @Setter
+    public static class UserDTO {
+        private Long id;
+        private String name;
+        private String email;
+        private String image;
+
+        public UserDTO(User user) {
+            this.id = user.getId();
+            this.name = user.getName();
+            this.email = user.getEmail();
+            this.image = user.getImage();
+        }
     }
 }
