@@ -2,7 +2,7 @@ package com.example.tily.alarm;
 
 import java.util.List;
 
-public record AlarmRequest() {
+public class AlarmRequest {
 
     public record ReadAlarmDTO(List<AlarmDTO> alarms) {
 
