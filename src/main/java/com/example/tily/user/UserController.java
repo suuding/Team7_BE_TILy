@@ -80,6 +80,13 @@ public class UserController {
                 .body(ApiUtils.success(new UserResponse.LoginDTO(responseDTO.getAccessToken())));
     }
 
+    // 사용자 정보 조회하기
+    @GetMapping("/users")
+    public ResponseEntity<?> findUser(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        UserResponse.UserDTO responseDTO = new UserResponse.UserDTO(userDetails.getUser());
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
     public ResponseCookie setRefreshTokenCookie(String refreshToken) {
         return ResponseCookie.from("refreshToken", refreshToken)
                 .httpOnly(true)
