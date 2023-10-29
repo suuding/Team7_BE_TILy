@@ -93,8 +93,8 @@ create table til_tb (
 --    primary key (id)
 --);
 
-insert into til_tb (id, created_date, updated_date, comment_num, content, is_personal, roadmap_id, step_id, submit_content, submit_date, title, writer_id) values (default, '2023-09-10', '2023-09-10', 0, '이것은 내용입니다.', true, '1', '1', null, null, '이것은 제목입니다!!', '1');
-insert into til_tb (id, created_date, updated_date, comment_num, content, is_personal, roadmap_id, step_id, submit_content, submit_date, title, writer_id) values (default, '2023-10-10', '2023-10-10', 0, '이것은 내용입니다.', true, '1', '1', null, null, '이것은 제목입니다!!!', '1');
-insert into til_tb (id, created_date, updated_date, comment_num, content, is_personal, roadmap_id, step_id, submit_content, submit_date, title, writer_id) values (default, '2022-12-10', '2022-12-10', 0, '이것은 내용입니다.', true, '1', '1', null, null, '이것은 제목입니다!!!!', '1');
-insert into til_tb (id, created_date, updated_date, comment_num, content, is_personal, roadmap_id, step_id, submit_content, submit_date, title, writer_id) values (default, '2023-01-10', '2023-01-10', 0, '이것은 내용입니다.', true, '1', '1', null, null, '이것은 제목입니다 홍홍', '1');
-insert into til_tb (id, created_date, updated_date, comment_num, content, is_personal, roadmap_id, step_id, submit_content, submit_date, title, writer_id) values (default, '2023-02-10', '2023-02-10', 0, '이것은 내용입니다.', true, '1', '1', null, null, '이것은 제목입니다.', '1');
+insert into til_tb (id, created_date, updated_date, comment_num, content, is_personal, roadmap_id, step_id, submit_content, submit_date, title, writer_id) values (default, '2023-09-10', '2023-09-10', 0, '이것은 내용입니다.', true, '1', '5', null, null, '이것은 제목입니다!!', '1');
+insert into til_tb (id, created_date, updated_date, comment_num, content, is_personal, roadmap_id, step_id, submit_content, submit_date, title, writer_id) values (default, '2023-10-10', '2023-10-10', 0, '이것은 내용입니다.', true, '1', '6', null, null, '이것은 제목입니다!!!', '1');
+insert into til_tb (id, created_date, updated_date, comment_num, content, is_personal, roadmap_id, step_id, submit_content, submit_date, title, writer_id) values (default, '2022-12-10', '2022-12-10', 0, '이것은 내용입니다.', true, '1', '7', null, null, '이것은 제목입니다!!!!', '1');
+insert into til_tb (id, created_date, updated_date, comment_num, content, is_personal, roadmap_id, step_id, submit_content, submit_date, title, writer_id) values (default, '2023-01-10', '2023-01-10', 0, '이것은 내용입니다.', true, '1', '8', null, null, '이것은 제목입니다 홍홍', '1');
+insert into til_tb (id, created_date, updated_date, comment_num, content, is_personal, roadmap_id, step_id, submit_content, submit_date, title, writer_id) values (default, '2023-02-10', '2023-02-10', 0, '이것은 내용입니다.', true, '1', '9', null, null, '이것은 제목입니다.', '1');
