@@ -87,6 +87,13 @@ public class UserController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
+    // 사용자 정보 수정하기
+    @PatchMapping("/users")
+    public ResponseEntity<?> updateUser(@RequestBody UserRequest.UpdateUserDTO requestDTO, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        userService.updateUser(requestDTO, userDetails.getUser());
+        return ResponseEntity.ok().body(null);
+    }
+
     public ResponseCookie setRefreshTokenCookie(String refreshToken) {
         return ResponseCookie.from("refreshToken", refreshToken)
                 .httpOnly(true)
