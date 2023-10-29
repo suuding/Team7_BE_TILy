@@ -124,13 +124,14 @@ public class UserService {
         if (!user.getId().equals(id))
             throw new CustomException(ExceptionCode.USER_UPDATE_FORBIDDEN);
 
-        if (!user.getPassword().equals(requestDTO.getCurPassword()))
+        if (!passwordEncoder.matches(requestDTO.getCurPassword(), user.getPassword()))
             throw new CustomException(ExceptionCode.USER_CURPASSWORD_WRONG);
 
-        if (!requestDTO.getNewPassword().equals(requestDTO.getNewPassword()))
+        if (!requestDTO.getNewPassword().equals(requestDTO.getNewPasswordConfirm()))
             throw new CustomException(ExceptionCode.USER_PASSWORD_WRONG);
 
-        user.updatePassword(requestDTO.getNewPassword());
+        String enPassword = passwordEncoder.encode(requestDTO.getNewPassword());
+        user.updatePassword(enPassword);
     }
 
     // 장미밭 조회
