@@ -88,7 +88,7 @@ public class UserController {
     @PatchMapping("/users")
     public ResponseEntity<?> updateUser(@RequestBody UserRequest.UpdateUserDTO requestDTO, @AuthenticationPrincipal CustomUserDetails userDetails) {
         userService.updateUser(requestDTO, userDetails.getUser().getId());
-        return ResponseEntity.ok().body(null);
+        return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 
     // 사용자 장미밭 조회하기
