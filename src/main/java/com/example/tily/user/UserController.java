@@ -3,7 +3,6 @@ package com.example.tily.user;
 import com.example.tily._core.security.CustomUserDetails;
 import com.example.tily._core.security.JWTProvider;
 import com.example.tily._core.utils.ApiUtils;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
@@ -16,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RequiredArgsConstructor
-@Controller
+@RestController
 public class UserController {
 
     private final UserService userService;
@@ -67,6 +66,7 @@ public class UserController {
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 
+    // 토큰 재발급
     @GetMapping("/refresh")
     public ResponseEntity<?> refresh(@CookieValue String refreshToken) {
         UserResponse.TokenDTO responseDTO = userService.refresh(refreshToken);
@@ -80,15 +80,22 @@ public class UserController {
     // 사용자 정보 조회하기
     @GetMapping("/users")
     public ResponseEntity<?> findUser(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        UserResponse.UserDTO responseDTO = new UserResponse.UserDTO(userDetails.getUser());
+        UserResponse.UserDTO responseDTO = userService.findUser(userDetails.getUser());
         return ResponseEntity.ok().body(responseDTO);
     }
 
     // 사용자 정보 수정하기
     @PatchMapping("/users")
     public ResponseEntity<?> updateUser(@RequestBody UserRequest.UpdateUserDTO requestDTO, @AuthenticationPrincipal CustomUserDetails userDetails) {
-        userService.updateUser(requestDTO, userDetails.getUser());
+        userService.updateUser(requestDTO, userDetails.getUser().getId());
         return ResponseEntity.ok().body(null);
+    }
+
+    // 사용자 장미밭 조회하기
+    @GetMapping("/gardens")
+    public ResponseEntity<?> gardens(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        UserResponse.ViewGardensDTO responseDTO = userService.viewGardens(userDetails.getUser());
+        return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
 
     public ResponseCookie setRefreshTokenCookie(String refreshToken) {
@@ -98,12 +105,6 @@ public class UserController {
                 .sameSite("None")
                 .maxAge(JWTProvider.REFRESH_EXP)
                 .build();
-    }
-    
-    @GetMapping("/gardens")
-    public ResponseEntity<?> gardens(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        UserResponse.ViewGardensDTO responseDTO = userService.viewGardens(userDetails.getUser());
-        return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
 
 }
