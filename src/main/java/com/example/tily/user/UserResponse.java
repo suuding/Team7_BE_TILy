@@ -59,6 +59,20 @@ public class UserResponse {
                 this.value = value;
             }
         }
+    }
 
+    @Getter @Setter
+    public static class UserDTO {
+        private Long id;
+        private String name;
+        private String email;
+        private String image;
+
+        public UserDTO(User user) {
+            this.id = user.getId();
+            this.name = user.getName();
+            this.email = user.getEmail();
+            this.image = user.getImage();
+        }
     }
 }
