@@ -45,9 +45,7 @@ public class UserService {
     @Transactional
     public void checkEmail(UserRequest.CheckEmailDTO requestDTO) {
         Optional<User> user = userRepository.findByEmail(requestDTO.getEmail());
-        if (user.isPresent()) {
-            throw new CustomException(ExceptionCode.USER_EMAIL_EXIST);
-        }
+        if (user.isPresent()) throw new CustomException(ExceptionCode.USER_EMAIL_EXIST);
 
         sendCode(requestDTO.getEmail());
     }
@@ -148,6 +146,23 @@ public class UserService {
         } catch (Exception e) {
             throw new CustomException(ExceptionCode.CODE_NOT_SEND);
         }
+    }
+
+    @Transactional
+    public void updateUser(UserRequest.UpdateUserDTO requestDTO, User user) {
+        User user1 = userRepository.findById(user.getId())
+                .orElseThrow(()->new CustomException(ExceptionCode.USER_NOT_FOUND));
+
+        if (!user1.equals(user))
+            throw new CustomException(ExceptionCode.USER_UPDATE_FORBIDDEN);
+
+        if (!user1.getPassword().equals(requestDTO.getCurPassword()))
+            throw new CustomException(ExceptionCode.USER_CURPASSWORD_WRONG);
+
+        if (!requestDTO.getNewPassword().equals(requestDTO.getNewPassword()))
+            throw new CustomException(ExceptionCode.USER_PASSWORD_WRONG);
+
+        user1.updatePassword(requestDTO.getNewPassword());
     }
 
     // 인증코드 랜덤 생성
