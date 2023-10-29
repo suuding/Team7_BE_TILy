@@ -40,6 +40,7 @@ public class UserResponse {
         }
     }
 
+    @Getter @Setter
     public static class ViewGardensDTO {
         private List<GardenDTO> gardens;
         public ViewGardensDTO(HashMap<String, Integer> maps){
