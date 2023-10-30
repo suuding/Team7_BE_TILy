@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -225,7 +226,26 @@ public class RoadmapService {
     public RoadmapResponse.FindAllMyRoadmapDTO findAllMyRoadmaps(User user) {
 
         List<Roadmap> roadmaps = userRoadmapRepository.findByUserId(user.getId(), true);      // 내가 속한 로드맵 조회
-        return new RoadmapResponse.FindAllMyRoadmapDTO(roadmaps);
+
+        List<RoadmapResponse.FindAllMyRoadmapDTO.CategoryDTO> categories = roadmaps.stream()
+                .filter(roadmap -> roadmap.getCategory().equals(Category.CATEGORY_INDIVIDUAL))
+                .map(RoadmapResponse.FindAllMyRoadmapDTO.CategoryDTO::new)
+                .collect(Collectors.toList());
+
+
+        List<RoadmapResponse.TilyDTO> tilys = roadmaps.stream()
+                .filter(roadmap -> roadmap.getCategory().equals(Category.CATEGORY_TILY))
+                .map(RoadmapResponse.TilyDTO::new)
+                .collect(Collectors.toList());
+
+        List<RoadmapResponse.GroupDTO> groups = roadmaps.stream()
+                .filter(roadmap -> roadmap.getCategory().equals(Category.CATEGORY_GROUP))
+                .map(RoadmapResponse.GroupDTO::new)
+                .collect(Collectors.toList());
+
+        RoadmapResponse.FindAllMyRoadmapDTO.RoadmapDTO roadmapDTO =  new RoadmapResponse.FindAllMyRoadmapDTO.RoadmapDTO(tilys, groups);
+
+        return new RoadmapResponse.FindAllMyRoadmapDTO(categories, roadmapDTO);
     }
 
     @Transactional
@@ -235,6 +255,10 @@ public class RoadmapService {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdDate"));
 
         Slice<Roadmap> roadmaps = roadmapRepository.findAllByOrderByCreatedDateDesc(Category.getCategory(category), name, pageable);
+
+        List<RoadmapResponse.FindRoadmapByQueryDTO.RoadmapDTO> roadmapDTOS = roadmaps.getContent().stream().map(RoadmapResponse.FindRoadmapByQueryDTO.RoadmapDTO::new).collect(Collectors.toList());
+        Boolean hasNext = roadmaps.hasNext();
+
         return new RoadmapResponse.FindRoadmapByQueryDTO(Category.getCategory(category), roadmaps);
     }
 
@@ -287,7 +311,11 @@ public class RoadmapService {
             throw new Exception404("로드맵의 사용자들을 찾을 수 없습니다");
         }
 
-        return new RoadmapResponse.FindRoadmapMembersDTO(userRoadmaps);
+        List<RoadmapResponse.FindRoadmapMembersDTO.UserDTO> users = userRoadmaps.stream()
+                .map(userRoadmap -> new RoadmapResponse.FindRoadmapMembersDTO.UserDTO(userRoadmap.getUser().getId(), userRoadmap.getUser().getName(), userRoadmap.getUser().getImage(), userRoadmap.getRole()))
+                .collect(Collectors.toList());
+
+        return new RoadmapResponse.FindRoadmapMembersDTO(users);
     }
 
     @Transactional
@@ -321,7 +349,11 @@ public class RoadmapService {
         UserRoadmap currentUser = userRoadmapRepository.findByRoadmapIdAndUserIdAndIsAcceptTrue(groupsId, user.getId())
                 .orElseThrow(() -> new Exception404("해당 사용자를 찾을 수 없습니다"));
 
-        return new RoadmapResponse.FindAppliedUsersDTO(userRoadmaps, currentUser.getRole());
+        List<RoadmapResponse.FindAppliedUsersDTO.UserDTO> users = userRoadmaps.stream()
+                .map(userRoadmap -> new RoadmapResponse.FindAppliedUsersDTO.UserDTO(userRoadmap.getUser().getId(), userRoadmap.getUser().getName(), userRoadmap.getUser().getImage(), userRoadmap.getCreatedDate().toLocalDate(), userRoadmap.getContent()))
+                .collect(Collectors.toList());
+
+        return new RoadmapResponse.FindAppliedUsersDTO(users, currentUser.getRole());
     }
 
     @Transactional
@@ -373,7 +405,20 @@ public class RoadmapService {
             }
         }
 
-        return new RoadmapResponse.FindTilOfStepDTO(pairs, isSubmit);
+        List<RoadmapResponse.FindTilOfStepDTO.MemberDTO> members;
+
+        if(isSubmit) {
+            members = pairs.stream()
+                    .map(pair -> new RoadmapResponse.FindTilOfStepDTO.MemberDTO(pair.getFirst().getId(), pair.getSecond().getId(),pair.getSecond().getName(), pair.getSecond().getImage(), pair.getFirst().getContent(), pair.getFirst().getSubmitDate().toLocalDate(), pair.getFirst().getCommentNum()))
+                    .collect(Collectors.toList());
+        }
+        else{
+            members = pairs.stream()
+                    .map(pair -> new RoadmapResponse.FindTilOfStepDTO.MemberDTO(null, pair.getSecond().getId(), pair.getSecond().getName(), null, null, null, 0))
+                    .collect(Collectors.toList());
+        }
+
+        return new RoadmapResponse.FindTilOfStepDTO(members);
     }
 
     private void checkManagerPermission(Long groupsId, User user) { // 매니저급만 접근
