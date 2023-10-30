@@ -226,11 +226,13 @@ public class RoadmapResponse {
     @Getter @Setter
     public static class FindRoadmapMembersDTO {
         private List<UserDTO> users;
+        private GroupRole myRole;
 
-        public FindRoadmapMembersDTO(List<UserRoadmap> userRoadmaps){
+        public FindRoadmapMembersDTO(List<UserRoadmap> userRoadmaps, GroupRole myRole){
             this.users = userRoadmaps.stream()
                     .map(userRoadmap -> new UserDTO(userRoadmap.getUser().getId(), userRoadmap.getUser().getName(), userRoadmap.getUser().getImage(), userRoadmap.getRole()))
                     .collect(Collectors.toList());
+            this.myRole = myRole;
         }
 
         @Getter @Setter
