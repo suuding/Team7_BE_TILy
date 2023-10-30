@@ -10,12 +10,9 @@ import java.util.stream.Collectors;
 
 public class CommentResponse {
 
-    @Getter
-    @Setter
-    public static class CreateCommentDTO {
-        private Long id;
-        public CreateCommentDTO(Comment comment){
-            this.id = comment.getId();
+    public record CreateCommentDTO(Long id) {
+        public CreateCommentDTO(Comment comment) {
+            this(comment.getId());
         }
     }
 
