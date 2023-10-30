@@ -290,7 +290,12 @@ public class RoadmapService {
             throw new Exception404("로드맵의 사용자들을 찾을 수 없습니다");
         }
 
-        return new RoadmapResponse.FindRoadmapMembersDTO(userRoadmaps);
+        Optional<GroupRole> myRole = userRoadmaps.stream()
+                .filter(userRoadmap -> userRoadmap.getUser().getId().equals(user.getId()))
+                .map(UserRoadmap::getRole)
+                .findFirst();
+
+        return new RoadmapResponse.FindRoadmapMembersDTO(userRoadmaps, myRole.get());
     }
 
     @Transactional
