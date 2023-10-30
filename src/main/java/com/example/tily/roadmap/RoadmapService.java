@@ -84,6 +84,7 @@ public class RoadmapService {
 
             // reference 저장
             RoadmapRequest.CreateGroupRoadmapDTO.StepDTO.ReferenceDTOs referenceDTOs = stepDTO.getReferences();
+            List<Reference> referenceList = new ArrayList<>();
 
             // (1) youtube
             List<RoadmapRequest.CreateGroupRoadmapDTO.StepDTO.ReferenceDTOs.ReferenceDTO> youtubeDTOs = referenceDTOs.getYoutube();
@@ -91,7 +92,7 @@ public class RoadmapService {
                 String link = youtubeDTO.getLink();
 
                 Reference reference = Reference.builder().step(step).category("youtube").link(link).build();
-                referenceRepository.save(reference);
+                referenceList.add(reference);
             }
 
             // (2) reference
@@ -100,8 +101,10 @@ public class RoadmapService {
                 String link = webDTO.getLink();
 
                 Reference reference = Reference.builder().step(step).category("web").link(link).build();
-                referenceRepository.save(reference);
+                referenceList.add(reference);
             }
+
+            referenceRepository.saveAll(referenceList);
         }
 
         UserRoadmap userRoadmap = UserRoadmap.builder()
