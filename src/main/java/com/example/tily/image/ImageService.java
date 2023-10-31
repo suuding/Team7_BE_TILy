@@ -15,7 +15,7 @@ public class ImageService {
 
     public void uploadImage(MultipartFile file) throws IOException {
         imageRepository.save(
-                ImageData.builder()
+                Image.builder()
                          .name(file.getOriginalFilename())
                          .type(file.getContentType())
                          .imageData(ImageUtils.compressImage(file.getBytes()))
@@ -24,7 +24,7 @@ public class ImageService {
 
     // 이미지 파일로 압축하기
     public byte[] downloadImage(String fileName) {
-        ImageData imageData = imageRepository.findByName(fileName)
+        Image imageData = imageRepository.findByName(fileName)
                 .orElseThrow(() -> new CustomException(ExceptionCode.IMAGE_NOT_FOUND));
 
         return ImageUtils.decompressImage(imageData.getImageData());

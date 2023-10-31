@@ -1,4 +1,4 @@
-package com.example.tily._core;
+package com.example.tily.image;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
@@ -32,7 +32,7 @@ public class AwsS3Config {
 }
 
 /*
-// applcation.yml 파일 설정 필요
+// applcation.yml 파일 설정 필요 -> 하지 않으면 서버 실행이 안됨
 cloud:
   aws:
     credentials:

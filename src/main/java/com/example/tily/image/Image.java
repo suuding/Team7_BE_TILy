@@ -11,7 +11,7 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name="image_tb")
-public class ImageData {
+public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,7 +25,7 @@ public class ImageData {
     private byte[] imageData;
 
     @Builder
-    public ImageData(String name, String type, byte[] imageData) {
+    public Image(String name, String type, byte[] imageData) {
         this.name = name;
         this.type = type;
         this.imageData = imageData;
