@@ -32,9 +32,7 @@ public class StepControllerTest {
         // given
         Long id = 1L;
 
-        String title = "스프링 시큐리티 - 세팅";
-        StepRequest.CreateIndividualStepDTO requestDTO = new StepRequest.CreateIndividualStepDTO();
-        requestDTO.setTitle(title);
+        StepRequest.CreateIndividualStepDTO requestDTO = new StepRequest.CreateIndividualStepDTO("스프링 시큐리티 - 세팅");
 
         String requestBody = om.writeValueAsString(requestDTO);
 
@@ -58,9 +56,7 @@ public class StepControllerTest {
         // given
         Long id = 50L;
 
-        String title = "스프링 시큐리티 - 세팅";
-        StepRequest.CreateIndividualStepDTO requestDTO = new StepRequest.CreateIndividualStepDTO();
-        requestDTO.setTitle(title);
+        StepRequest.CreateIndividualStepDTO requestDTO = new StepRequest.CreateIndividualStepDTO("스프링 시큐리티 - 세팅");
 
         String requestBody = om.writeValueAsString(requestDTO);
 
@@ -82,10 +78,8 @@ public class StepControllerTest {
 
         // given
         Long id = 1L;
-
-        String title = "";
-        StepRequest.CreateIndividualStepDTO requestDTO = new StepRequest.CreateIndividualStepDTO();
-        requestDTO.setTitle(title);
+        
+        StepRequest.CreateIndividualStepDTO requestDTO = new StepRequest.CreateIndividualStepDTO("");
 
         String requestBody = om.writeValueAsString(requestDTO);
 
