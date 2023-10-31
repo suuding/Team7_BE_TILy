@@ -85,6 +85,7 @@ public class RoadmapService {
 
             // reference 저장
             RoadmapRequest.ReferenceDTOs referenceDTOs = stepDTO.references();
+            List<Reference> referenceList = new ArrayList<>();
 
             // (1) youtube
             List<RoadmapRequest.ReferenceDTO> youtubeDTOs = referenceDTOs.youtube();
@@ -92,7 +93,7 @@ public class RoadmapService {
                 String link = youtubeDTO.link();
 
                 Reference reference = Reference.builder().step(step).category("youtube").link(link).build();
-                referenceRepository.save(reference);
+                referenceList.add(reference);
             }
 
             // (2) reference
@@ -101,8 +102,10 @@ public class RoadmapService {
                 String link = webDTO.link();
 
                 Reference reference = Reference.builder().step(step).category("web").link(link).build();
-                referenceRepository.save(reference);
+                referenceList.add(reference);
             }
+
+            referenceRepository.saveAll(referenceList);
         }
 
         UserRoadmap userRoadmap = UserRoadmap.builder()
@@ -320,12 +323,17 @@ public class RoadmapService {
         if (userRoadmaps.isEmpty()) {
             throw new Exception404("로드맵의 사용자들을 찾을 수 없습니다");
         }
-
+        
         List<RoadmapResponse.FindRoadmapMembersDTO.UserDTO> users = userRoadmaps.stream()
                 .map(userRoadmap -> new RoadmapResponse.FindRoadmapMembersDTO.UserDTO(userRoadmap.getUser().getId(), userRoadmap.getUser().getName(), userRoadmap.getUser().getImage(), userRoadmap.getRole()))
                 .collect(Collectors.toList());
 
-        return new RoadmapResponse.FindRoadmapMembersDTO(users);
+        Optional<GroupRole> myRole = userRoadmaps.stream()
+                .filter(userRoadmap -> userRoadmap.getUser().getId().equals(user.getId()))
+                .map(UserRoadmap::getRole)
+                .findFirst();
+
+        return new RoadmapResponse.FindRoadmapMembersDTO(users, myRole.get());
     }
 
     @Transactional

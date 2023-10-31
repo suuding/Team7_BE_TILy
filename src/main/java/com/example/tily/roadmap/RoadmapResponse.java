@@ -85,7 +85,7 @@ public class RoadmapResponse {
         }
     }
 
-    public record FindRoadmapMembersDTO(List<UserDTO> users) {
+    public record FindRoadmapMembersDTO(List<UserDTO> users, GroupRole myRole) {
         public record UserDTO(Long id, String name, String image, GroupRole role) {}
     }
 
