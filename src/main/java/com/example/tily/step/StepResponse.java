@@ -1,12 +1,8 @@
 package com.example.tily.step;
 
 import com.example.tily.til.Til;
-import lombok.Getter;
-import lombok.Setter;
-
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+
 
 public class StepResponse {
     public record CreateIndividualStepDTO(Long id) {

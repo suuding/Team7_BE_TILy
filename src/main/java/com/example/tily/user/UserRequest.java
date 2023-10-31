@@ -1,8 +1,5 @@
 package com.example.tily.user;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import javax.validation.constraints.*;
 
 public class UserRequest {

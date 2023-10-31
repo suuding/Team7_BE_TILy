@@ -14,26 +14,16 @@ public class RoadmapRequest {
                                              @Size(min=2, max=20, message = "이름은 2자에서 20자 이내여야 합니다.") String name) {
     }
 
-    public record ReferenceDTO(Long id,
-                               @NotBlank(message = "링크 주소를 입력해주세요.") String link) {
+    public record ReferenceDTO(Long id, @NotBlank(message = "링크 주소를 입력해주세요.") String link) {
     }
 
-    public record ReferenceDTOs(List<ReferenceDTO> youtube,
-                                List<ReferenceDTO> web) {
+    public record ReferenceDTOs(List<ReferenceDTO> youtube, List<ReferenceDTO> web) {
     }
 
-    public record StepDTO(Long id,
-                          @NotBlank(message = "제목을 입력해주세요.") String title,
-                          String description,
-                          ReferenceDTOs references,
-                          LocalDateTime dueDate){
+    public record StepDTO(Long id, @NotBlank(message = "제목을 입력해주세요.") String title, String description, ReferenceDTOs references, LocalDateTime dueDate){
     }
 
-    public record RoadmapDTO(@NotBlank(message = "이름을 입력해주세요.") String name,
-                             String description,
-                             String code,
-                             Boolean isPublic,
-                             Boolean isRecruit){
+    public record RoadmapDTO(@NotBlank(message = "이름을 입력해주세요.") String name, String description, String code, Boolean isPublic, Boolean isRecruit){
     }
 
     public record CreateGroupRoadmapDTO(RoadmapDTO roadmap, List<StepDTO> steps) {

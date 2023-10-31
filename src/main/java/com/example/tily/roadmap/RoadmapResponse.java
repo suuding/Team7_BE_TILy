@@ -1,21 +1,14 @@
 package com.example.tily.roadmap;
 
 import com.example.tily.roadmap.relation.GroupRole;
-import com.example.tily.roadmap.relation.UserRoadmap;
 import com.example.tily.step.Step;
 import com.example.tily.step.reference.Reference;
-import com.example.tily.til.Til;
 import com.example.tily.user.Role;
 import com.example.tily.user.User;
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.util.Pair;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+
 
 public class RoadmapResponse {
     public record CreateRoadmapDTO(Long id) {
