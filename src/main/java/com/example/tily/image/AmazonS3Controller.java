@@ -1,17 +1,17 @@
 package com.example.tily.image;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
+@RestController
+@RequiredArgsConstructor
 public class AmazonS3Controller {
-    final private AwsS3Service awsS3Service;
+    private final AwsS3Service awsS3Service;
 
     // 업로드
     @PostMapping("/image")
