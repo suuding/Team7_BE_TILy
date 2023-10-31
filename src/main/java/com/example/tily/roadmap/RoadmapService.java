@@ -323,7 +323,7 @@ public class RoadmapService {
         if (userRoadmaps.isEmpty()) {
             throw new Exception404("로드맵의 사용자들을 찾을 수 없습니다");
         }
-        
+
         List<RoadmapResponse.FindRoadmapMembersDTO.UserDTO> users = userRoadmaps.stream()
                 .map(userRoadmap -> new RoadmapResponse.FindRoadmapMembersDTO.UserDTO(userRoadmap.getUser().getId(), userRoadmap.getUser().getName(), userRoadmap.getUser().getImage(), userRoadmap.getRole()))
                 .collect(Collectors.toList());

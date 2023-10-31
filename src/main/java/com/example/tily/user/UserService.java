@@ -36,33 +36,15 @@ public class UserService {
     // (회원가입) 이메일 중복 체크 후 인증코드 전송
     @Transactional
     public void checkEmail(UserRequest.CheckEmailDTO requestDTO) {
-<<<<<<< HEAD
-        Optional<User> user = userRepository.findByEmail(requestDTO.email());
-        if (user.isPresent()) {
-            throw new CustomException(ExceptionCode.USER_EMAIL_EXIST);
-        }
-
+        checkEmail(requestDTO.email());
         sendCode(requestDTO.email());
-=======
-
-        checkEmail(requestDTO.getEmail());
-        sendCode(requestDTO.getEmail());
->>>>>>> upstream/weekly
     }
 
     // 인증코드 전송
     @Transactional
     public void sendEmailCode(UserRequest.SendEmailCodeDTO requestDTO) {
-
-<<<<<<< HEAD
-        User user = userRepository.findByEmail(requestDTO.email())
-                .orElseThrow(() -> new CustomException(ExceptionCode.USER_EMAIL_NOT_FOUND));
-
+        findByEmail(requestDTO.email());
         sendCode(requestDTO.email());
-=======
-        findByEmail(requestDTO.getEmail());
-        sendCode(requestDTO.getEmail());
->>>>>>> upstream/weekly
     }
 
     // 인증코드 확인
@@ -72,13 +54,7 @@ public class UserService {
 
         if (code==null)
             throw new CustomException(ExceptionCode.CODE_EXPIRED);
-<<<<<<< HEAD
-        }
-
-        if (!code.equals(requestDTO.code())) {
-=======
-        else if (!code.equals(requestDTO.getCode()))
->>>>>>> upstream/weekly
+        else if (!code.equals(requestDTO.code()))
             throw new CustomException(ExceptionCode.CODE_WRONG);
 
         redisUtils.deleteData(requestDTO.email()); // 인증 완료 후 인증코드 삭제
@@ -86,23 +62,16 @@ public class UserService {
         return new UserResponse.CheckEmailCodeDTO(requestDTO.email());
     }
 
+
     // 회원가입
     @Transactional
     public void join(UserRequest.JoinDTO requestDTO) {
-<<<<<<< HEAD
-        Optional<User> user = userRepository.findByEmail(requestDTO.email());
-        if (user.isPresent()) {
-            throw new CustomException(ExceptionCode.USER_EMAIL_EXIST);
-        }
-        requestDTO.setPassword(passwordEncoder.encode(requestDTO.password()));
-=======
-        checkEmail(requestDTO.getEmail());
->>>>>>> upstream/weekly
+        checkEmail(requestDTO.email());
 
         User user = User.builder()
-                .email(requestDTO.getEmail())
-                .name(requestDTO.getName())
-                .password(passwordEncoder.encode(requestDTO.getPassword()))
+                .email(requestDTO.email())
+                .name(requestDTO.name())
+                .password(passwordEncoder.encode(requestDTO.password()))
                 .role(Role.ROLE_USER)
                 .build();
 
@@ -112,16 +81,9 @@ public class UserService {
     // 로그인
     @Transactional
     public UserResponse.TokenDTO login(UserRequest.LoginDTO requestDTO) {
-<<<<<<< HEAD
-        User user = userRepository.findByEmail(requestDTO.email())
-                .orElseThrow(() -> new CustomException(ExceptionCode.USER_EMAIL_NOT_FOUND));
+        User user = findByEmail(requestDTO.email());
 
-        if(!passwordEncoder.matches(requestDTO.password(), user.getPassword())) {
-=======
-        User user = findByEmail(requestDTO.getEmail());
-
-        if(!passwordEncoder.matches(requestDTO.getPassword(), user.getPassword()))
->>>>>>> upstream/weekly
+        if(!passwordEncoder.matches(requestDTO.password(), user.getPassword()))
             throw new CustomException(ExceptionCode.USER_PASSWORD_WRONG);
 
         return createToken(user);
@@ -143,12 +105,7 @@ public class UserService {
     // 비밀번호 변경
     @Transactional
     public void changePassword(UserRequest.ChangePwdDTO requestDTO) {
-<<<<<<< HEAD
-        User user = userRepository.findByEmail(requestDTO.email())
-                .orElseThrow(() -> new CustomException(ExceptionCode.USER_EMAIL_NOT_FOUND));
-=======
-        User user = findByEmail(requestDTO.getEmail());
->>>>>>> upstream/weekly
+        User user = findByEmail(requestDTO.email());
 
         String enPassword = passwordEncoder.encode(requestDTO.password());
         user.updatePassword(enPassword);
@@ -167,13 +124,13 @@ public class UserService {
         if (!user.getId().equals(id))
             throw new CustomException(ExceptionCode.USER_UPDATE_FORBIDDEN);
 
-        if (!passwordEncoder.matches(requestDTO.getCurPassword(), user.getPassword()))
+        if (!passwordEncoder.matches(requestDTO.curPassword(), user.getPassword()))
             throw new CustomException(ExceptionCode.USER_CURPASSWORD_WRONG);
 
-        if (!requestDTO.getNewPassword().equals(requestDTO.getNewPasswordConfirm()))
+        if (!requestDTO.newPassword().equals(requestDTO.newPasswordConfirm()))
             throw new CustomException(ExceptionCode.USER_PASSWORD_WRONG);
 
-        String enPassword = passwordEncoder.encode(requestDTO.getNewPassword());
+        String enPassword = passwordEncoder.encode(requestDTO.newPassword());
         user.updatePassword(enPassword);
     }
 
