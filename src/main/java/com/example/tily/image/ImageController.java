@@ -11,24 +11,22 @@ import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/image")
 public class ImageController {
     final private ImageService imageService;
 
     // 업로드
-    @PostMapping
+    @PostMapping("/image")
     public ResponseEntity<?> uploadImage(@RequestParam("image") MultipartFile file) throws IOException {
-        String uploadImage = imageService.uploadImage(file);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(uploadImage);
+        imageService.uploadImage(file);
+
+        return ResponseEntity.ok().body(null);
     }
 
     // 다운로드
     @GetMapping("/{fileName}")
     public ResponseEntity<?> downloadImage(@PathVariable("fileName") String fileName) {
         byte[] downloadImage = imageService.downloadImage(fileName);
-        return ResponseEntity.status(HttpStatus.OK)
-                .contentType(MediaType.valueOf("image/png"))
-                .body(downloadImage);
+
+        return ResponseEntity.ok().contentType(MediaType.valueOf("image/png")).body(downloadImage);
     }
 }

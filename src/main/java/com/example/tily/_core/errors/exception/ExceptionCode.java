@@ -52,7 +52,10 @@ public enum ExceptionCode {
     DATE_WRONG(HttpStatus.BAD_REQUEST, "입력한 날짜를 찾을 수 없습니다."),
 
     // reference 관련 에러
-    REFERENCE_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 reference를 찾을 수 없습니다.");
+    REFERENCE_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 reference를 찾을 수 없습니다."),
+
+    // image 관련 에러
+    IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 image를 찰을 수 없습니다.");
 
     private final HttpStatus httpStatus;
     private final String message;

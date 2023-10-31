@@ -13,6 +13,7 @@ public class ImageUtils {
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
         byte[] tmp = new byte[4*1024];
+
         while (!deflater.finished()) {
             int size = deflater.deflate(tmp);
             outputStream.write(tmp, 0, size);
@@ -24,13 +25,13 @@ public class ImageUtils {
         return outputStream.toByteArray();
     }
 
-
-
     public static byte[] decompressImage(byte[] data) {
         Inflater inflater = new Inflater();
         inflater.setInput(data);
+
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
         byte[] tmp = new byte[4*1024];
+
         try {
             while (!inflater.finished()) {
                 int count = inflater.inflate(tmp);
