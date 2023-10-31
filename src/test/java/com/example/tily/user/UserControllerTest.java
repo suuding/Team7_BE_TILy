@@ -101,10 +101,7 @@ public class UserControllerTest {
     public void user_join_success_test() throws Exception {
 
         // given
-        UserRequest.JoinDTO requestDTO = new UserRequest.JoinDTO();
-        requestDTO.setEmail("test@nate.com");
-        requestDTO.setName("test");
-        requestDTO.setPassword("test1234!");
+        UserRequest.JoinDTO requestDTO = new UserRequest.JoinDTO("test@nate.com", "test", "test1234!");
 
         String requestBody = om.writeValueAsString(requestDTO);
 
@@ -125,10 +122,7 @@ public class UserControllerTest {
     public void user_join_fail_test_1() throws Exception {
 
         // given
-        UserRequest.JoinDTO requestDTO = new UserRequest.JoinDTO();
-        requestDTO.setEmail("testnate.com");
-        requestDTO.setName("test");
-        requestDTO.setPassword("test1234!");
+        UserRequest.JoinDTO requestDTO = new UserRequest.JoinDTO("testnate.com", "test", "test1234!");
 
         String requestBody = om.writeValueAsString(requestDTO);
 
@@ -149,10 +143,7 @@ public class UserControllerTest {
     public void user_join_fail_test_2() throws Exception {
 
         // given
-        UserRequest.JoinDTO requestDTO = new UserRequest.JoinDTO();
-        requestDTO.setEmail("test@nate.com");
-        requestDTO.setName("test");
-        requestDTO.setPassword("test1234");
+        UserRequest.JoinDTO requestDTO = new UserRequest.JoinDTO("test@nate.com", "test", "test1234");
 
         String requestBody = om.writeValueAsString(requestDTO);
 
@@ -173,9 +164,7 @@ public class UserControllerTest {
     public void user_login_success_test() throws Exception {
 
         // given
-        UserRequest.LoginDTO requestDTO = new UserRequest.LoginDTO();
-        requestDTO.setEmail("tngus@test.com");
-        requestDTO.setPassword("hongHong!");
+        UserRequest.LoginDTO requestDTO = new UserRequest.LoginDTO("tngus@test.com", "hongHong!");
 
         String requestBody = om.writeValueAsString(requestDTO);
 
@@ -195,9 +184,7 @@ public class UserControllerTest {
     public void user_login_fail_test_1() throws Exception {
 
         // given
-        UserRequest.LoginDTO requestDTO = new UserRequest.LoginDTO();
-        requestDTO.setEmail("tngus1@test.com");
-        requestDTO.setPassword("Honghong!");
+        UserRequest.LoginDTO requestDTO = new UserRequest.LoginDTO("tngus1@test.com", "Honghong!");
 
         String requestBody = om.writeValueAsString(requestDTO);
 
@@ -218,9 +205,7 @@ public class UserControllerTest {
     public void user_login_fail_test_2() throws Exception {
 
         // given
-        UserRequest.LoginDTO requestDTO = new UserRequest.LoginDTO();
-        requestDTO.setEmail("tngus@test.com");
-        requestDTO.setPassword("Honghong!@");
+        UserRequest.LoginDTO requestDTO = new UserRequest.LoginDTO("tngus@test.com", "Honghong!@");
 
         String requestBody = om.writeValueAsString(requestDTO);
 
@@ -241,9 +226,7 @@ public class UserControllerTest {
     public void user_change_password_success_test() throws Exception {
 
         // given
-        UserRequest.ChangePwdDTO requestDTO = new UserRequest.ChangePwdDTO();
-        requestDTO.setEmail("tngus@test.com");
-        requestDTO.setPassword("meta1234!!");
+        UserRequest.ChangePwdDTO requestDTO = new UserRequest.ChangePwdDTO("tngus@test.com", "meta1234!!");
 
         String requestBody = om.writeValueAsString(requestDTO);
 
@@ -263,9 +246,7 @@ public class UserControllerTest {
     public void user_change_password_fail_test_1() throws Exception {
 
         // given
-        UserRequest.ChangePwdDTO requestDTO = new UserRequest.ChangePwdDTO();
-        requestDTO.setEmail("tngus1@pusan.ac.kr");
-        requestDTO.setPassword("meta1234!!");
+        UserRequest.ChangePwdDTO requestDTO = new UserRequest.ChangePwdDTO("tngus1@pusan.ac.kr", "meta1234!!");
 
         String requestBody = om.writeValueAsString(requestDTO);
 
@@ -286,9 +267,7 @@ public class UserControllerTest {
     public void user_change_password_fail_test_2() throws Exception {
 
         // given
-        UserRequest.ChangePwdDTO requestDTO = new UserRequest.ChangePwdDTO();
-        requestDTO.setEmail("tngus@pusan.ac.kr");
-        requestDTO.setPassword("meta1234");
+        UserRequest.ChangePwdDTO requestDTO = new UserRequest.ChangePwdDTO("tngus@pusan.ac.kr", "meta1234");
 
         String requestBody = om.writeValueAsString(requestDTO);
 
