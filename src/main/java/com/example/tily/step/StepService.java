@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -30,13 +31,12 @@ public class StepService {
     private final ReferenceRepository referenceRepository;
     private final TilRepository tilRepository;
     private final UserRoadmapRepository userRoadmapRepository;
-    private final UserStepRepository userStepRepository;
 
     @Transactional
     public StepResponse.CreateIndividualStepDTO createIndividualStep(Long id, StepRequest.CreateIndividualStepDTO requestDTO){
         Roadmap roadmap = roadmapRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_NOT_FOUND));
-        String title = requestDTO.getTitle();
+        String title = requestDTO.title();
 
         Step step = Step.builder().roadmap(roadmap).title(title).build();
         stepRepository.save(step);
@@ -87,6 +87,11 @@ public class StepService {
         UserRoadmap userRoadmap = userRoadmapRepository.findByRoadmapIdAndUserId(roadmapId, user.getId())
                 .orElseThrow(() -> new CustomException(ExceptionCode.STEP_FORBIDDEN));
 
-        return new StepResponse.FindAllStepDTO(steps, maps, userRoadmap.getProgress(), userRoadmap.getRole().getValue());
+        List<StepResponse.FindAllStepDTO.StepDTO> stepDTOs = steps
+                .stream()
+                .map(step -> new StepResponse.FindAllStepDTO.StepDTO(step, maps.get(step)))
+                .collect(Collectors.toList());
+
+        return new StepResponse.FindAllStepDTO(stepDTOs, userRoadmap.getProgress(), userRoadmap.getRole().getValue());
     }
 }

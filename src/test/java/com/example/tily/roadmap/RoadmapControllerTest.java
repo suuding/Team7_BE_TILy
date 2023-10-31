@@ -38,8 +38,7 @@ public class RoadmapControllerTest {
 
         // given
         String name = "hong";
-        RoadmapRequest.CreateIndividualRoadmapDTO requestDTO = new RoadmapRequest.CreateIndividualRoadmapDTO();
-        requestDTO.setName(name);
+        RoadmapRequest.CreateIndividualRoadmapDTO requestDTO = new RoadmapRequest.CreateIndividualRoadmapDTO(name);
 
         String requestBody = om.writeValueAsString(requestDTO);
 
@@ -61,8 +60,7 @@ public class RoadmapControllerTest {
 
         // given
         String name = "";
-        RoadmapRequest.CreateIndividualRoadmapDTO requestDTO = new RoadmapRequest.CreateIndividualRoadmapDTO();
-        requestDTO.setName(name);
+        RoadmapRequest.CreateIndividualRoadmapDTO requestDTO = new RoadmapRequest.CreateIndividualRoadmapDTO(name);
 
         String requestBody = om.writeValueAsString(requestDTO);
 
@@ -81,59 +79,37 @@ public class RoadmapControllerTest {
     @WithUserDetails(value = "hong@naver.com")
     @Test
     public void roadmap_group_create_success_test() throws Exception {
-
         // given
-        RoadmapRequest.CreateGroupRoadmapDTO requestDTO = new RoadmapRequest.CreateGroupRoadmapDTO();
-
-        // 로드맵
-        RoadmapRequest.CreateGroupRoadmapDTO.RoadmapDTO roadmap = new RoadmapRequest.CreateGroupRoadmapDTO.RoadmapDTO();
-        roadmap.setName("운영체제(OS) 스터디");
-        roadmap.setDescription("면접 대비를 위한 CS 스터디 모임입니다!");
-        roadmap.setIsPublic(true);
-
-        requestDTO.setRoadmap(roadmap);
-
         // 스텝
-        List<RoadmapRequest.CreateGroupRoadmapDTO.StepDTO> steps = new ArrayList<>();
-
-        RoadmapRequest.CreateGroupRoadmapDTO.StepDTO step1 = new RoadmapRequest.CreateGroupRoadmapDTO.StepDTO();
-        step1.setTitle("데드락(Deadlock)");
-        step1.setDescription("스텝 1");
-        step1.setDueDate(LocalDateTime.of(2023, 10, 1, 19 ,28));
-
-        // step1의 참조
-        RoadmapRequest.CreateGroupRoadmapDTO.StepDTO.ReferenceDTOs references1 = new RoadmapRequest.CreateGroupRoadmapDTO.StepDTO.ReferenceDTOs();
-
         // step1의 참조 - youtube
-        List<RoadmapRequest.CreateGroupRoadmapDTO.StepDTO.ReferenceDTOs.ReferenceDTO> youtubeReferences = new ArrayList<>();
+        List<RoadmapRequest.ReferenceDTO> youtubeReferences = new ArrayList<>();
 
-        RoadmapRequest.CreateGroupRoadmapDTO.StepDTO.ReferenceDTOs.ReferenceDTO youtubeReference1 = new RoadmapRequest.CreateGroupRoadmapDTO.StepDTO.ReferenceDTOs.ReferenceDTO();
-        youtubeReference1.setLink("https://www.youtube.com/watch?v=v3slRhISacM");
+        RoadmapRequest.ReferenceDTO youtubeReference1 = new RoadmapRequest.ReferenceDTO(null, "https://www.youtube.com/watch?v=v3slRhISacM");
         youtubeReferences.add(youtubeReference1);
-        RoadmapRequest.CreateGroupRoadmapDTO.StepDTO.ReferenceDTOs.ReferenceDTO youtubeReference2 = new RoadmapRequest.CreateGroupRoadmapDTO.StepDTO.ReferenceDTOs.ReferenceDTO();
-        youtubeReference2.setLink("https://www.youtube.com/watch?v=OGXWr8LdKW0");
+        RoadmapRequest.ReferenceDTO youtubeReference2 = new RoadmapRequest.ReferenceDTO(null, "https://www.youtube.com/watch?v=OGXWr8LdKW0");
         youtubeReferences.add(youtubeReference2);
 
-        references1.setYoutube(youtubeReferences); // references1의 youtube 설정
-
         // step1의 참조 - web
-        List<RoadmapRequest.CreateGroupRoadmapDTO.StepDTO.ReferenceDTOs.ReferenceDTO> webReferences = new ArrayList<>();
+        List<RoadmapRequest.ReferenceDTO> webReferences = new ArrayList<>();
 
-        RoadmapRequest.CreateGroupRoadmapDTO.StepDTO.ReferenceDTOs.ReferenceDTO webReference1 = new RoadmapRequest.CreateGroupRoadmapDTO.StepDTO.ReferenceDTOs.ReferenceDTO();
-        webReference1.setLink("https://blog.naver.com/hoyai-/223178676752");
+        RoadmapRequest.ReferenceDTO webReference1 = new RoadmapRequest.ReferenceDTO(null, "https://blog.naver.com/hoyai-/223178676752");
         webReferences.add(webReference1);
-        RoadmapRequest.CreateGroupRoadmapDTO.StepDTO.ReferenceDTOs.ReferenceDTO webReference2 = new RoadmapRequest.CreateGroupRoadmapDTO.StepDTO.ReferenceDTOs.ReferenceDTO();
-        webReference2.setLink("https://blog.naver.com/hoyai-/223173899248");
+        RoadmapRequest.ReferenceDTO webReference2 = new RoadmapRequest.ReferenceDTO(null, "https://blog.naver.com/hoyai-/223173899248");
         webReferences.add(webReference2);
 
-        references1.setWeb(webReferences); // references1의 web 설정
+        // step1의 참조
+        RoadmapRequest.ReferenceDTOs references1 = new RoadmapRequest.ReferenceDTOs(youtubeReferences, webReferences);
 
-        step1.setReferences(references1); // step1의 references 설정
+        RoadmapRequest.StepDTO step1 = new RoadmapRequest.StepDTO(null, "데드락(Deadlock)", "스텝 1", references1, LocalDateTime.of(2023, 10, 1, 19 ,28));
 
+        List<RoadmapRequest.StepDTO> steps = new ArrayList<>();
         steps.add(step1);
-        requestDTO.setSteps(steps); // requestDTO의 steps 설정
 
-        //
+        // 로드맵
+        RoadmapRequest.RoadmapDTO roadmap = new RoadmapRequest.RoadmapDTO("운영체제(OS) 스터디", "면접 대비를 위한 CS 스터디 모임입니다!", null, true, null);
+
+        RoadmapRequest.CreateGroupRoadmapDTO requestDTO = new RoadmapRequest.CreateGroupRoadmapDTO(roadmap, steps);
+
         String requestBody = om.writeValueAsString(requestDTO);
 
         // when
@@ -153,55 +129,35 @@ public class RoadmapControllerTest {
     @Test
     public void roadmap_group_create_fail_test() throws Exception {
         // given
-        RoadmapRequest.CreateGroupRoadmapDTO requestDTO = new RoadmapRequest.CreateGroupRoadmapDTO();
-
-        // 로드맵
-        RoadmapRequest.CreateGroupRoadmapDTO.RoadmapDTO roadmap = new RoadmapRequest.CreateGroupRoadmapDTO.RoadmapDTO();
-        roadmap.setName(null);
-        roadmap.setDescription("면접 대비를 위한 CS 스터디 모임입니다!");
-        roadmap.setIsPublic(true);
-
-        requestDTO.setRoadmap(roadmap);
-
         // 스텝
-        List<RoadmapRequest.CreateGroupRoadmapDTO.StepDTO> steps = new ArrayList<>();
-
-        RoadmapRequest.CreateGroupRoadmapDTO.StepDTO step1 = new RoadmapRequest.CreateGroupRoadmapDTO.StepDTO();
-        step1.setTitle("데드락(Deadlock)");
-        step1.setDescription("스텝 1");
-        step1.setDueDate(LocalDateTime.of(2023, 10, 1, 19 ,28));
-
-        // step1의 참조
-        RoadmapRequest.CreateGroupRoadmapDTO.StepDTO.ReferenceDTOs references1 = new RoadmapRequest.CreateGroupRoadmapDTO.StepDTO.ReferenceDTOs();
-
         // step1의 참조 - youtube
-        List<RoadmapRequest.CreateGroupRoadmapDTO.StepDTO.ReferenceDTOs.ReferenceDTO> youtubeReferences = new ArrayList<>();
+        List<RoadmapRequest.ReferenceDTO> youtubeReferences = new ArrayList<>();
 
-        RoadmapRequest.CreateGroupRoadmapDTO.StepDTO.ReferenceDTOs.ReferenceDTO youtubeReference1 = new RoadmapRequest.CreateGroupRoadmapDTO.StepDTO.ReferenceDTOs.ReferenceDTO();
-        youtubeReference1.setLink("https://www.youtube.com/watch?v=v3slRhISacM");
+        RoadmapRequest.ReferenceDTO youtubeReference1 = new RoadmapRequest.ReferenceDTO(null, "https://www.youtube.com/watch?v=v3slRhISacM");
         youtubeReferences.add(youtubeReference1);
-        RoadmapRequest.CreateGroupRoadmapDTO.StepDTO.ReferenceDTOs.ReferenceDTO youtubeReference2 = new RoadmapRequest.CreateGroupRoadmapDTO.StepDTO.ReferenceDTOs.ReferenceDTO();
-        youtubeReference2.setLink("https://www.youtube.com/watch?v=OGXWr8LdKW0");
+        RoadmapRequest.ReferenceDTO youtubeReference2 = new RoadmapRequest.ReferenceDTO(null, "https://www.youtube.com/watch?v=OGXWr8LdKW0");
         youtubeReferences.add(youtubeReference2);
 
-        references1.setYoutube(youtubeReferences); // references1의 youtube 설정
-
         // step1의 참조 - web
-        List<RoadmapRequest.CreateGroupRoadmapDTO.StepDTO.ReferenceDTOs.ReferenceDTO> webReferences = new ArrayList<>();
+        List<RoadmapRequest.ReferenceDTO> webReferences = new ArrayList<>();
 
-        RoadmapRequest.CreateGroupRoadmapDTO.StepDTO.ReferenceDTOs.ReferenceDTO webReference1 = new RoadmapRequest.CreateGroupRoadmapDTO.StepDTO.ReferenceDTOs.ReferenceDTO();
-        webReference1.setLink("https://blog.naver.com/hoyai-/223178676752");
+        RoadmapRequest.ReferenceDTO webReference1 = new RoadmapRequest.ReferenceDTO(null, "https://blog.naver.com/hoyai-/223178676752");
         webReferences.add(webReference1);
-        RoadmapRequest.CreateGroupRoadmapDTO.StepDTO.ReferenceDTOs.ReferenceDTO webReference2 = new RoadmapRequest.CreateGroupRoadmapDTO.StepDTO.ReferenceDTOs.ReferenceDTO();
-        webReference2.setLink("https://blog.naver.com/hoyai-/223173899248");
+        RoadmapRequest.ReferenceDTO webReference2 = new RoadmapRequest.ReferenceDTO(null, "https://blog.naver.com/hoyai-/223173899248");
         webReferences.add(webReference2);
 
-        references1.setWeb(webReferences); // references1의 web 설정
+        // step1의 참조
+        RoadmapRequest.ReferenceDTOs references1 = new RoadmapRequest.ReferenceDTOs(youtubeReferences, webReferences);
 
-        step1.setReferences(references1); // step1의 references 설정
+        RoadmapRequest.StepDTO step1 = new RoadmapRequest.StepDTO(null, "데드락(Deadlock)", "스텝 1", references1, LocalDateTime.of(2023, 10, 1, 19 ,28));
 
+        List<RoadmapRequest.StepDTO> steps = new ArrayList<>();
         steps.add(step1);
-        requestDTO.setSteps(steps); // requestDTO의 steps 설정
+
+        // 로드맵
+        RoadmapRequest.RoadmapDTO roadmap = new RoadmapRequest.RoadmapDTO(null, "면접 대비를 위한 CS 스터디 모임입니다!", null, true, null);
+
+        RoadmapRequest.CreateGroupRoadmapDTO requestDTO = new RoadmapRequest.CreateGroupRoadmapDTO(roadmap, steps);
 
         String requestBody = om.writeValueAsString(requestDTO);
 
@@ -259,59 +215,36 @@ public class RoadmapControllerTest {
     }
 
     @DisplayName("그룹 로드맵_수정_성공_test")
-    @WithUserDetails(value = "hong@naver.com")
+    @WithUserDetails(value = "admin@test.com")
     @Test
     public void roadmap_group_update_success_test() throws Exception {
         // given
         Long id = 4L;
-        RoadmapRequest.UpdateGroupRoadmapDTO requestDTO = new RoadmapRequest.UpdateGroupRoadmapDTO();
-
-        // 로드맵
-        RoadmapRequest.UpdateGroupRoadmapDTO.RoadmapDTO roadmap = new RoadmapRequest.UpdateGroupRoadmapDTO.RoadmapDTO();
-
-        roadmap.setName("new JAVA - 생활 코딩");
-        roadmap.setDescription("새로운 버젼 입니다");
-        roadmap.setCode("modifiedCode1234");
-        roadmap.setIsRecruit(false);
-        roadmap.setIsPublic(true);
-
-        requestDTO.setRoadmap(roadmap);
-
-        // 스텝
-        List<RoadmapRequest.UpdateGroupRoadmapDTO.StepDTO> steps = new ArrayList<>();
-
-        RoadmapRequest.UpdateGroupRoadmapDTO.StepDTO step1 = new RoadmapRequest.UpdateGroupRoadmapDTO.StepDTO();
-        step1.setId(4L);
-        step1.setTitle("다형성(Polymorphism)");
-        step1.setDescription("수정된 step description 입니다");
-
-        // step1의 참조
-        RoadmapRequest.UpdateGroupRoadmapDTO.StepDTO.ReferenceDTOs references1 = new RoadmapRequest.UpdateGroupRoadmapDTO.StepDTO.ReferenceDTOs();
 
         // step1의 참조 - youtube
-        List<RoadmapRequest.UpdateGroupRoadmapDTO.StepDTO.ReferenceDTOs.ReferenceDTO> youtubeReferences = new ArrayList<>();
+        List<RoadmapRequest.ReferenceDTO> youtubeReferences = new ArrayList<>();
 
-        RoadmapRequest.UpdateGroupRoadmapDTO.StepDTO.ReferenceDTOs.ReferenceDTO youtubeReference1 = new RoadmapRequest.UpdateGroupRoadmapDTO.StepDTO.ReferenceDTOs.ReferenceDTO();
-        youtubeReference1.setId(1L);
-        youtubeReference1.setLink("https://www.youtube.com/watch?v=수정된 주소");
+        RoadmapRequest.ReferenceDTO youtubeReference1 = new RoadmapRequest.ReferenceDTO(1L, "https://www.youtube.com/watch?v=수정된 주소");
         youtubeReferences.add(youtubeReference1);
 
-        references1.setYoutube(youtubeReferences); // references1의 youtube 설정
-
         // step1의 참조 - web
-        List<RoadmapRequest.UpdateGroupRoadmapDTO.StepDTO.ReferenceDTOs.ReferenceDTO> webReferences = new ArrayList<>();
+        List<RoadmapRequest.ReferenceDTO> webReferences = new ArrayList<>();
 
-        RoadmapRequest.UpdateGroupRoadmapDTO.StepDTO.ReferenceDTOs.ReferenceDTO webReference1 = new RoadmapRequest.UpdateGroupRoadmapDTO.StepDTO.ReferenceDTOs.ReferenceDTO();
-        webReference1.setId(4L);
-        webReference1.setLink("https://blog.naver.com/hoyai-/수정된 주소");
+        RoadmapRequest.ReferenceDTO webReference1 = new RoadmapRequest.ReferenceDTO(4L, "https://blog.naver.com/hoyai-/수정된 주소");
         webReferences.add(webReference1);
 
-        references1.setWeb(webReferences); // references1의 web 설정
+        // step1의 참조
+        RoadmapRequest.ReferenceDTOs references1 = new RoadmapRequest.ReferenceDTOs(youtubeReferences, webReferences);
 
-        step1.setReferences(references1); // step1의 references 설정
-
+        // 스텝
+        RoadmapRequest.StepDTO step1 = new RoadmapRequest.StepDTO(4L, "다형성(Polymorphism)", "수정된 step description 입니다", references1, null);
+        List<RoadmapRequest.StepDTO> steps = new ArrayList<>();
         steps.add(step1);
-        requestDTO.setSteps(steps); // requestDTO의 steps 설정
+
+        // 로드맵
+        RoadmapRequest.RoadmapDTO roadmap = new RoadmapRequest.RoadmapDTO("new JAVA - 생활 코딩", "새로운 버젼 입니다", "modifiedCode1234", false, true);
+
+        RoadmapRequest.UpdateGroupRoadmapDTO requestDTO = new RoadmapRequest.UpdateGroupRoadmapDTO(roadmap, steps);
 
         String requestBody = om.writeValueAsString(requestDTO);
 
@@ -328,59 +261,36 @@ public class RoadmapControllerTest {
 
     // 실패 케이스는 화면을 바탕으로 만듦
     @DisplayName("그룹 로드맵_수정_실패_test: 로드맵 이름을 입력하지 않음")
-    @WithUserDetails(value = "hong@naver.com")
+    @WithUserDetails(value = "admin@test.com")
     @Test
     public void roadmap_group_update_fail_test() throws Exception {
         // given
         Long id = 4L;
-        RoadmapRequest.UpdateGroupRoadmapDTO requestDTO = new RoadmapRequest.UpdateGroupRoadmapDTO();
-
-        // 로드맵
-        RoadmapRequest.UpdateGroupRoadmapDTO.RoadmapDTO roadmap = new RoadmapRequest.UpdateGroupRoadmapDTO.RoadmapDTO();
-
-        roadmap.setName(null);
-        roadmap.setDescription("새로운 버젼 입니다");
-        roadmap.setCode("modifiedCode1234");
-        roadmap.setIsRecruit(false);
-        roadmap.setIsPublic(true);
-
-        requestDTO.setRoadmap(roadmap);
-
-        // 스텝
-        List<RoadmapRequest.UpdateGroupRoadmapDTO.StepDTO> steps = new ArrayList<>();
-
-        RoadmapRequest.UpdateGroupRoadmapDTO.StepDTO step1 = new RoadmapRequest.UpdateGroupRoadmapDTO.StepDTO();
-        step1.setId(4L);
-        step1.setTitle("다형성(Polymorphism)");
-        step1.setDescription("수정된 step description 입니다");
-
-        // step1의 참조
-        RoadmapRequest.UpdateGroupRoadmapDTO.StepDTO.ReferenceDTOs references1 = new RoadmapRequest.UpdateGroupRoadmapDTO.StepDTO.ReferenceDTOs();
 
         // step1의 참조 - youtube
-        List<RoadmapRequest.UpdateGroupRoadmapDTO.StepDTO.ReferenceDTOs.ReferenceDTO> youtubeReferences = new ArrayList<>();
+        List<RoadmapRequest.ReferenceDTO> youtubeReferences = new ArrayList<>();
 
-        RoadmapRequest.UpdateGroupRoadmapDTO.StepDTO.ReferenceDTOs.ReferenceDTO youtubeReference1 = new RoadmapRequest.UpdateGroupRoadmapDTO.StepDTO.ReferenceDTOs.ReferenceDTO();
-        youtubeReference1.setId(1L);
-        youtubeReference1.setLink("https://www.youtube.com/watch?v=수정된 주소");
+        RoadmapRequest.ReferenceDTO youtubeReference1 = new RoadmapRequest.ReferenceDTO(1L, "https://www.youtube.com/watch?v=수정된 주소");
         youtubeReferences.add(youtubeReference1);
 
-        references1.setYoutube(youtubeReferences); // references1의 youtube 설정
-
         // step1의 참조 - web
-        List<RoadmapRequest.UpdateGroupRoadmapDTO.StepDTO.ReferenceDTOs.ReferenceDTO> webReferences = new ArrayList<>();
+        List<RoadmapRequest.ReferenceDTO> webReferences = new ArrayList<>();
 
-        RoadmapRequest.UpdateGroupRoadmapDTO.StepDTO.ReferenceDTOs.ReferenceDTO webReference1 = new RoadmapRequest.UpdateGroupRoadmapDTO.StepDTO.ReferenceDTOs.ReferenceDTO();
-        webReference1.setId(4L);
-        webReference1.setLink("https://blog.naver.com/hoyai-/수정된 주소");
+        RoadmapRequest.ReferenceDTO webReference1 = new RoadmapRequest.ReferenceDTO(4L, "https://blog.naver.com/hoyai-/수정된 주소");
         webReferences.add(webReference1);
 
-        references1.setWeb(webReferences); // references1의 web 설정
+        // step1의 참조
+        RoadmapRequest.ReferenceDTOs references1 = new RoadmapRequest.ReferenceDTOs(youtubeReferences, webReferences);
 
-        step1.setReferences(references1); // step1의 references 설정
-
+        // 스텝
+        RoadmapRequest.StepDTO step1 = new RoadmapRequest.StepDTO(4L, "다형성(Polymorphism)", "수정된 step description 입니다", references1, null);
+        List<RoadmapRequest.StepDTO> steps = new ArrayList<>();
         steps.add(step1);
-        requestDTO.setSteps(steps); // requestDTO의 steps 설정
+
+        // 로드맵
+        RoadmapRequest.RoadmapDTO roadmap = new RoadmapRequest.RoadmapDTO(null, "새로운 버젼 입니다", "modifiedCode1234", false, true);
+
+        RoadmapRequest.UpdateGroupRoadmapDTO requestDTO = new RoadmapRequest.UpdateGroupRoadmapDTO(roadmap, steps);
 
         String requestBody = om.writeValueAsString(requestDTO);
 
@@ -472,9 +382,7 @@ public class RoadmapControllerTest {
         // given
         Long id = 10L;
 
-        RoadmapRequest.ApplyRoadmapDTO requestDTO = new RoadmapRequest.ApplyRoadmapDTO();
-        String content = "안녕하세요, 반갑습니다~";
-        requestDTO.setContent(content);
+        RoadmapRequest.ApplyRoadmapDTO requestDTO = new RoadmapRequest.ApplyRoadmapDTO("안녕하세요, 반갑습니다~");
 
         String requestBody = om.writeValueAsString(requestDTO);
 
@@ -497,9 +405,7 @@ public class RoadmapControllerTest {
         // given
         Long id = 20L;
 
-        RoadmapRequest.ApplyRoadmapDTO requestDTO = new RoadmapRequest.ApplyRoadmapDTO();
-        String content = "안녕하세요, 반갑습니다~";
-        requestDTO.setContent(content);
+        RoadmapRequest.ApplyRoadmapDTO requestDTO = new RoadmapRequest.ApplyRoadmapDTO("안녕하세요, 반갑습니다~");
 
         String requestBody = om.writeValueAsString(requestDTO);
 
@@ -519,9 +425,7 @@ public class RoadmapControllerTest {
     @Test
     public void roadmap_participate_success_test() throws Exception{
         // given
-        String code = "pnu12345";
-        RoadmapRequest.ParticipateRoadmapDTO requestDTO = new RoadmapRequest.ParticipateRoadmapDTO();
-        requestDTO.setCode(code);
+        RoadmapRequest.ParticipateRoadmapDTO requestDTO = new RoadmapRequest.ParticipateRoadmapDTO("pnu12345");
 
         String requestBody = om.writeValueAsString(requestDTO);
 
@@ -541,9 +445,7 @@ public class RoadmapControllerTest {
     @Test
     public void roadmap_participate_fail_test() throws Exception{
         // given
-        String code = "pnu12347";
-        RoadmapRequest.ParticipateRoadmapDTO requestDTO = new RoadmapRequest.ParticipateRoadmapDTO();
-        requestDTO.setCode(code);
+        RoadmapRequest.ParticipateRoadmapDTO requestDTO = new RoadmapRequest.ParticipateRoadmapDTO("pnu12347");
 
         String requestBody = om.writeValueAsString(requestDTO);
 
@@ -604,9 +506,7 @@ public class RoadmapControllerTest {
         // given
         Long groupsId = 12L;
         Long usersId = 2L;
-        GroupRole role = GroupRole.ROLE_MANAGER;
-        RoadmapRequest.ChangeMemberRoleDTO requestDTO = new RoadmapRequest.ChangeMemberRoleDTO();
-        requestDTO.setRole(role);
+        RoadmapRequest.ChangeMemberRoleDTO requestDTO = new RoadmapRequest.ChangeMemberRoleDTO(GroupRole.ROLE_MANAGER);
 
         String requestBody = om.writeValueAsString(requestDTO);
 
@@ -628,9 +528,7 @@ public class RoadmapControllerTest {
         // given
         Long groupsId = 12L;
         Long usersId = 10L;
-        GroupRole role = GroupRole.ROLE_MANAGER;
-        RoadmapRequest.ChangeMemberRoleDTO requestDTO = new RoadmapRequest.ChangeMemberRoleDTO();
-        requestDTO.setRole(role);
+        RoadmapRequest.ChangeMemberRoleDTO requestDTO = new RoadmapRequest.ChangeMemberRoleDTO(GroupRole.ROLE_MANAGER);
 
         String requestBody = om.writeValueAsString(requestDTO);
 
@@ -652,9 +550,7 @@ public class RoadmapControllerTest {
         // given
         Long groupsId = 20L;
         Long usersId = 2L;
-        GroupRole role = GroupRole.ROLE_MANAGER;
-        RoadmapRequest.ChangeMemberRoleDTO requestDTO = new RoadmapRequest.ChangeMemberRoleDTO();
-        requestDTO.setRole(role);
+        RoadmapRequest.ChangeMemberRoleDTO requestDTO = new RoadmapRequest.ChangeMemberRoleDTO(GroupRole.ROLE_MANAGER);
 
         String requestBody = om.writeValueAsString(requestDTO);
 

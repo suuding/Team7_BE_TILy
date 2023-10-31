@@ -42,7 +42,7 @@ public class CommentService {
                 .orElseThrow(() -> new CustomException(ExceptionCode.TIL_NOT_FOUND));
 
 
-        String content = requestDTO.getContent();
+        String content = requestDTO.content();
 
         Comment comment = Comment.builder().roadmap(roadmap).step(step).writer(user).til(til).content(content).build();
         commentRepository.save(comment);
@@ -65,7 +65,7 @@ public class CommentService {
             throw new CustomException(ExceptionCode.COMMENT_UPDATE_FORBIDDEN);
         }
 
-        comment.updateComment(requestDTO.getContent());
+        comment.updateComment(requestDTO.content());
     }
 
     @Transactional

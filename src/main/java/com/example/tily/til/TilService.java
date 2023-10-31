@@ -27,6 +27,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Transactional(readOnly = true)
@@ -83,7 +84,7 @@ public class TilService {
             throw new CustomException(ExceptionCode.TIL_UPDATE_FORBIDDEN);
         }
 
-        String content = requestDTO.getContent();
+        String content = requestDTO.content();
         if(content == null){
             throw new CustomException(ExceptionCode.TIL_CONTENT_NULL);
         }
@@ -107,7 +108,9 @@ public class TilService {
             maps.put(comment, user.getId().equals(comment.getWriter().getId()));
         }
 
-        return new TilResponse.ViewDTO(step, til, userStep.getIsSubmit(), comments, maps);
+        List<TilResponse.ViewDTO.CommentDTO> commentDTOs = comments.stream().map(c -> new TilResponse.ViewDTO.CommentDTO(c, maps.get(c))).collect(Collectors.toList());
+
+        return new TilResponse.ViewDTO(step, til, userStep.getIsSubmit(), commentDTOs);
     }
 
 
@@ -121,7 +124,7 @@ public class TilService {
             throw new CustomException(ExceptionCode.TIL_SUBMIT_FORBIDDEN);
         }
 
-        String submitContent = requestDTO.getSubmitContent();
+        String submitContent = requestDTO.submitContent();
         if(submitContent == null){
             throw new CustomException(ExceptionCode.TIL_CONTENT_NULL);
         }
@@ -167,13 +170,19 @@ public class TilService {
                 LocalDateTime endDate = LocalDateTime.of(now, LocalTime.of( 23,59,59));
 
                 Slice<Til> tils = tilRepository.findAllByDateByOrderByCreatedDateDesc(user.getId(), roadmapId, startDate, endDate, title, pageable);
-                return new TilResponse.FindAllDTO(tils);
+                List<TilResponse.TilDTO> tilDTOs = tils.getContent().stream()
+                        .map(til -> new TilResponse.TilDTO(til, til.getStep(), til.getRoadmap()))
+                        .collect(Collectors.toList());
+                return new TilResponse.FindAllDTO(tilDTOs, tils.hasNext());
             } catch (Exception e) {
                 throw new CustomException(ExceptionCode.DATE_WRONG);
             }
         } else {
             Slice<Til> tils = tilRepository.findAllByOrderByCreatedDateDesc(user.getId(), roadmapId, title, pageable);
-            return new TilResponse.FindAllDTO(tils);
+            List<TilResponse.TilDTO> tilDTOs = tils.getContent().stream()
+                    .map(til -> new TilResponse.TilDTO(til, til.getStep(), til.getRoadmap()))
+                    .collect(Collectors.toList());
+            return new TilResponse.FindAllDTO(tilDTOs, tils.hasNext());
         }
     }
 

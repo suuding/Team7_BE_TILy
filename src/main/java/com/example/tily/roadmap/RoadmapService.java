@@ -1,7 +1,9 @@
 package com.example.tily.roadmap;
 
+import com.example.tily._core.errors.exception.CustomException;
 import com.example.tily._core.errors.exception.Exception403;
 import com.example.tily._core.errors.exception.Exception404;
+import com.example.tily._core.errors.exception.ExceptionCode;
 import com.example.tily.roadmap.relation.GroupRole;
 import com.example.tily.roadmap.relation.UserRoadmap;
 import com.example.tily.roadmap.relation.UserRoadmapRepository;
@@ -22,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -40,7 +43,7 @@ public class RoadmapService {
         Roadmap roadmap = Roadmap.builder()
                 .creator(user)
                 .category(Category.CATEGORY_INDIVIDUAL)
-                .name(requestDTO.getName())
+                .name(requestDTO.name())
                 .stepNum(0)
                 .build();
         roadmapRepository.save(roadmap);
@@ -61,44 +64,44 @@ public class RoadmapService {
         Roadmap roadmap = Roadmap.builder()
                 .creator(user)
                 .category(Category.CATEGORY_GROUP)
-                .name(requestDTO.getRoadmap().getName())
-                .description(requestDTO.getRoadmap().getDescription())
-                .isPublic(requestDTO.getRoadmap().getIsPublic())
+                .name(requestDTO.roadmap().name())
+                .description(requestDTO.roadmap().description())
+                .isPublic(requestDTO.roadmap().isPublic())
                 .currentNum(1L)
                 .code(generateRandomCode())
                 .isRecruit(true)
-                .stepNum(requestDTO.getSteps().size())
+                .stepNum(requestDTO.steps().size())
                 .build();
         roadmapRepository.save(roadmap);
 
-        List<RoadmapRequest.CreateGroupRoadmapDTO.StepDTO> stepDTOS = requestDTO.getSteps();
+        List<RoadmapRequest.StepDTO> stepDTOS = requestDTO.steps();
 
-        for(RoadmapRequest.CreateGroupRoadmapDTO.StepDTO stepDTO : stepDTOS){
+        for(RoadmapRequest.StepDTO stepDTO : stepDTOS){
             // step 저장
-            String title = stepDTO.getTitle() ;
-            String stepDescription = stepDTO.getDescription();
-            LocalDateTime dueDate =  stepDTO.getDueDate();
+            String title = stepDTO.title() ;
+            String stepDescription = stepDTO.description();
+            LocalDateTime dueDate =  stepDTO.dueDate();
 
             Step step = Step.builder().roadmap(roadmap).title(title).description(stepDescription).dueDate(dueDate).build();
             stepRepository.save(step);
 
             // reference 저장
-            RoadmapRequest.CreateGroupRoadmapDTO.StepDTO.ReferenceDTOs referenceDTOs = stepDTO.getReferences();
+            RoadmapRequest.ReferenceDTOs referenceDTOs = stepDTO.references();
             List<Reference> referenceList = new ArrayList<>();
 
             // (1) youtube
-            List<RoadmapRequest.CreateGroupRoadmapDTO.StepDTO.ReferenceDTOs.ReferenceDTO> youtubeDTOs = referenceDTOs.getYoutube();
-            for(RoadmapRequest.CreateGroupRoadmapDTO.StepDTO.ReferenceDTOs.ReferenceDTO youtubeDTO : youtubeDTOs){
-                String link = youtubeDTO.getLink();
+            List<RoadmapRequest.ReferenceDTO> youtubeDTOs = referenceDTOs.youtube();
+            for(RoadmapRequest.ReferenceDTO youtubeDTO : youtubeDTOs){
+                String link = youtubeDTO.link();
 
                 Reference reference = Reference.builder().step(step).category("youtube").link(link).build();
                 referenceList.add(reference);
             }
 
             // (2) reference
-            List<RoadmapRequest.CreateGroupRoadmapDTO.StepDTO.ReferenceDTOs.ReferenceDTO> webDTOs = referenceDTOs.getWeb();
-            for(RoadmapRequest.CreateGroupRoadmapDTO.StepDTO.ReferenceDTOs.ReferenceDTO webDTO : webDTOs){
-                String link = webDTO.getLink();
+            List<RoadmapRequest.ReferenceDTO> webDTOs = referenceDTOs.web();
+            for(RoadmapRequest.ReferenceDTO webDTO : webDTOs){
+                String link = webDTO.link();
 
                 Reference reference = Reference.builder().step(step).category("web").link(link).build();
                 referenceList.add(reference);
@@ -120,7 +123,7 @@ public class RoadmapService {
 
     public RoadmapResponse.FindGroupRoadmapDTO findGroupRoadmap(Long id, User user){
         Roadmap roadmap = roadmapRepository.findById(id).orElseThrow(
-                () -> new Exception404("해당 로드맵을 찾을 수 없습니다")
+                () -> new CustomException(ExceptionCode.ROADMAP_NOT_FOUND)
         );
 
         List<Step> stepList = stepRepository.findByRoadmapId(id);
@@ -150,7 +153,17 @@ public class RoadmapService {
         Til latestTil = tilRepository.findFirstByOrderBySubmitDateDesc();
         Long recentTilId = latestTil != null ? latestTil.getId() : null;
 
-        return new RoadmapResponse.FindGroupRoadmapDTO(roadmap, stepList, youtubeMap, webMap, user, recentTilId);
+        List<RoadmapResponse.FindGroupRoadmapDTO.StepDTO> steps = stepList.stream()
+                .map(step -> new RoadmapResponse.FindGroupRoadmapDTO.StepDTO(step
+                        , youtubeMap.get(step.getId()).stream()
+                        .map(reference -> new RoadmapResponse.ReferenceDTOs.ReferenceDTO(reference))
+                        .collect(Collectors.toList())
+                        , webMap.get(step.getId()).stream()
+                        .map(reference -> new RoadmapResponse.ReferenceDTOs.ReferenceDTO(reference))
+                        .collect(Collectors.toList())))
+                .collect(Collectors.toList());
+
+        return new RoadmapResponse.FindGroupRoadmapDTO(roadmap, steps, user, recentTilId);
     }
 
     @Transactional
@@ -159,45 +172,45 @@ public class RoadmapService {
 
         // 로드맵 업데이트
         Roadmap roadmap = roadmapRepository.findById(id).orElseThrow(
-                () -> new Exception404("해당 로드맵을 찾을 수 없습니다")
+                () -> new CustomException(ExceptionCode.ROADMAP_NOT_FOUND)
         );
 
-        String name = requestDTO.getRoadmap().getName();
-        String description = requestDTO.getRoadmap().getDescription();
-        String code = requestDTO.getRoadmap().getCode();
-        Boolean isPublic = requestDTO.getRoadmap().getIsPublic();
-        Boolean isRecruit = requestDTO.getRoadmap().getIsRecruit();
+        String name = requestDTO.roadmap().name();
+        String description = requestDTO.roadmap().description();
+        String code = requestDTO.roadmap().code();
+        Boolean isPublic = requestDTO.roadmap().isPublic();
+        Boolean isRecruit = requestDTO.roadmap().isRecruit();
 
         roadmap.update(name, description, code, isPublic, isRecruit);
 
         // 스텝 업데이트
-        List<RoadmapRequest.UpdateGroupRoadmapDTO.StepDTO> stepDTOs = requestDTO.getSteps();
+        List<RoadmapRequest.StepDTO> stepDTOs = requestDTO.steps();
 
-        for(RoadmapRequest.UpdateGroupRoadmapDTO.StepDTO stepDTO : stepDTOs){
+        for(RoadmapRequest.StepDTO stepDTO : stepDTOs){
             Step step;
 
-            step = stepRepository.findById(stepDTO.getId()).orElseThrow(
-                    () -> new Exception404("해당 스텝을 찾을 수 없습니다.")
+            step = stepRepository.findById(stepDTO.id()).orElseThrow(
+                    () -> new CustomException(ExceptionCode.STEP_NOT_FOUND)
             );
 
-            String title = stepDTO.getTitle() ;
-            String stepDescription = stepDTO.getDescription();
+            String title = stepDTO.title() ;
+            String stepDescription = stepDTO.description();
 
             step.update(title,stepDescription);
 
             // reference 업데이트
-            List<RoadmapRequest.UpdateGroupRoadmapDTO.StepDTO.ReferenceDTOs.ReferenceDTO> referenceDTOs = new ArrayList<>();
-            referenceDTOs.addAll(stepDTO.getReferences().getWeb());
-            referenceDTOs.addAll(stepDTO.getReferences().getYoutube());
+            List<RoadmapRequest.ReferenceDTO> referenceDTOs = new ArrayList<>();
+            referenceDTOs.addAll(stepDTO.references().web());
+            referenceDTOs.addAll(stepDTO.references().youtube());
 
-            for(RoadmapRequest.UpdateGroupRoadmapDTO.StepDTO.ReferenceDTOs.ReferenceDTO referenceDTO : referenceDTOs){
+            for(RoadmapRequest.ReferenceDTO referenceDTO : referenceDTOs){
                 Reference reference;
 
-                reference = referenceRepository.findById(referenceDTO.getId()).orElseThrow(
-                        () -> new Exception404("해당 참조를 찾을 수 없습니다")
+                reference = referenceRepository.findById(referenceDTO.id()).orElseThrow(
+                        () -> new CustomException(ExceptionCode.REFERENCE_NOT_FOUND)
                 );
 
-                String link = referenceDTO.getLink();
+                String link = referenceDTO.link();
 
                 reference.update(link);
             }
@@ -228,7 +241,26 @@ public class RoadmapService {
     public RoadmapResponse.FindAllMyRoadmapDTO findAllMyRoadmaps(User user) {
 
         List<Roadmap> roadmaps = userRoadmapRepository.findByUserId(user.getId(), true);      // 내가 속한 로드맵 조회
-        return new RoadmapResponse.FindAllMyRoadmapDTO(roadmaps);
+
+        List<RoadmapResponse.FindAllMyRoadmapDTO.CategoryDTO> categories = roadmaps.stream()
+                .filter(roadmap -> roadmap.getCategory().equals(Category.CATEGORY_INDIVIDUAL))
+                .map(RoadmapResponse.FindAllMyRoadmapDTO.CategoryDTO::new)
+                .collect(Collectors.toList());
+
+
+        List<RoadmapResponse.TilyDTO> tilys = roadmaps.stream()
+                .filter(roadmap -> roadmap.getCategory().equals(Category.CATEGORY_TILY))
+                .map(RoadmapResponse.TilyDTO::new)
+                .collect(Collectors.toList());
+
+        List<RoadmapResponse.GroupDTO> groups = roadmaps.stream()
+                .filter(roadmap -> roadmap.getCategory().equals(Category.CATEGORY_GROUP))
+                .map(RoadmapResponse.GroupDTO::new)
+                .collect(Collectors.toList());
+
+        RoadmapResponse.FindAllMyRoadmapDTO.RoadmapDTO roadmapDTO =  new RoadmapResponse.FindAllMyRoadmapDTO.RoadmapDTO(tilys, groups);
+
+        return new RoadmapResponse.FindAllMyRoadmapDTO(categories, roadmapDTO);
     }
 
     @Transactional
@@ -238,20 +270,24 @@ public class RoadmapService {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdDate"));
 
         Slice<Roadmap> roadmaps = roadmapRepository.findAllByOrderByCreatedDateDesc(Category.getCategory(category), name, pageable);
-        return new RoadmapResponse.FindRoadmapByQueryDTO(Category.getCategory(category), roadmaps);
+
+        List<RoadmapResponse.FindRoadmapByQueryDTO.RoadmapDTO> roadmapDTOS = roadmaps.getContent().stream().map(RoadmapResponse.FindRoadmapByQueryDTO.RoadmapDTO::new).collect(Collectors.toList());
+        Boolean hasNext = roadmaps.hasNext();
+
+        return new RoadmapResponse.FindRoadmapByQueryDTO(Category.getCategory(category), roadmapDTOS, hasNext);
     }
 
     @Transactional
     public void applyRoadmap(RoadmapRequest.ApplyRoadmapDTO requestDTO, Long id, User user){
         Roadmap roadmap = roadmapRepository.findById(id).
-                orElseThrow(() -> new Exception404("해당 로드맵을 찾을 수 없습니다"));
+                orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_NOT_FOUND));
 
         // 지원하면 ROLE_MEMBER이지만 isAccep가 false이다. 즉 예비 맴버라는 의미
         UserRoadmap userRoadmap = UserRoadmap.builder()
                 .roadmap(roadmap)
                 .user(user)
                 .role(GroupRole.ROLE_MEMBER)
-                .content(requestDTO.getContent())
+                .content(requestDTO.content())
                 .isAccept(false)
                 .progress(0)
                 .build();
@@ -261,9 +297,9 @@ public class RoadmapService {
 
     @Transactional
     public RoadmapResponse.ParticipateRoadmapDTO participateRoadmap(RoadmapRequest.ParticipateRoadmapDTO requestDTO, User user){
-        String code = requestDTO.getCode();
+        String code = requestDTO.code();
         Roadmap roadmap = roadmapRepository.findByCode(code)
-                .orElseThrow(() -> new Exception404("해당 로드맵을 찾을 수 없습니다"));
+                .orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_NOT_FOUND));
 
         // 코드로 참여시 승인없이 바로 맴버가 된다
         UserRoadmap userRoadmap = UserRoadmap.builder()
@@ -287,15 +323,19 @@ public class RoadmapService {
         List<UserRoadmap> userRoadmaps = userRoadmapRepository.findByRoadmapIdAndIsAcceptTrue(groupsId);
 
         if (userRoadmaps.isEmpty()) {
-            throw new Exception404("로드맵의 사용자들을 찾을 수 없습니다");
+            throw new CustomException(ExceptionCode.USER_NOT_FOUND);
         }
+
+        List<RoadmapResponse.FindRoadmapMembersDTO.UserDTO> users = userRoadmaps.stream()
+                .map(userRoadmap -> new RoadmapResponse.FindRoadmapMembersDTO.UserDTO(userRoadmap.getUser().getId(), userRoadmap.getUser().getName(), userRoadmap.getUser().getImage(), userRoadmap.getRole()))
+                .collect(Collectors.toList());
 
         Optional<GroupRole> myRole = userRoadmaps.stream()
                 .filter(userRoadmap -> userRoadmap.getUser().getId().equals(user.getId()))
                 .map(UserRoadmap::getRole)
                 .findFirst();
 
-        return new RoadmapResponse.FindRoadmapMembersDTO(userRoadmaps, myRole.get());
+        return new RoadmapResponse.FindRoadmapMembersDTO(users, myRole.get());
     }
 
     @Transactional
@@ -303,9 +343,9 @@ public class RoadmapService {
         checkManagerPermission(groupsId, user);
 
         UserRoadmap userRoadmap = userRoadmapRepository.findByRoadmapIdAndUserIdAndIsAcceptTrue(groupsId, membersId)
-                .orElseThrow(() -> new Exception404("해당 사용자를 찾을 수 없습니다"));
+                .orElseThrow(() -> new CustomException(ExceptionCode.USER_NOT_FOUND));
 
-        userRoadmap.updateRole(requestDTO.getRole());
+        userRoadmap.updateRole(requestDTO.role());
     }
 
     @Transactional
@@ -313,7 +353,7 @@ public class RoadmapService {
         checkManagerPermission(groupsId, user);
 
         UserRoadmap userRoadmap = userRoadmapRepository.findByRoadmapIdAndUserIdAndIsAcceptTrue(groupsId, membersId)
-                .orElseThrow(() -> new Exception404("해당 사용자를 찾을 수 없습니다"));
+                .orElseThrow(() -> new CustomException(ExceptionCode.USER_NOT_FOUND));
 
         // 방출하면 Role을 NONE으로
         userRoadmap.updateRole(GroupRole.ROLE_NONE);
@@ -327,9 +367,13 @@ public class RoadmapService {
 
         // 해당 페이지로 들어온 사용자 찾기
         UserRoadmap currentUser = userRoadmapRepository.findByRoadmapIdAndUserIdAndIsAcceptTrue(groupsId, user.getId())
-                .orElseThrow(() -> new Exception404("해당 사용자를 찾을 수 없습니다"));
+                .orElseThrow(() -> new CustomException(ExceptionCode.USER_NOT_FOUND));
 
-        return new RoadmapResponse.FindAppliedUsersDTO(userRoadmaps, currentUser.getRole());
+        List<RoadmapResponse.FindAppliedUsersDTO.UserDTO> users = userRoadmaps.stream()
+                .map(userRoadmap -> new RoadmapResponse.FindAppliedUsersDTO.UserDTO(userRoadmap.getUser().getId(), userRoadmap.getUser().getName(), userRoadmap.getUser().getImage(), userRoadmap.getCreatedDate().toLocalDate(), userRoadmap.getContent()))
+                .collect(Collectors.toList());
+
+        return new RoadmapResponse.FindAppliedUsersDTO(users, currentUser.getRole());
     }
 
     @Transactional
@@ -337,7 +381,7 @@ public class RoadmapService {
         checkManagerPermission(groupsId, user);
 
         UserRoadmap userRoadmap = userRoadmapRepository.findByRoadmapIdAndUserIdAndIsAcceptFalse(groupsId, membersId)
-                .orElseThrow(() -> new Exception404("해당 사용자를 찾을 수 없습니다"));
+                .orElseThrow(() -> new CustomException(ExceptionCode.USER_NOT_FOUND));
 
         userRoadmap.updateIsAccept(true);
 
@@ -355,7 +399,7 @@ public class RoadmapService {
         checkManagerPermission(groupsId, user);
 
         UserRoadmap userRoadmap = userRoadmapRepository.findByRoadmapIdAndUserIdAndIsAcceptFalse(groupsId, membersId)
-                .orElseThrow(() -> new Exception404("해당 사용자를 찾을 수 없습니다"));
+                .orElseThrow(() -> new CustomException(ExceptionCode.USER_NOT_FOUND));
 
         userRoadmap.updateRole(GroupRole.ROLE_NONE);
     }
@@ -381,24 +425,37 @@ public class RoadmapService {
             }
         }
 
-        return new RoadmapResponse.FindTilOfStepDTO(pairs, isSubmit);
+        List<RoadmapResponse.FindTilOfStepDTO.MemberDTO> members;
+
+        if(isSubmit) {
+            members = pairs.stream()
+                    .map(pair -> new RoadmapResponse.FindTilOfStepDTO.MemberDTO(pair.getFirst().getId(), pair.getSecond().getId(),pair.getSecond().getName(), pair.getSecond().getImage(), pair.getFirst().getContent(), pair.getFirst().getSubmitDate().toLocalDate(), pair.getFirst().getCommentNum()))
+                    .collect(Collectors.toList());
+        }
+        else{
+            members = pairs.stream()
+                    .map(pair -> new RoadmapResponse.FindTilOfStepDTO.MemberDTO(null, pair.getSecond().getId(), pair.getSecond().getName(), null, null, null, 0))
+                    .collect(Collectors.toList());
+        }
+
+        return new RoadmapResponse.FindTilOfStepDTO(members);
     }
 
     private void checkManagerPermission(Long groupsId, User user) { // 매니저급만 접근
         UserRoadmap currentUserRoadmap = userRoadmapRepository.findByRoadmapIdAndUserIdAndIsAcceptTrue(groupsId, user.getId())
-                .orElseThrow(() -> new Exception403("잘못된 접근입니다"));
+                .orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_NOT_BELONG));
 
         if(currentUserRoadmap.getRole() != GroupRole.ROLE_MASTER && currentUserRoadmap.getRole() != GroupRole.ROLE_MANAGER){
-            throw new Exception403("권한이 없습니다");
+            throw new CustomException(ExceptionCode.ROADMAP_FORBIDDEN);
         }
     }
 
     private void checkUserPermission(Long groupsId, User user) { // 추후에 사용할지 몰라 남겨둠, 유저만 접근
         UserRoadmap currentUserRoadmap = userRoadmapRepository.findByRoadmapIdAndUserIdAndIsAcceptTrue(groupsId, user.getId())
-                .orElseThrow(() -> new Exception403("잘못된 접근입니다"));
+                .orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_NOT_BELONG));
 
         if(currentUserRoadmap.getRole() == GroupRole.ROLE_NONE){
-            throw new Exception403("권한이 없습니다");
+            throw new CustomException(ExceptionCode.ROADMAP_FORBIDDEN);
         }
     }
 }

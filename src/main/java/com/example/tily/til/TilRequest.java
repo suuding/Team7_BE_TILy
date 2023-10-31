@@ -8,21 +8,12 @@ import java.time.LocalDateTime;
 
 public class TilRequest {
 
-    @Getter @Setter
-    public static class CreateTilDTO {
-        @NotBlank(message = "TIL 제목을 입력해주세요.")
-        private String title;
+    public record CreateTilDTO(@NotBlank(message = "TIL 제목을 입력해주세요.") String title) {
     }
 
-    @Getter @Setter
-    public static class UpdateTilDTO {
-        @NotBlank(message = "TIL 내용을 입력해주세요.")
-        private String content;
+    public record UpdateTilDTO(@NotBlank(message = "TIL 내용을 입력해주세요.") String content) {
     }
 
-    @Getter @Setter
-    public static class SubmitTilDTO {
-        @NotBlank(message = "TIL 내용을 입력해주세요.")
-        private String submitContent;
+    public record SubmitTilDTO(@NotBlank(message = "TIL 내용을 입력해주세요.") String submitContent){
     }
 }

@@ -20,6 +20,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Transactional
 @RequiredArgsConstructor
@@ -35,43 +36,42 @@ public class UserService {
     // (회원가입) 이메일 중복 체크 후 인증코드 전송
     @Transactional
     public void checkEmail(UserRequest.CheckEmailDTO requestDTO) {
-
-        checkEmail(requestDTO.getEmail());
-        sendCode(requestDTO.getEmail());
+        checkEmail(requestDTO.email());
+        sendCode(requestDTO.email());
     }
 
     // 인증코드 전송
     @Transactional
     public void sendEmailCode(UserRequest.SendEmailCodeDTO requestDTO) {
-
-        findByEmail(requestDTO.getEmail());
-        sendCode(requestDTO.getEmail());
+        findByEmail(requestDTO.email());
+        sendCode(requestDTO.email());
     }
 
     // 인증코드 확인
     @Transactional
     public UserResponse.CheckEmailCodeDTO checkEmailCode(UserRequest.CheckEmailCodeDTO requestDTO) {
-        String code = redisUtils.getData(requestDTO.getEmail()); // 이메일로 찾은 코드
+        String code = redisUtils.getData(requestDTO.email()); // 이메일로 찾은 코드
 
         if (code==null)
             throw new CustomException(ExceptionCode.CODE_EXPIRED);
-        else if (!code.equals(requestDTO.getCode()))
+        else if (!code.equals(requestDTO.code()))
             throw new CustomException(ExceptionCode.CODE_WRONG);
 
-        redisUtils.deleteData(requestDTO.getEmail()); // 인증 완료 후 인증코드 삭제
+        redisUtils.deleteData(requestDTO.email()); // 인증 완료 후 인증코드 삭제
 
-        return new UserResponse.CheckEmailCodeDTO(requestDTO.getEmail());
+        return new UserResponse.CheckEmailCodeDTO(requestDTO.email());
     }
+
 
     // 회원가입
     @Transactional
     public void join(UserRequest.JoinDTO requestDTO) {
-        checkEmail(requestDTO.getEmail());
+        checkEmail(requestDTO.email());
 
         User user = User.builder()
-                .email(requestDTO.getEmail())
-                .name(requestDTO.getName())
-                .password(passwordEncoder.encode(requestDTO.getPassword()))
+                .email(requestDTO.email())
+                .name(requestDTO.name())
+                .password(passwordEncoder.encode(requestDTO.password()))
                 .role(Role.ROLE_USER)
                 .build();
 
@@ -81,9 +81,9 @@ public class UserService {
     // 로그인
     @Transactional
     public UserResponse.TokenDTO login(UserRequest.LoginDTO requestDTO) {
-        User user = findByEmail(requestDTO.getEmail());
+        User user = findByEmail(requestDTO.email());
 
-        if(!passwordEncoder.matches(requestDTO.getPassword(), user.getPassword()))
+        if(!passwordEncoder.matches(requestDTO.password(), user.getPassword()))
             throw new CustomException(ExceptionCode.USER_PASSWORD_WRONG);
 
         return createToken(user);
@@ -105,9 +105,9 @@ public class UserService {
     // 비밀번호 변경
     @Transactional
     public void changePassword(UserRequest.ChangePwdDTO requestDTO) {
-        User user = findByEmail(requestDTO.getEmail());
+        User user = findByEmail(requestDTO.email());
 
-        String enPassword = passwordEncoder.encode(requestDTO.getPassword());
+        String enPassword = passwordEncoder.encode(requestDTO.password());
         user.updatePassword(enPassword);
     }
 
@@ -124,13 +124,13 @@ public class UserService {
         if (!user.getId().equals(id))
             throw new CustomException(ExceptionCode.USER_UPDATE_FORBIDDEN);
 
-        if (!passwordEncoder.matches(requestDTO.getCurPassword(), user.getPassword()))
+        if (!passwordEncoder.matches(requestDTO.curPassword(), user.getPassword()))
             throw new CustomException(ExceptionCode.USER_CURPASSWORD_WRONG);
 
-        if (!requestDTO.getNewPassword().equals(requestDTO.getNewPasswordConfirm()))
+        if (!requestDTO.newPassword().equals(requestDTO.newPasswordConfirm()))
             throw new CustomException(ExceptionCode.USER_PASSWORD_WRONG);
 
-        String enPassword = passwordEncoder.encode(requestDTO.getNewPassword());
+        String enPassword = passwordEncoder.encode(requestDTO.newPassword());
         user.updatePassword(enPassword);
     }
 
@@ -155,7 +155,11 @@ public class UserService {
             maps.put(tilDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")), 1);
         }
 
-        return new UserResponse.ViewGardensDTO(maps);
+        List<UserResponse.ViewGardensDTO.GardenDTO> gardens = maps.entrySet().stream()
+                .map(garden -> new UserResponse.ViewGardensDTO.GardenDTO(garden.getKey(),garden.getValue()))
+                .collect(Collectors.toList());
+
+        return new UserResponse.ViewGardensDTO(gardens);
     }
 
     //////////////

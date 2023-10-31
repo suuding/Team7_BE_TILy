@@ -52,11 +52,11 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserRequest.LoginDTO requestDTO, Errors errors) {
         UserResponse.TokenDTO responseDTO = userService.login(requestDTO);
-        ResponseCookie responseCookie = setRefreshTokenCookie(responseDTO.getRefreshToken());
+        ResponseCookie responseCookie = setRefreshTokenCookie(responseDTO.refreshToken());
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
-                .body(ApiUtils.success(new UserResponse.LoginDTO(responseDTO.getAccessToken())));
+                .body(ApiUtils.success(new UserResponse.LoginDTO(responseDTO.accessToken())));
     }
 
     // 비밀번호 재설정
@@ -70,11 +70,11 @@ public class UserController {
     @GetMapping("/refresh")
     public ResponseEntity<?> refresh(@CookieValue String refreshToken) {
         UserResponse.TokenDTO responseDTO = userService.refresh(refreshToken);
-        ResponseCookie responseCookie = setRefreshTokenCookie(responseDTO.getRefreshToken());
+        ResponseCookie responseCookie = setRefreshTokenCookie(responseDTO.refreshToken());
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
-                .body(ApiUtils.success(new UserResponse.LoginDTO(responseDTO.getAccessToken())));
+                .body(ApiUtils.success(new UserResponse.LoginDTO(responseDTO.accessToken())));
     }
 
     // 사용자 정보 조회하기

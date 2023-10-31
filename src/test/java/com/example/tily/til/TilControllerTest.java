@@ -27,16 +27,14 @@ public class TilControllerTest {
     private ObjectMapper om;
 
     @DisplayName("틸 생성 성공 test")
-    @WithUserDetails(value = "hong@naver.com")
+    @WithUserDetails(value = "admin@test.com")
     @Test
     public void create_til_success_test() throws Exception {
         //given
         Long roadmapId = 5L;
-        Long stepId = 1L;
+        Long stepId = 8L;
 
-        String title = "spring security";
-        TilRequest.CreateTilDTO reqeustDTO = new TilRequest.CreateTilDTO();
-        reqeustDTO.setTitle(title);
+        TilRequest.CreateTilDTO reqeustDTO = new TilRequest.CreateTilDTO("spring security");
 
         String requestBody = om.writeValueAsString(reqeustDTO);
 
@@ -49,20 +47,18 @@ public class TilControllerTest {
 
         //then
         result.andExpect(jsonPath("$.success").value("true"));
-        result.andExpect(jsonPath("$.result.id").value(10));
+        result.andExpect(jsonPath("$.result.id").value(15));
     }
 
     @DisplayName("틸 생성 실패 test - 제목 미입력")
-    @WithUserDetails(value = "hong@naver.com")
+    @WithUserDetails(value = "admin@test.com")
     @Test
     public void create_til_failed_test() throws Exception {
         //given
         Long roadmapId = 1L;
         Long stepId = 1L;
 
-        String title = "";
-        TilRequest.CreateTilDTO reqeustDTO = new TilRequest.CreateTilDTO();
-        reqeustDTO.setTitle(title);
+        TilRequest.CreateTilDTO reqeustDTO = new TilRequest.CreateTilDTO("");
 
         String requestBody = om.writeValueAsString(reqeustDTO);
 
@@ -86,9 +82,7 @@ public class TilControllerTest {
         Long roadmapId = 15L;
         Long stepId = 1L;
 
-        String title = "10월 9일 TIL";
-        TilRequest.CreateTilDTO reqeustDTO = new TilRequest.CreateTilDTO();
-        reqeustDTO.setTitle(title);
+        TilRequest.CreateTilDTO reqeustDTO = new TilRequest.CreateTilDTO("10월 9일 TIL");
 
         String requestBody = om.writeValueAsString(reqeustDTO);
 
@@ -101,7 +95,7 @@ public class TilControllerTest {
 
         //then
         result.andExpect(jsonPath("$.success").value("false"));
-        result.andExpect(jsonPath("message").value("해당 로드맵을 찾을 수 없습니다"));
+        result.andExpect(jsonPath("message").value("해당 roadmap을 찾을 수 없습니다."));
 
     }
 
@@ -115,9 +109,7 @@ public class TilControllerTest {
         Long stepId = 1L;
         Long tilId = 1L;
 
-        String content = "바뀐 내용입니다.";
-        TilRequest.UpdateTilDTO reqeustDTO = new TilRequest.UpdateTilDTO();
-        reqeustDTO.setContent(content);
+        TilRequest.UpdateTilDTO reqeustDTO = new TilRequest.UpdateTilDTO("바뀐 내용입니다.");
 
         String requestBody = om.writeValueAsString(reqeustDTO);
 
@@ -127,7 +119,7 @@ public class TilControllerTest {
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(requestBody)
         );
-        System.out.println("테스트 ---------------------------------- "+content);
+        System.out.println("테스트 ---------------------------------- " + "바뀐 내용입니다.");
 
         result.andExpect(jsonPath("$.success").value("true"));
 
@@ -143,9 +135,7 @@ public class TilControllerTest {
         Long stepId = 1L;
         Long tilId = 15L;
 
-        String content = "바뀐 내용입니다.";
-        TilRequest.UpdateTilDTO reqeustDTO = new TilRequest.UpdateTilDTO();
-        reqeustDTO.setContent(content);
+        TilRequest.UpdateTilDTO reqeustDTO = new TilRequest.UpdateTilDTO("바뀐 내용입니다.");
 
         String requestBody = om.writeValueAsString(reqeustDTO);
 
@@ -155,10 +145,10 @@ public class TilControllerTest {
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(requestBody)
         );
-        System.out.println("테스트 ---------------------------------- "+content);
+        System.out.println("테스트 ---------------------------------- " + "바뀐 내용입니다.");
 
         result.andExpect(jsonPath("$.success").value("false"));
-        result.andExpect(jsonPath("$.message").value("해당 til을 찾을 수 없습니다."));
+        result.andExpect(jsonPath("$.message").value("해당 til을 찾을 수 없습니다"));
 
     }
 
@@ -222,11 +212,9 @@ public class TilControllerTest {
         Long stepId = 1L;
         Long tilId = 1L;
 
-        String submitContent = "제출할 내용입니다.";
         LocalDateTime submitDate = LocalDateTime.now();
 
-        TilRequest.SubmitTilDTO reqeustDTO = new TilRequest.SubmitTilDTO();
-        reqeustDTO.setSubmitContent(submitContent);
+        TilRequest.SubmitTilDTO reqeustDTO = new TilRequest.SubmitTilDTO("제출할 내용입니다.");
 
         String requestBody = om.writeValueAsString(reqeustDTO);
         //when
@@ -236,7 +224,7 @@ public class TilControllerTest {
                         .content(requestBody)
         );
 
-        System.out.println("테스트 ---------------------------------- " + submitContent);
+        System.out.println("테스트 ---------------------------------- " + "제출할 내용입니다.");
         System.out.println("테스트 ---------------------------------- " + submitDate);
         //then
         result.andExpect(jsonPath("$.success").value("true"));
@@ -282,7 +270,7 @@ public class TilControllerTest {
 
         // then
         result.andExpect(jsonPath("$.success").value("true"));
-        result.andExpect(jsonPath("$.result.tils[0].id").value(7L));
+        result.andExpect(jsonPath("$.result.tils[0].id").value(12L));
     }
 
     @DisplayName("나의 틸 목록 조회 성공 test:제목으로 검색")

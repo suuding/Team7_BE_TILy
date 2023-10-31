@@ -34,8 +34,7 @@ public class CommentControllerTest {
         Long tilId = 1L;
 
         String content = "열심히 하셨군요 홍홍";
-        CommentRequest.CreateCommentDTO requestDTO = new CommentRequest.CreateCommentDTO();
-        requestDTO.setContent(content);
+        CommentRequest.CreateCommentDTO requestDTO = new CommentRequest.CreateCommentDTO(content);
 
         String requestBody = om.writeValueAsString(requestDTO);
 
@@ -59,8 +58,7 @@ public class CommentControllerTest {
         Long commentId = 2L;
 
         String content = "수정한 댓글입니다 홍홍";
-        CommentRequest.UpdateCommentDTO requestDTO = new CommentRequest.UpdateCommentDTO();
-        requestDTO.setContent(content);
+        CommentRequest.UpdateCommentDTO requestDTO = new CommentRequest.UpdateCommentDTO(content);
 
         String requestBody = om.writeValueAsString(requestDTO);
 
@@ -84,8 +82,7 @@ public class CommentControllerTest {
         Long commentId = 2L;
 
         String content = "수정한 댓글입니다 홍홍";
-        CommentRequest.UpdateCommentDTO requestDTO = new CommentRequest.UpdateCommentDTO();
-        requestDTO.setContent(content);
+        CommentRequest.UpdateCommentDTO requestDTO = new CommentRequest.UpdateCommentDTO(content);
 
         String requestBody = om.writeValueAsString(requestDTO);
 
