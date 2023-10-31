@@ -31,7 +31,6 @@ public class StepService {
     private final ReferenceRepository referenceRepository;
     private final TilRepository tilRepository;
     private final UserRoadmapRepository userRoadmapRepository;
-    private final UserStepRepository userStepRepository;
 
     @Transactional
     public StepResponse.CreateIndividualStepDTO createIndividualStep(Long id, StepRequest.CreateIndividualStepDTO requestDTO){
