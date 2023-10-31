@@ -83,7 +83,7 @@ public class TilService {
             throw new CustomException(ExceptionCode.TIL_UPDATE_FORBIDDEN);
         }
 
-        String content = requestDTO.getContent();
+        String content = requestDTO.content();
         if(content == null){
             throw new CustomException(ExceptionCode.TIL_CONTENT_NULL);
         }
@@ -121,7 +121,7 @@ public class TilService {
             throw new CustomException(ExceptionCode.TIL_SUBMIT_FORBIDDEN);
         }
 
-        String submitContent = requestDTO.getSubmitContent();
+        String submitContent = requestDTO.submitContent();
         if(submitContent == null){
             throw new CustomException(ExceptionCode.TIL_CONTENT_NULL);
         }
