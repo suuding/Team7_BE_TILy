@@ -27,12 +27,12 @@ public class TilControllerTest {
     private ObjectMapper om;
 
     @DisplayName("틸 생성 성공 test")
-    @WithUserDetails(value = "hong@naver.com")
+    @WithUserDetails(value = "admin@test.com")
     @Test
     public void create_til_success_test() throws Exception {
         //given
         Long roadmapId = 5L;
-        Long stepId = 1L;
+        Long stepId = 8L;
 
         TilRequest.CreateTilDTO reqeustDTO = new TilRequest.CreateTilDTO("spring security");
 
@@ -47,11 +47,11 @@ public class TilControllerTest {
 
         //then
         result.andExpect(jsonPath("$.success").value("true"));
-        result.andExpect(jsonPath("$.result.id").value(10));
+        result.andExpect(jsonPath("$.result.id").value(15));
     }
 
     @DisplayName("틸 생성 실패 test - 제목 미입력")
-    @WithUserDetails(value = "hong@naver.com")
+    @WithUserDetails(value = "admin@test.com")
     @Test
     public void create_til_failed_test() throws Exception {
         //given
@@ -95,7 +95,7 @@ public class TilControllerTest {
 
         //then
         result.andExpect(jsonPath("$.success").value("false"));
-        result.andExpect(jsonPath("message").value("해당 로드맵을 찾을 수 없습니다"));
+        result.andExpect(jsonPath("message").value("해당 roadmap을 찾을 수 없습니다."));
 
     }
 
@@ -148,7 +148,7 @@ public class TilControllerTest {
         System.out.println("테스트 ---------------------------------- " + "바뀐 내용입니다.");
 
         result.andExpect(jsonPath("$.success").value("false"));
-        result.andExpect(jsonPath("$.message").value("해당 til을 찾을 수 없습니다."));
+        result.andExpect(jsonPath("$.message").value("해당 til을 찾을 수 없습니다"));
 
     }
 
@@ -270,7 +270,7 @@ public class TilControllerTest {
 
         // then
         result.andExpect(jsonPath("$.success").value("true"));
-        result.andExpect(jsonPath("$.result.tils[0].id").value(7L));
+        result.andExpect(jsonPath("$.result.tils[0].id").value(12L));
     }
 
     @DisplayName("나의 틸 목록 조회 성공 test:제목으로 검색")

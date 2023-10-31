@@ -45,7 +45,7 @@ public class StepControllerTest {
 
         // then
         result.andExpect(jsonPath("$.success").value("true"));
-        result.andExpect(jsonPath("$.result.id").value(8L));
+        result.andExpect(jsonPath("$.result.id").value(11L));
     }
 
     @DisplayName("개인 로드맵 스텝_생성_실패_test_1: 존재하지 않은 로드맵")
@@ -78,7 +78,7 @@ public class StepControllerTest {
 
         // given
         Long id = 1L;
-        
+
         StepRequest.CreateIndividualStepDTO requestDTO = new StepRequest.CreateIndividualStepDTO("");
 
         String requestBody = om.writeValueAsString(requestDTO);
@@ -120,7 +120,7 @@ public class StepControllerTest {
     @Test
     public void find_reference_fail_test() throws Exception {
         // given
-        Long stepId = 10L;
+        Long stepId = 20L;
         Long roadmapsId = 1L;
 
         // when

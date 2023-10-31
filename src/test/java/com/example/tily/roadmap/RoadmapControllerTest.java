@@ -215,7 +215,7 @@ public class RoadmapControllerTest {
     }
 
     @DisplayName("그룹 로드맵_수정_성공_test")
-    @WithUserDetails(value = "hong@naver.com")
+    @WithUserDetails(value = "admin@test.com")
     @Test
     public void roadmap_group_update_success_test() throws Exception {
         // given
@@ -261,7 +261,7 @@ public class RoadmapControllerTest {
 
     // 실패 케이스는 화면을 바탕으로 만듦
     @DisplayName("그룹 로드맵_수정_실패_test: 로드맵 이름을 입력하지 않음")
-    @WithUserDetails(value = "hong@naver.com")
+    @WithUserDetails(value = "admin@test.com")
     @Test
     public void roadmap_group_update_fail_test() throws Exception {
         // given
