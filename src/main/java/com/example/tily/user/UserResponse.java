@@ -11,54 +11,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class UserResponse {
+    public record CheckEmailCodeDTO(String email) {}
 
-    @Getter @Setter
-    public static class CheckEmailCodeDTO {
-        private String email;
+    public record LoginDTO(String accessToken) {}
 
-        public CheckEmailCodeDTO(String email) {
-            this.email = email;
-        }
-    }
+    public record TokenDTO(String accessToken, String refreshToken) {}
 
-    @Getter @Setter
-    public static class LoginDTO {
-        private String accessToken;
-        public LoginDTO(String accessToken) {
-            this.accessToken = accessToken;
-        }
-    }
-
-    @Getter @Setter
-    public static class TokenDTO {
-        private String accessToken;
-        private String refreshToken;
-
-        public TokenDTO(String accessToken, String refreshToken) {
-            this.accessToken = accessToken;
-            this.refreshToken = refreshToken;
-        }
-    }
-
-    public static class ViewGardensDTO {
-        private List<GardenDTO> gardens;
-        public ViewGardensDTO(HashMap<String, Integer> maps){
-            this.gardens = maps.entrySet().stream()
-                    .map(garden -> new GardenDTO(garden.getKey(),garden.getValue()))
-                    .collect(Collectors.toList());
-        }
-
-        @Getter
-        @Setter
-        public static class GardenDTO {
-            private String date;
-            private int value;
-
-            public GardenDTO(String date, int value) {
-                this.date = date;
-                this.value = value;
-            }
-        }
-
+    public record ViewGardensDTO(List<GardenDTO> gardens) {
+        public record GardenDTO(String date, int value) {}
     }
 }

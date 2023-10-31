@@ -29,6 +29,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Transactional
 @RequiredArgsConstructor
@@ -202,7 +203,11 @@ public class UserService {
             maps.put(tilDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")), 1);
         }
 
-        return new UserResponse.ViewGardensDTO(maps);
+        List<UserResponse.ViewGardensDTO.GardenDTO> gardens = maps.entrySet().stream()
+                .map(garden -> new UserResponse.ViewGardensDTO.GardenDTO(garden.getKey(),garden.getValue()))
+                .collect(Collectors.toList());
+
+        return new UserResponse.ViewGardensDTO(gardens);
     }
 
 }
