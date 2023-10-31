@@ -34,9 +34,7 @@ public class TilControllerTest {
         Long roadmapId = 5L;
         Long stepId = 1L;
 
-        String title = "spring security";
-        TilRequest.CreateTilDTO reqeustDTO = new TilRequest.CreateTilDTO();
-        reqeustDTO.setTitle(title);
+        TilRequest.CreateTilDTO reqeustDTO = new TilRequest.CreateTilDTO("spring security");
 
         String requestBody = om.writeValueAsString(reqeustDTO);
 
@@ -60,9 +58,7 @@ public class TilControllerTest {
         Long roadmapId = 1L;
         Long stepId = 1L;
 
-        String title = "";
-        TilRequest.CreateTilDTO reqeustDTO = new TilRequest.CreateTilDTO();
-        reqeustDTO.setTitle(title);
+        TilRequest.CreateTilDTO reqeustDTO = new TilRequest.CreateTilDTO("");
 
         String requestBody = om.writeValueAsString(reqeustDTO);
 
@@ -86,9 +82,7 @@ public class TilControllerTest {
         Long roadmapId = 15L;
         Long stepId = 1L;
 
-        String title = "10월 9일 TIL";
-        TilRequest.CreateTilDTO reqeustDTO = new TilRequest.CreateTilDTO();
-        reqeustDTO.setTitle(title);
+        TilRequest.CreateTilDTO reqeustDTO = new TilRequest.CreateTilDTO("10월 9일 TIL");
 
         String requestBody = om.writeValueAsString(reqeustDTO);
 
@@ -115,9 +109,7 @@ public class TilControllerTest {
         Long stepId = 1L;
         Long tilId = 1L;
 
-        String content = "바뀐 내용입니다.";
-        TilRequest.UpdateTilDTO reqeustDTO = new TilRequest.UpdateTilDTO();
-        reqeustDTO.setContent(content);
+        TilRequest.UpdateTilDTO reqeustDTO = new TilRequest.UpdateTilDTO("바뀐 내용입니다.");
 
         String requestBody = om.writeValueAsString(reqeustDTO);
 
@@ -127,7 +119,7 @@ public class TilControllerTest {
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(requestBody)
         );
-        System.out.println("테스트 ---------------------------------- "+content);
+        System.out.println("테스트 ---------------------------------- " + "바뀐 내용입니다.");
 
         result.andExpect(jsonPath("$.success").value("true"));
 
@@ -143,9 +135,7 @@ public class TilControllerTest {
         Long stepId = 1L;
         Long tilId = 15L;
 
-        String content = "바뀐 내용입니다.";
-        TilRequest.UpdateTilDTO reqeustDTO = new TilRequest.UpdateTilDTO();
-        reqeustDTO.setContent(content);
+        TilRequest.UpdateTilDTO reqeustDTO = new TilRequest.UpdateTilDTO("바뀐 내용입니다.");
 
         String requestBody = om.writeValueAsString(reqeustDTO);
 
@@ -155,7 +145,7 @@ public class TilControllerTest {
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(requestBody)
         );
-        System.out.println("테스트 ---------------------------------- "+content);
+        System.out.println("테스트 ---------------------------------- " + "바뀐 내용입니다.");
 
         result.andExpect(jsonPath("$.success").value("false"));
         result.andExpect(jsonPath("$.message").value("해당 til을 찾을 수 없습니다."));
@@ -222,11 +212,9 @@ public class TilControllerTest {
         Long stepId = 1L;
         Long tilId = 1L;
 
-        String submitContent = "제출할 내용입니다.";
         LocalDateTime submitDate = LocalDateTime.now();
 
-        TilRequest.SubmitTilDTO reqeustDTO = new TilRequest.SubmitTilDTO();
-        reqeustDTO.setSubmitContent(submitContent);
+        TilRequest.SubmitTilDTO reqeustDTO = new TilRequest.SubmitTilDTO("제출할 내용입니다.");
 
         String requestBody = om.writeValueAsString(reqeustDTO);
         //when
@@ -236,7 +224,7 @@ public class TilControllerTest {
                         .content(requestBody)
         );
 
-        System.out.println("테스트 ---------------------------------- " + submitContent);
+        System.out.println("테스트 ---------------------------------- " + "제출할 내용입니다.");
         System.out.println("테스트 ---------------------------------- " + submitDate);
         //then
         result.andExpect(jsonPath("$.success").value("true"));
