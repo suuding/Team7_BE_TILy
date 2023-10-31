@@ -37,7 +37,7 @@ public class StepService {
     public StepResponse.CreateIndividualStepDTO createIndividualStep(Long id, StepRequest.CreateIndividualStepDTO requestDTO){
         Roadmap roadmap = roadmapRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_NOT_FOUND));
-        String title = requestDTO.getTitle();
+        String title = requestDTO.title();
 
         Step step = Step.builder().roadmap(roadmap).title(title).build();
         stepRepository.save(step);
