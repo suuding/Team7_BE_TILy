@@ -55,7 +55,7 @@ public class AwsS3Service {
         return UUID.randomUUID().toString().concat(getFileExtension(fileName));
     }
 
-    // file 형식이 잘못된 경우를 확인하기 위해 만들어진 로직이며, 파일 타입과 상관없이 업로드할 수 있게 하기위해, "."의 존재 유무만 판단하였습니다.
+    // file 형식이 잘못된 경우를 확인하기 위해 만들어진 로직이며, 파일 타입과 상관없이 업로드할 수 있게 하기위해, "."의 존재 유무만 판단.
     private String getFileExtension(String fileName){
         try{
             return fileName.substring(fileName.lastIndexOf("."));

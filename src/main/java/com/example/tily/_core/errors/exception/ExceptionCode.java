@@ -33,7 +33,7 @@ public enum ExceptionCode {
 
     // roadmap 관련 에러
     ROADMAP_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 roadmap을 찾을 수 없습니다."),
-    ROADMAP_NOT_FORBIDDEN(HttpStatus.FORBIDDEN, "해당 로드냅에 속하지 않았습니다."),
+    ROADMAP_SUBMIT_FORBIDDEN(HttpStatus.FORBIDDEN, "해당 로드냅에 속하지 않았습니다."),
     ROADMAP_NOT_BELONG(HttpStatus.NOT_FOUND, "해당 reoadmap에 속하지 않습니다."),
     ROADMAP_FORBIDDEN(HttpStatus.FORBIDDEN, "해당 roadmap을 조회할 권한이 없습니다."),
 
