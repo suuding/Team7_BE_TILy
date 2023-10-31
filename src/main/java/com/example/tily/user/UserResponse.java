@@ -13,4 +13,6 @@ public class UserResponse {
     public record ViewGardensDTO(List<GardenDTO> gardens) {
         public record GardenDTO(String date, int value) {}
     }
+
+
 }

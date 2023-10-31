@@ -45,59 +45,59 @@ public class UserService {
     // (회원가입) 이메일 중복 체크 후 인증코드 전송
     @Transactional
     public void checkEmail(UserRequest.CheckEmailDTO requestDTO) {
-        Optional<User> user = userRepository.findByEmail(requestDTO.getEmail());
+        Optional<User> user = userRepository.findByEmail(requestDTO.email());
         if (user.isPresent()) {
             throw new CustomException(ExceptionCode.USER_EMAIL_EXIST);
         }
 
-        sendCode(requestDTO.getEmail());
+        sendCode(requestDTO.email());
     }
 
     // 인증코드 전송
     @Transactional
     public void sendEmailCode(UserRequest.SendEmailCodeDTO requestDTO) {
 
-        User user = userRepository.findByEmail(requestDTO.getEmail())
+        User user = userRepository.findByEmail(requestDTO.email())
                 .orElseThrow(() -> new CustomException(ExceptionCode.USER_EMAIL_NOT_FOUND));
 
-        sendCode(requestDTO.getEmail());
+        sendCode(requestDTO.email());
     }
 
     // 인증코드 확인
     @Transactional
     public UserResponse.CheckEmailCodeDTO checkEmailCode(UserRequest.CheckEmailCodeDTO requestDTO) {
-        String code = redisUtils.getData(requestDTO.getEmail()); // 이메일로 찾은 코드
+        String code = redisUtils.getData(requestDTO.email()); // 이메일로 찾은 코드
 
         if (code==null) {
             throw new CustomException(ExceptionCode.CODE_EXPIRED);
         }
 
-        if (!code.equals(requestDTO.getCode())) {
+        if (!code.equals(requestDTO.code())) {
             throw new CustomException(ExceptionCode.CODE_WRONG);
         }
 
-        redisUtils.deleteData(requestDTO.getEmail()); // 인증 완료 후 인증코드 삭제
+        redisUtils.deleteData(requestDTO.email()); // 인증 완료 후 인증코드 삭제
 
-        return new UserResponse.CheckEmailCodeDTO(requestDTO.getEmail());
+        return new UserResponse.CheckEmailCodeDTO(requestDTO.email());
     }
 
     @Transactional
     public void join(UserRequest.JoinDTO requestDTO) {
-        Optional<User> user = userRepository.findByEmail(requestDTO.getEmail());
+        Optional<User> user = userRepository.findByEmail(requestDTO.email());
         if (user.isPresent()) {
             throw new CustomException(ExceptionCode.USER_EMAIL_EXIST);
         }
-        requestDTO.setPassword(passwordEncoder.encode(requestDTO.getPassword()));
+        requestDTO.setPassword(passwordEncoder.encode(requestDTO.password()));
 
         userRepository.save(requestDTO.toEntity());
     }
 
     @Transactional
     public UserResponse.TokenDTO login(UserRequest.LoginDTO requestDTO) {
-        User user = userRepository.findByEmail(requestDTO.getEmail())
+        User user = userRepository.findByEmail(requestDTO.email())
                 .orElseThrow(() -> new CustomException(ExceptionCode.USER_EMAIL_NOT_FOUND));
 
-        if(!passwordEncoder.matches(requestDTO.getPassword(), user.getPassword())) {
+        if(!passwordEncoder.matches(requestDTO.password(), user.getPassword())) {
             throw new CustomException(ExceptionCode.USER_PASSWORD_WRONG);
         }
 
@@ -121,10 +121,10 @@ public class UserService {
 
     @Transactional
     public void changePassword(UserRequest.ChangePwdDTO requestDTO) {
-        User user = userRepository.findByEmail(requestDTO.getEmail())
+        User user = userRepository.findByEmail(requestDTO.email())
                 .orElseThrow(() -> new CustomException(ExceptionCode.USER_EMAIL_NOT_FOUND));
 
-        String enPassword = passwordEncoder.encode(requestDTO.getPassword());
+        String enPassword = passwordEncoder.encode(requestDTO.password());
         user.updatePassword(enPassword);
     }
 
