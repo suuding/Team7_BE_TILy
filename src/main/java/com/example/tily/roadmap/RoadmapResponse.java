@@ -18,93 +18,35 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class RoadmapResponse {
-    @Getter @Setter
-    public static class CreateRoadmapDTO {
-        private Long id;
-
-        public CreateRoadmapDTO(Roadmap roadmap)
-        {
-            this.id = roadmap.getId();
+    public record CreateRoadmapDTO(Long id) {
+        public CreateRoadmapDTO(Roadmap roadmap) {
+            this(roadmap.getId());
         }
     }
 
-    @Getter @Setter
-    public static class FindGroupRoadmapDTO {
-        private Creator creator;
-        private String name;
-        private String description;
-        private Role role;
-        private Long recentTilId;
-        private String code;
-        private List<StepDTO> steps;
-
-        public FindGroupRoadmapDTO(Roadmap roadmap, List<Step> stepList, Map<Long, List<Reference>> youtubeMap, Map<Long, List<Reference>> webMap, User user, Long recentTilId){
-            this.creator = new Creator(user.getName(), user.getImage());
-            this.name = roadmap.getName();
-            this.description = roadmap.getDescription();
-            this.role = user.getRole();
-            this.recentTilId = recentTilId;
-            this.code = roadmap.getCode();
-            this.steps = stepList.stream()
-                    .map(step -> new StepDTO(step, youtubeMap.get(step.getId()), webMap.get(step.getId())))
-                    .collect(Collectors.toList());
+    public record FindGroupRoadmapDTO(Creator creator, String name, String description, Role role, Long recentTilId, String code, List<StepDTO> steps) {
+        public FindGroupRoadmapDTO(Roadmap roadmap, List<StepDTO> steps, User user, Long recentTilId) {
+            this(new Creator(user.getName(), user.getImage()), roadmap.getName(), roadmap.getDescription(), user.getRole(), recentTilId, roadmap.getCode(), steps);
         }
 
-        @Getter @Setter
-        public class Creator{
-            private String name;
-            private String image;
+        public record Creator(String name, String image) {}
 
-            public Creator(String name, String image){
-                this.name = name;
-                this.image = image;
+        public record StepDTO(Long id, String title, String description, ReferenceDTOs references) {
+            public StepDTO(Step step, List<ReferenceDTOs.ReferenceDTO> youtubeList, List<ReferenceDTOs.ReferenceDTO> webList) {
+                this(step.getId(), step.getTitle(), step.getDescription(), new ReferenceDTOs(youtubeList, webList));
             }
         }
+    }
 
-        @Getter @Setter
-        public class StepDTO{
-            private Long id;
-            private String title;
-            private String description;
-            private ReferenceDTOs references;
-
-            public StepDTO(Step step, List<Reference> youtubeList, List<Reference> webList){
-                this.id = step.getId();
-                this.title = step.getTitle();
-                this.description = step.getDescription();
-                this.references = new ReferenceDTOs(youtubeList, webList);
-            }
-
-            @Getter @Setter
-            public class ReferenceDTOs{
-                List<ReferenceDTO> youtube;
-                List<ReferenceDTO> web;
-
-                public ReferenceDTOs(List<Reference> youtubeList, List<Reference> webList){
-                    this.youtube = youtubeList.stream()
-                            .map(reference -> new ReferenceDTO(reference))
-                            .collect(Collectors.toList());
-                    this.web = webList.stream()
-                            .map(reference -> new ReferenceDTO(reference))
-                            .collect(Collectors.toList());
-                }
-
-                @Getter @Setter
-                public class ReferenceDTO {
-                    private Long id;
-                    private String link;
-
-                    public ReferenceDTO(Reference reference){
-                        this.id = reference.getId();
-                        this.link = reference.getLink();
-                    }
-                }
+    public record ReferenceDTOs(List<ReferenceDTO> youtube, List<ReferenceDTO> web) {
+        public record ReferenceDTO(Long id, String link) {
+            public ReferenceDTO(Reference reference) {
+                this(reference.getId(), reference.getLink());
             }
         }
     }
 
     public record FindAllMyRoadmapDTO(List<CategoryDTO> categories, RoadmapDTO roadmaps) {
-
         public record CategoryDTO(Long id, String name) {
             public CategoryDTO(Roadmap roadmap) {
                 this(roadmap.getId(), roadmap.getName());
@@ -114,82 +56,40 @@ public class RoadmapResponse {
        public record RoadmapDTO(List<TilyDTO> tilys, List<GroupDTO> groups) {}
     }
 
-    @Getter @Setter
-    public static class GroupDTO {
-        private Long id;
-        private String name;
-        private int stepNum;
-        private Creator creator;
-
-        public GroupDTO(Roadmap roadmap) {
-            this.id = roadmap.getId();
-            this.name = roadmap.getName();
-            this.stepNum = roadmap.getStepNum();
-            this.creator = new Creator(roadmap.getCreator());
-        }
-
-        @Getter @Setter
-        public static class Creator {
-            private Long id;
-            private String name;
-            private String image;
-
-            public Creator(User user) {
-                this.id = user.getId();
-                this.name = user.getName();
-                this.image = user.getImage();
-            }
-        }
-    }
-
-    @Getter @Setter
-    public static class TilyDTO {
-        private Long id;
-        private String name;
-        private String image;
-        private int stepNum;
-
+    public record TilyDTO (Long id, String name, String image, int stepNum) {
         public TilyDTO(Roadmap roadmap) {
-            this.id = roadmap.getId();
-            this.name = roadmap.getName();
-            this.image = roadmap.getImage();
-            this.stepNum = roadmap.getStepNum();
+            this(roadmap.getId(), roadmap.getName(), roadmap.getImage(), roadmap.getStepNum());
         }
     }
 
-    @Getter @Setter
-    public static class FindRoadmapByQueryDTO {
-        private String category;
-        private List<RoadmapDTO> roadmaps;
-        private Boolean hasNext;
-
-        public FindRoadmapByQueryDTO(Category category, Slice<Roadmap> roadmaps) {
-            this.category = category.getValue();
-            this.roadmaps = roadmaps.getContent().stream().map(RoadmapDTO::new).collect(Collectors.toList());
-            this.hasNext = roadmaps.hasNext();
+    public record GroupDTO (Long id, String name, int stepNum, Creator creator) {
+        public GroupDTO(Roadmap roadmap) {
+            this(roadmap.getId(), roadmap.getName(), roadmap.getStepNum(), new Creator(roadmap.getCreator()));
         }
 
-        @Getter @Setter
-        public class RoadmapDTO {
-            private Long id;
-            private String name;
-            private int stepNum;
-            private FindAllMyRoadmapDTO.RoadmapDTO.GroupDTO.Creator creator;
-
-            public RoadmapDTO(Roadmap roadmap) {
-                this.id = roadmap.getId();
-                this.name = roadmap.getName();
-                this.stepNum = roadmap.getStepNum();
-                this.creator = new FindAllMyRoadmapDTO.RoadmapDTO.GroupDTO.Creator(roadmap.getCreator());
+        public record Creator(Long id, String name, String image) {
+            public Creator(User user) {
+                this(user.getId(), user.getName(), user.getImage());
             }
         }
     }
 
-    @Getter @Setter
-    public static class ParticipateRoadmapDTO{
-        private Long id;
+    public record FindRoadmapByQueryDTO (String category, List<RoadmapDTO> roadmaps, Boolean hasNext) {
+        public FindRoadmapByQueryDTO(Category category, List<RoadmapDTO> roadmaps, boolean hasNext) {
+            this(category.getValue(), roadmaps, hasNext);
+        }
 
-        public ParticipateRoadmapDTO(Roadmap roadmap){ this.id = roadmap.getId(); }
+        public record RoadmapDTO (Long id, String name, int stepNum, GroupDTO.Creator creator) {
+            public RoadmapDTO(Roadmap roadmap) {
+                this(roadmap.getId(), roadmap.getName(), roadmap.getStepNum(), new GroupDTO.Creator(roadmap.getCreator()));
+            }
+        }
+    }
+
+    public record ParticipateRoadmapDTO(Long id) {
+        public ParticipateRoadmapDTO(Roadmap roadmap) {
+            this(roadmap.getId());
+        }
     }
 
     public record FindRoadmapMembersDTO(List<UserDTO> users) {
@@ -201,7 +101,6 @@ public class RoadmapResponse {
     }
 
     public record FindTilOfStepDTO(List<MemberDTO> members) {
-        public record MemberDTO(Long tilId, Long userId, String name, String image,
-                                String content, LocalDate submitDate, int commentNum) {}
+        public record MemberDTO(Long tilId, Long userId, String name, String image, String content, LocalDate submitDate, int commentNum) {}
     }
 }

@@ -41,7 +41,7 @@ public class RoadmapService {
         Roadmap roadmap = Roadmap.builder()
                 .creator(user)
                 .category(Category.CATEGORY_INDIVIDUAL)
-                .name(requestDTO.getName())
+                .name(requestDTO.name())
                 .stepNum(0)
                 .build();
         roadmapRepository.save(roadmap);
@@ -148,7 +148,17 @@ public class RoadmapService {
         Til latestTil = tilRepository.findFirstByOrderBySubmitDateDesc();
         Long recentTilId = latestTil != null ? latestTil.getId() : null;
 
-        return new RoadmapResponse.FindGroupRoadmapDTO(roadmap, stepList, youtubeMap, webMap, user, recentTilId);
+        List<RoadmapResponse.FindGroupRoadmapDTO.StepDTO> steps = stepList.stream()
+                .map(step -> new RoadmapResponse.FindGroupRoadmapDTO.StepDTO(step
+                        , youtubeMap.get(step.getId()).stream()
+                        .map(reference -> new RoadmapResponse.ReferenceDTOs.ReferenceDTO(reference))
+                        .collect(Collectors.toList())
+                        , webMap.get(step.getId()).stream()
+                        .map(reference -> new RoadmapResponse.ReferenceDTOs.ReferenceDTO(reference))
+                        .collect(Collectors.toList())))
+                .collect(Collectors.toList());
+
+        return new RoadmapResponse.FindGroupRoadmapDTO(roadmap, steps, user, recentTilId);
     }
 
     @Transactional
@@ -259,7 +269,7 @@ public class RoadmapService {
         List<RoadmapResponse.FindRoadmapByQueryDTO.RoadmapDTO> roadmapDTOS = roadmaps.getContent().stream().map(RoadmapResponse.FindRoadmapByQueryDTO.RoadmapDTO::new).collect(Collectors.toList());
         Boolean hasNext = roadmaps.hasNext();
 
-        return new RoadmapResponse.FindRoadmapByQueryDTO(Category.getCategory(category), roadmaps);
+        return new RoadmapResponse.FindRoadmapByQueryDTO(Category.getCategory(category), roadmapDTOS, hasNext);
     }
 
     @Transactional
