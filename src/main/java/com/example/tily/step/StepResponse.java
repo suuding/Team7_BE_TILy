@@ -22,9 +22,9 @@ public class StepResponse {
     }
 
     public record FindAllStepDTO(List<StepDTO> steps, int progress, String role) {
-        public record StepDTO(Long id, String title, Boolean isCompleted, Long tillId) {
+        public record StepDTO(Long id, String title, Boolean isSubmit, Long tilId) {
             public StepDTO(Step step, Til til) {
-                this(step.getId(), step.getTitle(), til == null ? false : true, til.getId());
+                this(step.getId(), step.getTitle(), til != null, til==null ? null : til.getId());
             }
         }
     }
