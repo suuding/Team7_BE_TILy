@@ -5,6 +5,7 @@ import com.example.tily._core.errors.exception.CustomException;
 
 import com.example.tily.comment.Comment;
 import com.example.tily.comment.CommentRepository;
+import com.example.tily.roadmap.Category;
 import com.example.tily.roadmap.Roadmap;
 import com.example.tily.roadmap.RoadmapRepository;
 import com.example.tily.roadmap.relation.UserRoadmap;
@@ -26,6 +27,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -45,29 +47,28 @@ public class TilService {
     @Transactional
     public TilResponse.CreateTilDTO createTil(TilRequest.CreateTilDTO requestDTO, Long roadmapId, Long stepId, User user) {
 
-        Roadmap roadmap = roadmapRepository.findById(roadmapId)
-          .orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_NOT_FOUND));
+        Roadmap roadmap = getRoadmapById(roadmapId);
 
-        Step step = stepRepository.findById(stepId)
-          .orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_NOT_FOUND));
+        Step step = getStepById(stepId);
 
-        // 로드맵에 속한 step이 맞는지 확인
-        if (!step.getRoadmap().equals(roadmap)) {
-            throw new CustomException(ExceptionCode.STEP_NOT_FOUND);
-        }
+        if (!step.getRoadmap().equals(roadmap))
+            throw new CustomException(ExceptionCode.STEP_NOT_INCLUDE);
 
-        // 사용자가 속하지 않은 로드맵에 til을 생성하려고 할때
-        userRoadmapRepository.findByRoadmapIdAndUserIdAndIsAcceptTrue(roadmapId, user.getId())
-          .orElseThrow(() -> new CustomException(ExceptionCode.TIL_ROADMAP_FORBIDDEN));
+        getUserIncludeRoadmap(roadmapId, user.getId());
 
         // 사용자가 이미 step에 대한 til을 생성한 경우
         Til til = tilRepository.findByStepIdAndUserId(stepId, user.getId());
-        if (til != null) {
+        if (til != null)
             throw new CustomException(ExceptionCode.TIL_STEP_EXIST);
-        }
 
-        String title = step.getTitle();
-        Til newTil = Til.builder().roadmap(roadmap).step(step).title(title).writer(user).build();
+        Til newTil = Til.builder()
+                .roadmap(roadmap)
+                .step(step)
+                .title(step.getTitle())
+                .writer(user)
+                .commentNum(0)
+                .isPersonal(roadmap.getCategory().equals(Category.CATEGORY_INDIVIDUAL))
+                .build();
         tilRepository.save(newTil);
 
         return new TilResponse.CreateTilDTO(newTil);
@@ -77,30 +78,25 @@ public class TilService {
     @Transactional
     public void updateTil(TilRequest.UpdateTilDTO requestDTO, Long id, User user) {
 
-        Til til = tilRepository.findById(id)
-          .orElseThrow(() -> new CustomException(ExceptionCode.TIL_NOT_FOUND));
+        Til til = getTilById(id);
 
-        if (!til.getWriter().getId().equals(user.getId())) {
+        if (checkTilWriterEqualUser(til, user))
             throw new CustomException(ExceptionCode.TIL_UPDATE_FORBIDDEN);
-        }
 
-        String content = requestDTO.content();
-        if(content == null){
-            throw new CustomException(ExceptionCode.TIL_CONTENT_NULL);
-        }
-        til.updateContent(content);
+        til.updateContent(requestDTO.content());
     }
 
-    public TilResponse.ViewDTO viewTil (Long tilId, Long stepId, User user) {
-        Til til = tilRepository.findById(tilId)
-                .orElseThrow(() -> new CustomException(ExceptionCode.TIL_NOT_FOUND));
+    public TilResponse.ViewDTO viewTil (Long roadmapId, Long stepId, Long tilId, User user) {
 
-        Step step = stepRepository.findById(stepId)
-                .orElseThrow(() -> new CustomException(ExceptionCode.STEP_NOT_FOUND));
+        Til til = getTilById(tilId);
 
-        UserStep userStep = userStepRepository.findByUserIdAndStepId(til.getWriter().getId(), stepId)
+        Step step = getStepById(stepId);
+
+        Roadmap roadmap = getRoadmapById(roadmapId);
+
+        // roadmap 에 속한 사람만 볼 수 있음 (roadmap에 속하면 userstep에 넣어짐) -> getUserIncludeRoadmap 대신 사용 가능
+        UserStep userStep = userStepRepository.findByUserIdAndStepId(user.getId(), stepId)
                 .orElseThrow(() -> new CustomException(ExceptionCode.TIL_VIEW_FORBIDDEN));
-
 
         Map<Comment, Boolean> maps = new HashMap<>();
         List<Comment> comments = commentRepository.findByTilId(tilId);
@@ -109,7 +105,6 @@ public class TilService {
         }
 
         List<TilResponse.ViewDTO.CommentDTO> commentDTOs = comments.stream().map(c -> new TilResponse.ViewDTO.CommentDTO(c, maps.get(c))).collect(Collectors.toList());
-
         return new TilResponse.ViewDTO(step, til, userStep.getIsSubmit(), commentDTOs);
     }
 
@@ -117,43 +112,35 @@ public class TilService {
     @Transactional
     public void submitTil(TilRequest.SubmitTilDTO requestDTO, Long roadmapId, Long stepId, Long tilId, User user) {
 
-        Til til = tilRepository.findById(tilId)
-                .orElseThrow(() -> new CustomException(ExceptionCode.TIL_NOT_FOUND));
+        Til til = getTilById(tilId);
 
-        if (!Objects.equals(til.getWriter().getId(), user.getId())) {
+        Step step = getStepById(stepId);
+
+        Roadmap roadmap = getRoadmapById(roadmapId);
+
+        if (checkTilWriterEqualUser(til, user))
             throw new CustomException(ExceptionCode.TIL_SUBMIT_FORBIDDEN);
-        }
 
-        String submitContent = requestDTO.submitContent();
-        if(submitContent == null){
-            throw new CustomException(ExceptionCode.TIL_CONTENT_NULL);
-        }
+        // 사용자가 그룹에 속했는지 확인
+        UserRoadmap userRoadmap = getUserIncludeRoadmap(roadmapId, user.getId());
 
-        // 제출 내용을 저장 내용에도 저장
-        til.submitTil(submitContent);
-
-        // 제출 여부(완료) 저장
-        UserStep userstep = userStepRepository.findByStepId(stepId);
-        if (userstep.getIsSubmit().equals(true)) {
+        // UserStep 조회 -> 사용자가 로드맵에 속했는지, 제출했는지 확인
+        UserStep userstep = userStepRepository.findByUserIdAndStepId(user.getId(), stepId)
+                .orElseThrow(()-> new CustomException(ExceptionCode.TIL_SUBMIT_FORBIDDEN));
+        if (userstep.getIsSubmit().equals(true))
             throw new CustomException(ExceptionCode.TIL_ALREADY_SUBMIT);
-        }
-        userstep.submit();
 
-        UserRoadmap userRoadmap = userRoadmapRepository.findByRoadmapIdAndUserId(roadmapId, user.getId())
-                .orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_SUBMIT_FORBIDDEN));
-
-        int progress = calProgress(roadmapId, user.getId());
-        userRoadmap.updateProgress(progress);
+        til.submitTil(requestDTO.submitContent()); // 내용, 제출 내용 저장
+        userstep.submit(); // 제출 여부(완료) 저장
+        userRoadmap.updateProgress(calProgress(roadmapId, user.getId())); // 진도율 저장
     }
 
     @Transactional
     public void deleteTil(Long id, User user) {
-        Til til = tilRepository.findById(id)
-                .orElseThrow(() -> new CustomException(ExceptionCode.TIL_NOT_FOUND));
+        Til til = getTilById(id);
 
-        if (!til.getWriter().equals(user)) {
+        if (checkTilWriterEqualUser(til, user))
             throw new CustomException(ExceptionCode.TIL_DELETE_FORBIDDEN);
-        }
 
         tilRepository.deleteById(id);
     }
@@ -162,38 +149,60 @@ public class TilService {
     public TilResponse.FindAllDTO findAllMyTil(Long roadmapId, String date, String title, int page, int size, User user) {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdDate"));
+        Slice<Til> tils;
 
         if (date!=null) {
-            try {
-                LocalDate now = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-                LocalDateTime startDate = LocalDateTime.of(now, LocalTime.of( 0,0,0));
-                LocalDateTime endDate = LocalDateTime.of(now, LocalTime.of( 23,59,59));
+            LocalDate now = parseDate(date);
+            LocalDateTime startDate = LocalDateTime.of(now, LocalTime.of( 0,0,0));
+            LocalDateTime endDate = LocalDateTime.of(now, LocalTime.of( 23,59,59));
 
-                Slice<Til> tils = tilRepository.findAllByDateByOrderByCreatedDateDesc(user.getId(), roadmapId, startDate, endDate, title, pageable);
-                List<TilResponse.TilDTO> tilDTOs = tils.getContent().stream()
-                        .map(til -> new TilResponse.TilDTO(til, til.getStep(), til.getRoadmap()))
-                        .collect(Collectors.toList());
-                return new TilResponse.FindAllDTO(tilDTOs, tils.hasNext());
-            } catch (Exception e) {
-                throw new CustomException(ExceptionCode.DATE_WRONG);
-            }
+            tils = tilRepository.findAllByDateByOrderByCreatedDateDesc(user.getId(), roadmapId, startDate, endDate, title, pageable);
         } else {
-            Slice<Til> tils = tilRepository.findAllByOrderByCreatedDateDesc(user.getId(), roadmapId, title, pageable);
-            List<TilResponse.TilDTO> tilDTOs = tils.getContent().stream()
-                    .map(til -> new TilResponse.TilDTO(til, til.getStep(), til.getRoadmap()))
-                    .collect(Collectors.toList());
-            return new TilResponse.FindAllDTO(tilDTOs, tils.hasNext());
+            tils = tilRepository.findAllByOrderByCreatedDateDesc(user.getId(), roadmapId, title, pageable);
         }
+
+        List<TilResponse.TilDTO> tilDTOs = tils.getContent().stream()
+                .map(til -> new TilResponse.TilDTO(til, til.getStep(), til.getRoadmap())).collect(Collectors.toList());
+        return new TilResponse.FindAllDTO(tilDTOs, tils.hasNext());
     }
 
-    public int calProgress(Long roadmapId, Long userId) {
+    private Roadmap getRoadmapById(Long roadmapId) {
+        return roadmapRepository.findById(roadmapId).orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_NOT_FOUND));
+    }
+
+    private Step getStepById(Long stepId) {
+        return stepRepository.findById(stepId).orElseThrow(() -> new CustomException(ExceptionCode.STEP_NOT_FOUND));
+    }
+
+    private boolean checkTilWriterEqualUser(Til til, User user) {
+        return !til.getWriter().getId().equals(user.getId());
+    }
+
+    private Til getTilById(Long tilId) {
+        return tilRepository.findById(tilId).orElseThrow(() -> new CustomException(ExceptionCode.TIL_NOT_FOUND));
+    }
+
+    // 사용자가 로드맵에 속했는지
+    private UserRoadmap getUserIncludeRoadmap(Long roadmapId, Long userId) {
+        return userRoadmapRepository.findByRoadmapIdAndUserIdAndIsAcceptTrue(roadmapId, userId)
+                .orElseThrow(() -> new CustomException(ExceptionCode.TIL_ROADMAP_FORBIDDEN));
+    }
+
+    // 진도율 계산
+    private int calProgress(Long roadmapId, Long userId) {
 
         List<UserStep> userSteps = userStepRepository.findByUserIdAndRoadmapId(userId, roadmapId);
-        int sumNum = userSteps.size();
-        int submitNum = 0;
-        for (UserStep userStep : userSteps) {
-            if (userStep.getIsSubmit())  submitNum++;
-        }
+        long sumNum = userSteps.size();
+        long submitNum = userSteps.stream().filter(UserStep::getIsSubmit).count();
+
         return (int)(((double)submitNum/(double)sumNum)*100.0);
+    }
+
+    private LocalDate parseDate(String date) {
+        try {
+            return LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        } catch (DateTimeParseException e) {
+            throw new CustomException(ExceptionCode.DATE_WRONG);
+        }
     }
 }
