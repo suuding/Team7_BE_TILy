@@ -18,7 +18,8 @@ public class Reference {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "step_id")
     private Step step;
 
     @Column(nullable = false)
