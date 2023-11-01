@@ -23,7 +23,8 @@ public class Reference {
 
     @Column(nullable = false)
     private String category;
-    @Column(nullable = false)
+
+    @Column(nullable = false, columnDefinition="TEXT", length = 1000)
     private String link;
 
     @Builder
