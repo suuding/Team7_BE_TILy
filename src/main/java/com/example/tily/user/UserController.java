@@ -50,7 +50,7 @@ public class UserController {
 
     // 로그인
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody UserRequest.LoginDTO requestDTO, Errors errors) {
+    public ResponseEntity<?> login(@RequestBody @Valid UserRequest.LoginDTO requestDTO, Errors errors) {
         UserResponse.TokenDTO responseDTO = userService.login(requestDTO);
         ResponseCookie responseCookie = setRefreshTokenCookie(responseDTO.refreshToken());
 
@@ -86,7 +86,8 @@ public class UserController {
 
     // 사용자 정보 수정하기
     @PatchMapping("/users")
-    public ResponseEntity<?> updateUser(@RequestBody UserRequest.UpdateUserDTO requestDTO, @AuthenticationPrincipal CustomUserDetails userDetails) {
+    public ResponseEntity<?> updateUser(@RequestBody @Valid UserRequest.UpdateUserDTO requestDTO, Errors errors,
+                                        @AuthenticationPrincipal CustomUserDetails userDetails) {
         userService.updateUser(requestDTO, userDetails.getUser().getId());
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
