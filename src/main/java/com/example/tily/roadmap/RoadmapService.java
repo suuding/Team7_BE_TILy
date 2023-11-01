@@ -287,7 +287,18 @@ public class RoadmapService {
         Roadmap roadmap = roadmapRepository.findById(id).
                 orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_NOT_FOUND));
 
-        // 지원하면 ROLE_MEMBER이지만 isAccep가 false이다. 즉 예비 맴버라는 의미
+        // 최초로 한 번만 신청 가능
+        Optional<UserRoadmap> ur = userRoadmapRepository.findByRoadmapIdAndUserId(id, user.getId());
+        if (ur.isPresent()) {
+            if (ur.get().getRole().equals(GroupRole.ROLE_NONE))
+                throw new CustomException(ExceptionCode.ROADMAP_REJECT);
+            else if (ur.get().getIsAccept().equals(true))
+                throw new CustomException(ExceptionCode.ROADMAP_ALREADY_MEMBER);
+            else
+                throw new CustomException(ExceptionCode.ROADMAP_ALREADY_APPLY);
+        }
+
+        // 신청하면 ROLE_MEMBER, isAccept=false이다. 즉 예비 맴버라는 의미
         UserRoadmap userRoadmap = UserRoadmap.builder()
                 .roadmap(roadmap)
                 .user(user)
