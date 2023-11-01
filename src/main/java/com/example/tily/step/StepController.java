@@ -16,14 +16,14 @@ public class StepController {
 
     // 개인 로드맵(카테고리)의 step 생성하기
     @PostMapping("/roadmaps/individual/{id}/steps")
-    public ResponseEntity<?> createIndividualStep(@PathVariable Long id, @RequestBody @Valid StepRequest.CreateIndividualStepDTO requestDTO) {
-        StepResponse.CreateIndividualStepDTO responseDTO = stepService.createIndividualStep(id, requestDTO);
+    public ResponseEntity<?> createIndividualStep(@PathVariable Long id, @RequestBody @Valid StepRequest.CreateIndividualStepDTO requestDTO, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        StepResponse.CreateIndividualStepDTO responseDTO = stepService.createIndividualStep(id, requestDTO, userDetails.getUser());
 
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
 
     // 특정 step의 참고자료 목록 조회
-    @PostMapping("/roadmaps/{roadmapsId}/steps/{stepsId}/references")
+    @GetMapping("/roadmaps/{roadmapsId}/steps/{stepsId}/references")
     public ResponseEntity<?> findReference(@PathVariable Long stepsId){
         StepResponse.FindReferenceDTO responseDTO = stepService.findReference(stepsId);
 

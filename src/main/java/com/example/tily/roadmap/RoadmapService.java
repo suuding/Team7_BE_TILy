@@ -52,6 +52,7 @@ public class RoadmapService {
                 .roadmap(roadmap)
                 .user(user)
                 .role(GroupRole.ROLE_MASTER)
+                .isAccept(true)
                 .build();
         userRoadmapRepository.save(userRoadmap);
 
@@ -85,6 +86,9 @@ public class RoadmapService {
             Step step = Step.builder().roadmap(roadmap).title(title).description(stepDescription).dueDate(dueDate).build();
             stepRepository.save(step);
 
+            UserStep userStep = UserStep.builder().roadmap(roadmap).step(step).user(user).isSubmit(false).build();
+            userStepRepository.save(userStep);
+
             // reference 저장
             RoadmapRequest.ReferenceDTOs referenceDTOs = stepDTO.references();
             List<Reference> referenceList = new ArrayList<>();
@@ -115,6 +119,7 @@ public class RoadmapService {
                 .user(user)
                 .role(GroupRole.ROLE_MASTER)
                 .progress(0)
+                .isAccept(true)
                 .build();
         userRoadmapRepository.save(userRoadmap);
 
