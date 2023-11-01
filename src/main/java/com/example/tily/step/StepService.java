@@ -39,13 +39,13 @@ public class StepService {
         Roadmap roadmap = getRoadmapById(id);
 
         // 사용자가 해당 로드맵에 속했는지 확인
-        UserRoadmap userRoadmap = userRoadmapRepository.findByRoadmapIdAndUserIdAndIsAcceptTrue(id, user.getId())
+        userRoadmapRepository.findByRoadmapIdAndUserIdAndIsAcceptTrue(id, user.getId())
                 .orElseThrow(() -> new CustomException(ExceptionCode.STEP_ROADMAP_FORBIDDEN));
 
         Step step = Step.builder().roadmap(roadmap).title(requestDTO.title()).build(); // 개인 로드맵이므로 description, dueDate 는 null
         stepRepository.save(step);
 
-        UserStep userStep = UserStep.builder().roadmap(roadmap).step(step).user(user).isSubmit(true).build(); // isSubmit true인 이유는,,
+        UserStep userStep = UserStep.builder().roadmap(roadmap).step(step).user(user).isSubmit(true).build();
         userStepRepository.save(userStep);
 
         return new StepResponse.CreateIndividualStepDTO(step);
