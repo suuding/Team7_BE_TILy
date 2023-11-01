@@ -70,4 +70,6 @@ public class Roadmap extends BaseTimeEntity {
         this.isPublic = isPublic;
         this.isRecruit = isRecruit;
     }
+
+    public void updateImage (String image) {this.image = image; }
 }

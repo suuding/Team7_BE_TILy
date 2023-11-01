@@ -4,6 +4,8 @@ import java.io.ByteArrayOutputStream;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
+// 당장은 사용하지 않지만, 추후에 사용할 필요가 있으면 사용
+
 public class ImageUtils {
     public static byte[] compressImage(byte[] data) {
         Deflater deflater = new Deflater();
