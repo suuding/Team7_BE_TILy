@@ -16,8 +16,8 @@ public class StepController {
 
     // 개인 로드맵(카테고리)의 step 생성하기
     @PostMapping("/roadmaps/individual/{id}/steps")
-    public ResponseEntity<?> createIndividualStep(@PathVariable Long id, @RequestBody @Valid StepRequest.CreateIndividualStepDTO requestDTO) {
-        StepResponse.CreateIndividualStepDTO responseDTO = stepService.createIndividualStep(id, requestDTO);
+    public ResponseEntity<?> createIndividualStep(@PathVariable Long id, @RequestBody @Valid StepRequest.CreateIndividualStepDTO requestDTO, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        StepResponse.CreateIndividualStepDTO responseDTO = stepService.createIndividualStep(id, requestDTO, userDetails.getUser());
 
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }

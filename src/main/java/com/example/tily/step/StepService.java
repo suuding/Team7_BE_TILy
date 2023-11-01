@@ -8,6 +8,7 @@ import com.example.tily.roadmap.relation.UserRoadmap;
 import com.example.tily.roadmap.relation.UserRoadmapRepository;
 import com.example.tily.step.reference.Reference;
 import com.example.tily.step.reference.ReferenceRepository;
+import com.example.tily.step.relation.UserStep;
 import com.example.tily.step.relation.UserStepRepository;
 import com.example.tily.til.Til;
 import com.example.tily.til.TilRepository;
@@ -31,15 +32,19 @@ public class StepService {
     private final ReferenceRepository referenceRepository;
     private final TilRepository tilRepository;
     private final UserRoadmapRepository userRoadmapRepository;
+    private final UserStepRepository userStepRepository;
 
     @Transactional
-    public StepResponse.CreateIndividualStepDTO createIndividualStep(Long id, StepRequest.CreateIndividualStepDTO requestDTO){
+    public StepResponse.CreateIndividualStepDTO createIndividualStep(Long id, StepRequest.CreateIndividualStepDTO requestDTO, User user){
         Roadmap roadmap = roadmapRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_NOT_FOUND));
         String title = requestDTO.title();
 
         Step step = Step.builder().roadmap(roadmap).title(title).build();
         stepRepository.save(step);
+
+        UserStep userStep = UserStep.builder().roadmap(roadmap).step(step).user(user).isSubmit(true).build();
+        userStepRepository.save(userStep);
 
         return new StepResponse.CreateIndividualStepDTO(step);
     }
