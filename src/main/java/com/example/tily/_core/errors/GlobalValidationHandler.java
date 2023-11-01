@@ -1,6 +1,8 @@
 package com.example.tily._core.errors;
 
+import com.example.tily._core.errors.exception.CustomException;
 import com.example.tily._core.errors.exception.Exception400;
+import com.example.tily._core.errors.exception.ExceptionCode;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -15,7 +17,11 @@ public class GlobalValidationHandler {
     public void postMapping() {
     }
 
-    @Before("postMapping()")
+    @Pointcut("@annotation(org.springframework.web.bind.annotation.PatchMapping)")
+    public void patchMapping() {
+    }
+
+    @Before("postMapping() || patchMapping()")
     public void validationAdvice(JoinPoint jp) {
         Object[] args = jp.getArgs();
         for (Object arg : args) {
@@ -23,9 +29,7 @@ public class GlobalValidationHandler {
                 Errors errors = (Errors) arg;
 
                 if (errors.hasErrors()) {
-                    throw new Exception400(
-                            errors.getFieldErrors().get(0).getDefaultMessage()
-                    );
+                    throw new CustomException(ExceptionCode.BAD_REQUEST, errors.getFieldErrors().get(0).getDefaultMessage());
                 }
             }
         }

@@ -36,10 +36,12 @@ public enum ExceptionCode {
     ROADMAP_NOT_FORBIDDEN(HttpStatus.FORBIDDEN, "해당 로드냅에 속하지 않았습니다."),
     ROADMAP_NOT_BELONG(HttpStatus.NOT_FOUND, "해당 reoadmap에 속하지 않습니다."),
     ROADMAP_FORBIDDEN(HttpStatus.FORBIDDEN, "해당 roadmap을 조회할 권한이 없습니다."),
+    ROADMAP_SUBMIT_FORBIDDEN(HttpStatus.FORBIDDEN, "해당 til을 제출할 권한이 없습니다."),
 
     // step 관련 에러
     STEP_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 step을 찾을 수 없습니다."),
     STEP_FORBIDDEN(HttpStatus.FORBIDDEN, "해당 step을 조회할 권한이 없습니다."),
+    STEP_NOT_INCLUDE(HttpStatus.BAD_REQUEST, "해당 step은 roadmap에 속하지 않았습니다."),
 
     // comment 관련 에러
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 댓글을 찾을 수 없습니다."),
@@ -52,8 +54,9 @@ public enum ExceptionCode {
     DATE_WRONG(HttpStatus.BAD_REQUEST, "입력한 날짜를 찾을 수 없습니다."),
 
     // reference 관련 에러
-    REFERENCE_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 reference를 찾을 수 없습니다.");
+    REFERENCE_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 reference를 찾을 수 없습니다."),
 
+    BAD_REQUEST(HttpStatus.BAD_REQUEST, "올바른 형식을 입력해주세요.");
     private final HttpStatus httpStatus;
     private final String message;
 }

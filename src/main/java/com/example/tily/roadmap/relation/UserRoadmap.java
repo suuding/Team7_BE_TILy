@@ -27,7 +27,7 @@ public class UserRoadmap extends BaseTimeEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column
+    @Column(columnDefinition="TEXT", length = 1000)
     private String content;
     @Column
     private Boolean isAccept;
