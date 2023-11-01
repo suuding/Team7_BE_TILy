@@ -68,7 +68,7 @@ public class StepService {
                 StepResponse.FindReferenceDTO.YoutubeDTO youtubeDTO = new StepResponse.FindReferenceDTO.YoutubeDTO(id, link);
                 youtubeDTOs.add(youtubeDTO);
             }
-            else if(category.equals("reference") ) {
+            else if(category.equals("web") ) {
                 StepResponse.FindReferenceDTO.WebDTO webDTO = new StepResponse.FindReferenceDTO.WebDTO(id, link);
                 webDTOS.add(webDTO);
             }
