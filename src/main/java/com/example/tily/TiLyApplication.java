@@ -75,9 +75,9 @@ public class TiLyApplication {
 
 					));
 			userRoadmapRepository.saveAll(Arrays.asList(
-					newUserRoadmapRelation(Roadmap.builder().id(1L).build(), User.builder().id(1L).build(), null, null, GroupRole.ROLE_MASTER, 0),
-					newUserRoadmapRelation(Roadmap.builder().id(2L).build(), User.builder().id(2L).build(), null, null, GroupRole.ROLE_MASTER, 0),
-					newUserRoadmapRelation(Roadmap.builder().id(3L).build(), User.builder().id(3L).build(), null, null, GroupRole.ROLE_MASTER, 0),
+					newUserRoadmapRelation(Roadmap.builder().id(1L).build(), User.builder().id(1L).build(), null, true, GroupRole.ROLE_MASTER, 0),
+					newUserRoadmapRelation(Roadmap.builder().id(2L).build(), User.builder().id(2L).build(), null, true, GroupRole.ROLE_MASTER, 0),
+					newUserRoadmapRelation(Roadmap.builder().id(3L).build(), User.builder().id(3L).build(), null, true, GroupRole.ROLE_MASTER, 0),
 
 					newUserRoadmapRelation(Roadmap.builder().id(4L).build(), User.builder().id(4L).build(), null, true, GroupRole.ROLE_MASTER, 10),
 					newUserRoadmapRelation(Roadmap.builder().id(4L).build(), User.builder().id(1L).build(), null, true, GroupRole.ROLE_MEMBER, 10),
@@ -161,7 +161,7 @@ public class TiLyApplication {
 		return User.builder()
 				.email(email)
 				.name(name)
-				.password(passwordEncoder.encode("hongHong!"))
+				.password(passwordEncoder.encode("hongHong1!"))
 				.role(role)
 				.build();
 	}
