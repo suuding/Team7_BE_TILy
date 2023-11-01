@@ -136,16 +136,15 @@ public class TilService {
     }
 
     @Transactional
-    public void deleteTil(Long id, User user) {
-        Til til = getTilById(id);
+    public void deleteTil(Long tilId, User user) {
+        Til til = getTilById(tilId);
 
         if (checkTilWriterEqualUser(til, user))
             throw new CustomException(ExceptionCode.TIL_DELETE_FORBIDDEN);
 
-        tilRepository.deleteById(id);
+        tilRepository.deleteById(tilId);
     }
 
-    @Transactional
     public TilResponse.FindAllDTO findAllMyTil(Long roadmapId, String date, String title, int page, int size, User user) {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdDate"));
@@ -174,12 +173,12 @@ public class TilService {
         return stepRepository.findById(stepId).orElseThrow(() -> new CustomException(ExceptionCode.STEP_NOT_FOUND));
     }
 
-    private boolean checkTilWriterEqualUser(Til til, User user) {
-        return !til.getWriter().getId().equals(user.getId());
-    }
-
     private Til getTilById(Long tilId) {
         return tilRepository.findById(tilId).orElseThrow(() -> new CustomException(ExceptionCode.TIL_NOT_FOUND));
+    }
+
+    private boolean checkTilWriterEqualUser(Til til, User user) {
+        return !til.getWriter().getId().equals(user.getId());
     }
 
     // 사용자가 로드맵에 속했는지
