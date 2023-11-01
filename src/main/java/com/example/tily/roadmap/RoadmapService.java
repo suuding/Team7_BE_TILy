@@ -252,7 +252,6 @@ public class RoadmapService {
                 .map(RoadmapResponse.FindAllMyRoadmapDTO.CategoryDTO::new)
                 .collect(Collectors.toList());
 
-
         List<RoadmapResponse.TilyDTO> tilys = roadmaps.stream()
                 .filter(roadmap -> roadmap.getCategory().equals(Category.CATEGORY_TILY))
                 .map(RoadmapResponse.TilyDTO::new)
@@ -260,7 +259,10 @@ public class RoadmapService {
 
         List<RoadmapResponse.GroupDTO> groups = roadmaps.stream()
                 .filter(roadmap -> roadmap.getCategory().equals(Category.CATEGORY_GROUP))
-                .map(RoadmapResponse.GroupDTO::new)
+                .map(roadmap -> {
+                    GroupRole groupRole = userRoadmapRepository.findByRoadmapIdAndUserId(roadmap.getId(), user.getId()).get().getRole();
+                    return (groupRole == GroupRole.ROLE_MASTER || groupRole == GroupRole.ROLE_MANAGER) ? new RoadmapResponse.GroupDTO(roadmap, true) : new RoadmapResponse.GroupDTO(roadmap, false);
+                })
                 .collect(Collectors.toList());
 
         RoadmapResponse.FindAllMyRoadmapDTO.RoadmapDTO roadmapDTO =  new RoadmapResponse.FindAllMyRoadmapDTO.RoadmapDTO(tilys, groups);
