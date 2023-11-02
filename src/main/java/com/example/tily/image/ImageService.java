@@ -31,6 +31,8 @@ public class ImageService {
 
     @Transactional
     public void updateUserImage(Long userId, MultipartFile multipartFile) {
+        // 삭제 로직
+
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ExceptionCode.USER_NOT_FOUND));
 

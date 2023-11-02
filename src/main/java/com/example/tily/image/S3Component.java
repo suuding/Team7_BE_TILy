@@ -14,5 +14,8 @@ public class S3Component {
     private String userFolder;
 
     @Value("${cloud.aws.s3.folder.folderName2}")
+    private String roadmapFolder;
+
+    @Value("${cloud.aws.s3.folder.folderName3}")
     private String postFolder;
 }

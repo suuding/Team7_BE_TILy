@@ -44,8 +44,8 @@ public class ImageController {
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 
-    @GetMapping("/image/post")
-    public ResponseEntity<?> findPostImage(@RequestParam("image") MultipartFile file){
+    @PostMapping("/image/post")
+    public ResponseEntity<?> postImage(@RequestParam("image") MultipartFile file){
         ImageResponse.PostImageDTO responseDTO = imageService.postImage(file);
 
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
