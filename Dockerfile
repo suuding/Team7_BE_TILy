@@ -2,7 +2,7 @@
 FROM krmp-d2hub-idock.9rum.cc/goorm/gradle:8.2.1-jdk17 AS builder
 
 # 작업 디렉토리 설정
-WORKDIR /home/gradle/project
+WORKDIR project
 
 # Spring 소스 코드를 이미지에 복사
 COPY . .
@@ -12,9 +12,6 @@ RUN echo "systemProp.http.proxyHost=krmp-proxy.9rum.cc\nsystemProp.http.proxyPor
 
 FROM builder AS final
 COPY --from=builder /home/gradle/project/build/libs/server-0.0.1.jar .
-
-# gradlew를 이용한 프로젝트 필드
-RUN chmod +x gradlew
 
 # gradlew를 이용한 프로젝트 필드
 RUN ./gradlew clean build -x test
