@@ -79,11 +79,12 @@ public class RoadmapService {
 
         for(RoadmapRequest.StepDTO stepDTO : stepDTOS){
             // step 저장
-            String title = stepDTO.title() ;
-            String stepDescription = stepDTO.description();
-            LocalDateTime dueDate =  stepDTO.dueDate();
-
-            Step step = Step.builder().roadmap(roadmap).title(title).description(stepDescription).dueDate(dueDate).build();
+            Step step = Step.builder()
+                    .roadmap(roadmap)
+                    .title(stepDTO.title())
+                    .description(stepDTO.description())
+                    .dueDate(stepDTO.dueDate()!=null ? parseDate(stepDTO.dueDate()) : null)
+                    .build();
             stepRepository.save(step);
 
             UserStep userStep = UserStep.builder().roadmap(roadmap).step(step).user(user).isSubmit(false).build();
