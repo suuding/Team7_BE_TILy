@@ -20,7 +20,7 @@ RUN gradle wrapper
 RUN ./gradlew clean build -x test
 
 FROM builder AS final
-COPY --from=builder /home/gradle/project/build/libs/server-0.0.1.jar .
+COPY --from=builder /home/gradle/project/build/libs/TILy-0.0.1-SNAPSHOT.jar .
 
 # DATABASE_URL을 환경 변수로 삽입
 ENV DATABASE_URL=jdbc:mariadb://mariadb/krampoline
