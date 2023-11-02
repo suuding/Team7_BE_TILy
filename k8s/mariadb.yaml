@@ -27,9 +27,9 @@ spec:
             - name: MARIADB_DISABLE_UPGRADE_BACKUP
               value: '1'
           volumeMounts:
-            - mountPath: /var/lib/mysql
+            - mountPath: /var/lib/mariadb
               name: data
-              subPath: mysql
+              subPath: mariadb
             - mountPath: /docker-entrypoint-initdb.d
               name: init-db
           resources:
