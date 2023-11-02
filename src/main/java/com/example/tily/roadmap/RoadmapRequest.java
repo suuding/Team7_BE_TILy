@@ -36,10 +36,10 @@ public class RoadmapRequest {
     }
 
     public record ParticipateRoadmapDTO(@NotBlank(message="이름을 입력해주세요.")
-                                        @Size(min=8, max=8, message = "코드는 8자여야 합니다.")String code){
+                                        @Size(min=8, max=8, message = "코드는 8자여야 합니다.") String code){
     }
 
-    public record ChangeMemberRoleDTO(@NotNull(message="역할을 선택해주세요.") GroupRole role){
+    public record ChangeMemberRoleDTO(@NotNull(message="역할을 선택해주세요.") String role){
     }
 }
 

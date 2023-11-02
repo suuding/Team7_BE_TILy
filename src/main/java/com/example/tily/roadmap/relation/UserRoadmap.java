@@ -29,10 +29,13 @@ public class UserRoadmap extends BaseTimeEntity {
 
     @Column(columnDefinition="TEXT", length = 1000)
     private String content;
+
     @Column
     private Boolean isAccept;
+
     @Column(nullable = false)
-    private GroupRole role;
+    private String role;
+
     @Column(nullable = false)
     private int progress;
 
@@ -42,11 +45,11 @@ public class UserRoadmap extends BaseTimeEntity {
         this.user = user;
         this.content = content;
         this.isAccept = isAccept;
-        this.role = role;
+        this.role = role.getValue();
         this.progress = progress;
     }
 
-    public void updateRole(GroupRole role) { this.role = role; }
+    public void updateRole(String role) { this.role = role; }
 
     public void updateIsAccept(Boolean isAccept) { this.isAccept = isAccept; }
 
