@@ -9,7 +9,6 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name="image_tb")
 public class Image {
     @Id
     @GeneratedValue
