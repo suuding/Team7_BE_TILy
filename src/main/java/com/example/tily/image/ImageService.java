@@ -30,19 +30,19 @@ public class ImageService {
         return new ImageResponse.UserImageDTO(url);
     }
 
+    @Transactional
     public void updateUserImage(Long userId, MultipartFile multipartFile) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ExceptionCode.USER_NOT_FOUND));
 
         String storageFileName = s3Service.uploadFile(multipartFile, FileFolder.USER_IMAGE);
 
-        imageRepository.save(new Image(multipartFile.getOriginalFilename(), storageFileName, s3Service.getFileUrl(storageFileName)));
         user.updateImage(storageFileName); // user의 image 필드는 파일명을 가진다
     }
 
     @Transactional
-    public ImageResponse.RoadmapImageDTO findRoadmapImage(Long userId){
-        Roadmap roadmap = roadmapRepository.findById(userId)
+    public ImageResponse.RoadmapImageDTO findRoadmapImage(Long roadmapId){
+        Roadmap roadmap = roadmapRepository.findById(roadmapId)
                 .orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_NOT_FOUND));
 
         String url = s3Service.getFileUrl(roadmap.getImage());
@@ -50,13 +50,22 @@ public class ImageService {
         return new ImageResponse.RoadmapImageDTO(url);
     }
 
+    @Transactional
     public void updateRoadmapImage(Long roadmapId, MultipartFile multipartFile) {
         Roadmap roadmap = roadmapRepository.findById(roadmapId)
                 .orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_NOT_FOUND));
 
         String storageFileName = s3Service.uploadFile(multipartFile, FileFolder.ROADMAP_IMAGE);
 
-        imageRepository.save(new Image(multipartFile.getOriginalFilename(), storageFileName, s3Service.getFileUrl(storageFileName)));
         roadmap.updateImage(storageFileName);
+    }
+
+    @Transactional
+    public ImageResponse.PostImageDTO postImage(MultipartFile multipartFile){
+        String storageFileName = s3Service.uploadFile(multipartFile, FileFolder.POST_IMAGE);
+
+        String url = s3Service.getFileUrl(storageFileName);
+
+        return new ImageResponse.PostImageDTO(url);
     }
 }

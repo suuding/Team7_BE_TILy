@@ -4,6 +4,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileNotFoundException;
 
+// S3이외 다른 서비스를 염두해두고 인터페이스 사용
 public interface FileService {
     //파일 업로드
     String uploadFile(MultipartFile file, FileFolder fileFolder);

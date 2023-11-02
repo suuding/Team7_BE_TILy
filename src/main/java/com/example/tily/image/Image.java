@@ -1,9 +1,6 @@
 package com.example.tily.image;
 
-import com.example.tily.roadmap.Roadmap;
-import com.example.tily.user.User;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
