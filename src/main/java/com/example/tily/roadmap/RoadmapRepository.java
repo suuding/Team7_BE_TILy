@@ -15,7 +15,11 @@ public interface RoadmapRepository extends JpaRepository<Roadmap, Long> {
     @Query("select r from Roadmap r where r.creator.id =:userId and r.category=:category")
     List<Roadmap> findByUserId(@Param("userId") Long userId, @Param("category") Category category);
 
-    @Query("select r from Roadmap r where r.category=:category and (:name is null or r.name=:name) and (r.isPublic=true or r.isPublic is null) and (r.isRecruit=true or r.isRecruit is null)")
+    @Query("select r from Roadmap r " +
+            "where r.category=:category " +
+            "and (:name is null or r.name like %:name%) " +
+            "and (r.isPublic=true or r.isPublic is null) " +
+            "and (r.isRecruit=true or r.isRecruit is null)")
     Slice<Roadmap> findAllByOrderByCreatedDateDesc(@Param("category") Category category, @Param("name") String name, Pageable pageable);
 
     Optional<Roadmap> findByCode(String code);

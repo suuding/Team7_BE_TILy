@@ -4,6 +4,7 @@ import com.example.tily.roadmap.relation.GroupRole;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,8 +24,14 @@ public class RoadmapRequest {
     public record RoadmapDTO(@NotBlank(message = "이름을 입력해주세요.") String name, String description, String code, Boolean isPublic, Boolean isRecruit){
     }
 
-    public record StepDTO(Long id, @NotBlank(message = "제목을 입력해주세요.") String title, String description, ReferenceDTOs references, LocalDateTime dueDate){
-    }
+    public record StepDTO(
+            Long id,
+            @NotBlank(message = "제목을 입력해주세요.")
+            String title,
+            String description,
+            ReferenceDTOs references,
+            @Pattern(regexp = "^[0-9]{4}+-[0-9]{2}+-[0-9]{2}+( )+[0-9]{2}+:[0-9]{2}+:[0-9]{2}$", message = "잘못된 날짜 형식입니다.")
+            String dueDate) {}
 
     public record ReferenceDTOs(List<ReferenceDTO> youtube, List<ReferenceDTO> web) {
     }
@@ -36,10 +43,10 @@ public class RoadmapRequest {
     }
 
     public record ParticipateRoadmapDTO(@NotBlank(message="이름을 입력해주세요.")
-                                        @Size(min=8, max=8, message = "코드는 8자여야 합니다.")String code){
+                                        @Size(min=8, max=8, message = "코드는 8자여야 합니다.") String code){
     }
 
-    public record ChangeMemberRoleDTO(@NotNull(message="역할을 선택해주세요.") GroupRole role){
+    public record ChangeMemberRoleDTO(@NotNull(message="역할을 선택해주세요.") String role){
     }
 }
 
