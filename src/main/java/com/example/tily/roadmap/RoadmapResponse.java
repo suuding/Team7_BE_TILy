@@ -90,15 +90,31 @@ public class RoadmapResponse {
         }
     }
 
-    public record FindRoadmapMembersDTO(List<UserDTO> users, GroupRole myRole) {
-        public record UserDTO(Long id, String name, String image, GroupRole role) {}
+    public record FindRoadmapMembersDTO(List<UserDTO> users) {
+        public record UserDTO(Long id, String name, String image, String role) {}
     }
 
-    public record FindAppliedUsersDTO(List<UserDTO> users, GroupRole myRole) {
-        public record UserDTO(Long id, String name, String image, LocalDate date, String content) {}
+    public record FindAppliedUsersDTO(List<UserDTO> users) {
+        public record UserDTO(Long id, String name, String image, LocalDate date, String content) {
+            public UserDTO(User user, UserRoadmap userRoadmap) {
+                this(user.getId(), user.getName(), user.getImage(), userRoadmap.getCreatedDate().toLocalDate(), userRoadmap.getContent());
+            }
+        }
     }
 
     public record FindTilOfStepDTO(List<MemberDTO> members) {
-        public record MemberDTO(Long tilId, Long userId, String name, String image, String content, LocalDate submitDate, int commentNum) {}
+        public record MemberDTO(Long tilId, Long userId, String name, String image, String content, String submitDate, Integer commentNum) {
+
+            public MemberDTO(Til til, User user) {
+                this(
+                        til!=null ? til.getId() : null,
+                        user.getId(),
+                        user.getName(),
+                        user.getImage(),
+                        til!=null ? til.getContent() : null,
+                        til!=null ? til.getSubmitDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) : null,
+                        til!=null ? til.getCommentNum() : null);
+            }
+        }
     }
 }
