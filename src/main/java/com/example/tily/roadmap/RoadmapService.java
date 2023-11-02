@@ -444,37 +444,70 @@ public class RoadmapService {
     }
 
     @Transactional
-    public RoadmapResponse.FindTilOfStepDTO findTilOfStep(Long groupsId, Long stepsId, Boolean isSubmit, Boolean isMember, String name){
-        List<Pair<Til, User>> pairs = new ArrayList<>();
+    public RoadmapResponse.FindTilOfStepDTO findTilOfStep(Long groupsId, Long stepId, Boolean isSubmit, Boolean isMember, String name){
+//        List<Pair<Til, User>> pairs = new ArrayList<>();
+//
+//        List<Til> tils = tilRepository.findByStepId(stepId);
+//        for(Til til : tils){
+//            User user = til.getWriter();
+//
+//            // 어떤 틸이 존재한다면, 해당 틸은 반드시 틸이 속한 Step과 Roadmap 그리고 User를 가진다 => userStep 관계와 userRoadmap 관계는 반드시 존재한다. => 존재하지 않은 것에 대한 예외처리 필요 X
+//            UserStep userStep = userStepRepository.findByUserIdAndStepId(user.getId(), stepId).get();
+//            UserRoadmap userRoadmap = userRoadmapRepository.findByRoadmapIdAndUserId(groupsId, user.getId()).get();
+//
+//            if((isSubmit == userStep.getIsSubmit())  && (name == null || name.equals(user.getName()))){
+//                // isMember가 false => 운영자를 포함해서 모든 til을 반환, isMember가 true => 운영자의 til을 제외하고 반환한다
+//                if(!isMember || (isMember && GroupRole.ROLE_MEMBER.equals(userRoadmap.getRole()))){
+//                    Pair<Til, User> pair = Pair.of(til, user);
+//                    pairs.add(pair);
+//                }
+//            }
+//        }
+//
+//        List<RoadmapResponse.FindTilOfStepDTO.MemberDTO> members;
+//
+//        if(isSubmit) {
+//            members = pairs.stream()
+//                    .map(pair -> new RoadmapResponse.FindTilOfStepDTO.MemberDTO(pair.getFirst().getId(), pair.getSecond().getId(),pair.getSecond().getName(), pair.getSecond().getImage(), pair.getFirst().getContent(), pair.getFirst().getSubmitDate().toLocalDate(), pair.getFirst().getCommentNum()))
+//                    .collect(Collectors.toList());
+//        }
+//        else {
+//            members = pairs.stream()
+//                    .map(pair -> new RoadmapResponse.FindTilOfStepDTO.MemberDTO(null, pair.getSecond().getId(), pair.getSecond().getName(), null, null, null, 0))
+//                    .collect(Collectors.toList());
+//        }
+//
+//        return new RoadmapResponse.FindTilOfStepDTO(members);
 
-        List<Til> tils = tilRepository.findByStep_Id(stepsId);
-        for(Til til : tils){
-            User user = til.getWriter();
+        // 특정 로드맵에 속한 UserRoadmap list
+        List<UserRoadmap> userRoadmaps = userRoadmapRepository.findByRoadmapIdAndIsAcceptTrue(groupsId);
+        List<User> users = userStepRepository.findAllByStepIdAndIsSubmitAndName(stepId, isSubmit, name)
+                .stream().map(UserStep::getUser).toList(); // 특정 step에 대해 제출 여부, 사용자 이름으로 user 조회
 
-            // 어떤 틸이 존재한다면, 해당 틸은 반드시 틸이 속한 Step과 Roadmap 그리고 User를 가진다 => userStep 관계와 userRoadmap 관계는 반드시 존재한다. => 존재하지 않은 것에 대한 예외처리 필요 X
-            UserStep userStep = userStepRepository.findByUserIdAndStepId(user.getId(), stepsId).get();
-            UserRoadmap userRoadmap = userRoadmapRepository.findByRoadmapIdAndUserId(groupsId, user.getId()).get();
+        List<RoadmapResponse.FindTilOfStepDTO.MemberDTO> members = new ArrayList<>();
 
-            if((isSubmit == userStep.getIsSubmit())  && (name == null || name.equals(user.getName()))){
-                // isMember가 false => 운영자를 포함해서 모든 til을 반환, isMember가 true => 운영자의 til을 제외하고 반환한다
-                if(!isMember || (isMember && GroupRole.ROLE_MEMBER.equals(userRoadmap.getRole()))){
-                    Pair<Til, User> pair = Pair.of(til, user);
-                    pairs.add(pair);
+        if (isMember) { // 로드맵에 속한 member만 대해
+            for (User user : users) {
+                // 로드맵에서의 사용자의 role을 알기 위해 사용자의 userRoadmap 조회
+                Optional<UserRoadmap> userRoadmap = userRoadmaps.stream().filter(u -> u.getUser().equals(user)).findFirst();
+
+                if (userRoadmap.isPresent() & userRoadmap.get().getRole().equals(GroupRole.ROLE_MEMBER.getValue())) {
+                    Til til = tilRepository.findByStepIdAndUserId(stepId, user.getId());
+                    if (til==null) members.add(new RoadmapResponse.FindTilOfStepDTO.MemberDTO(null, user));
+                    else members.add(new RoadmapResponse.FindTilOfStepDTO.MemberDTO(til, user));
                 }
+            }
+        } else { // 로드맵에 속한 모든 사용자에 대해
+            for (User user : users) {
+                Til til = tilRepository.findByStepIdAndUserId(stepId, user.getId());
+                if (til==null) members.add(new RoadmapResponse.FindTilOfStepDTO.MemberDTO(null, user));
+                else members.add(new RoadmapResponse.FindTilOfStepDTO.MemberDTO(til, user));
             }
         }
 
-        List<RoadmapResponse.FindTilOfStepDTO.MemberDTO> members;
+        return new RoadmapResponse.FindTilOfStepDTO(members);
+    }
 
-        if(isSubmit) {
-            members = pairs.stream()
-                    .map(pair -> new RoadmapResponse.FindTilOfStepDTO.MemberDTO(pair.getFirst().getId(), pair.getSecond().getId(),pair.getSecond().getName(), pair.getSecond().getImage(), pair.getFirst().getContent(), pair.getFirst().getSubmitDate().toLocalDate(), pair.getFirst().getCommentNum()))
-                    .collect(Collectors.toList());
-        }
-        else{
-            members = pairs.stream()
-                    .map(pair -> new RoadmapResponse.FindTilOfStepDTO.MemberDTO(null, pair.getSecond().getId(), pair.getSecond().getName(), null, null, null, 0))
-                    .collect(Collectors.toList());
         }
 
         return new RoadmapResponse.FindTilOfStepDTO(members);
