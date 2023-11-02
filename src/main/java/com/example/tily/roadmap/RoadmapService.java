@@ -334,6 +334,10 @@ public class RoadmapService {
         Roadmap roadmap = roadmapRepository.findByCode(code)
                 .orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_NOT_FOUND));
 
+        Optional<UserRoadmap> ur = userRoadmapRepository.findByRoadmapIdAndUserIdAndIsAcceptTrue(roadmap.getId(), user.getId());
+        if (ur.isPresent())
+            throw new CustomException(ExceptionCode.ROADMAP_ALREADY_MEMBER);
+
         // 코드로 참여시 승인없이 바로 맴버가 된다
         UserRoadmap userRoadmap = UserRoadmap.builder()
                 .roadmap(roadmap)
