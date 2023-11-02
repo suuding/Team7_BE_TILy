@@ -387,13 +387,15 @@ public class RoadmapService {
 
     @Transactional
     public void dismissMember(Long groupsId, Long membersId, User user){
-        checkManagerPermission(groupsId, user);
+        String role = checkMasterAndManagerPermission(groupsId, user);
 
-        UserRoadmap userRoadmap = userRoadmapRepository.findByRoadmapIdAndUserIdAndIsAcceptTrue(groupsId, membersId)
-                .orElseThrow(() -> new CustomException(ExceptionCode.USER_NOT_FOUND));
+        UserRoadmap userRoadmap = getUserBelongRoadmap(groupsId, membersId);
 
-        // 방출하면 Role을 NONE으로
-        userRoadmap.updateRole(GroupRole.ROLE_NONE);
+        // master는 다 강퇴 가능, manager는 member만
+        if (role.equals(GroupRole.ROLE_MANAGER.getValue()) & userRoadmap.getRole().equals(GroupRole.ROLE_MASTER.getValue()))
+            throw new CustomException(ExceptionCode.ROADMAP_DISMISS_FORBIDDEN);
+
+        userRoadmap.updateRole(GroupRole.ROLE_NONE.getValue());
     }
 
     @Transactional
