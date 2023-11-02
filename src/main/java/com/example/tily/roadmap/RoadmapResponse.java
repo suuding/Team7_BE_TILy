@@ -1,12 +1,16 @@
 package com.example.tily.roadmap;
 
 import com.example.tily.roadmap.relation.GroupRole;
+import com.example.tily.roadmap.relation.UserRoadmap;
 import com.example.tily.step.Step;
 import com.example.tily.step.reference.Reference;
+import com.example.tily.til.Til;
 import com.example.tily.user.Role;
 import com.example.tily.user.User;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 
@@ -17,16 +21,17 @@ public class RoadmapResponse {
         }
     }
 
-    public record FindGroupRoadmapDTO(Creator creator, String name, String description, Role role, Long recentTilId, String code, List<StepDTO> steps) {
-        public FindGroupRoadmapDTO(Roadmap roadmap, List<StepDTO> steps, User user, Long recentTilId) {
-            this(new Creator(user.getName(), user.getImage()), roadmap.getName(), roadmap.getDescription(), user.getRole(), recentTilId, roadmap.getCode(), steps);
+    public record FindGroupRoadmapDTO(Creator creator, String name, String description, String myRole, Long recentTilId, Long recentStepId, Boolean isPublic, Boolean isRecruit, String code, List<StepDTO> steps) {
+        public FindGroupRoadmapDTO(Roadmap roadmap, List<StepDTO> steps, User user, Long recentTilId, Long recentStepId, String myRole) {
+            this(new Creator(user.getName(), user.getImage()), roadmap.getName(), roadmap.getDescription(), myRole, recentTilId, recentStepId, roadmap.getIsPublic(), roadmap.getIsRecruit(), roadmap.getCode(), steps);
         }
 
         public record Creator(String name, String image) {}
 
-        public record StepDTO(Long id, String title, String description, ReferenceDTOs references) {
+        public record StepDTO(Long id, String title, String description, String dueDate, ReferenceDTOs references) {
+
             public StepDTO(Step step, List<ReferenceDTOs.ReferenceDTO> youtubeList, List<ReferenceDTOs.ReferenceDTO> webList) {
-                this(step.getId(), step.getTitle(), step.getDescription(), new ReferenceDTOs(youtubeList, webList));
+                this(step.getId(), step.getTitle(), step.getDescription(), step.getDueDate()!=null ? DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(step.getDueDate()) : null, new ReferenceDTOs(youtubeList, webList));
             }
         }
     }

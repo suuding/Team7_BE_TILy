@@ -169,7 +169,23 @@ public class RoadmapService {
                         .collect(Collectors.toList())))
                 .collect(Collectors.toList());
 
-        return new RoadmapResponse.FindGroupRoadmapDTO(roadmap, steps, user, recentTilId);
+        Optional<UserRoadmap> userRoadmap = userRoadmapRepository.findByRoadmapIdAndUserIdAndIsAcceptTrue(id, user.getId());
+        String myRole;
+        Long recentTilId;
+        Long recentStepId;
+
+        if (userRoadmap.isPresent()) {
+            myRole = userRoadmap.get().getRole();
+            List<Til> tils = tilRepository.findByUserIdByOrderByUpdatedDateDesc(id, user.getId());
+            recentTilId = !tils.isEmpty() ? tils.get(0).getId() : null;
+            recentStepId = !tils.isEmpty() ? tils.get(0).getStep().getId() : null;
+        } else {
+            myRole = "none";
+            recentTilId = null;
+            recentStepId = null;
+        }
+
+        return new RoadmapResponse.FindGroupRoadmapDTO(roadmap, steps, roadmap.getCreator(), recentTilId, recentStepId, myRole);
     }
 
     @Transactional
