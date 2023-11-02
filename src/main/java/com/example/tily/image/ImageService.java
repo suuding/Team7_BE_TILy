@@ -15,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 @RequiredArgsConstructor
 public class ImageService {
-    private final ImageRepository imageRepository;
     private final UserRepository userRepository;
     private final RoadmapRepository roadmapRepository;
     private final S3Service s3Service;
