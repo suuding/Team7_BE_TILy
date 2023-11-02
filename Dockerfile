@@ -10,7 +10,7 @@ COPY . .
 # gradle 빌드 시 proxy 설정을 gradle.properties에 추가
 RUN echo "systemProp.http.proxyHost=krmp-proxy.9rum.cc\nsystemProp.http.proxyPort=3128\nsystemProp.https.proxyHost=krmp-proxy.9rum.cc\nsystemProp.https.proxyPort=3128" > /root/.gradle/gradle.properties
 
-# gradle 초기화
+# gradle 초기
 RUN gradle init
 
 # gradle wrapper를 프로젝트에 추가
@@ -26,4 +26,4 @@ COPY --from=builder /home/gradle/project/build/libs/TILy-0.0.1-SNAPSHOT.jar .
 ENV DATABASE_URL=jdbc:mariadb://mariadb/krampoline
 
 # 빌드 결과 jar 파일을 실행
-CMD ["java", "-jar", "-Dspring.profiles.active=prod", "/home/gradle/project/build/libs/kakao-1.0.jar"]
+CMD ["java", "-jar", "-Dspring.profiles.active=prod", "/home/gradle/project/build/libs/TILy-0.0.1-SNAPSHOT.jar"]
