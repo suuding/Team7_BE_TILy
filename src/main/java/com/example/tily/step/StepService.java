@@ -87,7 +87,7 @@ public class StepService {
 
         // 해당 페이지로 들어온 사람의 역할 (master, manager, member, none)
         Optional<UserRoadmap> userRoadmap = userRoadmapRepository.findByRoadmapIdAndUserIdAndIsAcceptTrue(roadmapId, user.getId());
-        String role = userRoadmap.isPresent() ? userRoadmap.get().getRole().getValue() : "none";
+        String role = userRoadmap.isPresent() ? userRoadmap.get().getRole() : "none";
         int progress = userRoadmap.isPresent() ? userRoadmap.get().getProgress() : 0;
 
         List<StepResponse.FindAllStepDTO.StepDTO> stepDTOs = steps.stream()
