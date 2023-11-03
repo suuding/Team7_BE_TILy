@@ -16,14 +16,27 @@ spec:
       containers:
         - name: mariadb
           # 여러분의 mariadb image 주소를 입력해주세요.
-          image: mariadb:15.1
+          image: mariadb:10.6.12
           env:
             - name: TZ
               value: Asia/Seoul
+            - name: MARIADB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: MARIADB_USERNAME
             - name: MARIADB_ROOT_PASSWORD
-              value: root
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: MARIADB_ROOT_PASSWORD
+            - name: MARIADB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: MARIADB_PASSWORD
             - name: MARIADB_DATABASE
-              value: krampoline
+              value: tily
             - name: MARIADB_DISABLE_UPGRADE_BACKUP
               value: '1'
           volumeMounts:

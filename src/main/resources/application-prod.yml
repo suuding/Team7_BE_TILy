@@ -1,5 +1,31 @@
 spring :
-  jpa :
-    properties :
-      hibernate :
-        dialect : org.hibernate.dialect.MySQL5InnoDBDialect
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    hibernate:
+      ddl-auto: none
+      
+  config:
+    import:
+      - classpath:/application-secret.yml
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username:
+    password:
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+  redis: # redis 설정 (로컬)
+    host: redis
+    port: 6379
+
+  datasource:
+    url: jdbc:mariadb://mariadb:3306/tily
+    username:
+    password:
+    driver-class-name: org.mariadb.jdbc.Driver
