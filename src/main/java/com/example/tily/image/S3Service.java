@@ -4,7 +4,8 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;
 
 import com.amazonaws.util.IOUtils;
-import com.example.tily._core.errors.exception.FileDownloadFailedException;
+import com.example.tily._core.errors.exception.CustomException;
+import com.example.tily._core.errors.exception.ExceptionCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -66,7 +67,7 @@ public class S3Service implements FileService{
         try {
             return IOUtils.toByteArray(s3ObjectContent);
         }catch (IOException e ){
-            throw new FileDownloadFailedException();
+            throw new CustomException(ExceptionCode.IMAGE_DOWNLOAD_FAIL);
         }
     }
 

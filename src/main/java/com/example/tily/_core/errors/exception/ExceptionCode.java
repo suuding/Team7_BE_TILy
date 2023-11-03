@@ -65,6 +65,7 @@ public enum ExceptionCode {
 
     // image 관련 에러
     IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 image를 찰을 수 없습니다."),
+    IMAGE_DOWNLOAD_FAIL(HttpStatus.NOT_FOUND, "파일이 서버에 존재하지 않거나 다운로드 경로가 잘못되었습니다"),
 
 
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "올바른 형식을 입력해주세요.");
