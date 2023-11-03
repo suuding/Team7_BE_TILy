@@ -22,9 +22,9 @@ public class TilResponse {
         }
     }
 
-    public record ViewDTO(String content, Boolean isPersonal, Boolean isSubmit, StepDTO step, List<CommentDTO> comments) {
+    public record ViewDTO(String content, Boolean isPersonal, Boolean isSubmit, String roadmapName, StepDTO step, List<CommentDTO> comments) {
         public ViewDTO(Step step, Til til, Boolean isSubmit, List<CommentDTO> comments) {
-            this(til.getContent(), til.isPersonal(), isSubmit, new StepDTO(step), comments);
+            this(til.getContent(), til.isPersonal(), isSubmit, step.getRoadmap().getName(), new StepDTO(step), comments);
         }
 
         public record StepDTO(Long id, String title) {

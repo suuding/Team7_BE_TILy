@@ -130,6 +130,12 @@ public class TilService {
         if (userstep.getIsSubmit().equals(true))
             throw new CustomException(ExceptionCode.TIL_ALREADY_SUBMIT);
 
+        // 제출 시간 지났는데 제출하려고할때
+        LocalDateTime now = LocalDateTime.now();
+        if (now.isAfter(step.getDueDate()))
+            throw new CustomException(ExceptionCode.TIL_END_DUEDATE);
+
+
         til.submitTil(requestDTO.submitContent()); // 내용, 제출 내용 저장
         userstep.submit(); // 제출 여부(완료) 저장
         userRoadmap.updateProgress(calProgress(roadmapId, user.getId())); // 진도율 저장

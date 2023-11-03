@@ -506,7 +506,7 @@ public class RoadmapControllerTest {
         // given
         Long groupsId = 12L;
         Long usersId = 2L;
-        RoadmapRequest.ChangeMemberRoleDTO requestDTO = new RoadmapRequest.ChangeMemberRoleDTO(GroupRole.ROLE_MANAGER);
+        RoadmapRequest.ChangeMemberRoleDTO requestDTO = new RoadmapRequest.ChangeMemberRoleDTO(GroupRole.ROLE_MANAGER.getValue());
 
         String requestBody = om.writeValueAsString(requestDTO);
 
@@ -528,7 +528,7 @@ public class RoadmapControllerTest {
         // given
         Long groupsId = 12L;
         Long usersId = 10L;
-        RoadmapRequest.ChangeMemberRoleDTO requestDTO = new RoadmapRequest.ChangeMemberRoleDTO(GroupRole.ROLE_MANAGER);
+        RoadmapRequest.ChangeMemberRoleDTO requestDTO = new RoadmapRequest.ChangeMemberRoleDTO(GroupRole.ROLE_MANAGER.getValue());
 
         String requestBody = om.writeValueAsString(requestDTO);
 
@@ -550,7 +550,7 @@ public class RoadmapControllerTest {
         // given
         Long groupsId = 20L;
         Long usersId = 2L;
-        RoadmapRequest.ChangeMemberRoleDTO requestDTO = new RoadmapRequest.ChangeMemberRoleDTO(GroupRole.ROLE_MANAGER);
+        RoadmapRequest.ChangeMemberRoleDTO requestDTO = new RoadmapRequest.ChangeMemberRoleDTO(GroupRole.ROLE_MANAGER.getValue());
 
         String requestBody = om.writeValueAsString(requestDTO);
 

@@ -30,6 +30,7 @@ public enum ExceptionCode {
     TIL_SUBMIT_FORBIDDEN(HttpStatus.FORBIDDEN, "til을 제출할 권한이 없습니다."),
     TIL_ALREADY_SUBMIT(HttpStatus.BAD_REQUEST, "이미 til을 제출하였습니다."),
     TIL_DELETE_FORBIDDEN(HttpStatus.FORBIDDEN, "해당 til을 삭제할 권한이 없습니다."),
+    TIL_END_DUEDATE(HttpStatus.BAD_REQUEST, "제출 시간이 지나 til을 제출할 수 없습니다."),
 
     // roadmap 관련 에러
     ROADMAP_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 roadmap을 찾을 수 없습니다."),
@@ -37,11 +38,17 @@ public enum ExceptionCode {
     ROADMAP_NOT_BELONG(HttpStatus.NOT_FOUND, "해당 reoadmap에 속하지 않습니다."),
     ROADMAP_FORBIDDEN(HttpStatus.FORBIDDEN, "해당 roadmap을 조회할 권한이 없습니다."),
     ROADMAP_SUBMIT_FORBIDDEN(HttpStatus.FORBIDDEN, "해당 til을 제출할 권한이 없습니다."),
+    ROADMAP_ALREADY_APPLY(HttpStatus.BAD_REQUEST, "해당 로드맵에 이미 신청했습니다."),
+    ROADMAP_REJECT(HttpStatus.BAD_REQUEST, "로드맵 신청이 거절되었습니다."),
+    ROADMAP_ALREADY_MEMBER(HttpStatus.BAD_REQUEST, "이미 해당 로드맵에 속했습니다."),
+    ROADMAP_DISMISS_FORBIDDEN(HttpStatus.FORBIDDEN, "로드맵의 master를 강퇴할 권한이 없습니다."),
+    ROADMAP_ONLY_MASTER(HttpStatus.FORBIDDEN, "master 권한이 필요합니다."),
 
     // step 관련 에러
     STEP_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 step을 찾을 수 없습니다."),
     STEP_FORBIDDEN(HttpStatus.FORBIDDEN, "해당 step을 조회할 권한이 없습니다."),
     STEP_NOT_INCLUDE(HttpStatus.BAD_REQUEST, "해당 step은 roadmap에 속하지 않았습니다."),
+    STEP_ROADMAP_FORBIDDEN(HttpStatus.FORBIDDEN, "해당 로드맵에 step을 생성할 권한이 없습니다."),
 
     // comment 관련 에러
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 댓글을 찾을 수 없습니다."),
@@ -51,7 +58,7 @@ public enum ExceptionCode {
     // alarm 관련 에러
     ALARM_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 알림을 찾을 수 없습니다."),
 
-    DATE_WRONG(HttpStatus.BAD_REQUEST, "입력한 날짜를 찾을 수 없습니다."),
+    DATE_WRONG(HttpStatus.BAD_REQUEST, "잘못된 날짜 형식입니다."),
 
     // reference 관련 에러
     REFERENCE_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 reference를 찾을 수 없습니다."),
