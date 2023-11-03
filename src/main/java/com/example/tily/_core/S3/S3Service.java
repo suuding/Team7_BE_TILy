@@ -38,7 +38,7 @@ public class S3Service implements FileService {
                     new PutObjectRequest(s3Component.getBucket(), fileName, inputStream, objectMetadata).withCannedAcl(CannedAccessControlList.PublicReadWrite)
             );
         } catch (IOException e) {
-            throw new IllegalArgumentException(String.format("파일 변환 중 에러가 발생하였습니다. (%s)", file.getOriginalFilename()));
+            throw new CustomException(ExceptionCode.FILE_UPLOAD_FAIL);
         }
 
         return fileName;
@@ -87,9 +87,9 @@ public class S3Service implements FileService {
         return folder;
     }
 
-    private void validateFileExists(String fileName) throws FileNotFoundException {
+    private void validateFileExists(String fileName) {
         if(!amazonS3.doesObjectExist(s3Component.getBucket(), fileName))
-            throw new FileNotFoundException();
+            throw new CustomException(ExceptionCode.IMAGE_NOT_FOUND);
     }
 
     //파일 이름 생성 로직
@@ -102,7 +102,7 @@ public class S3Service implements FileService {
         try{
             return fileName.substring(fileName.lastIndexOf("."));
         }catch(StringIndexOutOfBoundsException e) {
-            throw new IllegalArgumentException(String.format("잘못된 형식의 파일 (%s) 입니다.",fileName));
+            throw new CustomException(ExceptionCode.INVALID_FILE_FORMAT);
         }
     }
 
