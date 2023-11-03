@@ -1,4 +1,4 @@
-package com.example.tily.image;
+package com.example.tily._core.S3;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;
@@ -17,7 +17,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class S3Service implements FileService{
+public class S3Service implements FileService {
     private final S3Component s3Component;
     private final AmazonS3 amazonS3;
 

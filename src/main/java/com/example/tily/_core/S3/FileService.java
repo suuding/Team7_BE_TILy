@@ -1,5 +1,6 @@
-package com.example.tily.image;
+package com.example.tily._core.S3;
 
+import com.example.tily._core.S3.FileFolder;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileNotFoundException;
