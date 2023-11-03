@@ -100,7 +100,7 @@ public class RoadmapControllerTest {
         // step1의 참조
         RoadmapRequest.ReferenceDTOs references1 = new RoadmapRequest.ReferenceDTOs(youtubeReferences, webReferences);
 
-        RoadmapRequest.StepDTO step1 = new RoadmapRequest.StepDTO(null, "데드락(Deadlock)", "스텝 1", references1, LocalDateTime.of(2023, 10, 1, 19 ,28));
+        RoadmapRequest.StepDTO step1 = new RoadmapRequest.StepDTO(null, "데드락(Deadlock)", "스텝 1", references1, "2023-11-03 10:58:47");
 
         List<RoadmapRequest.StepDTO> steps = new ArrayList<>();
         steps.add(step1);
@@ -149,7 +149,7 @@ public class RoadmapControllerTest {
         // step1의 참조
         RoadmapRequest.ReferenceDTOs references1 = new RoadmapRequest.ReferenceDTOs(youtubeReferences, webReferences);
 
-        RoadmapRequest.StepDTO step1 = new RoadmapRequest.StepDTO(null, "데드락(Deadlock)", "스텝 1", references1, LocalDateTime.of(2023, 10, 1, 19 ,28));
+        RoadmapRequest.StepDTO step1 = new RoadmapRequest.StepDTO(null, "데드락(Deadlock)", "스텝 1", references1, "2023-11-03 10:58:47");
 
         List<RoadmapRequest.StepDTO> steps = new ArrayList<>();
         steps.add(step1);
