@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
@@ -55,7 +54,7 @@ public class S3Service implements FileService {
     }
 
     @Override
-    public byte[] downloadFile(String fileName) throws FileNotFoundException {
+    public byte[] downloadFile(String fileName) {
 
         //파일 유무 확인
         validateFileExists(fileName);
