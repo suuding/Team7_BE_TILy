@@ -1,4 +1,4 @@
-package com.example.tily.image;
+package com.example.tily._core.S3;
 
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;

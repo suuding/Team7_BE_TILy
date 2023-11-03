@@ -1,5 +1,7 @@
 package com.example.tily.image;
 
+import com.example.tily._core.S3.FileFolder;
+import com.example.tily._core.S3.S3Service;
 import com.example.tily._core.errors.exception.CustomException;
 import com.example.tily._core.errors.exception.ExceptionCode;
 import com.example.tily.roadmap.Roadmap;

@@ -1,22 +1,22 @@
-package com.example.tily.image;
+package com.example.tily._core.S3;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;
 
 import com.amazonaws.util.IOUtils;
-import com.example.tily._core.errors.exception.FileDownloadFailedException;
+import com.example.tily._core.errors.exception.CustomException;
+import com.example.tily._core.errors.exception.ExceptionCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class S3Service implements FileService{
+public class S3Service implements FileService {
     private final S3Component s3Component;
     private final AmazonS3 amazonS3;
 
@@ -37,7 +37,7 @@ public class S3Service implements FileService{
                     new PutObjectRequest(s3Component.getBucket(), fileName, inputStream, objectMetadata).withCannedAcl(CannedAccessControlList.PublicReadWrite)
             );
         } catch (IOException e) {
-            throw new IllegalArgumentException(String.format("파일 변환 중 에러가 발생하였습니다. (%s)", file.getOriginalFilename()));
+            throw new CustomException(ExceptionCode.FILE_UPLOAD_FAIL);
         }
 
         return fileName;
@@ -54,7 +54,7 @@ public class S3Service implements FileService{
     }
 
     @Override
-    public byte[] downloadFile(String fileName) throws FileNotFoundException {
+    public byte[] downloadFile(String fileName) {
 
         //파일 유무 확인
         validateFileExists(fileName);
@@ -66,7 +66,7 @@ public class S3Service implements FileService{
         try {
             return IOUtils.toByteArray(s3ObjectContent);
         }catch (IOException e ){
-            throw new FileDownloadFailedException();
+            throw new CustomException(ExceptionCode.IMAGE_DOWNLOAD_FAIL);
         }
     }
 
@@ -86,9 +86,9 @@ public class S3Service implements FileService{
         return folder;
     }
 
-    private void validateFileExists(String fileName) throws FileNotFoundException {
+    private void validateFileExists(String fileName) {
         if(!amazonS3.doesObjectExist(s3Component.getBucket(), fileName))
-            throw new FileNotFoundException();
+            throw new CustomException(ExceptionCode.IMAGE_NOT_FOUND);
     }
 
     //파일 이름 생성 로직
@@ -101,7 +101,7 @@ public class S3Service implements FileService{
         try{
             return fileName.substring(fileName.lastIndexOf("."));
         }catch(StringIndexOutOfBoundsException e) {
-            throw new IllegalArgumentException(String.format("잘못된 형식의 파일 (%s) 입니다.",fileName));
+            throw new CustomException(ExceptionCode.INVALID_FILE_FORMAT);
         }
     }
 
