@@ -50,4 +50,5 @@ public class User extends BaseTimeEntity {
         this.password  = password;
     }
 
+    public void updateImage (String image) {this.image = image; }
 }

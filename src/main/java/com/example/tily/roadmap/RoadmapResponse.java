@@ -60,9 +60,9 @@ public class RoadmapResponse {
         }
     }
 
-    public record GroupDTO (Long id, String name, int stepNum, Creator creator) {
-        public GroupDTO(Roadmap roadmap) {
-            this(roadmap.getId(), roadmap.getName(), roadmap.getStepNum(), new Creator(roadmap.getCreator()));
+    public record GroupDTO (Long id, String name, int stepNum, Creator creator, boolean isManager) {
+        public GroupDTO(Roadmap roadmap, Boolean isManager) {
+            this(roadmap.getId(), roadmap.getName(), roadmap.getStepNum(), new Creator(roadmap.getCreator()), isManager);
         }
 
         public record Creator(Long id, String name, String image) {

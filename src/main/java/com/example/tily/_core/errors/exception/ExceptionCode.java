@@ -63,6 +63,10 @@ public enum ExceptionCode {
     // reference 관련 에러
     REFERENCE_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 reference를 찾을 수 없습니다."),
 
+    // image 관련 에러
+    IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 image를 찰을 수 없습니다."),
+
+
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "올바른 형식을 입력해주세요.");
     private final HttpStatus httpStatus;
     private final String message;
