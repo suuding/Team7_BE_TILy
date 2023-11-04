@@ -5,7 +5,7 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 k8s/secret.yml
-**/src/main/resources/application-secret.yml
+src/main/resources/application-secret.yml
 
 ### STS ###
 .apt_generated
