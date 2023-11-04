@@ -34,10 +34,10 @@ public class Til extends BaseTimeEntity {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false, columnDefinition="TEXT", length = 5000)
+    @Column(columnDefinition="TEXT", length = 5000)
     private String content;
 
-    @Column(nullable = false, columnDefinition="TEXT", length = 5000)
+    @Column(columnDefinition="TEXT", length = 5000)
     private String submitContent;
 
     @Column
