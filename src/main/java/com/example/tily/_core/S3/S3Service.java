@@ -75,12 +75,11 @@ public class S3Service implements FileService {
 
         String folder = "";
         if(fileFolder == FileFolder.USER_IMAGE) {
-            folder = s3Component.getUserFolder();
-
-        }else if(fileFolder ==FileFolder.ROADMAP_IMAGE){
-            folder = s3Component.getRoadmapFolder();
+            folder = s3Component.getUserFolder()+"/";
+        }else if(fileFolder == FileFolder.ROADMAP_IMAGE){
+            folder = s3Component.getRoadmapFolder()+"/";
         }else if(fileFolder == FileFolder.POST_IMAGE){
-            folder = s3Component.getPostFolder();
+            folder = s3Component.getPostFolder()+"/";
         }
 
         return folder;

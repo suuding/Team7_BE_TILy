@@ -23,8 +23,7 @@ public class ImageService {
 
     @Transactional
     public ImageResponse.UserImageDTO findUserImage(Long userId){
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(ExceptionCode.USER_NOT_FOUND));
+        User user = getUserById(userId);
 
         String url = s3Service.getFileUrl(user.getImage());
 
@@ -32,9 +31,11 @@ public class ImageService {
     }
 
     @Transactional
-    public void updateUserImage(Long userId, MultipartFile multipartFile) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(ExceptionCode.USER_NOT_FOUND));
+    public void updateUserImage(Long userId, MultipartFile multipartFile, User userDetails) {
+        if (!userDetails.getId().equals(userId))
+            throw new CustomException(ExceptionCode.USER_UPDATE_FORBIDDEN);
+        
+        User user = getUserById(userId);
 
         String storageFileName = s3Service.uploadFile(multipartFile, FileFolder.USER_IMAGE);
         if(user.getImage() != null) {
@@ -46,8 +47,7 @@ public class ImageService {
 
     @Transactional
     public ImageResponse.RoadmapImageDTO findRoadmapImage(Long roadmapId){
-        Roadmap roadmap = roadmapRepository.findById(roadmapId)
-                .orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_NOT_FOUND));
+        Roadmap roadmap = getRoadmapById(roadmapId);
 
         String url = s3Service.getFileUrl(roadmap.getImage());
 
@@ -56,8 +56,7 @@ public class ImageService {
 
     @Transactional
     public void updateRoadmapImage(Long roadmapId, MultipartFile multipartFile) {
-        Roadmap roadmap = roadmapRepository.findById(roadmapId)
-                .orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_NOT_FOUND));
+        Roadmap roadmap = getRoadmapById(roadmapId);
 
         String storageFileName = s3Service.uploadFile(multipartFile, FileFolder.ROADMAP_IMAGE);
         if(roadmap.getImage() != null) {
@@ -73,5 +72,13 @@ public class ImageService {
         String url = s3Service.getFileUrl(storageFileName);
 
         return new ImageResponse.PostImageDTO(url);
+    }
+
+    private User getUserById(Long userId) {
+        return userRepository.findById(userId).orElseThrow(() -> new CustomException(ExceptionCode.USER_NOT_FOUND));
+    }
+
+    private Roadmap getRoadmapById(Long roadmapId) {
+        return roadmapRepository.findById(roadmapId).orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_NOT_FOUND));
     }
 }

@@ -30,8 +30,7 @@ public class RoadmapRequest {
             String title,
             String description,
             ReferenceDTOs references,
-            @Pattern(regexp = "^[0-9]{4}+-[0-9]{2}+-[0-9]{2}+( )+[0-9]{2}+:[0-9]{2}+:[0-9]{2}$", message = "잘못된 날짜 형식입니다.")
-            String dueDate) {}
+            LocalDateTime dueDate) {}
 
     public record ReferenceDTOs(List<ReferenceDTO> youtube, List<ReferenceDTO> web) {
     }

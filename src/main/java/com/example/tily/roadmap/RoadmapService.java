@@ -85,7 +85,7 @@ public class RoadmapService {
                     .roadmap(roadmap)
                     .title(stepDTO.title())
                     .description(stepDTO.description())
-                    .dueDate(stepDTO.dueDate()!=null ? parseDate(stepDTO.dueDate()) : null)
+                    .dueDate(stepDTO.dueDate()!=null ? stepDTO.dueDate() : null)
                     .build();
             stepRepository.save(step);
 
