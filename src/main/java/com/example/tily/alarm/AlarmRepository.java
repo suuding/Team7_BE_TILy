@@ -14,4 +14,6 @@ public interface AlarmRepository extends JpaRepository<Alarm, Long> {
             "join fetch a.comment " +
             "where a.receiver.id=:receiverId and a.isChecked=false")
     List<Alarm> findAllByReceiverId(@Param("receiverId") Long receiverId, Sort sort);
+
+    void deleteByCommentId(Long commentId);
 }
