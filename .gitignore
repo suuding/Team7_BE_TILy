@@ -4,6 +4,9 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
+k8s/secret.yml
+src/main/resources/application-secret.yml
+.DS_Store
 
 ### STS ###
 .apt_generated
