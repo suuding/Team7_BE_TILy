@@ -3,7 +3,7 @@ CREATE SCHEMA IF NOT EXISTS `tily` DEFAULT CHARACTER SET utf8mb4;
 USE `tily`;
 
 
-CREATE TABLE user_tb (
+CREATE TABLE user_tb IF NOT EXISTS user_tb (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL,
@@ -14,7 +14,7 @@ CREATE TABLE user_tb (
     updated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE roadmap_tb (
+CREATE TABLE roadmap_tb IF NOT EXISTS roadmap_tb (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     category VARCHAR(255) NOT NULL,
     name VARCHAR(255) NOT NULL,
@@ -30,7 +30,7 @@ CREATE TABLE roadmap_tb (
     updated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE step_tb (
+CREATE TABLE step_tb IF NOT EXISTS step_tb (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     roadmap_id BIGINT,
@@ -38,7 +38,7 @@ CREATE TABLE step_tb (
     due_date TIMESTAMP
 );
 
-CREATE TABLE til_tb (
+CREATE TABLE til_tb IF NOT EXISTS til_tb (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     content VARCHAR(255),
     submit_content VARCHAR(255),
@@ -52,7 +52,7 @@ CREATE TABLE til_tb (
     updated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE comment_tb (
+CREATE TABLE comment_tb IF NOT EXISTS comment_tb (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     til_id BIGINT,
     writer_id BIGINT,
@@ -61,14 +61,14 @@ CREATE TABLE comment_tb (
     updated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE reference_tb (
+CREATE TABLE reference_tb IF NOT EXISTS reference_tb (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     step_id BIGINT,
     category VARCHAR(255) NOT NULL,
     link VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE user_roadmap_tb (
+CREATE TABLE user_roadmap_tb IF NOT EXISTS user_roadmap_tb (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     content VARCHAR(255),
     is_accept BOOLEAN,
@@ -80,7 +80,7 @@ CREATE TABLE user_roadmap_tb (
     updated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE user_step_tb (
+CREATE TABLE user_step_tb IF NOT EXISTS user_step_tb (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     is_submit BOOLEAN NOT NULL,
     roadmap_id BIGINT,
@@ -88,7 +88,7 @@ CREATE TABLE user_step_tb (
     user_id BIGINT
 );
 
-CREATE TABLE alarm_tb (
+CREATE TABLE alarm_tb IF NOT EXISTS alarm_tb (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     til_id BIGINT,
     comment_id BIGINT,
