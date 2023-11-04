@@ -61,7 +61,7 @@ public class CommentService {
                 .orElseThrow(() -> new CustomException(ExceptionCode.COMMENT_NOT_FOUND));
 
 
-        if(!comment.getWriter().equals(user)) {
+        if(!comment.getWriter().getId().equals(user.getId())) {
             throw new CustomException(ExceptionCode.COMMENT_UPDATE_FORBIDDEN);
         }
 
@@ -73,11 +73,11 @@ public class CommentService {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ExceptionCode.COMMENT_NOT_FOUND));
 
-        if(!comment.getWriter().equals(user)) {
+        if(!comment.getWriter().getId().equals(user.getId())) {
             throw new CustomException(ExceptionCode.COMMENT_DELETE_FORBIDDEN);
-
         }
 
+        alarmRepository.deleteByCommentId(id);
         commentRepository.deleteById(id);
     }
 }
