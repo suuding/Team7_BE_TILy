@@ -12,7 +12,7 @@ public class StepResponse {
         }
     }
 
-    public record FindReferenceDTO(Long id, String description, List<YoutubeDTO> youtubeDTOs, List<WebDTO> webDTOs) {
+    public record FindReferenceDTO(Long id, String description, List<YoutubeDTO> youtubes, List<WebDTO> webs) {
         public FindReferenceDTO(Step step, List<YoutubeDTO> youtubeDTOs, List<WebDTO> webDTOs) {
             this(step.getId(), step.getDescription(), youtubeDTOs, webDTOs);
         }
@@ -22,11 +22,11 @@ public class StepResponse {
         public record WebDTO(Long id, String link) {}
     }
 
-    public record FindAllStepDTO(List<StepDTO> steps, int progress, String role) {
+    public record FindAllStepDTO(List<StepDTO> steps, int progress, String myRole) {
 
         public record StepDTO(Long id, String title, Boolean isSubmit, Long tilId) {
             public StepDTO(Step step, Til til) {
-                this(step.getId(), step.getTitle(), til != null, til==null ? null : til.getId());
+                this(step.getId(), step.getTitle(), til==null ? false : (til.getSubmitContent()!=null), til==null ? null : til.getId());
             }
         }
     }
