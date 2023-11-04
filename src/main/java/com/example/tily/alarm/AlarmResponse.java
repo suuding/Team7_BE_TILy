@@ -45,6 +45,6 @@ public class AlarmResponse {
         }
     }
 
-    public record FindAllDTO(List<AlarmDTO> alarmDTOs) {
+    public record FindAllDTO(List<AlarmDTO> alarms)                                                       {
     }
 }
