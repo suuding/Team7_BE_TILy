@@ -1,8 +1,10 @@
 package com.example.tily.image;
 
+import com.example.tily._core.security.CustomUserDetails;
 import com.example.tily._core.utils.ApiUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,10 +22,10 @@ public class ImageController {
     }
 
     @PostMapping("/user/{userId}/image")
-    public ResponseEntity<?> uploadUserImage(@PathVariable Long userId,
-                                             @RequestParam("image") MultipartFile file) {
+    public ResponseEntity<?> uploadUserImage(@PathVariable Long userId, @RequestParam("image") MultipartFile file,
+                                             @AuthenticationPrincipal CustomUserDetails userDetails) {
 
-        imageService.updateUserImage(userId, file);
+        imageService.updateUserImage(userId, file, userDetails.getUser());
 
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
