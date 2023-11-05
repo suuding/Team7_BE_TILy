@@ -1,4 +1,4 @@
-package com.example.tily.SocialLogin;
+package com.example.tily.socialLogin;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +17,7 @@ public class SocialLoginController {
 
     // 카카오 로그인
     @GetMapping("/user/kakao/callback")
-    public SocialUserInfoDto kakaoLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
+    public SocialLoginResponse.UserInfoDto kakaoLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
         return kakaoLoginService.kakaoLogin(code, response);
     }
 }

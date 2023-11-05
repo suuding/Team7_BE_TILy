@@ -1,4 +1,4 @@
-package com.example.tily.SocialLogin;
+package com.example.tily.socialLogin;
 
 import com.example.tily._core.security.CustomUserDetails;
 import com.example.tily._core.security.JWTProvider;
@@ -33,25 +33,24 @@ public class KakaoLoginService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
 
-    public SocialUserInfoDto kakaoLogin(String code, HttpServletResponse response) throws JsonProcessingException {
+    public SocialLoginResponse.UserInfoDto kakaoLogin(String code, HttpServletResponse response) throws JsonProcessingException {
         // 1. "인가 코드"로 "액세스 토큰" 요청
         String accessToken = getAccessToken(code);
 
         // 2. 토큰으로 카카오 API 호출
-        SocialUserInfoDto kakaoUserInfo = getKakaoUserInfo(accessToken);
+        SocialLoginResponse.UserInfoDto userInfo = getUserInfo(accessToken);
 
         // 3. 카카오ID로 회원가입 처리
-        User kakaoUser = registerKakaoUserIfNeed(kakaoUserInfo);
+        User kakaoUser = registerUser(userInfo);
 
         // 4. 로그인 처리
         Authentication authentication = forceLogin(kakaoUser);
 
         // 5. response Header에 JWT 토큰 추가
-        kakaoUsersAuthorizationInput(authentication, response);
-        return kakaoUserInfo;
+        putJwtToken(authentication, response);
+        return userInfo;
     }
 
-    // 1. "인가 코드"로 "액세스 토큰" 요청
     private String getAccessToken(String code) throws JsonProcessingException {
         // HTTP Header 생성
         HttpHeaders headers = new HttpHeaders();
@@ -82,8 +81,7 @@ public class KakaoLoginService {
         return jsonNode.get("access_token").asText();
     }
 
-    // 2. 토큰으로 카카오 API 호출
-    private SocialUserInfoDto getKakaoUserInfo(String accessToken) throws JsonProcessingException {
+    private SocialLoginResponse.UserInfoDto getUserInfo(String accessToken) throws JsonProcessingException {
         // HTTP Header 생성
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + accessToken);
@@ -109,11 +107,10 @@ public class KakaoLoginService {
         String nickname = jsonNode.get("properties")
                 .get("nickname").asText();
 
-        return new SocialUserInfoDto(id, nickname, email);
+        return new SocialLoginResponse.UserInfoDto(id, nickname, email);
     }
 
-    // 3. 카카오ID로 회원가입 처리
-    private User registerKakaoUserIfNeed (SocialUserInfoDto kakaoUserInfo) {
+    private User registerUser(SocialLoginResponse.UserInfoDto kakaoUserInfo) {
         // DB 에 중복된 email이 있는지 확인
         String kakaoEmail = kakaoUserInfo.email();
         String nickname = kakaoUserInfo.nickname();
@@ -121,8 +118,8 @@ public class KakaoLoginService {
                 .orElse(null);
 
         if (kakaoUser == null) {
-            // 회원가입, password: random UUID
-            String password = UUID.randomUUID().toString();
+            // 회원가입
+            String password = UUID.randomUUID().toString(); // 비밀번호는 랜던
             String encodedPassword = passwordEncoder.encode(password);
 
             kakaoUser = User.builder()
@@ -137,7 +134,6 @@ public class KakaoLoginService {
         return kakaoUser;
     }
 
-    // 4. 로그인 처리
     private Authentication forceLogin(User kakaoUser) {
         UserDetails userDetails = new CustomUserDetails(kakaoUser);
         Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
@@ -147,8 +143,7 @@ public class KakaoLoginService {
         return authentication;
     }
 
-    // 5. response Header에 JWT 토큰 추가
-    private void kakaoUsersAuthorizationInput(Authentication authentication, HttpServletResponse response) {
+    private void putJwtToken(Authentication authentication, HttpServletResponse response) {
         // response header에 token 추가
         CustomUserDetails customUserDetails = ((CustomUserDetails) authentication.getPrincipal());
         String token = JWTProvider.createAccessToken(customUserDetails.getUser());
