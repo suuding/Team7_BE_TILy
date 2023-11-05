@@ -96,7 +96,8 @@ public class KakaoLoginService {
     private User registerUser(SocialLoginResponse.UserInfoDto kakaoUserInfo) {
         // 이미 가입한 회원인지 확인
         String nickname = kakaoUserInfo.nickname();
-        String kakaoEmail = nickname + "@kakao.com";
+        Long id = kakaoUserInfo.id();
+        String kakaoEmail = id + "@kakao.com";
         User kakaoUser = userRepository.findByEmail(kakaoEmail)
                 .orElse(null);
 
