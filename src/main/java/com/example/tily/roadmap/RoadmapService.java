@@ -1,8 +1,6 @@
 package com.example.tily.roadmap;
 
 import com.example.tily._core.errors.exception.CustomException;
-import com.example.tily._core.errors.exception.Exception403;
-import com.example.tily._core.errors.exception.Exception404;
 import com.example.tily._core.errors.exception.ExceptionCode;
 import com.example.tily.roadmap.relation.GroupRole;
 import com.example.tily.roadmap.relation.UserRoadmap;
@@ -18,11 +16,9 @@ import com.example.tily.til.TilRepository;
 import com.example.tily.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
-import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -75,6 +71,75 @@ public class RoadmapService {
                 .code(generateRandomCode())
                 .isRecruit(true)    // 모집여부
                 .stepNum(requestDTO.steps().size())
+                .build();
+        roadmapRepository.save(roadmap);
+
+        List<RoadmapRequest.StepDTO> stepDTOS = requestDTO.steps();
+        for(RoadmapRequest.StepDTO stepDTO : stepDTOS){
+            // step 저장
+            Step step = Step.builder()
+                    .roadmap(roadmap)
+                    .title(stepDTO.title())
+                    .description(stepDTO.description())
+                    .dueDate(stepDTO.dueDate()!=null ? stepDTO.dueDate() : null)
+                    .build();
+            stepRepository.save(step);
+
+            UserStep userStep = UserStep.builder()
+                    .roadmap(roadmap)
+                    .step(step)
+                    .user(user)
+                    .isSubmit(false)
+                    .build();
+            userStepRepository.save(userStep);
+
+            // reference 저장
+            RoadmapRequest.ReferenceDTOs referenceDTOs = stepDTO.references();
+            List<Reference> references = new ArrayList<>();
+
+            // (1) youtube
+            List<RoadmapRequest.ReferenceDTO> youtubeDTOs = referenceDTOs.youtube();
+            for(RoadmapRequest.ReferenceDTO youtubeDTO : youtubeDTOs){
+                Reference reference = Reference.builder().step(step).category("youtube").link(youtubeDTO.link()).build();
+                references.add(reference);
+            }
+
+            // (2) reference
+            List<RoadmapRequest.ReferenceDTO> webDTOs = referenceDTOs.web();
+            for(RoadmapRequest.ReferenceDTO webDTO : webDTOs){
+                Reference reference = Reference.builder().step(step).category("web").link(webDTO.link()).build();
+                references.add(reference);
+            }
+
+            referenceRepository.saveAll(references);
+        }
+
+        UserRoadmap userRoadmap = UserRoadmap.builder()
+                .roadmap(roadmap)
+                .user(user)
+                .role(GroupRole.ROLE_MASTER)
+                .progress(0)
+                .isAccept(true)
+                .build();
+        userRoadmapRepository.save(userRoadmap);
+
+        return new RoadmapResponse.CreateRoadmapDTO(roadmap);
+    }
+
+    @Transactional
+    public RoadmapResponse.CreateRoadmapDTO createTilyRoadmap(RoadmapRequest.CreateTilyRoadmapDTO requestDTO, User user){
+
+        Roadmap roadmap = Roadmap.builder()
+                .creator(user)
+                .category(Category.CATEGORY_TILY)
+                .name(requestDTO.roadmap().name())
+                .description(requestDTO.roadmap().description())
+                .isPublic(requestDTO.roadmap().isPublic()) // 공개여부
+                .currentNum(1L)
+                .code(generateRandomCode())
+                .isRecruit(true)    // 모집여부
+                .stepNum(requestDTO.steps().size())
+                .image("https://tily-bucket.s3.ap-northeast-2.amazonaws.com/tily.png")
                 .build();
         roadmapRepository.save(roadmap);
 
@@ -253,7 +318,8 @@ public class RoadmapService {
                 .filter(roadmap -> roadmap.getCategory().equals(Category.CATEGORY_GROUP))
                 .map(roadmap -> {
                     String groupRole = userRoadmapRepository.findByRoadmapIdAndUserId(roadmap.getId(), user.getId()).get().getRole();
-                    return (groupRole == "master" || groupRole == "manager") ? new RoadmapResponse.GroupDTO(roadmap, true) : new RoadmapResponse.GroupDTO(roadmap, false);
+                    boolean isManager = groupRole.equals(GroupRole.ROLE_MASTER.getValue()) || groupRole.equals(GroupRole.ROLE_MANAGER.getValue());
+                    return new RoadmapResponse.GroupDTO(roadmap, isManager);
                 }).collect(Collectors.toList());
 
         return new RoadmapResponse.FindAllMyRoadmapDTO(categories, new RoadmapResponse.FindAllMyRoadmapDTO.RoadmapDTO(tilys, groups));

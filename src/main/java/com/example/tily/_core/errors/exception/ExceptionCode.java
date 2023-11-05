@@ -14,6 +14,8 @@ public enum ExceptionCode {
     USER_PASSWORD_WRONG(HttpStatus.BAD_REQUEST, "비밀번호가 일치하지 않습니다."),
     USER_UPDATE_FORBIDDEN(HttpStatus.FORBIDDEN, "사용자 정보를 수정할 권한이 없습니다."),
     USER_CURPASSWORD_WRONG(HttpStatus.BAD_REQUEST, "잘못된 비밀번호 입니다."),
+    USER_FORBIDDEN(HttpStatus.FORBIDDEN, "권한이 없습니다."),
+    USER_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "인증되지 않았습니다"),
 
     // code 관련 에러
     CODE_EXPIRED(HttpStatus.BAD_REQUEST, "유효기간이 만료되었습니다."),
@@ -71,7 +73,10 @@ public enum ExceptionCode {
     FILE_UPLOAD_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "파일 업로드 중 에러가 발생하였습니다."),
     INVALID_FILE_FORMAT(HttpStatus.BAD_REQUEST, "잘못된 형식의 파일입니다."),
 
-    BAD_REQUEST(HttpStatus.BAD_REQUEST, "올바른 형식을 입력해주세요.");
+    BAD_REQUEST(HttpStatus.BAD_REQUEST, "올바른 형식을 입력해주세요."),
+
+    // token 관련
+    TOKEN_EXPIRED(HttpStatus.BAD_REQUEST, "토큰이 만료됐습니다.");
     private final HttpStatus httpStatus;
     private final String message;
 }
