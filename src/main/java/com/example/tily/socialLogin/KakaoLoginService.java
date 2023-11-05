@@ -33,7 +33,7 @@ public class KakaoLoginService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
 
-    public SocialLoginResponse.UserInfoDto kakaoLogin(String code, HttpServletResponse response) throws JsonProcessingException {
+    public SocialLoginResponse.TokenDTO kakaoLogin(String code) throws JsonProcessingException {
         // 1. "인가 코드"로 "액세스 토큰" 요청
         String accessToken = getAccessToken(code);
 
@@ -47,8 +47,8 @@ public class KakaoLoginService {
         Authentication authentication = forceLogin(kakaoUser);
 
         // 5. response Header에 JWT 토큰 추가
-        putJwtToken(authentication, response);
-        return userInfo;
+        SocialLoginResponse.TokenDTO response = putJwtToken(authentication);
+        return response;
     }
 
     private String getAccessToken(String code) throws JsonProcessingException {
@@ -127,11 +127,12 @@ public class KakaoLoginService {
         return authentication;
     }
 
-    private void putJwtToken(Authentication authentication, HttpServletResponse response) {
+    private SocialLoginResponse.TokenDTO putJwtToken(Authentication authentication) {
         // response header에 token 추가
         CustomUserDetails customUserDetails = ((CustomUserDetails) authentication.getPrincipal());
         String token = JWTProvider.createAccessToken(customUserDetails.getUser());
-        response.addHeader("Authorization", "BEARER" + " " + token);
+
+        return new SocialLoginResponse.TokenDTO(token);
     }
 
     private String sendRequest(String url, HttpMethod method, MultiValueMap<String, String> body, HttpHeaders headers) {
