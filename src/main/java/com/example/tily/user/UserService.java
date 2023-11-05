@@ -94,7 +94,7 @@ public class UserService {
         Long userId = decodedJWT.getClaim("id").asLong();
 
         if (!redisUtils.existData(userId.toString()))
-            throw new Exception403("Refresh 토큰이 만료됐습니다.");
+            throw new CustomException(ExceptionCode.TOKEN_EXPIRED);
 
         User user = findById(userId);
         return createToken(user);
