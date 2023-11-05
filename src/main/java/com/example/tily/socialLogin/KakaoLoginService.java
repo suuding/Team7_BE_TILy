@@ -24,7 +24,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
 @Service
@@ -46,8 +45,9 @@ public class KakaoLoginService {
         // 4. 로그인 처리
         Authentication authentication = forceLogin(kakaoUser);
 
-        // 5. response Header에 JWT 토큰 추가
-        SocialLoginResponse.TokenDTO response = putJwtToken(authentication);
+        // 5. JWT 토큰을 응답에 넣음
+        SocialLoginResponse.TokenDTO response = getJwtToken(authentication);
+
         return response;
     }
 
@@ -95,7 +95,7 @@ public class KakaoLoginService {
     }
 
     private User registerUser(SocialLoginResponse.UserInfoDto kakaoUserInfo) {
-        // DB 에 중복된 email이 있는지 확인
+        // 이미 가입한 회원인지 확인
         String kakaoEmail = kakaoUserInfo.email();
         String nickname = kakaoUserInfo.nickname();
         User kakaoUser = userRepository.findByEmail(kakaoEmail)
@@ -122,13 +122,12 @@ public class KakaoLoginService {
         UserDetails userDetails = new CustomUserDetails(kakaoUser);
         Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 
-        // SecurityContextHolder를 통해 현재 스레드에 인증 객체를 저장
+        // 현재 실행 중인 스레드에 인증 정보를 설정
         SecurityContextHolder.getContext().setAuthentication(authentication);
         return authentication;
     }
 
-    private SocialLoginResponse.TokenDTO putJwtToken(Authentication authentication) {
-        // response header에 token 추가
+    private SocialLoginResponse.TokenDTO getJwtToken(Authentication authentication) {
         CustomUserDetails customUserDetails = ((CustomUserDetails) authentication.getPrincipal());
         String token = JWTProvider.createAccessToken(customUserDetails.getUser());
 
