@@ -76,7 +76,7 @@ public class KakaoLoginService {
     private SocialLoginResponse.UserInfoDto getUserInfo(String accessToken) throws JsonProcessingException {
         // HTTP Header 생성
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + accessToken);
+        headers.add("Authorization", "Bearer " + accessToken); // Bearer을 빼면 작동 할 수도 있음
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 
         // HTTP 요청 보내기
@@ -87,17 +87,16 @@ public class KakaoLoginService {
         JsonNode jsonNode = objectMapper.readTree(response);
 
         Long id = jsonNode.get("id").asLong();
-        String email = jsonNode.get("kakao_account").get("email").asText();
         String nickname = jsonNode.get("properties")
                 .get("nickname").asText();
 
-        return new SocialLoginResponse.UserInfoDto(id, nickname, email);
+        return new SocialLoginResponse.UserInfoDto(id, nickname);
     }
 
     private User registerUser(SocialLoginResponse.UserInfoDto kakaoUserInfo) {
         // 이미 가입한 회원인지 확인
-        String kakaoEmail = kakaoUserInfo.email();
         String nickname = kakaoUserInfo.nickname();
+        String kakaoEmail = nickname + "@kakao.com";
         User kakaoUser = userRepository.findByEmail(kakaoEmail)
                 .orElse(null);
 
