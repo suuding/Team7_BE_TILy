@@ -59,8 +59,8 @@ public class KakaoLoginService {
         // HTTP Body 생성
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
-        body.add("client_id", "82e7687da8c2542f0d59deb7b6cc79ad");
-        body.add("redirect_uri", "http://localhost:3000/user/kakao/callback");
+        body.add("client_id", "4d20c892221a95fd1978913709917644");
+        body.add("redirect_uri", "http://localhost:3000/auth/kakao/callback");
         body.add("code", code);
 
         // HTTP 요청 보내기
@@ -86,20 +86,17 @@ public class KakaoLoginService {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = objectMapper.readTree(response);
 
-        Long id = jsonNode.get("id").asLong();
-        String nickname = jsonNode.get("properties")
-                .get("nickname").asText();
+        String nickname = jsonNode.get("properties").get("nickname").asText();
+        String email = jsonNode.get("kakao_account").get("email").asText();
 
-        return new SocialLoginResponse.UserInfoDto(id, nickname);
+        return new SocialLoginResponse.UserInfoDto(nickname, email);
     }
 
     private User registerUser(SocialLoginResponse.UserInfoDto kakaoUserInfo) {
         // 이미 가입한 회원인지 확인
         String nickname = kakaoUserInfo.nickname();
-        Long id = kakaoUserInfo.id();
-        String kakaoEmail = id + "@kakao.com";
-        User kakaoUser = userRepository.findByEmail(kakaoEmail)
-                .orElse(null);
+        String kakaoEmail = kakaoUserInfo.email();
+        User kakaoUser = userRepository.findByEmail(kakaoEmail).orElse(null);
 
         if (kakaoUser == null) {
             // 회원가입
