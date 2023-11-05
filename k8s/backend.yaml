@@ -26,11 +26,21 @@ spec:
                 secretKeyRef:
                   name: secret
                   key: MARIADB_USERNAME
-            - name: MARIADB_PASSWORD
+            - name : MARIADB_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: secret
                   key: MARIADB_PASSWORD
+            - name : MAIL_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: MAIL_USERNAME
+            - name : MAIL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: MAIL_PASSWORD
           resources:
             requests:
               memory: 1Gi
