@@ -2,9 +2,6 @@ package com.example.tily.comment;
 
 import com.example.tily._core.errors.exception.ExceptionCode;
 import com.example.tily._core.errors.exception.CustomException;
-import com.example.tily._core.errors.exception.Exception400;
-import com.example.tily._core.errors.exception.Exception403;
-import com.example.tily._core.errors.exception.Exception404;
 import com.example.tily.alarm.Alarm;
 import com.example.tily.alarm.AlarmRepository;
 import com.example.tily.roadmap.Roadmap;
