@@ -21,6 +21,8 @@ spec:
               value: Asia/Seoul
             # - name: DATABASE_URL
             #   value: jdbc:mariadb://mariadb/tily
+            - name: MARIADB_DATABASE
+              value: tily
             - name: MARIADB_USERNAME
               valueFrom:
                 secretKeyRef:
