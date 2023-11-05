@@ -16,7 +16,7 @@ public class SocialLoginController {
     private final KakaoLoginService kakaoLoginService;
 
     // 카카오 로그인
-    @GetMapping("/user/kakao/callback")
+    @GetMapping("/auth/kakao/callback")
     public SocialLoginResponse.TokenDTO kakaoLogin(@RequestParam String code) throws JsonProcessingException {
         return kakaoLoginService.kakaoLogin(code);
     }
