@@ -1,5 +1,7 @@
 spring:
-
+  config:
+    import:
+      - classpath:/application-secret.yml
 
   servlet:
     multipart:

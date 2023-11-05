@@ -1,5 +1,7 @@
 spring :
-
+  config:
+    import:
+      - classpath:/application-secret.yml
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
