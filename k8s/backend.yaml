@@ -19,8 +19,8 @@ spec:
           env:
             - name: TZ
               value: Asia/Seoul
-            # - name: DATABASE_URL
-            #   value: jdbc:mariadb://mariadb:3306/tily
+            - name: DATABASE_URL
+              value: jdbc:mariadb://mariadb:3306/tily
             - name: MARIADB_USERNAME
               valueFrom:
                 secretKeyRef:
