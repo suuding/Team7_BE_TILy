@@ -20,7 +20,7 @@ spec:
             - name: TZ
               value: Asia/Seoul
             - name: DATABASE_URL
-              value: jdbc:mariadb://mariadb:3306/tily
+              value: jdbc:mariadb://mariadb/tily
             - name: MARIADB_USERNAME
               valueFrom:
                 secretKeyRef:
@@ -46,6 +46,8 @@ spec:
                 secretKeyRef:
                   name: secret
                   key: MAIL_PASSWORD
+          ports:
+            - containerPort: 8080
           resources:
             requests:
               memory: 1Gi
