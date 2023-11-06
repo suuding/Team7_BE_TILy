@@ -2,6 +2,7 @@ package com.example.tily.step;
 
 import com.example.tily._core.errors.exception.ExceptionCode;
 import com.example.tily._core.errors.exception.CustomException;
+import com.example.tily.comment.CommentRepository;
 import com.example.tily.roadmap.Roadmap;
 import com.example.tily.roadmap.RoadmapRepository;
 import com.example.tily.roadmap.relation.GroupRole;
@@ -31,6 +32,7 @@ public class StepService {
     private final TilRepository tilRepository;
     private final UserRoadmapRepository userRoadmapRepository;
     private final UserStepRepository userStepRepository;
+    private final CommentRepository commentRepository;
 
     // 개인 로드맵(카테고리)의 step 생성하기
     @Transactional
@@ -106,8 +108,18 @@ public class StepService {
         List<Long> tilIds = tils.stream()
                 .map(Til::getId)
                 .collect(Collectors.toList());
+
+        // 1. Til과 연관된 Comment들을 삭제한다.
+        commentRepository.softDeleteAllCommentsByTilIds(tilIds);
+
+        // 2. Til들을 삭제한다
         tilRepository.softDeleteAllTils(tilIds);
 
+        // 3. UserStep을 삭제한다
+        UserStep userStep = getUserStepByUserIdAndStepId(user.getId(), stepId);
+        userStepRepository.delete(userStep);
+
+        // 4. Step을 삭제한다
         stepRepository.delete(step);
     }
 
@@ -143,5 +155,9 @@ public class StepService {
 
     private UserRoadmap getUserBelongRoadmap(Long roadmapId, Long userId) {
         return userRoadmapRepository.findByRoadmapIdAndUserIdAndIsAcceptTrue(roadmapId, userId).orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_NOT_BELONG));
+    }
+
+    private UserStep getUserStepByUserIdAndStepId(Long userId, Long stepId){
+        return userStepRepository.findByUserIdAndStepId(userId, stepId).orElseThrow(() -> new CustomException(ExceptionCode.STEP_NOT_INCLUDE));
     }
 }
