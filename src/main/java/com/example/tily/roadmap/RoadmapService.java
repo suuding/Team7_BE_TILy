@@ -250,54 +250,66 @@ public class RoadmapService {
         return new RoadmapResponse.FindGroupRoadmapDTO(roadmap, steps, roadmap.getCreator(), recentTilId, recentStepId, myRole);
     }
 
-    // 그룹 로드맵 정보 수정하기 수정필요!
+    // 그룹 로드맵 정보 수정하기
     @Transactional
     public void updateGroupRoadmap(Long id, RoadmapRequest.UpdateGroupRoadmapDTO requestDTO, User user){
         checkMasterAndManagerPermission(id ,user);
 
-        // 로드맵 업데이트
-        Roadmap roadmap = roadmapRepository.findById(id).orElseThrow(
-                () -> new CustomException(ExceptionCode.ROADMAP_NOT_FOUND)
-        );
+        Roadmap roadmap = roadmapRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_NOT_FOUND));
 
-        String name = requestDTO.roadmap().name();
-        String description = requestDTO.roadmap().description();
-        String code = requestDTO.roadmap().code();
-        Boolean isPublic = requestDTO.roadmap().isPublic();
-        Boolean isRecruit = requestDTO.roadmap().isRecruit();
+        // roadmap update
+        roadmap.update(requestDTO.roadmap());
 
-        roadmap.update(name, description, code, isPublic, isRecruit);
-
-        // 스텝 업데이트
+        // step update
         List<RoadmapRequest.StepDTO> stepDTOs = requestDTO.steps();
-
         for(RoadmapRequest.StepDTO stepDTO : stepDTOs){
-            Step step;
+            Step step = stepRepository.findById(stepDTO.id()).orElse(null);
 
-            step = stepRepository.findById(stepDTO.id()).orElseThrow(
-                    () -> new CustomException(ExceptionCode.STEP_NOT_FOUND)
-            );
+            // 새로운 step
+            if (step == null) {
+                Step newStep = Step.builder()
+                        .roadmap(roadmap)
+                        .title(stepDTO.title())
+                        .description(stepDTO.description())
+                        .dueDate(stepDTO.dueDate()!=null ? stepDTO.dueDate() : null)
+                        .build();
+                Step newStep1 = stepRepository.save(newStep);
 
-            String title = stepDTO.title() ;
-            String stepDescription = stepDTO.description();
-
-            step.update(title,stepDescription);
+                // 로드맵에 속한 사람들에게 userstep에 넣어야함
+                List<User> users = userRoadmapRepository.findByRoadmapIdAndIsAcceptTrue(id).stream().map(UserRoadmap::getUser).toList();
+                for (User u : users) {
+                    UserStep userStep = UserStep.builder()
+                            .roadmap(roadmap)
+                            .step(newStep1)
+                            .user(u)
+                            .isSubmit(false)
+                            .build();
+                    userStepRepository.save(userStep);
+                }
+            } else {
+                step.update(stepDTO.title(),stepDTO.description());
+            }
 
             // reference 업데이트
-            List<RoadmapRequest.ReferenceDTO> referenceDTOs = new ArrayList<>();
-            referenceDTOs.addAll(stepDTO.references().web());
-            referenceDTOs.addAll(stepDTO.references().youtube());
+            for(RoadmapRequest.ReferenceDTO web : stepDTO.references().web()){
+                if (web.id() == null) {
+                    Reference newReference = Reference.builder().step(step).category("web").link(web.link()).build();
+                    referenceRepository.save(newReference);
+                } else {
+                    Reference reference = referenceRepository.findById(web.id()).orElse(null);
+                    reference.update(web.link());
+                }
+            }
 
-            for(RoadmapRequest.ReferenceDTO referenceDTO : referenceDTOs){
-                Reference reference;
-
-                reference = referenceRepository.findById(referenceDTO.id()).orElseThrow(
-                        () -> new CustomException(ExceptionCode.REFERENCE_NOT_FOUND)
-                );
-
-                String link = referenceDTO.link();
-
-                reference.update(link);
+            for(RoadmapRequest.ReferenceDTO youtube : stepDTO.references().youtube()){
+                if (youtube.id() == null) {
+                    Reference newReference = Reference.builder().step(step).category("youtube").link(youtube.link()).build();
+                    referenceRepository.save(newReference);
+                } else {
+                    Reference reference = referenceRepository.findById(youtube.id()).orElse(null);
+                    reference.update(youtube.link());
+                }
             }
         }
     }
