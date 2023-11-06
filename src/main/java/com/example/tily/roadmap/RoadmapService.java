@@ -339,8 +339,12 @@ public class RoadmapService {
     }
 
     @Transactional
-    public void applyRoadmap(RoadmapRequest.ApplyRoadmapDTO requestDTO, Long id, User user){
+    public void applyGroupRoadmap(RoadmapRequest.ApplyRoadmapDTO requestDTO, Long id, User user){
         Roadmap roadmap = getRoadmapById(id);
+
+        // 모집을 중단했을 때
+        if (!roadmap.getIsRecruit())
+            throw new CustomException(ExceptionCode.ROADMAP_END_RECRUIT);
 
         // 최초로 한 번만 신청 가능
         Optional<UserRoadmap> ur = userRoadmapRepository.findByRoadmapIdAndUserId(id, user.getId());
