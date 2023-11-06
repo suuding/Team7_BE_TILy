@@ -366,6 +366,29 @@ public class RoadmapService {
     }
 
     @Transactional
+    public void applyTilyRoadmap(Long id, User user) {
+        Roadmap roadmap = getRoadmapById(id);
+
+        // 모집을 중단했을 때
+        if (!roadmap.getIsRecruit())
+            throw new CustomException(ExceptionCode.ROADMAP_END_RECRUIT);
+
+        // 이미 로드맵에 속한 경우
+        Optional<UserRoadmap> ur = userRoadmapRepository.findByRoadmapIdAndUserId(id, user.getId());
+        if (ur.isPresent() && ur.get().getIsAccept().equals(true))
+                throw new CustomException(ExceptionCode.ROADMAP_ALREADY_MEMBER);
+
+        UserRoadmap userRoadmap = UserRoadmap.builder()
+                .roadmap(roadmap)
+                .user(user)
+                .role(GroupRole.ROLE_MEMBER)
+                .isAccept(true)
+                .progress(0)
+                .build();
+        userRoadmapRepository.save(userRoadmap);
+    }
+
+    @Transactional
     public RoadmapResponse.ParticipateRoadmapDTO participateRoadmap(RoadmapRequest.ParticipateRoadmapDTO requestDTO, User user){
         String code = requestDTO.code();
         Roadmap roadmap = roadmapRepository.findByCode(code)
