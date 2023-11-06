@@ -38,6 +38,9 @@ public class User extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Column
+    private boolean isDeleted = false;
+
     @Builder
     public User(Long id, String email, String name, String password, String image, Role role) {
         this.id = id;
