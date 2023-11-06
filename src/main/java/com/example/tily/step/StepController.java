@@ -40,7 +40,7 @@ public class StepController {
     // 참고자료 삭제
     @DeleteMapping("/reference/{referenceId}")
     public ResponseEntity<?> deleteReference(@PathVariable Long referenceId, @AuthenticationPrincipal CustomUserDetails userDetails){
-        stepService.deleteReference(referenceId);
+        stepService.deleteReference(referenceId, userDetails.getUser());
 
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }

@@ -96,11 +96,22 @@ public class StepService {
     }
 
     // 참고자료 삭제
-    public void deleteReference(Long referenceId){
+    public void deleteReference(Long referenceId, User user){
         Reference reference = getReferenceById(referenceId);
+
+        checkMasterAndManagerPermission(reference.getStep().getRoadmap().getId(), user); // 매니저급만 삭제 가능
+
         referenceRepository.delete(reference);
     }
 
+    private String checkMasterAndManagerPermission(Long roadmapId, User user) {
+        UserRoadmap userRoadmap = getUserBelongRoadmap(roadmapId, user.getId());
+
+        if(!userRoadmap.getRole().equals(GroupRole.ROLE_MASTER.getValue()) && !userRoadmap.getRole().equals(GroupRole.ROLE_MANAGER.getValue())){
+            throw new CustomException(ExceptionCode.ROADMAP_FORBIDDEN);
+        }
+        return userRoadmap.getRole();
+    }
 
     private Roadmap getRoadmapById(Long roadmapId) {
         return roadmapRepository.findById(roadmapId).orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_NOT_FOUND));
@@ -112,5 +123,9 @@ public class StepService {
 
     private Reference getReferenceById(Long referenceId){
         return referenceRepository.findById(referenceId).orElseThrow(() -> new CustomException(ExceptionCode.REFERENCE_NOT_FOUND));
+    }
+
+    private UserRoadmap getUserBelongRoadmap(Long roadmapId, Long userId) {
+        return userRoadmapRepository.findByRoadmapIdAndUserIdAndIsAcceptTrue(roadmapId, userId).orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_NOT_BELONG));
     }
 }
