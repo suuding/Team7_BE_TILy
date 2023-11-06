@@ -95,6 +95,22 @@ public class StepService {
         return new StepResponse.FindAllStepDTO(stepDTOs, progress, myRole);
     }
 
+    // step 삭제
+    @Transactional
+    public void deleteStep(Long stepId, User user){
+        Step step = getStepById(stepId);
+
+        checkMasterAndManagerPermission(step.getRoadmap().getId(), user); // 매니저급만 삭제 가능
+
+        List<Til> tils = tilRepository.findByStepId(stepId);
+        List<Long> tilIds = tils.stream()
+                .map(Til::getId)
+                .collect(Collectors.toList());
+        tilRepository.softDeleteAllTils(tilIds);
+
+        stepRepository.delete(step);
+    }
+
     // 참고자료 삭제
     public void deleteReference(Long referenceId, User user){
         Reference reference = getReferenceById(referenceId);

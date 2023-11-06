@@ -37,6 +37,14 @@ public class StepController {
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
 
+    // step 삭제
+    @DeleteMapping("/step/{stepId}")
+    public ResponseEntity<?> deleteStep(@PathVariable Long stepId, @AuthenticationPrincipal CustomUserDetails userDetails){
+        stepService.deleteStep(stepId, userDetails.getUser());
+
+        return ResponseEntity.ok().body(ApiUtils.success(null));
+    }
+
     // 참고자료 삭제
     @DeleteMapping("/reference/{referenceId}")
     public ResponseEntity<?> deleteReference(@PathVariable Long referenceId, @AuthenticationPrincipal CustomUserDetails userDetails){
