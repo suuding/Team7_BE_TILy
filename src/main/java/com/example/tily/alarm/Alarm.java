@@ -34,17 +34,17 @@ public class Alarm extends BaseTimeEntity {
     private Comment comment;
 
     @Column
-    private Boolean isChecked;
+    private Boolean isRead;
 
     @Builder
-    public Alarm(Til til, User receiver, Comment comment, Boolean isChecked) {
+    public Alarm(Til til, User receiver, Comment comment, Boolean isRead) {
         this.til = til;
         this.receiver = receiver;
         this.comment = comment;
-        this.isChecked = isChecked;
+        this.isRead = isRead;
     }
 
     public void readAlarm() {
-        this.isChecked = true;
+        this.isRead = true;
     }
 }

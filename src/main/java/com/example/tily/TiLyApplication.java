@@ -281,11 +281,11 @@ public class TiLyApplication {
 				.build();
 	}
 
-	private Alarm newAlarm(Til til, User receiver, Boolean isChecked) {
+	private Alarm newAlarm(Til til, User receiver, Boolean isRead) {
 		return Alarm.builder()
 				.til(til)
 				.receiver(receiver)
-				.isChecked(false)
+				.isRead(false)
 				.build();
 	}
 
