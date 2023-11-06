@@ -45,6 +45,7 @@ public enum ExceptionCode {
     ROADMAP_ALREADY_MEMBER(HttpStatus.BAD_REQUEST, "이미 해당 로드맵에 속했습니다."),
     ROADMAP_DISMISS_FORBIDDEN(HttpStatus.FORBIDDEN, "로드맵의 master를 강퇴할 권한이 없습니다."),
     ROADMAP_ONLY_MASTER(HttpStatus.FORBIDDEN, "master 권한이 필요합니다."),
+    ROADMAP_END_RECRUIT(HttpStatus.BAD_REQUEST, "해당 로드맵은 모집을 종료했습니다."),
 
     // step 관련 에러
     STEP_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 step을 찾을 수 없습니다."),
