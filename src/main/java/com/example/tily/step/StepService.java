@@ -109,11 +109,19 @@ public class StepService {
                 .map(Til::getId)
                 .collect(Collectors.toList());
 
+        List<Reference> references = referenceRepository.findByStepId(stepId);
+        List<Long> referenceIds = references.stream()
+                .map(Reference::getId)
+                .collect(Collectors.toList());
+
         // 1. Til과 연관된 Comment들을 삭제한다.
         commentRepository.softDeleteAllCommentsByTilIds(tilIds);
 
         // 2. Til들을 삭제한다
         tilRepository.softDeleteAllTils(tilIds);
+
+        // 3. Reference들을 삭제한다.
+        referenceRepository.softDeleteAllReferences(referenceIds);
 
         // 3. UserStep을 삭제한다
         UserStep userStep = getUserStepByUserIdAndStepId(user.getId(), stepId);
