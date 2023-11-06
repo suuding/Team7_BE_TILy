@@ -36,7 +36,7 @@ public class Step {
     private LocalDateTime dueDate;
 
     @Column
-    private boolean isDeleted;
+    private boolean isDeleted = false;
 
     @Builder
     public Step(Long id, Roadmap roadmap, String title, String description, LocalDateTime dueDate) {

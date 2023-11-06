@@ -30,8 +30,10 @@ public class Comment extends BaseTimeEntity {
     @JoinColumn(name="writer_id")
     private User writer;
 
-    private String content;
+    @Column
+    private boolean isDeleted = false;
 
+    private String content;
 
 
     @Builder

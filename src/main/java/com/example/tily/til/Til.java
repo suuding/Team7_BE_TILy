@@ -50,7 +50,7 @@ public class Til extends BaseTimeEntity {
     private boolean isPersonal;
 
     @Column
-    private boolean isDeleted;
+    private boolean isDeleted = false;
 
 
     @Builder
