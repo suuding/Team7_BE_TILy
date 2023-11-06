@@ -12,7 +12,7 @@ public interface AlarmRepository extends JpaRepository<Alarm, Long> {
     @Query("select a from Alarm a " +
             "join fetch a.til " +
             "join fetch a.comment " +
-            "where a.receiver.id=:receiverId and a.isChecked=false")
+            "where a.receiver.id=:receiverId")
     List<Alarm> findAllByReceiverId(@Param("receiverId") Long receiverId, Sort sort);
 
     void deleteByCommentId(Long commentId);
