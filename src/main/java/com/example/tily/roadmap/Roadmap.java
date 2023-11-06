@@ -60,10 +60,9 @@ public class Roadmap extends BaseTimeEntity {
         this.image = image;
     }
 
-    public void update(RoadmapRequest.RoadmapDTO roadmap){
+    public void update(RoadmapRequest.UpdateGroupRoadmapDTO roadmap){
         this.name = roadmap.name();
         this.description = roadmap.description();
-        this.code = roadmap.code();
         this.isPublic = roadmap.isPublic();
         this.isRecruit = roadmap.isRecruit();
     }

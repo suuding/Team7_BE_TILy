@@ -64,55 +64,15 @@ public class RoadmapService {
         Roadmap roadmap = Roadmap.builder()
                 .creator(user)
                 .category(Category.CATEGORY_GROUP)
-                .name(requestDTO.roadmap().name())
-                .description(requestDTO.roadmap().description())
-                .isPublic(requestDTO.roadmap().isPublic()) // 공개여부
+                .name(requestDTO.name())
+                .description(requestDTO.description())
+                .isPublic(requestDTO.isPublic()) // 공개여부
                 .currentNum(1L)
                 .code(generateRandomCode())
                 .isRecruit(true)    // 모집여부
-                .stepNum(requestDTO.steps().size())
+                .stepNum(0)
                 .build();
         roadmapRepository.save(roadmap);
-
-        List<RoadmapRequest.StepDTO> stepDTOS = requestDTO.steps();
-        for(RoadmapRequest.StepDTO stepDTO : stepDTOS){
-            // step 저장
-            Step step = Step.builder()
-                    .roadmap(roadmap)
-                    .title(stepDTO.title())
-                    .description(stepDTO.description())
-                    .dueDate(stepDTO.dueDate()!=null ? stepDTO.dueDate() : null)
-                    .build();
-            stepRepository.save(step);
-
-            UserStep userStep = UserStep.builder()
-                    .roadmap(roadmap)
-                    .step(step)
-                    .user(user)
-                    .isSubmit(false)
-                    .build();
-            userStepRepository.save(userStep);
-
-            // reference 저장
-            RoadmapRequest.ReferenceDTOs referenceDTOs = stepDTO.references();
-            List<Reference> references = new ArrayList<>();
-
-            // (1) youtube
-            List<RoadmapRequest.ReferenceDTO> youtubeDTOs = referenceDTOs.youtube();
-            for(RoadmapRequest.ReferenceDTO youtubeDTO : youtubeDTOs){
-                Reference reference = Reference.builder().step(step).category("youtube").link(youtubeDTO.link()).build();
-                references.add(reference);
-            }
-
-            // (2) reference
-            List<RoadmapRequest.ReferenceDTO> webDTOs = referenceDTOs.web();
-            for(RoadmapRequest.ReferenceDTO webDTO : webDTOs){
-                Reference reference = Reference.builder().step(step).category("web").link(webDTO.link()).build();
-                references.add(reference);
-            }
-
-            referenceRepository.saveAll(references);
-        }
 
         UserRoadmap userRoadmap = UserRoadmap.builder()
                 .roadmap(roadmap)
@@ -259,59 +219,7 @@ public class RoadmapService {
                 .orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_NOT_FOUND));
 
         // roadmap update
-        roadmap.update(requestDTO.roadmap());
-
-        // step update
-        List<RoadmapRequest.StepDTO> stepDTOs = requestDTO.steps();
-        for(RoadmapRequest.StepDTO stepDTO : stepDTOs){
-            Step step = stepRepository.findById(stepDTO.id()).orElse(null);
-
-            // 새로운 step
-            if (step == null) {
-                Step newStep = Step.builder()
-                        .roadmap(roadmap)
-                        .title(stepDTO.title())
-                        .description(stepDTO.description())
-                        .dueDate(stepDTO.dueDate()!=null ? stepDTO.dueDate() : null)
-                        .build();
-                Step newStep1 = stepRepository.save(newStep);
-
-                // 로드맵에 속한 사람들에게 userstep에 넣어야함
-                List<User> users = userRoadmapRepository.findByRoadmapIdAndIsAcceptTrue(id).stream().map(UserRoadmap::getUser).toList();
-                for (User u : users) {
-                    UserStep userStep = UserStep.builder()
-                            .roadmap(roadmap)
-                            .step(newStep1)
-                            .user(u)
-                            .isSubmit(false)
-                            .build();
-                    userStepRepository.save(userStep);
-                }
-            } else {
-                step.update(stepDTO.title(),stepDTO.description());
-            }
-
-            // reference 업데이트
-            for(RoadmapRequest.ReferenceDTO web : stepDTO.references().web()){
-                if (web.id() == null) {
-                    Reference newReference = Reference.builder().step(step).category("web").link(web.link()).build();
-                    referenceRepository.save(newReference);
-                } else {
-                    Reference reference = referenceRepository.findById(web.id()).orElse(null);
-                    reference.update(web.link());
-                }
-            }
-
-            for(RoadmapRequest.ReferenceDTO youtube : stepDTO.references().youtube()){
-                if (youtube.id() == null) {
-                    Reference newReference = Reference.builder().step(step).category("youtube").link(youtube.link()).build();
-                    referenceRepository.save(newReference);
-                } else {
-                    Reference reference = referenceRepository.findById(youtube.id()).orElse(null);
-                    reference.update(youtube.link());
-                }
-            }
-        }
+        roadmap.update(requestDTO);
     }
 
     public RoadmapResponse.FindAllMyRoadmapDTO findAllMyRoadmaps(User user) {
