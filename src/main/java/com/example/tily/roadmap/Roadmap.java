@@ -28,22 +28,31 @@ public class Roadmap extends BaseTimeEntity {
     @Enumerated(value = EnumType.STRING)
     @Column(nullable = false)
     private Category category;
+
     @Column(nullable = false)
     private String name;
+
     @Column
     private String description;
+
     @Column
     private boolean isPublic;
+
     @Column
     private Long currentNum;
+
     @Column
     private String code;
+
     @Column
     private boolean isRecruit;
+
     @Column
     private int stepNum;
+
     @Column
     private String image;
+
     @Column
     private boolean isDeleted;
 

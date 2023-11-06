@@ -28,10 +28,15 @@ public class Step {
 
     @Column(nullable = false)
     private String title;
+
     @Column
     private String description;
+
     @Column
     private LocalDateTime dueDate;
+
+    @Column
+    private boolean isDeleted;
 
     @Builder
     public Step(Long id, Roadmap roadmap, String title, String description, LocalDateTime dueDate) {
