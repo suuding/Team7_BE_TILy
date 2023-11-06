@@ -37,4 +37,13 @@ public class StepController {
         StepResponse.FindAllStepDTO responseDTO = stepService.findAllStep(roadmapId, userDetails.getUser());
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
+
+    // 특정 로드맵의 step 수정
+    @PostMapping("/roadmaps/{roadmapId}/steps/{stepId}")
+    public ResponseEntity<?> createStep(@RequestBody @Valid StepRequest.UpdateStepDTO requestDTO, Errors errors,
+                                        @PathVariable("roadmapId") Long roadmapId, @PathVariable("stepId") Long stepId,
+                                        @AuthenticationPrincipal CustomUserDetails userDetails) {
+        stepService.updateStep(requestDTO, roadmapId, stepId, userDetails.getUser());
+        return ResponseEntity.ok().body(ApiUtils.success(null));
+    }
 }
