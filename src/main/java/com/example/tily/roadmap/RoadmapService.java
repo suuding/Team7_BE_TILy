@@ -418,15 +418,15 @@ public class RoadmapService {
     }
 
     public RoadmapResponse.FindRoadmapMembersDTO findRoadmapMembers(Long groupsId, User user){
-        checkMasterAndManagerPermission(groupsId, user);
+        String myRole = checkMasterAndManagerPermission(groupsId, user);
 
         List<UserRoadmap> userRoadmaps = userRoadmapRepository.findByRoadmapIdAndIsAcceptTrue(groupsId);
 
         List<RoadmapResponse.FindRoadmapMembersDTO.UserDTO> users = userRoadmaps.stream()
-                .map(userRoadmap -> new RoadmapResponse.FindRoadmapMembersDTO.UserDTO(userRoadmap.getUser().getId(), userRoadmap.getUser().getName(), userRoadmap.getUser().getImage(), userRoadmap.getRole()))
+                .map(userRoadmap -> new RoadmapResponse.FindRoadmapMembersDTO.UserDTO(userRoadmap.getUser(), userRoadmap.getRole()))
                 .collect(Collectors.toList());
 
-        return new RoadmapResponse.FindRoadmapMembersDTO(users);
+        return new RoadmapResponse.FindRoadmapMembersDTO(myRole, users);
     }
 
     @Transactional
@@ -499,39 +499,6 @@ public class RoadmapService {
 
     @Transactional
     public RoadmapResponse.FindTilOfStepDTO findTilOfStep(Long groupsId, Long stepId, Boolean isSubmit, Boolean isMember, String name){
-//        List<Pair<Til, User>> pairs = new ArrayList<>();
-//
-//        List<Til> tils = tilRepository.findByStepId(stepId);
-//        for(Til til : tils){
-//            User user = til.getWriter();
-//
-//            // 어떤 틸이 존재한다면, 해당 틸은 반드시 틸이 속한 Step과 Roadmap 그리고 User를 가진다 => userStep 관계와 userRoadmap 관계는 반드시 존재한다. => 존재하지 않은 것에 대한 예외처리 필요 X
-//            UserStep userStep = userStepRepository.findByUserIdAndStepId(user.getId(), stepId).get();
-//            UserRoadmap userRoadmap = userRoadmapRepository.findByRoadmapIdAndUserId(groupsId, user.getId()).get();
-//
-//            if((isSubmit == userStep.getIsSubmit())  && (name == null || name.equals(user.getName()))){
-//                // isMember가 false => 운영자를 포함해서 모든 til을 반환, isMember가 true => 운영자의 til을 제외하고 반환한다
-//                if(!isMember || (isMember && GroupRole.ROLE_MEMBER.equals(userRoadmap.getRole()))){
-//                    Pair<Til, User> pair = Pair.of(til, user);
-//                    pairs.add(pair);
-//                }
-//            }
-//        }
-//
-//        List<RoadmapResponse.FindTilOfStepDTO.MemberDTO> members;
-//
-//        if(isSubmit) {
-//            members = pairs.stream()
-//                    .map(pair -> new RoadmapResponse.FindTilOfStepDTO.MemberDTO(pair.getFirst().getId(), pair.getSecond().getId(),pair.getSecond().getName(), pair.getSecond().getImage(), pair.getFirst().getContent(), pair.getFirst().getSubmitDate().toLocalDate(), pair.getFirst().getCommentNum()))
-//                    .collect(Collectors.toList());
-//        }
-//        else {
-//            members = pairs.stream()
-//                    .map(pair -> new RoadmapResponse.FindTilOfStepDTO.MemberDTO(null, pair.getSecond().getId(), pair.getSecond().getName(), null, null, null, 0))
-//                    .collect(Collectors.toList());
-//        }
-//
-//        return new RoadmapResponse.FindTilOfStepDTO(members);
 
         // 특정 로드맵에 속한 UserRoadmap list
         List<UserRoadmap> userRoadmaps = userRoadmapRepository.findByRoadmapIdAndIsAcceptTrue(groupsId);

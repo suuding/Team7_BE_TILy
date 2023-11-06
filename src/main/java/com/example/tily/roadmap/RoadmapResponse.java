@@ -90,8 +90,12 @@ public class RoadmapResponse {
         }
     }
 
-    public record FindRoadmapMembersDTO(List<UserDTO> users) {
-        public record UserDTO(Long id, String name, String image, String role) {}
+    public record FindRoadmapMembersDTO(String myRole, List<UserDTO> users) {
+        public record UserDTO(Long id, String name, String image, String role) {
+            public UserDTO(User user, String role) {
+                this(user.getId(), user.getName(), user.getImage(), role);
+            }
+        }
     }
 
     public record FindAppliedUsersDTO(List<UserDTO> users) {
