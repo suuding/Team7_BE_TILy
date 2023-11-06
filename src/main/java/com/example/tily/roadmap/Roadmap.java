@@ -33,19 +33,19 @@ public class Roadmap extends BaseTimeEntity {
     @Column
     private String description;
     @Column
-    private Boolean isPublic;
+    private boolean isPublic;
     @Column
     private Long currentNum;
     @Column
     private String code;
     @Column
-    private Boolean isRecruit;
+    private boolean isRecruit;
     @Column
     private int stepNum;
     @Column
     private String image;
     @Column
-    private Boolean isDeleted = false;
+    private boolean isDeleted;
 
     @Builder
     public Roadmap(Long id, User creator, Category category, String name, String description, Boolean isPublic, Long currentNum, String code, Boolean isRecruit, int stepNum, String image) {

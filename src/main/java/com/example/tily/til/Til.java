@@ -49,6 +49,9 @@ public class Til extends BaseTimeEntity {
     @Column
     private boolean isPersonal;
 
+    @Column
+    private boolean isDeleted;
+
 
     @Builder
     public Til(Long id, Roadmap roadmap, Step step, User writer, String title, String content, String submitContent, LocalDateTime submitDate, int commentNum, boolean isPersonal) {
