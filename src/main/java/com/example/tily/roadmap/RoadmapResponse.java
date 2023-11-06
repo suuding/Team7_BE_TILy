@@ -7,6 +7,7 @@ import com.example.tily.step.reference.Reference;
 import com.example.tily.til.Til;
 import com.example.tily.user.Role;
 import com.example.tily.user.User;
+import org.joda.time.DateTime;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -107,7 +108,7 @@ public class RoadmapResponse {
     }
 
     public record FindTilOfStepDTO(List<MemberDTO> members) {
-        public record MemberDTO(Long tilId, Long userId, String name, String image, String content, String submitDate, Integer commentNum) {
+        public record MemberDTO(Long tilId, Long userId, String name, String image, String content, LocalDateTime submitDate, Integer commentNum) {
 
             public MemberDTO(Til til, User user) {
                 this(
@@ -116,7 +117,7 @@ public class RoadmapResponse {
                         user.getName(),
                         user.getImage(),
                         til!=null ? til.getContent() : null,
-                        til!=null ? til.getSubmitDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) : null,
+                        til!=null ? til.getSubmitDate() : null,
                         til!=null ? til.getCommentNum() : null);
             }
         }
