@@ -7,6 +7,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
 
 import javax.persistence.*;
 
@@ -14,6 +15,7 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name="user_roadmap_tb")
+@SQLDelete(sql = "UPDATE user_roadmap_tb SET isDeleted = true WHERE id = ?")
 public class UserRoadmap extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,6 +40,9 @@ public class UserRoadmap extends BaseTimeEntity {
 
     @Column(nullable = false)
     private int progress;
+
+    @Column
+    private boolean isDeleted = false;
 
     @Builder
     public UserRoadmap(Roadmap roadmap, User user, String content, Boolean isAccept, GroupRole role, int progress) {
