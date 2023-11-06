@@ -23,6 +23,12 @@ public class StepController {
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
 
+    // 특정 로드맵의 step 생성
+    @PostMapping("/roadmaps/{roadmapId}/steps")
+    public ResponseEntity<?> createStep(@RequestBody @Valid StepRequest.CreateStepDTO requestDTO, Errors errors,
+                                        @PathVariable("roadmapId") Long roadmapId, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        stepService.createStep(requestDTO, roadmapId, userDetails.getUser());
+        return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 
     // 특정 로드맵의 step 목록 전체 조회
