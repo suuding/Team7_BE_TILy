@@ -36,4 +36,12 @@ public class StepController {
         StepResponse.FindAllStepDTO responseDTO = stepService.findAllStep(roadmapId, userDetails.getUser());
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
+
+    // 참고자료 삭제
+    @DeleteMapping("/reference/{referenceId}")
+    public ResponseEntity<?> deleteReference(@PathVariable Long referenceId, @AuthenticationPrincipal CustomUserDetails userDetails){
+        stepService.deleteReference(referenceId);
+
+        return ResponseEntity.ok().body(ApiUtils.success(null));
+    }
 }

@@ -95,11 +95,22 @@ public class StepService {
         return new StepResponse.FindAllStepDTO(stepDTOs, progress, myRole);
     }
 
+    // 참고자료 삭제
+    public void deleteReference(Long referenceId){
+        Reference reference = getReferenceById(referenceId);
+        referenceRepository.delete(reference);
+    }
+
+
     private Roadmap getRoadmapById(Long roadmapId) {
         return roadmapRepository.findById(roadmapId).orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_NOT_FOUND));
     }
 
     private Step getStepById(Long stepId) {
         return stepRepository.findById(stepId).orElseThrow(() -> new CustomException(ExceptionCode.STEP_NOT_FOUND));
+    }
+
+    private Reference getReferenceById(Long referenceId){
+        return referenceRepository.findById(referenceId).orElseThrow(() -> new CustomException(ExceptionCode.REFERENCE_NOT_FOUND));
     }
 }
