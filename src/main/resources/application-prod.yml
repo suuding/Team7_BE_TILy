@@ -13,12 +13,12 @@ spring :
     port: 587
     username: ${MAIL_USERNAME}
     password: ${MAIL_PASSWORD}
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
+    # properties:
+    #   mail:
+    #     smtp:
+    #       auth: true
+    #       starttls:
+    #         enable: true
 
   redis: # redis 설정 (로컬)
     host: redis
