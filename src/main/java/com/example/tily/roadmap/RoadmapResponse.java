@@ -54,15 +54,15 @@ public class RoadmapResponse {
        public record RoadmapDTO(List<TilyDTO> tilys, List<GroupDTO> groups) {}
     }
 
-    public record TilyDTO (Long id, String name, String image, int stepNum) {
+    public record TilyDTO (Long id, String name, String image, int stepNum, String description) {
         public TilyDTO(Roadmap roadmap) {
-            this(roadmap.getId(), roadmap.getName(), roadmap.getImage(), roadmap.getStepNum());
+            this(roadmap.getId(), roadmap.getName(), roadmap.getImage(), roadmap.getStepNum(), roadmap.getDescription());
         }
     }
 
-    public record GroupDTO (Long id, String name, int stepNum, Creator creator, boolean isManager) {
+    public record GroupDTO (Long id, String name, int stepNum, Creator creator, boolean isManager, String description) {
         public GroupDTO(Roadmap roadmap, Boolean isManager) {
-            this(roadmap.getId(), roadmap.getName(), roadmap.getStepNum(), new Creator(roadmap.getCreator()), isManager);
+            this(roadmap.getId(), roadmap.getName(), roadmap.getStepNum(), new Creator(roadmap.getCreator()), isManager, roadmap.getDescription());
         }
 
         public record Creator(Long id, String name, String image) {
@@ -77,9 +77,9 @@ public class RoadmapResponse {
             this(category.getValue(), roadmaps, hasNext);
         }
 
-        public record RoadmapDTO (Long id, String name, int stepNum, GroupDTO.Creator creator) {
+        public record RoadmapDTO (Long id, String name, String description, int stepNum, GroupDTO.Creator creator) {
             public RoadmapDTO(Roadmap roadmap) {
-                this(roadmap.getId(), roadmap.getName(), roadmap.getStepNum(), new GroupDTO.Creator(roadmap.getCreator()));
+                this(roadmap.getId(), roadmap.getName(), roadmap.getDescription(), roadmap.getStepNum(), new GroupDTO.Creator(roadmap.getCreator()));
             }
         }
     }

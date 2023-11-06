@@ -18,6 +18,9 @@ public class RoadmapRequest {
     public record CreateGroupRoadmapDTO(RoadmapDTO roadmap, List<StepDTO> steps) {
     }
 
+    public record CreateTilyRoadmapDTO(RoadmapDTO roadmap, List<StepDTO> steps) {
+    }
+
     public record UpdateGroupRoadmapDTO(RoadmapDTO roadmap, List<StepDTO> steps) {
     }
 

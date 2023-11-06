@@ -1,7 +1,5 @@
 package com.example.tily.user;
 
-import com.example.tily._core.errors.exception.Exception403;
-import com.example.tily._core.errors.exception.Exception404;
 import com.example.tily._core.errors.exception.ExceptionCode;
 import com.example.tily._core.errors.exception.CustomException;
 import com.auth0.jwt.interfaces.DecodedJWT;
@@ -96,7 +94,7 @@ public class UserService {
         Long userId = decodedJWT.getClaim("id").asLong();
 
         if (!redisUtils.existData(userId.toString()))
-            throw new Exception403("Refresh 토큰이 만료됐습니다.");
+            throw new CustomException(ExceptionCode.TOKEN_EXPIRED);
 
         User user = findById(userId);
         return createToken(user);
