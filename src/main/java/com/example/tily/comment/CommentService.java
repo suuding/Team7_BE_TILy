@@ -58,9 +58,8 @@ public class CommentService {
                 .orElseThrow(() -> new CustomException(ExceptionCode.COMMENT_NOT_FOUND));
 
 
-        if(!comment.getWriter().getId().equals(user.getId())) {
+        if(!comment.getWriter().getId().equals(user.getId()))
             throw new CustomException(ExceptionCode.COMMENT_UPDATE_FORBIDDEN);
-        }
 
         comment.updateComment(requestDTO.content());
     }
@@ -70,9 +69,9 @@ public class CommentService {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ExceptionCode.COMMENT_NOT_FOUND));
 
-        if(!comment.getWriter().getId().equals(user.getId())) {
+        // 댓글 주인 또는 글의 주인만 댓글 삭제 가능
+        if(!comment.getWriter().getId().equals(user.getId()) || !comment.getTil().getWriter().getId().equals(user.getId()))
             throw new CustomException(ExceptionCode.COMMENT_DELETE_FORBIDDEN);
-        }
 
         alarmRepository.deleteByCommentId(id);
         commentRepository.deleteById(id);

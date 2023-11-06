@@ -139,7 +139,7 @@ public class RoadmapService {
                 .code(generateRandomCode())
                 .isRecruit(true)    // 모집여부
                 .stepNum(requestDTO.steps().size())
-                .image("https://tily-bucket.s3.ap-northeast-2.amazonaws.com/tily.png")
+                .image("tily.png")
                 .build();
         roadmapRepository.save(roadmap);
 
@@ -402,6 +402,18 @@ public class RoadmapService {
                 .progress(0)
                 .build();
         userRoadmapRepository.save(userRoadmap);
+
+        // 수강생이 해당 roadmap에 속한다 -> 제출 여부 관리를 위해 모든 step에 대해 userstep에 다 저장
+        List<Step> steps = stepRepository.findByRoadmapId(id);
+        for (Step step : steps) {
+            UserStep userStep = UserStep.builder()
+                    .roadmap(step.getRoadmap())
+                    .step(step)
+                    .user(userRoadmap.getUser())
+                    .isSubmit(false)
+                    .build();
+            userStepRepository.save(userStep);
+        }
     }
 
     @Transactional
@@ -423,8 +435,19 @@ public class RoadmapService {
                 .isAccept(true)
                 .progress(0)
                 .build();
-
         userRoadmapRepository.save(userRoadmap);
+
+        // 해당 roadmap에 속한다 -> 제출 여부 관리를 위해 모든 step에 대해 userstep에 다 저장
+        List<Step> steps = stepRepository.findByRoadmapId(roadmap.getId());
+        for (Step step : steps) {
+            UserStep userStep = UserStep.builder()
+                    .roadmap(step.getRoadmap())
+                    .step(step)
+                    .user(userRoadmap.getUser())
+                    .isSubmit(false)
+                    .build();
+            userStepRepository.save(userStep);
+        }
 
         return new RoadmapResponse.ParticipateRoadmapDTO(roadmap);
     }
@@ -540,6 +563,7 @@ public class RoadmapService {
 
         return new RoadmapResponse.FindTilOfStepDTO(members);
     }
+
 
     private static String generateRandomCode() {
         String upperAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
