@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -18,6 +19,7 @@ import java.util.List;
 @Entity
 @Table(name="step_tb")
 @SQLDelete(sql = "UPDATE step_tb SET isDeleted = true WHERE id = ?")
+@Where(clause = "isDeleted = false")
 public class Step {
 
     @Id

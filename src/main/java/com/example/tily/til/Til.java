@@ -6,6 +6,7 @@ import com.example.tily.step.Step;
 import com.example.tily.user.User;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name="til_tb")
 @SQLDelete(sql = "UPDATE til_tb SET isDeleted = true WHERE id = ?")
+@Where(clause = "isDeleted = false")
 public class Til extends BaseTimeEntity {
 
     @Id

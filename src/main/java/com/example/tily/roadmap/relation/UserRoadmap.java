@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
@@ -16,6 +17,7 @@ import javax.persistence.*;
 @Entity
 @Table(name="user_roadmap_tb")
 @SQLDelete(sql = "UPDATE user_roadmap_tb SET isDeleted = true WHERE id = ?")
+@Where(clause = "isDeleted = false")
 public class UserRoadmap extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
