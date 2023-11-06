@@ -12,6 +12,12 @@ public class StepResponse {
         }
     }
 
+    public record CreateStepDTO(Long id) {
+        public CreateStepDTO(Step step) {
+            this(step.getId());
+        }
+    }
+
     public record FindReferenceDTO(Long id, String description, List<YoutubeDTO> youtubes, List<WebDTO> webs) {
         public FindReferenceDTO(Step step, List<YoutubeDTO> youtubeDTOs, List<WebDTO> webDTOs) {
             this(step.getId(), step.getDescription(), youtubeDTOs, webDTOs);
