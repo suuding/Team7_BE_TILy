@@ -30,6 +30,7 @@ public class UserService {
     private final JavaMailSender javaMailSender;
     private final RedisUtils redisUtils;
     private final TilRepository tilRepository;
+    private String defaultImage = "user/profile-user.jpg";
 
     // (회원가입) 이메일 중복 체크 후 인증코드 전송
     @Transactional
@@ -70,6 +71,7 @@ public class UserService {
                 .email(requestDTO.email())
                 .name(requestDTO.name())
                 .password(passwordEncoder.encode(requestDTO.password()))
+                .image(defaultImage)
                 .role(Role.ROLE_USER)
                 .build();
 
