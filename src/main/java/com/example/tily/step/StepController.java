@@ -23,11 +23,6 @@ public class StepController {
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
 
-    // 특정 step의 참고자료 목록 조회
-    @GetMapping("/roadmaps/{roadmapsId}/steps/{stepsId}/references")
-    public ResponseEntity<?> findReference(@PathVariable Long stepsId, @AuthenticationPrincipal CustomUserDetails userDetails){
-        StepResponse.FindReferenceDTO responseDTO = stepService.findReference(stepsId);
-        return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
 
     // 특정 로드맵의 step 목록 전체 조회
