@@ -45,7 +45,7 @@ public class CommentService {
         commentRepository.save(comment);
 
         // 댓글 작성하면 알림 생성
-        Alarm alarm = Alarm.builder().til(til).receiver(til.getWriter()).comment(comment).isChecked(false).build();
+        Alarm alarm = Alarm.builder().til(til).receiver(til.getWriter()).comment(comment).isRead(false).build();
         alarmRepository.save(alarm);
 
         return new CommentResponse.CreateCommentDTO(comment);
