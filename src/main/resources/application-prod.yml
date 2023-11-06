@@ -25,7 +25,7 @@ spring :
     port: 6379
 
   datasource:
-    url: jdbc:mariadb://mariadb:3306/tily?rewriteBatchedStatements=true&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+    url: jdbc:mariadb://mariadb:3306/tily?useSSL=false&allowPublicKeyRetrieval=true&rewriteBatchedStatements=true&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
     username: ${MARIADB_USERNAME}
     password: ${MARIADB_PASSWORD}
     driver-class-name: org.mariadb.jdbc.Driver
