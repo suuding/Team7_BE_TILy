@@ -9,6 +9,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
 
 import javax.persistence.*;
 
@@ -16,6 +17,7 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name="comment_tb")
+@SQLDelete(sql = "UPDATE comment_tb SET isDeleted = true WHERE id = ?")
 public class Comment extends BaseTimeEntity {
 
     @Id
@@ -31,10 +33,10 @@ public class Comment extends BaseTimeEntity {
     private User writer;
 
     @Column
-    private boolean isDeleted = false;
-
     private String content;
 
+    @Column
+    private boolean isDeleted = false;
 
     @Builder
     public Comment (Long id, Roadmap roadmap, Step step, Til til, User writer, String content) {

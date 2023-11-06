@@ -355,7 +355,7 @@ public class RoadmapService {
         Roadmap roadmap = getRoadmapById(id);
 
         // 모집을 중단했을 때
-        if (!roadmap.getIsRecruit())
+        if (!roadmap.isRecruit())
             throw new CustomException(ExceptionCode.ROADMAP_END_RECRUIT);
 
         // 최초로 한 번만 신청 가능
@@ -386,7 +386,7 @@ public class RoadmapService {
         Roadmap roadmap = getRoadmapById(id);
 
         // 모집을 중단했을 때
-        if (!roadmap.getIsRecruit())
+        if (!roadmap.isRecruit())
             throw new CustomException(ExceptionCode.ROADMAP_END_RECRUIT);
 
         // 이미 로드맵에 속한 경우
