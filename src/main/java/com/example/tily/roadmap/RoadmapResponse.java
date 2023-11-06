@@ -22,9 +22,9 @@ public class RoadmapResponse {
         }
     }
 
-    public record FindGroupRoadmapDTO(Creator creator, String name, String description, String myRole, Long recentTilId, Long recentStepId, Boolean isPublic, Boolean isRecruit, String code, List<StepDTO> steps) {
+    public record FindGroupRoadmapDTO(Creator creator, String name, String description, String myRole, Long recentTilId, Long recentStepId, Boolean isPublic, Boolean isRecruit, String code, String category, List<StepDTO> steps) {
         public FindGroupRoadmapDTO(Roadmap roadmap, List<StepDTO> steps, User user, Long recentTilId, Long recentStepId, String myRole) {
-            this(new Creator(user.getName(), user.getImage()), roadmap.getName(), roadmap.getDescription(), myRole, recentTilId, recentStepId, roadmap.getIsPublic(), roadmap.getIsRecruit(), roadmap.getCode(), steps);
+            this(new Creator(user.getName(), user.getImage()), roadmap.getName(), roadmap.getDescription(), myRole, recentTilId, recentStepId, roadmap.getIsPublic(), roadmap.getIsRecruit(), roadmap.getCode(), roadmap.getCategory().getValue(), steps);
         }
 
         public record Creator(String name, String image) {}
@@ -116,7 +116,7 @@ public class RoadmapResponse {
                         user.getId(),
                         user.getName(),
                         user.getImage(),
-                        til!=null ? til.getContent() : null,
+                        til!=null ? til.getSubmitContent() : null,
                         til!=null ? til.getSubmitDate() : null,
                         til!=null ? til.getCommentNum() : null);
             }
