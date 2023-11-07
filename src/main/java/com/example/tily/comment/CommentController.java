@@ -36,6 +36,7 @@ public class CommentController {
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 
+    // API 주소 수정 필요
     @DeleteMapping("/roadmaps/{roadmapId}/steps/{stepId}/tils/{tilId}/comments/{commentId}")
     public ResponseEntity<?> deleteComment(@PathVariable("roadmapId") Long roadmapId, @PathVariable("stepId")Long stepId,
                                        @PathVariable("tilId") Long tilId, @PathVariable("commentId") Long commentId,

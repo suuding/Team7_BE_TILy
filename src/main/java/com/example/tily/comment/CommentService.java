@@ -74,6 +74,6 @@ public class CommentService {
             throw new CustomException(ExceptionCode.COMMENT_DELETE_FORBIDDEN);
 
         alarmRepository.deleteByCommentId(id);
-        commentRepository.deleteById(id);
+        commentRepository.deleteById(id); // soft delete 적용됨
     }
 }
