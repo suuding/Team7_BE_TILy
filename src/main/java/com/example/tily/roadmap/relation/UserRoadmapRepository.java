@@ -30,7 +30,7 @@ public interface UserRoadmapRepository extends JpaRepository<UserRoadmap, Long> 
     List<UserRoadmap> findByRoadmapIdAndIsAcceptTrueAndName(@Param("roadmapId") Long roadmapId, @Param("name") String name);
 
     @Modifying
-    @Query("update UserRoadmap ur SET ur.isDeleted = true WHERE ur.isDeleted = false AND ur.roadmap.id IN :roadmapId")
+    @Query("update UserRoadmap ur SET ur.isDeleted = true WHERE ur.isDeleted = false AND ur.roadmap.id = :roadmapId")
     void softDeleteUserRoadmapByRoadmapId(Long roadmapId);
 
     @Modifying

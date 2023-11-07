@@ -191,10 +191,6 @@ public class TilService {
         return !til.getWriter().getId().equals(user.getId());
     }
 
-    private List<Comment> getCommentByStepId(Long tilId) {
-        return commentRepository.findByTilId(tilId);
-    }
-
     // 사용자가 로드맵에 속했는지
     private UserRoadmap getUserIncludeRoadmap(Long roadmapId, Long userId) {
         return userRoadmapRepository.findByRoadmapIdAndUserIdAndIsAcceptTrue(roadmapId, userId)
