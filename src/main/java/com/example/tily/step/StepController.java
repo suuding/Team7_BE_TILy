@@ -23,11 +23,12 @@ public class StepController {
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
 
-    // 특정 step의 참고자료 목록 조회
-    @GetMapping("/roadmaps/{roadmapsId}/steps/{stepsId}/references")
-    public ResponseEntity<?> findReference(@PathVariable Long stepsId, @AuthenticationPrincipal CustomUserDetails userDetails){
-        StepResponse.FindReferenceDTO responseDTO = stepService.findReference(stepsId);
-        return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
+    // 특정 로드맵의 step 생성
+    @PostMapping("/roadmaps/{roadmapId}/steps")
+    public ResponseEntity<?> createStep(@RequestBody @Valid StepRequest.CreateStepDTO requestDTO, Errors errors,
+                                        @PathVariable("roadmapId") Long roadmapId, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        stepService.createStep(requestDTO, roadmapId, userDetails.getUser());
+        return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 
     // 특정 로드맵의 step 목록 전체 조회
@@ -45,11 +46,12 @@ public class StepController {
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 
-    // 참고자료 삭제
-    @DeleteMapping("/reference/{referenceId}")
-    public ResponseEntity<?> deleteReference(@PathVariable Long referenceId, @AuthenticationPrincipal CustomUserDetails userDetails){
-        stepService.deleteReference(referenceId, userDetails.getUser());
-
+    // 특정 로드맵의 step 수정
+    @PostMapping("/roadmaps/{roadmapId}/steps/{stepId}")
+    public ResponseEntity<?> createStep(@RequestBody @Valid StepRequest.UpdateStepDTO requestDTO, Errors errors,
+                                        @PathVariable("roadmapId") Long roadmapId, @PathVariable("stepId") Long stepId,
+                                        @AuthenticationPrincipal CustomUserDetails userDetails) {
+        stepService.updateStep(requestDTO, roadmapId, stepId, userDetails.getUser());
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 }

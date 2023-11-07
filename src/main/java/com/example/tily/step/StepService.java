@@ -28,11 +28,11 @@ import java.util.stream.Collectors;
 public class StepService {
     private final RoadmapRepository roadmapRepository;
     private final StepRepository stepRepository;
-    private final ReferenceRepository referenceRepository;
     private final TilRepository tilRepository;
     private final UserRoadmapRepository userRoadmapRepository;
     private final UserStepRepository userStepRepository;
     private final CommentRepository commentRepository;
+    private final ReferenceRepository referenceRepository;
 
     // 개인 로드맵(카테고리)의 step 생성하기
     @Transactional
@@ -53,27 +53,45 @@ public class StepService {
         return new StepResponse.CreateIndividualStepDTO(step);
     }
 
-    // step의 참고자료 목록 조회
-    public StepResponse.FindReferenceDTO findReference(Long stepId){
-        Step step = getStepById(stepId);
+    // step 생성하기
+    @Transactional
+    public StepResponse.CreateStepDTO createStep(StepRequest.CreateStepDTO requestDTO, Long roadmapId, User user) {
+        checkMasterAndManagerPermission(roadmapId, user); // 관리자 권한 확인
 
-        List<Reference> references = referenceRepository.findByStepId(stepId);
+        Roadmap roadmap = roadmapRepository.findById(roadmapId)
+                .orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_NOT_FOUND));
 
-        List<StepResponse.FindReferenceDTO.YoutubeDTO> youtubeDTOs = new ArrayList<>();
-        List<StepResponse.FindReferenceDTO.WebDTO> webDTOs = new ArrayList<>();
+        Step step = Step.builder()
+                .roadmap(roadmap)
+                .title(requestDTO.title())
+                .description(requestDTO.description())
+                .dueDate(requestDTO.dueDate())
+                .build();
+        stepRepository.save(step);
 
-        for(Reference reference : references){
-            String category = reference.getCategory();
-            Long id = reference.getId();
-            String link = reference.getLink();
-
-            if(category.equals("youtube"))
-                youtubeDTOs.add(new StepResponse.FindReferenceDTO.YoutubeDTO(id, link));
-            else if(category.equals("web"))
-                webDTOs.add(new StepResponse.FindReferenceDTO.WebDTO(id, link));
+        // 해당 로드맵에 속한 학생들에 대해, UserStep에 넣기
+        List<User> users = userRoadmapRepository.findByRoadmapIdAndIsAcceptTrue(roadmapId).stream().map(UserRoadmap::getUser).toList();
+        for (User u : users) {
+            UserStep userStep = UserStep.builder()
+                    .roadmap(roadmap)
+                    .step(step)
+                    .user(u)
+                    .isSubmit(false)
+                    .build();
+            userStepRepository.save(userStep);
         }
 
-        return new StepResponse.FindReferenceDTO(step, youtubeDTOs, webDTOs);
+        return new StepResponse.CreateStepDTO(step);
+    }
+
+    // step 수정하기
+    public void updateStep(StepRequest.UpdateStepDTO requestDTO, Long roadmapId, Long stepId, User user) {
+        checkMasterAndManagerPermission(roadmapId, user); // 관리자 권한 확인
+
+        Step step = stepRepository.findById(stepId)
+                .orElseThrow(() -> new CustomException(ExceptionCode.STEP_NOT_FOUND));
+
+        step.update(requestDTO);
     }
 
     // 로드맵의 step 목록 전체 조회
@@ -125,16 +143,7 @@ public class StepService {
         stepRepository.delete(step);
     }
 
-    // 참고자료 삭제
-    public void deleteReference(Long referenceId, User user){
-        Reference reference = getReferenceById(referenceId);
-
-        checkMasterAndManagerPermission(reference.getStep().getRoadmap().getId(), user); // 매니저급만 삭제 가능
-
-        referenceRepository.delete(reference);
-    }
-
-    private String checkMasterAndManagerPermission(Long roadmapId, User user) {
+    private String checkMasterAndManagerPermission(Long roadmapId, User user) { // 매니저급만 접근
         UserRoadmap userRoadmap = getUserBelongRoadmap(roadmapId, user.getId());
 
         if(!userRoadmap.getRole().equals(GroupRole.ROLE_MASTER.getValue()) && !userRoadmap.getRole().equals(GroupRole.ROLE_MANAGER.getValue())){
@@ -151,10 +160,7 @@ public class StepService {
         return stepRepository.findById(stepId).orElseThrow(() -> new CustomException(ExceptionCode.STEP_NOT_FOUND));
     }
 
-    private Reference getReferenceById(Long referenceId){
-        return referenceRepository.findById(referenceId).orElseThrow(() -> new CustomException(ExceptionCode.REFERENCE_NOT_FOUND));
-    }
-
+    // 해당 로드맵에 속한 user
     private UserRoadmap getUserBelongRoadmap(Long roadmapId, Long userId) {
         return userRoadmapRepository.findByRoadmapIdAndUserIdAndIsAcceptTrue(roadmapId, userId).orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_NOT_BELONG));
     }

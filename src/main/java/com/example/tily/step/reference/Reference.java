@@ -43,8 +43,4 @@ public class Reference {
         this.category = category;
         this.link = link;
     }
-
-    public void update(String link){
-        this.link = link;
-    }
 }

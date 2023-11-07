@@ -51,8 +51,8 @@ public class Step {
         this.dueDate = dueDate;
     }
 
-    public void update(String title, String description){
-        this.title = title;
-        this.description = description;
+    public void update(StepRequest.UpdateStepDTO requestDTO){
+        this.title = requestDTO.title();
+        this.description = requestDTO.description();
     }
 }
