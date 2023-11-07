@@ -2,6 +2,7 @@ package com.example.tily.roadmap;
 
 import com.example.tily._core.errors.exception.CustomException;
 import com.example.tily._core.errors.exception.ExceptionCode;
+import com.example.tily.comment.CommentRepository;
 import com.example.tily.roadmap.relation.GroupRole;
 import com.example.tily.roadmap.relation.UserRoadmap;
 import com.example.tily.roadmap.relation.UserRoadmapRepository;
@@ -35,6 +36,7 @@ public class RoadmapService {
     private final TilRepository tilRepository;
     private final UserRoadmapRepository userRoadmapRepository;
     private final UserStepRepository userStepRepository;
+    private final CommentRepository commentRepository;
 
     @Transactional
     public RoadmapResponse.CreateRoadmapDTO createIndividualRoadmap(RoadmapRequest.CreateIndividualRoadmapDTO requestDTO, User user){
@@ -541,6 +543,44 @@ public class RoadmapService {
         return new RoadmapResponse.FindTilOfStepDTO(members);
     }
 
+    @Transactional
+    public void deleteRoadmap(Long roadmapId, User user){
+        Roadmap roadmap = getRoadmapById(roadmapId);
+
+        checkMasterAndManagerPermission(roadmapId, user);
+
+        List<Til> tils = getTilsByRoadmapId(roadmapId);
+        List<Long> tilIds = tils.stream()
+                .map(Til::getId)
+                .collect(Collectors.toList());
+
+        List<Step> steps = getStepsByRoadmapId(roadmapId);
+        List<Long> stepIds = steps.stream()
+                .map(Step::getId)
+                .collect(Collectors.toList());
+
+        // 1. Til과 연관된 Comment들을 삭제한다.
+        commentRepository.softDeleteCommentsByTilIds(tilIds);
+
+        // 2. Til을 삭제한다.
+        tilRepository.softDeleteTilsByTilIds(tilIds);
+
+        // 3. Reference들을 삭제한다
+        referenceRepository.softDeleteReferenceByStepIds(stepIds);
+
+        // 4. Step들을 삭제한다.
+        stepRepository.softDeleteStepByStepIds(stepIds);
+
+        // 5. UserStep들을 삭제한다.
+        userStepRepository.softDeleteUserStepByStepIds(stepIds);
+
+        // 6. UserRoadmap을 삭제한다
+        userRoadmapRepository.softDeleteUserRoadmapByRoadmapId(roadmapId);
+
+        // 7. Roadmap을 삭제한다
+        roadmapRepository.delete(roadmap);
+    }
+
     private static String generateRandomCode() {
         String upperAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         String lowerAlphabet = "abcdefghijklmnopqrstuvwxyz";
@@ -593,6 +633,14 @@ public class RoadmapService {
 
     private Roadmap getRoadmapById(Long roadmapId) {
         return roadmapRepository.findById(roadmapId).orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_NOT_FOUND));
+    }
+
+    private List<Step> getStepsByRoadmapId(Long roadmapId){
+        return stepRepository.findByRoadmapId(roadmapId);
+    }
+
+    private List<Til> getTilsByRoadmapId(Long roadmapId){
+        return tilRepository.findByRoadmapId(roadmapId);
     }
 
     // 해당 로드맵에 속하지 않은 user

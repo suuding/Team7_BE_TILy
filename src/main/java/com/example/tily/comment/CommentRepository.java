@@ -13,10 +13,10 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     List<Comment> findByTilId(@Param("tilId") Long tilId);
 
     @Modifying
-    @Query("update Comment c SET c.isDeleted = true WHERE c.isDeleted = false AND c.til.id IN :tilIds")
-    void softDeleteAllCommentsByTilIds(List<Long> tilIds);
+    @Query("update Comment c SET c.isDeleted = true WHERE c.isDeleted = false AND c.til.id = :tilId")
+    void softDeleteCommentsByTilId(Long tilId);
 
     @Modifying
-    @Query("update Comment c SET c.isDeleted = true WHERE c.isDeleted = false AND c.id IN :commentIds")
-    void softDeleteAllComments(List<Long> tilIds);
+    @Query("update Comment c SET c.isDeleted = true WHERE c.isDeleted = false AND c.til.id IN :tilIds")
+    void softDeleteCommentsByTilIds(List<Long> tilIds);
 }

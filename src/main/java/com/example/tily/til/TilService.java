@@ -148,13 +148,8 @@ public class TilService {
         if (checkTilWriterEqualUser(til, user))
             throw new CustomException(ExceptionCode.TIL_DELETE_FORBIDDEN);
 
-        List<Comment> comments = getCommentByStepId(tilId);
-        List<Long> commentIds = comments.stream()
-                .map(Comment::getId)
-                .collect(Collectors.toList());
-
         // 1. Til과 연관된 Comment들을 삭제한다.
-        commentRepository.softDeleteAllComments(commentIds);
+        commentRepository.softDeleteCommentsByTilId(tilId);
 
         // 2. Til을 삭제한다.
         tilRepository.deleteById(tilId);

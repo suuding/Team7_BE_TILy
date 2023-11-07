@@ -109,23 +109,17 @@ public class StepService {
                 .map(Til::getId)
                 .collect(Collectors.toList());
 
-        List<Reference> references = referenceRepository.findByStepId(stepId);
-        List<Long> referenceIds = references.stream()
-                .map(Reference::getId)
-                .collect(Collectors.toList());
-
         // 1. Til과 연관된 Comment들을 삭제한다.
-        commentRepository.softDeleteAllCommentsByTilIds(tilIds);
+        commentRepository.softDeleteCommentsByTilIds(tilIds);
 
         // 2. Til들을 삭제한다
-        tilRepository.softDeleteAllTils(tilIds);
+        tilRepository.softDeleteTilsByTilIds(tilIds);
 
         // 3. Reference들을 삭제한다.
-        referenceRepository.softDeleteAllReferences(referenceIds);
+        referenceRepository.softDeleteReferenceByStepId(stepId);
 
         // 4. UserStep을 삭제한다
-        UserStep userStep = getUserStepByUserIdAndStepId(user.getId(), stepId);
-        userStepRepository.delete(userStep);
+        userStepRepository.softDeleteUserStepByStepId(stepId);
 
         // 5. Step을 삭제한다
         stepRepository.delete(step);
@@ -165,7 +159,7 @@ public class StepService {
         return userRoadmapRepository.findByRoadmapIdAndUserIdAndIsAcceptTrue(roadmapId, userId).orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_NOT_BELONG));
     }
 
-    private UserStep getUserStepByUserIdAndStepId(Long userId, Long stepId){
+    private UserStep getUserStep(Long userId, Long stepId){
         return userStepRepository.findByUserIdAndStepId(userId, stepId).orElseThrow(() -> new CustomException(ExceptionCode.STEP_NOT_INCLUDE));
     }
 }
