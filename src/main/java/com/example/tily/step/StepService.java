@@ -2,6 +2,7 @@ package com.example.tily.step;
 
 import com.example.tily._core.errors.exception.ExceptionCode;
 import com.example.tily._core.errors.exception.CustomException;
+import com.example.tily.comment.CommentRepository;
 import com.example.tily.roadmap.Roadmap;
 import com.example.tily.roadmap.RoadmapRepository;
 import com.example.tily.roadmap.relation.GroupRole;
@@ -30,6 +31,8 @@ public class StepService {
     private final TilRepository tilRepository;
     private final UserRoadmapRepository userRoadmapRepository;
     private final UserStepRepository userStepRepository;
+    private final CommentRepository commentRepository;
+    private final ReferenceRepository referenceRepository;
 
     // 개인 로드맵(카테고리)의 step 생성하기
     @Transactional
@@ -112,8 +115,32 @@ public class StepService {
         return new StepResponse.FindAllStepDTO(stepDTOs, progress, myRole);
     }
 
-    private Roadmap getRoadmapById(Long roadmapId) {
-        return roadmapRepository.findById(roadmapId).orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_NOT_FOUND));
+    // step 삭제
+    @Transactional
+    public void deleteStep(Long stepId, User user){
+        Step step = getStepById(stepId);
+
+        checkMasterAndManagerPermission(step.getRoadmap().getId(), user); // 매니저급만 삭제 가능
+
+        List<Til> tils = tilRepository.findByStepId(stepId);
+        List<Long> tilIds = tils.stream()
+                .map(Til::getId)
+                .collect(Collectors.toList());
+
+        // 1. Til과 연관된 Comment들을 삭제한다.
+        commentRepository.softDeleteCommentsByTilIds(tilIds);
+
+        // 2. Til들을 삭제한다
+        tilRepository.softDeleteTilsByTilIds(tilIds);
+
+        // 3. Reference들을 삭제한다.
+        referenceRepository.softDeleteReferenceByStepId(stepId);
+
+        // 4. UserStep을 삭제한다
+        userStepRepository.softDeleteUserStepByStepId(stepId);
+
+        // 5. Step을 삭제한다
+        stepRepository.delete(step);
     }
 
     private String checkMasterAndManagerPermission(Long roadmapId, User user) { // 매니저급만 접근
@@ -123,6 +150,14 @@ public class StepService {
             throw new CustomException(ExceptionCode.ROADMAP_FORBIDDEN);
         }
         return userRoadmap.getRole();
+    }
+
+    private Roadmap getRoadmapById(Long roadmapId) {
+        return roadmapRepository.findById(roadmapId).orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_NOT_FOUND));
+    }
+
+    private Step getStepById(Long stepId) {
+        return stepRepository.findById(stepId).orElseThrow(() -> new CustomException(ExceptionCode.STEP_NOT_FOUND));
     }
 
     // 해당 로드맵에 속한 user

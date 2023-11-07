@@ -99,6 +99,13 @@ public class UserController {
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
 
+    // 회원 탈퇴하기
+    @DeleteMapping("/users")
+    public ResponseEntity<?> withdrawMembership(@AuthenticationPrincipal CustomUserDetails userDetails){
+        userService.withdrawMembership(userDetails.getUser());
+        return ResponseEntity.ok().body(ApiUtils.success(null));
+    }
+
     public ResponseCookie setRefreshTokenCookie(String refreshToken) {
         return ResponseCookie.from("refreshToken", refreshToken)
                 .httpOnly(true)
@@ -107,5 +114,4 @@ public class UserController {
                 .maxAge(JWTProvider.REFRESH_EXP)
                 .build();
     }
-
 }

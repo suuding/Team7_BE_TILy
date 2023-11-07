@@ -65,6 +65,7 @@ public enum ExceptionCode {
 
     // reference 관련 에러
     REFERENCE_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 reference를 찾을 수 없습니다."),
+    REFERENCE_DELETE_FORBIDDEN(HttpStatus.FORBIDDEN, "해당 reference를 삭제할 권한이 없습니다"),
 
     // image 관련 에러
     IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 image를 찰을 수 없습니다."),

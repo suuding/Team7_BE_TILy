@@ -38,6 +38,14 @@ public class StepController {
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
 
+    // step 삭제
+    @DeleteMapping("/step/{stepId}")
+    public ResponseEntity<?> deleteStep(@PathVariable Long stepId, @AuthenticationPrincipal CustomUserDetails userDetails){
+        stepService.deleteStep(stepId, userDetails.getUser());
+
+        return ResponseEntity.ok().body(ApiUtils.success(null));
+    }
+
     // 특정 로드맵의 step 수정
     @PostMapping("/roadmaps/{roadmapId}/steps/{stepId}")
     public ResponseEntity<?> createStep(@RequestBody @Valid StepRequest.UpdateStepDTO requestDTO, Errors errors,

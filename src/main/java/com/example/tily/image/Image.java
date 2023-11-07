@@ -13,8 +13,14 @@ public class Image {
     @Id
     @GeneratedValue
     private Long id;
+
+    @Column
     private String originalImageName;
+
+    @Column
     private String storageImageName;
+
+    @Column
     private String imagePath;
 
     public Image(String originalImageName, String storageImageName, String imagePath) {

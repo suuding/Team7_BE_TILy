@@ -1,6 +1,8 @@
 package com.example.tily.step.relation;
 
+import com.example.tily.roadmap.relation.UserRoadmap;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -22,4 +24,18 @@ public interface UserStepRepository extends JpaRepository<UserStep, Long> {
                                                      @Param("name") String name);
 
     Optional<UserStep> findByStepIdAndUserIdAndIsSubmitTrue(Long stepId, Long userId);
+
+    @Modifying
+    @Query("update UserStep us SET us.isDeleted = true WHERE us.isDeleted = false AND us.step.id IN :stepIds")
+    void softDeleteUserStepByStepIds(List<Long> stepIds); // 여러 step들에 대한 UserStep 삭제
+
+    @Modifying
+    @Query("update UserStep us SET us.isDeleted = true WHERE us.isDeleted = false AND us.step.id = :stepId")
+    void softDeleteUserStepByStepId(Long stepId); // 하나의 step에 대한 UserStep 삭제
+
+    @Modifying
+    @Query("update UserStep us SET us.isDeleted = true WHERE us.isDeleted = false AND us.id IN :userStepIds")
+    void softDeleteUserStepByUserStepIds(List<Long> userStepIds);
+
+    List<UserStep> findByUserId(Long userId);
 }

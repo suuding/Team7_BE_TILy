@@ -32,4 +32,12 @@ public class ReferenceController {
         StepResponse.FindReferenceDTO responseDTO = referenceService.findReference(stepsId, userDetails.getUser());
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
+
+    // 참고자료 삭제
+    @DeleteMapping("/reference/{referenceId}")
+    public ResponseEntity<?> deleteReference(@PathVariable Long referenceId, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        referenceService.deleteReference(referenceId, userDetails.getUser());
+
+        return ResponseEntity.ok().body(ApiUtils.success(null));
+    }
 }

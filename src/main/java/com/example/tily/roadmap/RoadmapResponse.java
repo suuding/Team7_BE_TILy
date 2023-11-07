@@ -24,7 +24,7 @@ public class RoadmapResponse {
 
     public record FindGroupRoadmapDTO(Creator creator, String name, String description, String myRole, Long recentTilId, Long recentStepId, Boolean isPublic, Boolean isRecruit, String code, String category, List<StepDTO> steps) {
         public FindGroupRoadmapDTO(Roadmap roadmap, List<StepDTO> steps, User user, Long recentTilId, Long recentStepId, String myRole) {
-            this(new Creator(user.getName(), user.getImage()), roadmap.getName(), roadmap.getDescription(), myRole, recentTilId, recentStepId, roadmap.getIsPublic(), roadmap.getIsRecruit(), roadmap.getCode(), roadmap.getCategory().getValue(), steps);
+            this(new Creator(user.getName(), user.getImage()), roadmap.getName(), roadmap.getDescription(), myRole, recentTilId, recentStepId, roadmap.isPublic(), roadmap.isRecruit(), roadmap.getCode(), roadmap.getCategory().getValue(), steps);
         }
 
         public record Creator(String name, String image) {}
