@@ -5,6 +5,7 @@ resources:
   - backend.yaml
   - redis.yaml
   - ingress.yaml
+  - frontend.yaml
 configMapGenerator:
   - name: nginx
     files:
