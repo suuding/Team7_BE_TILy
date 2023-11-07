@@ -36,6 +36,10 @@ import java.util.Arrays;
 @EnableJpaAuditing
 @SpringBootApplication
 public class TiLyApplication {
+    
+    static {
+		System.setProperty("com.amazonaws.sdk.disableEc2Metadata", "true");
+	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(TiLyApplication.class, args);

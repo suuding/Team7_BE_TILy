@@ -15,8 +15,8 @@ spring :
   mail:
     host: smtp.gmail.com
     port: 587
-    username:
-    password:
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
     properties:
       mail:
         smtp:
@@ -29,16 +29,16 @@ spring :
     port: 6379
 
   datasource:
-    url: jdbc:mariadb://mariadb:3306/tily
-    username:
-    password:
+    url: jdbc:mariadb://mariadb:3306/tily?useSSL=false&allowPublicKeyRetrieval=true&rewriteBatchedStatements=true&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+    username: ${MARIADB_USERNAME}
+    password: ${MARIADB_PASSWORD}
     driver-class-name: org.mariadb.jdbc.Driver
 
 cloud:
   aws:
     credentials:
-      access-key:
-      secret-key:
+      access-key: ${ACCESS_KEY}
+      secret-key: ${SECRET_KEY}
     s3:
       folder :
         folderName1: user
