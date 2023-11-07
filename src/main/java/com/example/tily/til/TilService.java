@@ -86,7 +86,6 @@ public class TilService {
         Til til = getTilById(tilId);
 
         Step step = til.getStep();
-        //Roadmap roadmap = til.getRoadmap();
 
         // roadmap 에 속한 사람만 볼 수 있음 (roadmap에 속하면 userstep에 넣어짐) -> getUserBelongRoadmap 대신 사용 가능
         UserStep userStep = userStepRepository.findByUserIdAndStepId(user.getId(), step.getId())
@@ -132,7 +131,7 @@ public class TilService {
         UserStep userstep = userStepRepository.findByUserIdAndStepId(user.getId(), step.getId())
                 .orElseThrow(()-> new CustomException(ExceptionCode.TIL_SUBMIT_FORBIDDEN));
 
-        // 이미 제출한 경우
+        // 이미 til을 제출한 경우
         if (userstep.getIsSubmit().equals(true))
             throw new CustomException(ExceptionCode.TIL_ALREADY_SUBMIT);
 
@@ -140,7 +139,6 @@ public class TilService {
         LocalDateTime now = LocalDateTime.now();
         if (step.getDueDate()!=null && now.isAfter(step.getDueDate()))
             throw new CustomException(ExceptionCode.TIL_END_DUEDATE);
-
 
         til.submitTil(requestDTO.submitContent()); // 내용, 제출 내용 저장
         userstep.submit(); // 제출 여부(완료) 저장

@@ -33,10 +33,11 @@ public enum ExceptionCode {
     TIL_ALREADY_SUBMIT(HttpStatus.BAD_REQUEST, "이미 til을 제출하였습니다."),
     TIL_DELETE_FORBIDDEN(HttpStatus.FORBIDDEN, "해당 til을 삭제할 권한이 없습니다."),
     TIL_END_DUEDATE(HttpStatus.BAD_REQUEST, "제출 시간이 지나 til을 제출할 수 없습니다."),
+    TIL_FORBIDDEN(HttpStatus.FORBIDDEN, "til에 대한 권한이 없습니다."),
 
     // roadmap 관련 에러
     ROADMAP_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 roadmap을 찾을 수 없습니다."),
-    ROADMAP_NOT_FORBIDDEN(HttpStatus.FORBIDDEN, "해당 로드냅에 속하지 않았습니다."),
+    ROADMAP_NOT_FORBIDDEN(HttpStatus.FORBIDDEN, "해당 로드맵에 속하지 않았습니다."),
     ROADMAP_NOT_BELONG(HttpStatus.NOT_FOUND, "해당 reoadmap에 속하지 않습니다."),
     ROADMAP_FORBIDDEN(HttpStatus.FORBIDDEN, "해당 roadmap을 조회할 권한이 없습니다."),
     ROADMAP_SUBMIT_FORBIDDEN(HttpStatus.FORBIDDEN, "해당 til을 제출할 권한이 없습니다."),
