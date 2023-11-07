@@ -11,6 +11,7 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
@@ -25,12 +26,12 @@ public class StepControllerTest {
     private ObjectMapper om;
 
     @DisplayName("개인 로드맵 스텝_생성_성공_test")
-    @WithUserDetails(value = "hong@naver.com")
+    @WithUserDetails(value = "tngus@test.com")
     @Test
     public void individual_step_create_success_test() throws Exception {
 
         // given
-        Long id = 1L;
+        Long roadmapId = 1L;
 
         StepRequest.CreateIndividualStepDTO requestDTO = new StepRequest.CreateIndividualStepDTO("스프링 시큐리티 - 세팅");
 
@@ -38,7 +39,7 @@ public class StepControllerTest {
 
         // when
         ResultActions result = mvc.perform(
-                post("/roadmaps/individual/"+ id +"/steps")
+                post("/roadmaps/individual/"+ roadmapId +"/steps")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(requestBody)
         );
@@ -54,7 +55,7 @@ public class StepControllerTest {
     public void individual_step_create_fail_test_1() throws Exception {
 
         // given
-        Long id = 50L;
+        Long roadmapId = 50L;
 
         StepRequest.CreateIndividualStepDTO requestDTO = new StepRequest.CreateIndividualStepDTO("스프링 시큐리티 - 세팅");
 
@@ -62,13 +63,14 @@ public class StepControllerTest {
 
         // when
         ResultActions result = mvc.perform(
-                post("/roadmaps/individual/"+ id +"/steps")
+                post("/roadmaps/individual/"+ roadmapId +"/steps")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(requestBody)
         );
 
         // then
         result.andExpect(jsonPath("$.success").value("false"));
+        result.andExpect(jsonPath("$.message").value("해당 roadmap을 찾을 수 없습니다."));
     }
 
     @DisplayName("개인 로드맵 스텝_생성_실패_test_1: 잘못된 제목 형식")
@@ -77,7 +79,7 @@ public class StepControllerTest {
     public void individual_step_create_fail_test_2() throws Exception {
 
         // given
-        Long id = 1L;
+        Long roadmapId = 1L;
 
         StepRequest.CreateIndividualStepDTO requestDTO = new StepRequest.CreateIndividualStepDTO("");
 
@@ -85,13 +87,14 @@ public class StepControllerTest {
 
         // when
         ResultActions result = mvc.perform(
-                post("/roadmaps/individual/"+ id +"/steps")
+                post("/roadmaps/individual/"+ roadmapId +"/steps")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(requestBody)
         );
 
         // then
         result.andExpect(jsonPath("$.success").value("false"));
+        result.andExpect(jsonPath("$.message").value("스텝 제목을 입력해주세요."));
     }
 
     @DisplayName("레퍼런스_조회_성공_test")
@@ -100,11 +103,11 @@ public class StepControllerTest {
     public void find_reference_success_test() throws Exception {
         // given
         Long stepId = 4L;
-        Long roadmapsId = 1L;
+        Long roadmapId = 1L;
 
         // when
         ResultActions result = mvc.perform(
-                post("/roadmaps/" + roadmapsId + "/steps/"+ stepId +"/references")
+                get("/roadmaps/" + roadmapId + "/steps/"+ stepId +"/references")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
         );
 
@@ -121,15 +124,16 @@ public class StepControllerTest {
     public void find_reference_fail_test() throws Exception {
         // given
         Long stepId = 20L;
-        Long roadmapsId = 1L;
+        Long roadmapId = 1L;
 
         // when
         ResultActions result = mvc.perform(
-                post("/roadmaps/" + roadmapsId + "/steps/"+ stepId +"/references")
+                get("/roadmaps/" + roadmapId + "/steps/"+ stepId +"/references")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
         );
 
         // then
         result.andExpect(jsonPath("$.success").value("false"));
+        result.andExpect(jsonPath("$.message").value("해당 step을 찾을 수 없습니다."));
     }
 }

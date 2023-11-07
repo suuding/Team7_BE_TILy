@@ -153,12 +153,33 @@ public class UserControllerTest {
         result.andExpect(jsonPath("$.message").value("올바른 비밀번호 형식을 입력해주세요."));
     }
 
+    @DisplayName("사용자_회원가입_실패_test_3:잘못된 비밀번호 길이")
+    @Test
+    public void user_join_fail_test_3() throws Exception {
+
+        // given
+        UserRequest.JoinDTO requestDTO = new UserRequest.JoinDTO("test@nate.com", "test", "te!");
+
+        String requestBody = om.writeValueAsString(requestDTO);
+
+        // when
+        ResultActions result = mvc.perform(
+                post("/join")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(requestBody)
+        );
+
+        // then
+        result.andExpect(jsonPath("$.success").value("false"));
+        result.andExpect(jsonPath("$.message").value("올바른 비밀번호 형식을 입력해주세요."));
+    }
+
     @DisplayName("사용자_로그인_성공_test")
     @Test
     public void user_login_success_test() throws Exception {
 
         // given
-        UserRequest.LoginDTO requestDTO = new UserRequest.LoginDTO("tngus@test.com", "hongHong!");
+        UserRequest.LoginDTO requestDTO = new UserRequest.LoginDTO("tngus@test.com", "hongHong1!");
 
         String requestBody = om.writeValueAsString(requestDTO);
 
@@ -178,7 +199,7 @@ public class UserControllerTest {
     public void user_login_fail_test_1() throws Exception {
 
         // given
-        UserRequest.LoginDTO requestDTO = new UserRequest.LoginDTO("tngus1@test.com", "Honghong!");
+        UserRequest.LoginDTO requestDTO = new UserRequest.LoginDTO("tngus1@test.com", "test1234!");
 
         String requestBody = om.writeValueAsString(requestDTO);
 
@@ -199,7 +220,7 @@ public class UserControllerTest {
     public void user_login_fail_test_2() throws Exception {
 
         // given
-        UserRequest.LoginDTO requestDTO = new UserRequest.LoginDTO("tngus@test.com", "Honghong!@");
+        UserRequest.LoginDTO requestDTO = new UserRequest.LoginDTO("tngus@test.com", "Honghong123!");
 
         String requestBody = om.writeValueAsString(requestDTO);
 

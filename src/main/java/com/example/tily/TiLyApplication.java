@@ -43,8 +43,11 @@ public class TiLyApplication {
 
 	@Profile("local")
 	@Bean
-	CommandLineRunner localServerStart(UserRepository userRepository, RoadmapRepository roadmapRepository, StepRepository stepRepository, ReferenceRepository referenceRepository, TilRepository tilRepository, PasswordEncoder passwordEncoder,
-									   UserRoadmapRepository userRoadmapRepository, UserStepRepository userStepRepository, CommentRepository commentRepository, AlarmRepository alarmRepository) {
+	CommandLineRunner localServerStart(UserRepository userRepository, RoadmapRepository roadmapRepository,
+									   StepRepository stepRepository, ReferenceRepository referenceRepository,
+									   TilRepository tilRepository, PasswordEncoder passwordEncoder,
+									   UserRoadmapRepository userRoadmapRepository, UserStepRepository userStepRepository,
+									   CommentRepository commentRepository, AlarmRepository alarmRepository) {
 
 		return args -> {
 			userRepository.saveAll(Arrays.asList(

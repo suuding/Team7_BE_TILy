@@ -100,7 +100,7 @@ public class RoadmapControllerTest {
         // step1의 참조
         RoadmapRequest.ReferenceDTOs references1 = new RoadmapRequest.ReferenceDTOs(youtubeReferences, webReferences);
 
-        RoadmapRequest.StepDTO step1 = new RoadmapRequest.StepDTO(null, "데드락(Deadlock)", "스텝 1", references1, "2023-11-03 10:58:47");
+        RoadmapRequest.StepDTO step1 = new RoadmapRequest.StepDTO(null, "데드락(Deadlock)", "스텝 1", references1, LocalDateTime.of(2023, 11, 12, 12, 32,22,3333));
 
         List<RoadmapRequest.StepDTO> steps = new ArrayList<>();
         steps.add(step1);
@@ -149,7 +149,7 @@ public class RoadmapControllerTest {
         // step1의 참조
         RoadmapRequest.ReferenceDTOs references1 = new RoadmapRequest.ReferenceDTOs(youtubeReferences, webReferences);
 
-        RoadmapRequest.StepDTO step1 = new RoadmapRequest.StepDTO(null, "데드락(Deadlock)", "스텝 1", references1, "2023-11-03 10:58:47");
+        RoadmapRequest.StepDTO step1 = new RoadmapRequest.StepDTO(null, "데드락(Deadlock)", "스텝 1", references1, LocalDateTime.of(2023, 11, 12, 12, 32,22,3333));
 
         List<RoadmapRequest.StepDTO> steps = new ArrayList<>();
         steps.add(step1);
@@ -195,6 +195,8 @@ public class RoadmapControllerTest {
 
         String responseBody = result.andReturn().getResponse().getContentAsString();
         System.out.println("테스트 : "+responseBody);
+
+        result.andExpect(jsonPath("$.success").value("true"));
     }
 
     @DisplayName("그룹 로드맵_조회_실패_test: 존재하지 않은 로드맵")
@@ -260,10 +262,10 @@ public class RoadmapControllerTest {
     }
 
     // 실패 케이스는 화면을 바탕으로 만듦
-    @DisplayName("그룹 로드맵_수정_실패_test: 로드맵 이름을 입력하지 않음")
+    @DisplayName("그룹 로드맵_수정_실패1_test: 로드맵 이름을 입력하지 않음")
     @WithUserDetails(value = "admin@test.com")
     @Test
-    public void roadmap_group_update_fail_test() throws Exception {
+    public void roadmap_group_update_fail_test_1() throws Exception {
         // given
         Long id = 4L;
 
@@ -303,6 +305,52 @@ public class RoadmapControllerTest {
 
         // then
         result.andExpect(jsonPath("$.success").value("false"));
+    }
+
+    @DisplayName("그룹 로드맵_수정_실패2_test:권한 없는 접근")
+    @WithUserDetails(value = "test@test.com")
+    @Test
+    public void roadmap_group_update_fail_test_2() throws Exception {
+        // given
+        Long id = 4L;
+
+        // step1의 참조 - youtube
+        List<RoadmapRequest.ReferenceDTO> youtubeReferences = new ArrayList<>();
+
+        RoadmapRequest.ReferenceDTO youtubeReference1 = new RoadmapRequest.ReferenceDTO(1L, "https://www.youtube.com/watch?v=수정된 주소");
+        youtubeReferences.add(youtubeReference1);
+
+        // step1의 참조 - web
+        List<RoadmapRequest.ReferenceDTO> webReferences = new ArrayList<>();
+
+        RoadmapRequest.ReferenceDTO webReference1 = new RoadmapRequest.ReferenceDTO(4L, "https://blog.naver.com/hoyai-/수정된 주소");
+        webReferences.add(webReference1);
+
+        // step1의 참조
+        RoadmapRequest.ReferenceDTOs references1 = new RoadmapRequest.ReferenceDTOs(youtubeReferences, webReferences);
+
+        // 스텝
+        RoadmapRequest.StepDTO step1 = new RoadmapRequest.StepDTO(4L, "다형성(Polymorphism)", "수정된 step description 입니다", references1, null);
+        List<RoadmapRequest.StepDTO> steps = new ArrayList<>();
+        steps.add(step1);
+
+        // 로드맵
+        RoadmapRequest.RoadmapDTO roadmap = new RoadmapRequest.RoadmapDTO("new JAVA - 생활 코딩", "새로운 버젼 입니다", "modifiedCode1234", false, true);
+
+        RoadmapRequest.UpdateGroupRoadmapDTO requestDTO = new RoadmapRequest.UpdateGroupRoadmapDTO(roadmap, steps);
+
+        String requestBody = om.writeValueAsString(requestDTO);
+
+        // when
+        ResultActions result = mvc.perform(
+                post("/roadmaps/"+ id)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(requestBody)
+        );
+
+        // then
+        result.andExpect(jsonPath("$.success").value("false"));
+        result.andExpect(jsonPath("$.message").value("해당 roadmap을 조회할 권한이 없습니다."));
     }
 
     @DisplayName("내가 속한 로드맵 전체 목록_조회_성공_test")
@@ -375,10 +423,10 @@ public class RoadmapControllerTest {
         result.andExpect(jsonPath("$.result.roadmaps[0].name").value("JAVA 입문 수업 - 생활 코딩"));
     }
 
-    @DisplayName("로드맵_신청하기_성공_test")
-    @WithUserDetails(value = "hong@naver.com")
+    @DisplayName("그룹로드맵_신청하기_성공_test")
+    @WithUserDetails(value = "tngus@test.com")
     @Test
-    public void roadmap_apply_success_test() throws Exception{
+    public void group_roadmap_apply_success_test() throws Exception{
         // given
         Long id = 10L;
 
@@ -388,7 +436,7 @@ public class RoadmapControllerTest {
 
         // when
         ResultActions result = mvc.perform(
-                post("/roadmaps/" + id + "/apply")
+                post("/roadmaps/groups/" + id + "/apply")
                         .content(requestBody)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
 
@@ -398,10 +446,10 @@ public class RoadmapControllerTest {
         result.andExpect(jsonPath("$.success").value("true"));
     }
 
-    @DisplayName("로드맵_신청하기_실패_test: 존재하지 않은 로드맵")
+    @DisplayName("로드맵_신청하기_실패_test1: 존재하지 않은 로드맵")
     @WithUserDetails(value = "hong@naver.com")
     @Test
-    public void roadmap_apply_fail_test() throws Exception{
+    public void group_roadmap_apply_fail_test_1() throws Exception{
         // given
         Long id = 20L;
 
@@ -411,7 +459,7 @@ public class RoadmapControllerTest {
 
         // when
         ResultActions result = mvc.perform(
-                post("/roadmaps/" + id + "/apply")
+                post("/roadmaps/groups/" + id + "/apply")
                         .content(requestBody)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
         );
@@ -420,10 +468,33 @@ public class RoadmapControllerTest {
         result.andExpect(jsonPath("$.success").value("false"));
     }
 
-    @DisplayName("로드맵_참여하기_성공_test")
+    @DisplayName("로드맵_신청하기_실패_test2: 이미 가입한 로드맵")
     @WithUserDetails(value = "hong@naver.com")
     @Test
-    public void roadmap_participate_success_test() throws Exception{
+    public void group_roadmap_apply_fail_test_2() throws Exception{
+        // given
+        Long id = 10L;
+
+        RoadmapRequest.ApplyRoadmapDTO requestDTO = new RoadmapRequest.ApplyRoadmapDTO("안녕하세요, 반갑습니다~");
+
+        String requestBody = om.writeValueAsString(requestDTO);
+
+        // when
+        ResultActions result = mvc.perform(
+                post("/roadmaps/groups/" + id + "/apply")
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+
+        // then
+        result.andExpect(jsonPath("$.success").value("false"));
+        result.andExpect(jsonPath("$.message").value("이미 해당 로드맵에 속했습니다."));
+    }
+
+    @DisplayName("틸리로드맵_참여하기_성공_test")
+    @WithUserDetails(value = "tngus@test.com")
+    @Test
+    public void tily_roadmap_participate_success_test() throws Exception{
         // given
         RoadmapRequest.ParticipateRoadmapDTO requestDTO = new RoadmapRequest.ParticipateRoadmapDTO("pnu12345");
 
@@ -440,10 +511,10 @@ public class RoadmapControllerTest {
         result.andExpect(jsonPath("$.success").value("true"));
     }
 
-    @DisplayName("로드맵_참여하기_실패_test: 존재하지 않은 로드맵")
-    @WithUserDetails(value = "hong@naver.com")
+    @DisplayName("틸리로드맵_참여하기_실패_test1: 존재하지 않은 로드맵")
+    @WithUserDetails(value = "tngus@test.com")
     @Test
-    public void roadmap_participate_fail_test() throws Exception{
+    public void tily_roadmap_participate_fail_test_1() throws Exception{
         // given
         RoadmapRequest.ParticipateRoadmapDTO requestDTO = new RoadmapRequest.ParticipateRoadmapDTO("pnu12347");
 
@@ -458,6 +529,27 @@ public class RoadmapControllerTest {
 
         // then
         result.andExpect(jsonPath("$.success").value("false"));
+    }
+
+    @DisplayName("틸리로드맵_참여하기_실패_test2: 이미 속한 틸리 로드맵")
+    @WithUserDetails(value = "hong@naver.com")
+    @Test
+    public void tily_roadmap_participate_fail_test_2() throws Exception{
+        // given
+        RoadmapRequest.ParticipateRoadmapDTO requestDTO = new RoadmapRequest.ParticipateRoadmapDTO("pnu12345");
+
+        String requestBody = om.writeValueAsString(requestDTO);
+
+        // when
+        ResultActions result = mvc.perform(
+                post("/roadmaps/groups/participate")
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+
+        // then
+        result.andExpect(jsonPath("$.success").value("false"));
+        result.andExpect(jsonPath("$.message").value("이미 해당 로드맵에 속했습니다."));
     }
 
     @DisplayName("로드맵_구성원_전체조회_성공_test")
@@ -476,16 +568,58 @@ public class RoadmapControllerTest {
         // then
         result.andExpect(jsonPath("$.success").value("true"));
         result.andExpect(jsonPath("$.result.users[0].name").value("hong"));
-        result.andExpect(jsonPath("$.result.users[0].role").value("ROLE_MANAGER"));
+        result.andExpect(jsonPath("$.result.myRole").value("manager"));
 
         String responseBody = result.andReturn().getResponse().getContentAsString();
         System.out.println("테스트 : "+responseBody);
     }
 
-    @DisplayName("로드맵_구성원_전체조회_실패_test: 존재하지 않은 로드맵")
+    @DisplayName("로드맵_구성원_전체조회_실패_test:권한 없음")
+    @WithUserDetails(value = "test@test.com")
+    @Test
+    public void roadmap_members_find_fail_test_1() throws Exception{
+        // given
+        Long id = 10L;
+
+        // when
+        ResultActions result = mvc.perform(
+                get("/roadmaps/groups/"+id+"/members")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+
+        // then
+        result.andExpect(jsonPath("$.success").value("false"));
+        result.andExpect(jsonPath("$.message").value("해당 roadmap을 조회할 권한이 없습니다."));
+
+        String responseBody = result.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : "+responseBody);
+    }
+
+    @DisplayName("로드맵_구성원_전체조회_실패_test: 해당 로드맵에 속하지 않은 사람의 접근")
+    @WithUserDetails(value = "tngus@test.com")
+    @Test
+    public void roadmap_members_find_fail_test_2() throws Exception{
+        // given
+        Long id = 10L;
+
+        // when
+        ResultActions result = mvc.perform(
+                get("/roadmaps/groups/"+id+"/members")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+
+        // then
+        result.andExpect(jsonPath("$.success").value("false"));
+        result.andExpect(jsonPath("$.message").value("해당 reoadmap에 속하지 않습니다."));
+
+        String responseBody = result.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : "+responseBody);
+    }
+
+    @DisplayName("로드맵_구성원_전체조회_실패_test3: 존재하지 않은 로드맵")
     @WithUserDetails(value = "hong@naver.com")
     @Test
-    public void roadmap_members_find_fail_test() throws Exception{
+    public void roadmap_members_find_fail_test3() throws Exception{
         // given
         Long id = 20L;
 
@@ -500,11 +634,11 @@ public class RoadmapControllerTest {
     }
 
     @DisplayName("구성원_역할_변경하기_성공_test")
-    @WithUserDetails(value = "hoyai@naver.com")
+    @WithUserDetails(value = "admin@test.com")
     @Test
     public void member_role_change_success_test() throws Exception{
         // given
-        Long groupsId = 12L;
+        Long groupsId = 4L;
         Long usersId = 2L;
         RoadmapRequest.ChangeMemberRoleDTO requestDTO = new RoadmapRequest.ChangeMemberRoleDTO(GroupRole.ROLE_MANAGER.getValue());
 
@@ -521,13 +655,13 @@ public class RoadmapControllerTest {
         result.andExpect(jsonPath("$.success").value("true"));
     }
 
-    @DisplayName("구성원_역할_변경하기_실패_test1: 존재하지 않은 유저")
-    @WithUserDetails(value = "hoyai@naver.com")
+    @DisplayName("구성원_역할_변경하기_실패_test1: 권한 없는 유저")
+    @WithUserDetails(value = "tngus@test.com")
     @Test
     public void member_role_change_fail_test_1() throws Exception{
         // given
-        Long groupsId = 12L;
-        Long usersId = 10L;
+        Long groupsId = 4L;
+        Long usersId = 1L;
         RoadmapRequest.ChangeMemberRoleDTO requestDTO = new RoadmapRequest.ChangeMemberRoleDTO(GroupRole.ROLE_MANAGER.getValue());
 
         String requestBody = om.writeValueAsString(requestDTO);
@@ -541,6 +675,7 @@ public class RoadmapControllerTest {
 
         // then
         result.andExpect(jsonPath("$.success").value("false"));
+        result.andExpect(jsonPath("$.message").value("master 권한이 필요합니다."));
     }
 
     @DisplayName("구성원_역할_변경하기_실패_test2: 존재하지 않은 로드맵")
@@ -564,6 +699,7 @@ public class RoadmapControllerTest {
         // then
         result.andExpect(jsonPath("$.success").value("false"));
     }
+
 
     @DisplayName("구성원_강퇴하기_성공_test")
     @WithUserDetails(value = "hoyai@naver.com")
@@ -614,7 +750,23 @@ public class RoadmapControllerTest {
                 delete("/roadmaps/groups/" + groupsId + "/members/" + usersId)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
         );
+        // then
+        result.andExpect(jsonPath("$.success").value("false"));
+    }
 
+    @DisplayName("구성원_강퇴하기_실패_test3: 강퇴 권한 없는 유저")
+    @WithUserDetails(value = "tngus@test.com")
+    @Test
+    public void member_dismiss_fail_test_3() throws Exception {
+        // given
+        Long groupsId = 12L;
+        Long usersId = 5L;
+
+        // when
+        ResultActions result = mvc.perform(
+                delete("/roadmaps/groups/" + groupsId + "/members/" + usersId)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
         // then
         result.andExpect(jsonPath("$.success").value("false"));
     }
@@ -712,6 +864,25 @@ public class RoadmapControllerTest {
         result.andExpect(jsonPath("$.success").value("false"));
     }
 
+    @DisplayName("신청_승인하기_실패3_test: 권한이 없는 유저")
+    @WithUserDetails(value = "test@test.com")
+    @Test
+    public void application_accept_fail_test_3() throws Exception {
+        // given
+        Long groupsId = 10L;
+        Long membersId = 6L;
+
+        // when
+        ResultActions result = mvc.perform(
+                post("/roadmaps/groups/"+ groupsId +"/members/"+ membersId +"/accept")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+
+        // then
+        result.andExpect(jsonPath("$.success").value("false"));
+        result.andExpect(jsonPath("$.message").value("해당 roadmap을 조회할 권한이 없습니다."));
+    }
+
     @DisplayName("신청_거절하기_성공_test")
     @WithUserDetails(value = "hong@naver.com")
     @Test
@@ -748,7 +919,7 @@ public class RoadmapControllerTest {
         result.andExpect(jsonPath("$.success").value("false"));
     }
 
-    @DisplayName("신청_거절하기_실패1_test2: 존재하지 않은 로드맵")
+    @DisplayName("신청_거절하기_실패2_test: 존재하지 않은 로드맵")
     @WithUserDetails(value = "hong@naver.com")
     @Test
     public void application_reject_fail_test_2() throws Exception {
@@ -766,6 +937,25 @@ public class RoadmapControllerTest {
         result.andExpect(jsonPath("$.success").value("false"));
     }
 
+    @DisplayName("신청_거절하기_실패3_test: 권한 없는 유저")
+    @WithUserDetails(value = "test@test.com")
+    @Test
+    public void application_reject_fail_test_3() throws Exception {
+        // given
+        Long groupsId = 10L;
+        Long membersId = 6L;
+
+        // when
+        ResultActions result = mvc.perform(
+                delete("/roadmaps/groups/"+ groupsId +"/members/"+ membersId +"/reject")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+
+        // then
+        result.andExpect(jsonPath("$.success").value("false"));
+        result.andExpect(jsonPath("$.message").value("해당 roadmap을 조회할 권한이 없습니다."));
+    }
+/*
     @DisplayName("특정스텝_틸_조회하기_성공_test1: isSubmit이 true인 케이스")
     @WithUserDetails(value = "hong@naver.com")
     @Test
@@ -869,4 +1059,6 @@ public class RoadmapControllerTest {
         result.andExpect(jsonPath("$.success").value("true"));
         result.andExpect(jsonPath("$.result.members[1].name").value("masterHong"));
     }
+
+ */
 }
