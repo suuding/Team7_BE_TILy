@@ -1,11 +1,12 @@
 package com.example.tily._core.security;
 
 
-import com.example.tily._core.errors.exception.Exception401;
-import com.example.tily._core.errors.exception.Exception403;
+import com.example.tily._core.errors.exception.CustomException;
+import com.example.tily._core.errors.exception.ExceptionCode;
 import com.example.tily._core.utils.FilterResponseUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -60,19 +61,21 @@ public class SecurityConfig {
 
         // 인증 실패 처리
         http.exceptionHandling().authenticationEntryPoint((request, response, authException) -> {
-            FilterResponseUtils.unAuthorized(response, new Exception401("인증되지 않았습니다"));
+            FilterResponseUtils.unAuthorized(response, new CustomException(ExceptionCode.USER_UNAUTHORIZED));
         });
 
         // 권한 실패 처리
         http.exceptionHandling().accessDeniedHandler((request, response, accessDeniedException) -> {
-            FilterResponseUtils.forbidden(response, new Exception403("권한이 없습니다"));
+            FilterResponseUtils.forbidden(response, new CustomException(ExceptionCode.USER_FORBIDDEN));
         });
 
         // 인증, 권한 필터 설정
         http.authorizeRequests(
-                authorize -> authorize.antMatchers("/roadmaps/**", "/user/**").authenticated()
-                        .antMatchers("/admin/**")
-                        .access("hasRole('ADMIN')")
+                authorize -> authorize.antMatchers(HttpMethod.GET, "/roadmaps").permitAll()
+                        .antMatchers(HttpMethod.GET, "/roadmaps/my").authenticated()
+                        .antMatchers(HttpMethod.GET, "/roadmaps/{roadmapId}").access("hasRole('ROLE_NONE') or hasRole('ROLE_USER')")
+                        .antMatchers("/roadmaps/**", "/user/**").authenticated()
+                        .antMatchers("/admin/**").access("hasRole('ADMIN')")
                         .anyRequest().permitAll()
         );
 

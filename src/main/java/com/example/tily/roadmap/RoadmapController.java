@@ -31,6 +31,14 @@ public class RoadmapController {
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
 
+    // 틸리 로드맵 생성하기
+    @PostMapping("/roadmaps/tily")
+    public ResponseEntity<?> createTilyRoadmap(@RequestBody @Valid RoadmapRequest.CreateTilyRoadmapDTO requestDTO, Errors errors,
+                                                @AuthenticationPrincipal CustomUserDetails userDetails){
+        RoadmapResponse.CreateRoadmapDTO responseDTO = roadmapService.createTilyRoadmap(requestDTO, userDetails.getUser());
+        return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
+    }
+
     // 틸리, 그룹 로드맵 정보 조회하기
     @GetMapping("/roadmaps/{id}")
     public ResponseEntity<?> findGroupRoadmap(@PathVariable Long id, @AuthenticationPrincipal CustomUserDetails userDetails){
@@ -64,11 +72,18 @@ public class RoadmapController {
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
 
-    // 특정 로드맵에 참여 신청하기
-    @PostMapping("/roadmaps/{id}/apply")
-    public ResponseEntity<?> applyRoadmap(@RequestBody @Valid RoadmapRequest.ApplyRoadmapDTO requestDTO, Errors errors,
-                                          @PathVariable Long id, @AuthenticationPrincipal CustomUserDetails userDetails){
-        roadmapService.applyRoadmap(requestDTO, id, userDetails.getUser());
+    // 그룹 로드맵에 참여 신청하기
+    @PostMapping("/roadmaps/groups/{groupId}/apply")
+    public ResponseEntity<?> applyGroupRoadmap(@RequestBody @Valid RoadmapRequest.ApplyRoadmapDTO requestDTO, Errors errors,
+                                          @PathVariable("groupId") Long groupId, @AuthenticationPrincipal CustomUserDetails userDetails){
+        roadmapService.applyGroupRoadmap(requestDTO, groupId, userDetails.getUser());
+        return ResponseEntity.ok().body(ApiUtils.success(null));
+    }
+
+    // 틸리 로드맵에 참여 신청하기
+    @PostMapping("/roadmaps/tily/{tilyId}/apply")
+    public ResponseEntity<?> applyTilyRoadmap(@PathVariable("tilyId") Long tilyId, @AuthenticationPrincipal CustomUserDetails userDetails){
+        roadmapService.applyTilyRoadmap(tilyId, userDetails.getUser());
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 

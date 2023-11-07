@@ -1,14 +1,7 @@
 package com.example.tily.roadmap;
 
-import com.example.tily._core.errors.exception.Exception400;
-import com.example.tily._core.errors.exception.Exception404;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @AllArgsConstructor
 @Getter

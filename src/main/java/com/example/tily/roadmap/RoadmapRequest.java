@@ -15,10 +15,13 @@ public class RoadmapRequest {
                                              @Size(min=2, max=20, message = "이름은 2자에서 20자 이내여야 합니다.") String name) {
     }
 
-    public record CreateGroupRoadmapDTO(RoadmapDTO roadmap, List<StepDTO> steps) {
+    public record CreateGroupRoadmapDTO(String name, String description, Boolean isPublic) {
     }
 
-    public record UpdateGroupRoadmapDTO(RoadmapDTO roadmap, List<StepDTO> steps) {
+    public record CreateTilyRoadmapDTO(RoadmapDTO roadmap, List<StepDTO> steps) {
+    }
+
+    public record UpdateGroupRoadmapDTO(String name, String description, Boolean isPublic, Boolean isRecruit) {
     }
 
     public record RoadmapDTO(@NotBlank(message = "이름을 입력해주세요.") String name, String description, String code, Boolean isPublic, Boolean isRecruit){
@@ -30,8 +33,7 @@ public class RoadmapRequest {
             String title,
             String description,
             ReferenceDTOs references,
-            @Pattern(regexp = "^[0-9]{4}+-[0-9]{2}+-[0-9]{2}+( )+[0-9]{2}+:[0-9]{2}+:[0-9]{2}$", message = "잘못된 날짜 형식입니다.")
-            String dueDate) {}
+            LocalDateTime dueDate) {}
 
     public record ReferenceDTOs(List<ReferenceDTO> youtube, List<ReferenceDTO> web) {
     }
