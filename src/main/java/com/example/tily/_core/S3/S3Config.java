@@ -32,7 +32,8 @@ public class S3Config {
     @Profile({"local", "prod"})
     public AmazonS3Client amazonS3Client() {
         BasicAWSCredentials awsCreds = new BasicAWSCredentials(accessKey, secretKey);
-        return (AmazonS3Client) AmazonS3ClientBuilder.standard()
+        return (AmazonS3Client) AmazonS3ClientBuilder
+                .standard()
                 .withRegion(region)
                 .withCredentials(new AWSStaticCredentialsProvider(awsCreds))
                 .build();
@@ -50,7 +51,8 @@ public class S3Config {
         clientConfiguration.setProxyPort(proxyPort);
         clientConfiguration.setProxyProtocol(Protocol.HTTP);
 
-        return (AmazonS3Client) AmazonS3ClientBuilder.standard()
+        return (AmazonS3Client) AmazonS3ClientBuilder
+                .standard()
                 .withRegion(region)
                 .withCredentials(new AWSStaticCredentialsProvider(awsCreds))
                 .build();
