@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -23,4 +24,8 @@ public interface RoadmapRepository extends JpaRepository<Roadmap, Long> {
     Slice<Roadmap> findAllByOrderByCreatedDateDesc(@Param("category") Category category, @Param("name") String name, Pageable pageable);
 
     Optional<Roadmap> findByCode(String code);
+
+    @Modifying
+    @Query("update Roadmap r SET r.isDeleted = true WHERE r.isDeleted = false AND r.id IN :roadmapIds")
+    void softDeleteRoadmapByRoadmapIds(List<Long> roadmapIds);
 }

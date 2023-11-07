@@ -549,23 +549,23 @@ public class RoadmapService {
 
         checkMasterAndManagerPermission(roadmapId, user);
 
+        // 1. Til과 연관된 Comment들을 삭제한다.
         List<Til> tils = getTilsByRoadmapId(roadmapId);
         List<Long> tilIds = tils.stream()
                 .map(Til::getId)
                 .collect(Collectors.toList());
 
-        List<Step> steps = getStepsByRoadmapId(roadmapId);
-        List<Long> stepIds = steps.stream()
-                .map(Step::getId)
-                .collect(Collectors.toList());
-
-        // 1. Til과 연관된 Comment들을 삭제한다.
         commentRepository.softDeleteCommentsByTilIds(tilIds);
 
         // 2. Til을 삭제한다.
         tilRepository.softDeleteTilsByTilIds(tilIds);
 
         // 3. Reference들을 삭제한다
+        List<Step> steps = getStepsByRoadmapId(roadmapId);
+        List<Long> stepIds = steps.stream()
+                .map(Step::getId)
+                .collect(Collectors.toList());
+
         referenceRepository.softDeleteReferenceByStepIds(stepIds);
 
         // 4. Step들을 삭제한다.

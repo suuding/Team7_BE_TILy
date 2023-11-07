@@ -41,6 +41,8 @@ public interface TilRepository extends JpaRepository<Til, Long>{
 
     List<Til> findByStepId(Long stepId);
 
+    List<Til> findByUserId(Long userId);
+
     @Query("select t from Til t where t.writer.id=:userId and t.step.id=:stepId")
     Til findByStepIdAndUserId(@Param("stepId") Long stepId, @Param("userId") Long userId);
 

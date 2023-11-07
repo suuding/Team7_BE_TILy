@@ -158,8 +158,4 @@ public class StepService {
     private UserRoadmap getUserBelongRoadmap(Long roadmapId, Long userId) {
         return userRoadmapRepository.findByRoadmapIdAndUserIdAndIsAcceptTrue(roadmapId, userId).orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_NOT_BELONG));
     }
-
-    private UserStep getUserStep(Long userId, Long stepId){
-        return userStepRepository.findByUserIdAndStepId(userId, stepId).orElseThrow(() -> new CustomException(ExceptionCode.STEP_NOT_INCLUDE));
-    }
 }

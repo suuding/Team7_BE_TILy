@@ -1,5 +1,6 @@
 package com.example.tily.roadmap.relation;
 
+import com.example.tily.roadmap.Category;
 import com.example.tily.roadmap.Roadmap;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -31,4 +32,10 @@ public interface UserRoadmapRepository extends JpaRepository<UserRoadmap, Long> 
     @Modifying
     @Query("update UserRoadmap ur SET ur.isDeleted = true WHERE ur.isDeleted = false AND ur.roadmap.id IN :roadmapId")
     void softDeleteUserRoadmapByRoadmapId(Long roadmapId);
+
+    @Modifying
+    @Query("update UserRoadmap ur SET ur.isDeleted = true WHERE ur.isDeleted = false AND ur.id IN :userRoadmapIds")
+    void softDeleteUserRoadmapByUserRoadmapIds(List<Long> userRoadmapIds);
+
+    List<UserRoadmap> findByUserId(Long userId);
 }
