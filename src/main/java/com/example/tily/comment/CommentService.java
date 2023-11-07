@@ -75,6 +75,6 @@ public class CommentService {
         }
 
         alarmRepository.deleteByCommentId(id);
-        commentRepository.deleteById(id);
+        commentRepository.deleteById(id); // soft delete 적용됨
     }
 }

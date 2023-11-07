@@ -58,6 +58,7 @@ public class TilController {
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 
+    // API 주소 수정 필요
     @DeleteMapping("/roadmaps/{roadmapId}/steps/{stepId}/tils/{tilId}")
     public ResponseEntity<?> deleteTil(@PathVariable("roadmapId") Long roadmapId,
                                        @PathVariable("stepId")Long stepId,
