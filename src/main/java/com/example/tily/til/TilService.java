@@ -148,6 +148,15 @@ public class TilService {
         if (checkTilWriterEqualUser(til, user))
             throw new CustomException(ExceptionCode.TIL_DELETE_FORBIDDEN);
 
+        List<Comment> comments = getCommentByStepId(tilId);
+        List<Long> commentIds = comments.stream()
+                .map(Comment::getId)
+                .collect(Collectors.toList());
+
+        // 1. Til과 연관된 Comment들을 삭제한다.
+        commentRepository.softDeleteAllComments(commentIds);
+
+        // 2. Til을 삭제한다.
         tilRepository.deleteById(tilId);
     }
 
@@ -185,6 +194,10 @@ public class TilService {
 
     private boolean checkTilWriterEqualUser(Til til, User user) {
         return !til.getWriter().getId().equals(user.getId());
+    }
+
+    private List<Comment> getCommentByStepId(Long tilId) {
+        return commentRepository.findByTilId(tilId);
     }
 
     // 사용자가 로드맵에 속했는지

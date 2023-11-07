@@ -123,11 +123,11 @@ public class StepService {
         // 3. Reference들을 삭제한다.
         referenceRepository.softDeleteAllReferences(referenceIds);
 
-        // 3. UserStep을 삭제한다
+        // 4. UserStep을 삭제한다
         UserStep userStep = getUserStepByUserIdAndStepId(user.getId(), stepId);
         userStepRepository.delete(userStep);
 
-        // 4. Step을 삭제한다
+        // 5. Step을 삭제한다
         stepRepository.delete(step);
     }
 
