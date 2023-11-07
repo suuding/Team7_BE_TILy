@@ -26,4 +26,4 @@ COPY --from=builder /home/gradle/project/build/libs/TILy-0.0.1-SNAPSHOT.jar .
 ENV DATABASE_URL=jdbc:mariadb://mariadb/tily
 
 # 빌드 결과 jar 파일을 실행
-CMD ["java", "-jar", "-Dspring.profiles.active=prod", "/home/gradle/project/build/libs/TILy-0.0.1-SNAPSHOT.jar"]
+CMD ["java", "-jar", "-Dspring.profiles.active=deploy", "/home/gradle/project/build/libs/TILy-0.0.1-SNAPSHOT.jar"]
