@@ -184,7 +184,7 @@ public class TilService {
 
     //  로드맵의 특정 step의 til 목록 조회하기
     @Transactional
-    public RoadmapResponse.FindTilOfStepDTO findTilOfStep(Long stepId, Boolean isSubmit, Boolean isMember, String name){
+    public RoadmapResponse.FindTilOfStepDTO findTilOfStep(Long stepId, boolean isSubmit, boolean isMember, String name){
 
         Step step = stepRepository.findById(stepId)
                 .orElseThrow(() -> new CustomException(ExceptionCode.STEP_NOT_FOUND));

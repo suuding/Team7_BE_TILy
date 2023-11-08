@@ -35,7 +35,7 @@ public class UserRoadmap extends BaseTimeEntity {
     private String content;
 
     @Column
-    private Boolean isAccept;
+    private boolean isAccept;
 
     @Column(nullable = false)
     private String role;
@@ -47,7 +47,7 @@ public class UserRoadmap extends BaseTimeEntity {
     private boolean isDeleted = false;
 
     @Builder
-    public UserRoadmap(Roadmap roadmap, User user, String content, Boolean isAccept, GroupRole role, int progress) {
+    public UserRoadmap(Roadmap roadmap, User user, String content, boolean isAccept, GroupRole role, int progress) {
         this.roadmap = roadmap;
         this.user = user;
         this.content = content;
@@ -58,7 +58,7 @@ public class UserRoadmap extends BaseTimeEntity {
 
     public void updateRole(String role) { this.role = role; }
 
-    public void updateIsAccept(Boolean isAccept) { this.isAccept = isAccept; }
+    public void updateIsAccept(boolean isAccept) { this.isAccept = isAccept; }
 
     public void updateProgress(int progress) {
         this.progress = progress;

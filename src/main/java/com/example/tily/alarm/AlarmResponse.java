@@ -28,7 +28,7 @@ public class AlarmResponse {
 
     public record AlarmDTO(Long id,
                            Long tilId,
-                           Boolean isRead,
+                           boolean isRead,
                            String createDate,
                            RoadmapDTO roadmap,
                            StepDTO step,

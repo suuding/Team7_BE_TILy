@@ -273,7 +273,7 @@ public class RoadmapService {
         if (ur.isPresent()) {
             if (ur.get().getRole().equals(GroupRole.ROLE_NONE.getValue()))
                 throw new CustomException(ExceptionCode.ROADMAP_REJECT);
-            else if (ur.get().getIsAccept().equals(true))
+            else if (ur.get().isAccept())
                 throw new CustomException(ExceptionCode.ROADMAP_ALREADY_MEMBER);
             else
                 throw new CustomException(ExceptionCode.ROADMAP_ALREADY_APPLY);
@@ -301,7 +301,7 @@ public class RoadmapService {
 
         // 이미 로드맵에 속한 경우
         Optional<UserRoadmap> ur = userRoadmapRepository.findByRoadmapIdAndUserId(id, user.getId());
-        if (ur.isPresent() && ur.get().getIsAccept().equals(true))
+        if (ur.isPresent() && ur.get().isAccept())
                 throw new CustomException(ExceptionCode.ROADMAP_ALREADY_MEMBER);
 
         UserRoadmap userRoadmap = UserRoadmap.builder()
