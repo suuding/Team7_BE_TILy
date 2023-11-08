@@ -13,7 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ImageService {
@@ -38,6 +40,7 @@ public class ImageService {
         User user = getUserById(userId);
         
         System.out.println("postmapping, user images - service");
+        log.info("postmapping, user - service")
         
         String storageFileName = s3Service.uploadFile(multipartFile, FileFolder.USER_IMAGE);
         if(user.getImage() != null) {

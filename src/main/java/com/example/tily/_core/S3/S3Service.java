@@ -13,7 +13,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class S3Service implements FileService {
@@ -23,10 +25,11 @@ public class S3Service implements FileService {
     @Override
     public String uploadFile(MultipartFile file, FileFolder fileFolder) {
 
-        System.out.println("s3service - uploadFile");
+        log.info("s3service - uploadFile");
         //파일 이름 생성
         String fileName = getFileFolder(fileFolder) + createFileName(file.getOriginalFilename());
         System.out.println("fileName = " + fileName);
+        log.info("filename : "+fileName);
         
         //파일 변환
         ObjectMetadata objectMetadata = new ObjectMetadata();
@@ -38,7 +41,7 @@ public class S3Service implements FileService {
             amazonS3.putObject(
                     new PutObjectRequest(s3Component.getBucket(), fileName, inputStream, objectMetadata).withCannedAcl(CannedAccessControlList.PublicReadWrite)
             );
-            System.out.println("12341324");
+            log.info("asdfasdfasf inpuStream");
         } catch (IOException e) {
             throw new CustomException(ExceptionCode.FILE_UPLOAD_FAIL);
         }

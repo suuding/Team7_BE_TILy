@@ -7,7 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
@@ -25,7 +27,8 @@ public class ImageController {
     @PostMapping("/users/{userId}/image")
     public ResponseEntity<?> uploadUserImage(@PathVariable Long userId, @RequestParam("image") MultipartFile file,
                                              @AuthenticationPrincipal CustomUserDetails userDetails) {
-
+        System.out.println("postmapping, user images");
+        log.info("user image, controller");
         imageService.updateUserImage(userId, file, userDetails.getUser());
 
         return ResponseEntity.ok().body(ApiUtils.success(null));
