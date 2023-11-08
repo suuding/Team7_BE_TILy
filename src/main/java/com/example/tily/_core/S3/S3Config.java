@@ -18,9 +18,11 @@ import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.http.SdkHttpClient;
 import software.amazon.awssdk.http.apache.ApacheHttpClient;
 import software.amazon.awssdk.http.apache.ProxyConfiguration;
+import lombok.extern.slf4j.Slf4j;
 
 import java.net.URI;
 
+@Slf4j
 @Configuration
 public class S3Config {
     @Value("${cloud.aws.credentials.access-key}") // application.yml 에 명시한 내용
