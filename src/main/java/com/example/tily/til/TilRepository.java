@@ -49,4 +49,6 @@ public interface TilRepository extends JpaRepository<Til, Long>{
     List<Til> findTilsByUserIdAndDateRange(@Param("userId") Long userId,
                                            @Param("startDate") LocalDateTime startDate,
                                            @Param("endDate") LocalDateTime endDate);
+
+    Til findByRoadmapIdAndStepId(Long roadmapId, Long stepId);
 }

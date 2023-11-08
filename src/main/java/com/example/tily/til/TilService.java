@@ -58,7 +58,7 @@ public class TilService {
 
         // step이 roadmap에 속했는지 확인
         if (!step.getRoadmap().equals(roadmap))
-            throw new CustomException(ExceptionCode.STEP_NOT_INCLUDE);
+            throw new CustomException(ExceptionCode.STEP_NOT_BELONG);
 
         getUserBelongRoadmap(roadmapId, user.getId());
 
