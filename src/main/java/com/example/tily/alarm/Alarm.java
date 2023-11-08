@@ -34,10 +34,10 @@ public class Alarm extends BaseTimeEntity {
     private Comment comment;
 
     @Column
-    private Boolean isRead;
+    private boolean isRead;
 
     @Builder
-    public Alarm(Til til, User receiver, Comment comment, Boolean isRead) {
+    public Alarm(Til til, User receiver, Comment comment, boolean isRead) {
         this.til = til;
         this.receiver = receiver;
         this.comment = comment;

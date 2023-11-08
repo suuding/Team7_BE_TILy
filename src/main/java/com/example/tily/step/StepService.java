@@ -89,7 +89,6 @@ public class StepService {
         }
     }
 
-
     // 특정 로드맵의 step 목록 전체 조회
     public StepResponse.FindAllStepDTO findAllStep (Long roadmapId, User user) {
 

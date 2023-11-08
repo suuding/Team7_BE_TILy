@@ -22,7 +22,7 @@ public class RoadmapResponse {
         }
     }
 
-    public record FindGroupRoadmapDTO(Creator creator, String name, String description, String myRole, Long recentTilId, Long recentStepId, Boolean isPublic, Boolean isRecruit, String code, String category, List<StepDTO> steps) {
+    public record FindGroupRoadmapDTO(Creator creator, String name, String description, String myRole, Long recentTilId, Long recentStepId, boolean isPublic, boolean isRecruit, String code, String category, List<StepDTO> steps) {
         public FindGroupRoadmapDTO(Roadmap roadmap, List<StepDTO> steps, User user, Long recentTilId, Long recentStepId, String myRole) {
             this(new Creator(user.getName(), user.getImage()), roadmap.getName(), roadmap.getDescription(), myRole, recentTilId, recentStepId, roadmap.isPublic(), roadmap.isRecruit(), roadmap.getCode(), roadmap.getCategory().getValue(), steps);
         }
@@ -62,7 +62,7 @@ public class RoadmapResponse {
     }
 
     public record GroupDTO (Long id, String name, int stepNum, Creator creator, boolean isManager, String description) {
-        public GroupDTO(Roadmap roadmap, Boolean isManager) {
+        public GroupDTO(Roadmap roadmap, boolean isManager) {
             this(roadmap.getId(), roadmap.getName(), roadmap.getStepNum(), new Creator(roadmap.getCreator()), isManager, roadmap.getDescription());
         }
 
@@ -73,7 +73,7 @@ public class RoadmapResponse {
         }
     }
 
-    public record FindRoadmapByQueryDTO (String category, List<RoadmapDTO> roadmaps, Boolean hasNext) {
+    public record FindRoadmapByQueryDTO (String category, List<RoadmapDTO> roadmaps, boolean hasNext) {
         public FindRoadmapByQueryDTO(Category category, List<RoadmapDTO> roadmaps, boolean hasNext) {
             this(category.getValue(), roadmaps, hasNext);
         }

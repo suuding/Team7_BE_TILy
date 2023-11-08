@@ -6,12 +6,6 @@ import java.util.List;
 
 
 public class StepResponse {
-    public record CreateIndividualStepDTO(Long id) {
-        public CreateIndividualStepDTO(Step step) {
-            this(step.getId());
-        }
-    }
-
     public record CreateStepDTO(Long id) {
         public CreateStepDTO(Step step) {
             this(step.getId());

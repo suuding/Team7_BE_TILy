@@ -37,7 +37,7 @@ public class AlarmResponse {
         public AlarmDTO(Alarm alarm){
             this(alarm.getId(),
                     alarm.getTil().getId(),
-                    alarm.getIsRead(),
+                    alarm.isRead(),
                     alarm.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
                     new RoadmapDTO(alarm.getTil().getRoadmap()),
                     new StepDTO(alarm.getTil().getStep()),
