@@ -42,8 +42,13 @@ public class Step {
         this.dueDate = dueDate;
     }
 
-    public void update(String title, String description){
+    public void update(String title, String description, LocalDateTime dueDate){
         this.title = title;
         this.description = description;
+        this.dueDate = dueDate;
+    }
+
+    public void updateTitle(String title) {
+        this.title = title;
     }
 }
