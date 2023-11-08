@@ -16,23 +16,15 @@ import javax.validation.Valid;
 public class RoadmapController {
     private final RoadmapService roadmapService;
 
-    // 개인 로드맵(카테고리) 생성하기
-    @PostMapping("/roadmaps/individual")
-    public ResponseEntity<?> createIndividualRoadmap(@RequestBody @Valid RoadmapRequest.CreateIndividualRoadmapDTO requestDTO, Errors errors,
-                                                     @AuthenticationPrincipal CustomUserDetails userDetails) {
-        RoadmapResponse.CreateRoadmapDTO responseDTO = roadmapService.createIndividualRoadmap(requestDTO, userDetails.getUser());
-        return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
-    }
-
-    // 그룹 로드맵 생성하기
+    // 로드맵 생성하기
     @PostMapping("/roadmaps")
-    public ResponseEntity<?> createGroupRoadmap(@RequestBody @Valid RoadmapRequest.CreateGroupRoadmapDTO requestDTO, Errors errors,
+    public ResponseEntity<?> createRoadmap(@RequestBody @Valid RoadmapRequest.CreateRoadmapDTO requestDTO, Errors errors,
                                                 @AuthenticationPrincipal CustomUserDetails userDetails){
-        RoadmapResponse.CreateRoadmapDTO responseDTO = roadmapService.createGroupRoadmap(requestDTO, userDetails.getUser());
+        RoadmapResponse.CreateRoadmapDTO responseDTO = roadmapService.createRoadmap(requestDTO, userDetails.getUser());
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
 
-    // 틸리 로드맵 생성하기
+    // 틸리 로드맵 생성하기 - 임시 api
     @PostMapping("/roadmaps/tily")
     public ResponseEntity<?> createTilyRoadmap(@RequestBody @Valid RoadmapRequest.CreateTilyRoadmapDTO requestDTO, Errors errors,
                                                 @AuthenticationPrincipal CustomUserDetails userDetails){
