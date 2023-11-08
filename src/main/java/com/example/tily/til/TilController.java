@@ -82,8 +82,8 @@ public class TilController {
     //  로드맵의 특정 step의 til 목록 조회하기
     @GetMapping("/steps/{stepId}/tils")
     public ResponseEntity<?> findTilOfStep(@PathVariable Long stepId,
-                                           @RequestParam(value="isSubmit", defaultValue = "true") Boolean isSubmit,
-                                           @RequestParam(value="isMember", defaultValue = "true") Boolean isMember,
+                                           @RequestParam(value="isSubmit", defaultValue = "true") boolean isSubmit,
+                                           @RequestParam(value="isMember", defaultValue = "true") boolean isMember,
                                            @RequestParam(value="name", required = false) String name){
         RoadmapResponse.FindTilOfStepDTO responseDTO = tilService.findTilOfStep(stepId, isSubmit, isMember, name);
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
