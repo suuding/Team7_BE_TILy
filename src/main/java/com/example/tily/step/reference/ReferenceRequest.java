@@ -6,6 +6,6 @@ public class ReferenceRequest {
     public record FindReferenceDTO(Long stepId){
     }
 
-    public record CreateReferenceDTO(String category, String link) {
+    public record CreateReferenceDTO(Long stepId, String category, String link) {
     }
 }
