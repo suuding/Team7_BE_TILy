@@ -42,7 +42,7 @@ public class S3Config {
     @Bean
     @Profile("deploy")
     public AmazonS3Client amazonS3ClientForDeploy() {
-        BasicAWSCredentials awsCreds = new BasicAWSCredentials(accessKey, secretKey);
+        AWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
 
         ClientConfiguration clientConfiguration = new ClientConfiguration();
         clientConfiguration.setConnectionTimeout(60000);  // 연결 타임아웃 시간 60000ms = 60s 설정
@@ -51,11 +51,11 @@ public class S3Config {
         clientConfiguration.setProxyPort(proxyPort);
         clientConfiguration.setProxyProtocol(Protocol.HTTP);
 
-        return (AmazonS3Client) AmazonS3ClientBuilder
+        return AmazonS3ClientBuilder
                 .standard()
-                .withRegion(region)
+                .withCredentials(new AWSStaticCredentialsProvider(credentials))
                 .withClientConfiguration(clientConfiguration)
-                .withCredentials(new AWSStaticCredentialsProvider(awsCreds))
+                .withRegion(region)
                 .build();
     }
 }
