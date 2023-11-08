@@ -1,4 +1,4 @@
-package com.example.tily.socialLogin;
+package com.example.tily.user.socialLogin;
 
 import com.example.tily._core.utils.ApiUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-
-import javax.servlet.http.HttpServletResponse;
 
 
 @RestController

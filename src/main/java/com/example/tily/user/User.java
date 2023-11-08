@@ -19,7 +19,7 @@ import java.util.List;
 @Entity
 @Table(name="user_tb")
 @SQLDelete(sql = "UPDATE user_tb SET isDeleted = true WHERE id = ?")
-@Where(clause = "isDeleted = false")
+@Where(clause = "is_deleted = false")
 public class User extends BaseTimeEntity {
 
     @Id

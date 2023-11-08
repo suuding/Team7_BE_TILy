@@ -87,10 +87,11 @@ public class StepService {
         } else { // 그룹 로드맵일 때
             step.update(requestDTO.title(), requestDTO.description(), requestDTO.dueDate());
         }
+    }
 
 
     // 특정 로드맵의 step 목록 전체 조회
-    public StepResponse.FindAllStepDTO findAllStep(Long roadmapId, User user) {
+    public StepResponse.FindAllStepDTO findAllStep (Long roadmapId, User user) {
 
         List<Step> steps = stepRepository.findByRoadmapId(roadmapId);
 
@@ -138,7 +139,8 @@ public class StepService {
         stepRepository.delete(step);
     }
 
-    private String checkMasterAndManagerPermission(Long roadmapId, User user) { // 매니저급만 접근
+    // 로드맵의 관리자 권한 확인 (master, manager)
+    private String checkMasterAndManagerPermission(Long roadmapId, User user) {
         UserRoadmap userRoadmap = getUserBelongRoadmap(roadmapId, user.getId());
 
         if(!userRoadmap.getRole().equals(GroupRole.ROLE_MASTER.getValue()) && !userRoadmap.getRole().equals(GroupRole.ROLE_MANAGER.getValue())){
@@ -147,27 +149,17 @@ public class StepService {
         return userRoadmap.getRole();
     }
 
-    private Roadmap getRoadmapById(Long roadmapId) {
-        return roadmapRepository.findById(roadmapId).orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_NOT_FOUND));
+    private Step getStepById(Long stepId) {
+        return stepRepository.findById(stepId).orElseThrow(() -> new CustomException(ExceptionCode.STEP_NOT_FOUND));
     }
 
-    private String checkMasterAndManagerPermission(Long roadmapId, User user) {
-        UserRoadmap userRoadmap = getUserBelongRoadmap(roadmapId, user.getId());
-
-        if (!userRoadmap.getRole().equals(GroupRole.ROLE_MASTER.getValue()) && !userRoadmap.getRole().equals(GroupRole.ROLE_MANAGER.getValue()))
-            throw new CustomException(ExceptionCode.ROADMAP_FORBIDDEN);
-
-        return userRoadmap.getRole();
+    private Roadmap getRoadmapById(Long roadmapId) {
+        return roadmapRepository.findById(roadmapId).orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_NOT_FOUND));
     }
 
     // 해당 로드맵에 속한 user
     private UserRoadmap getUserBelongRoadmap(Long roadmapId, Long userId) {
         return userRoadmapRepository.findByRoadmapIdAndUserIdAndIsAcceptTrue(roadmapId, userId)
                 .orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_NOT_BELONG));
-    }
-
-    // 해당 로드맵에 속한 user
-    private UserRoadmap getUserBelongRoadmap(Long roadmapId, Long userId) {
-        return userRoadmapRepository.findByRoadmapIdAndUserIdAndIsAcceptTrue(roadmapId, userId).orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_NOT_BELONG));
     }
 }

@@ -45,7 +45,6 @@ public class StepController {
     @DeleteMapping("/step/{stepId}")
     public ResponseEntity<?> deleteStep(@PathVariable Long stepId, @AuthenticationPrincipal CustomUserDetails userDetails){
         stepService.deleteStep(stepId, userDetails.getUser());
-
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 }

@@ -17,7 +17,7 @@ import javax.persistence.*;
 @Entity
 @Table(name="user_roadmap_tb")
 @SQLDelete(sql = "UPDATE user_roadmap_tb SET isDeleted = true WHERE id = ?")
-@Where(clause = "isDeleted = false")
+@Where(clause = "is_deleted = false")
 public class UserRoadmap extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

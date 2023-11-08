@@ -1,4 +1,4 @@
-package com.example.tily.socialLogin;
+package com.example.tily.user.socialLogin;
 
 import com.example.tily._core.security.CustomUserDetails;
 import com.example.tily._core.security.JWTProvider;

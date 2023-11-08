@@ -546,12 +546,4 @@ public class RoadmapService {
     private UserRoadmap getUserNotBelongRoadmap(Long roadmapId, Long userId) {
         return userRoadmapRepository.findByRoadmapIdAndUserIdAndIsAcceptFalse(roadmapId, userId).orElseThrow(() -> new CustomException(ExceptionCode.USER_NOT_FOUND));
     }
-
-    private LocalDateTime parseDate(String date) {
-        try {
-            return LocalDateTime.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        } catch (DateTimeParseException e) {
-            throw new CustomException(ExceptionCode.DATE_WRONG);
-        }
-    }
 }

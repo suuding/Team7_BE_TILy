@@ -19,7 +19,7 @@ import java.util.List;
 @Entity
 @Table(name="roadmap_tb")
 @SQLDelete(sql = "UPDATE roadmap_tb SET isDeleted = true WHERE id = ?")
-@Where(clause = "isDeleted = false")
+@Where(clause = "is_deleted = false")
 public class Roadmap extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,7 +36,7 @@ public class Roadmap extends BaseTimeEntity {
     @Column(nullable = false)
     private String name;
 
-    @Column
+    @Column(columnDefinition="TEXT", length = 1000)
     private String description;
 
     @Column
@@ -61,7 +61,7 @@ public class Roadmap extends BaseTimeEntity {
     private boolean isDeleted = false;
 
     @Builder
-    public Roadmap(Long id, User creator, Category category, String name, String description, Boolean isPublic, Long currentNum, String code, Boolean isRecruit, int stepNum, String image) {
+    public Roadmap(Long id, User creator, Category category, String name, String description, boolean isPublic, Long currentNum, String code, boolean isRecruit, int stepNum, String image) {
         this.id = id;
         this.creator = creator;
         this.category = category;

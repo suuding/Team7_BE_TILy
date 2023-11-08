@@ -19,7 +19,7 @@ import java.util.List;
 @Entity
 @Table(name="step_tb")
 @SQLDelete(sql = "UPDATE step_tb SET isDeleted = true WHERE id = ?")
-@Where(clause = "isDeleted = false")
+@Where(clause = "is_deleted = false")
 public class Step {
 
     @Id
@@ -33,7 +33,7 @@ public class Step {
     @Column(nullable = false)
     private String title;
 
-    @Column
+    @Column(columnDefinition="TEXT", length = 5000)
     private String description;
 
     @Column

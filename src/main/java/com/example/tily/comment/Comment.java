@@ -19,7 +19,7 @@ import javax.persistence.*;
 @Entity
 @Table(name="comment_tb")
 @SQLDelete(sql = "UPDATE comment_tb SET isDeleted = true WHERE id = ?")
-@Where(clause = "isDeleted = false")
+@Where(clause = "is_deleted = false")
 public class Comment extends BaseTimeEntity {
 
     @Id
@@ -34,7 +34,7 @@ public class Comment extends BaseTimeEntity {
     @JoinColumn(name="writer_id")
     private User writer;
 
-    @Column
+    @Column(columnDefinition="TEXT", length = 1000)
     private String content;
 
     @Column
