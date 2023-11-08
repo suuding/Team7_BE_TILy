@@ -74,6 +74,10 @@ public class Til extends BaseTimeEntity {
         this.content  = content;
     }
 
+    public void updateTitle (String title) {
+        this.title = title;
+    }
+
     public void submitTil(String submitContent) {
         this.content  = submitContent;
         this.submitContent = submitContent;

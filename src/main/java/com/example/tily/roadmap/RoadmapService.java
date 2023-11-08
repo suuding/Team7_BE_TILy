@@ -443,38 +443,6 @@ public class RoadmapService {
     }
 
     @Transactional
-    public RoadmapResponse.FindTilOfStepDTO findTilOfStep(Long groupsId, Long stepId, Boolean isSubmit, Boolean isMember, String name){
-
-        // 특정 로드맵에 속한 UserRoadmap list
-        List<UserRoadmap> userRoadmaps = userRoadmapRepository.findByRoadmapIdAndIsAcceptTrue(groupsId);
-        List<User> users = userStepRepository.findAllByStepIdAndIsSubmitAndName(stepId, isSubmit, name)
-                .stream().map(UserStep::getUser).toList(); // 특정 step에 대해 제출 여부, 사용자 이름으로 user 조회
-
-        List<RoadmapResponse.FindTilOfStepDTO.MemberDTO> members = new ArrayList<>();
-
-        if (isMember) { // 로드맵에 속한 member만 대해
-            for (User user : users) {
-                // 로드맵에서의 사용자의 role을 알기 위해 사용자의 userRoadmap 조회
-                Optional<UserRoadmap> userRoadmap = userRoadmaps.stream().filter(u -> u.getUser().equals(user)).findFirst();
-
-                if (userRoadmap.isPresent() & userRoadmap.get().getRole().equals(GroupRole.ROLE_MEMBER.getValue())) {
-                    Til til = tilRepository.findByStepIdAndUserId(stepId, user.getId());
-                    if (til==null) members.add(new RoadmapResponse.FindTilOfStepDTO.MemberDTO(null, user));
-                    else members.add(new RoadmapResponse.FindTilOfStepDTO.MemberDTO(til, user));
-                }
-            }
-        } else { // 로드맵에 속한 모든 사용자에 대해
-            for (User user : users) {
-                Til til = tilRepository.findByStepIdAndUserId(stepId, user.getId());
-                if (til==null) members.add(new RoadmapResponse.FindTilOfStepDTO.MemberDTO(null, user));
-                else members.add(new RoadmapResponse.FindTilOfStepDTO.MemberDTO(til, user));
-            }
-        }
-
-        return new RoadmapResponse.FindTilOfStepDTO(members);
-    }
-
-    @Transactional
     public void deleteRoadmap(Long roadmapId, User user){
         Roadmap roadmap = getRoadmapById(roadmapId);
 

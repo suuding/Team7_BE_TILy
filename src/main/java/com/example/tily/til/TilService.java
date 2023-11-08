@@ -8,6 +8,8 @@ import com.example.tily.comment.CommentRepository;
 import com.example.tily.roadmap.Category;
 import com.example.tily.roadmap.Roadmap;
 import com.example.tily.roadmap.RoadmapRepository;
+import com.example.tily.roadmap.RoadmapResponse;
+import com.example.tily.roadmap.relation.GroupRole;
 import com.example.tily.roadmap.relation.UserRoadmap;
 import com.example.tily.roadmap.relation.UserRoadmapRepository;
 import com.example.tily.step.Step;
@@ -58,7 +60,7 @@ public class TilService {
 
         // step이 roadmap에 속했는지 확인
         if (!step.getRoadmap().equals(roadmap))
-            throw new CustomException(ExceptionCode.STEP_NOT_INCLUDE);
+            throw new CustomException(ExceptionCode.STEP_NOT_BELONG);
 
         getUserBelongRoadmap(roadmapId, user.getId());
 
@@ -178,6 +180,45 @@ public class TilService {
         List<TilResponse.TilDTO> tilDTOs = tils.getContent().stream()
                 .map(til -> new TilResponse.TilDTO(til, til.getStep(), til.getRoadmap())).collect(Collectors.toList());
         return new TilResponse.FindAllDTO(tilDTOs, tils.hasNext());
+    }
+
+    //  로드맵의 특정 step의 til 목록 조회하기
+    @Transactional
+    public RoadmapResponse.FindTilOfStepDTO findTilOfStep(Long stepId, Boolean isSubmit, Boolean isMember, String name){
+
+        Step step = stepRepository.findById(stepId)
+                .orElseThrow(() -> new CustomException(ExceptionCode.STEP_NOT_FOUND));
+
+        Roadmap roadmap = step.getRoadmap();
+
+        // 특정 로드맵에 속한 UserRoadmap list
+        List<UserRoadmap> userRoadmaps = userRoadmapRepository.findByRoadmapIdAndIsAcceptTrue(roadmap.getId());
+        // 특정 step에 대해 제출 여부, 사용자 이름으로 user 조회
+        List<User> users = userStepRepository.findAllByStepIdAndIsSubmitAndName(stepId, isSubmit, name)
+                .stream().map(UserStep::getUser).toList();
+
+        List<RoadmapResponse.FindTilOfStepDTO.MemberDTO> members = new ArrayList<>();
+
+        if (isMember) { // 로드맵에 속한 member만 대해
+            for (User user : users) {
+                // 로드맵에서의 사용자의 role을 알기 위해 사용자의 userRoadmap 조회
+                Optional<UserRoadmap> userRoadmap = userRoadmaps.stream().filter(u -> u.getUser().equals(user)).findFirst();
+
+                if (userRoadmap.isPresent() && userRoadmap.get().getRole().equals(GroupRole.ROLE_MEMBER.getValue())) {
+                    Til til = tilRepository.findByStepIdAndUserId(stepId, user.getId());
+                    if (til==null) members.add(new RoadmapResponse.FindTilOfStepDTO.MemberDTO(null, user));
+                    else members.add(new RoadmapResponse.FindTilOfStepDTO.MemberDTO(til, user));
+                }
+            }
+        } else { // 로드맵에 속한 모든 사용자에 대해
+            for (User user : users) {
+                Til til = tilRepository.findByStepIdAndUserId(stepId, user.getId());
+                if (til==null) members.add(new RoadmapResponse.FindTilOfStepDTO.MemberDTO(null, user));
+                else members.add(new RoadmapResponse.FindTilOfStepDTO.MemberDTO(til, user));
+            }
+        }
+
+        return new RoadmapResponse.FindTilOfStepDTO(members);
     }
 
     private Til getTilById(Long tilId) {

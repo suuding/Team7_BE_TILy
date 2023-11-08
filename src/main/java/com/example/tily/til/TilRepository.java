@@ -53,6 +53,8 @@ public interface TilRepository extends JpaRepository<Til, Long>{
                                            @Param("startDate") LocalDateTime startDate,
                                            @Param("endDate") LocalDateTime endDate);
 
+    Til findByRoadmapIdAndStepId(Long roadmapId, Long stepId);
+  
     @Modifying
     @Query("update Til t SET t.isDeleted = true WHERE t.isDeleted = false AND t.id IN :tilIds")
     void softDeleteTilsByTilIds(List<Long> tilIds);
