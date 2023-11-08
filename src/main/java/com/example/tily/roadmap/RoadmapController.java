@@ -48,7 +48,7 @@ public class RoadmapController {
     }
 
     // 그룹 로드맵 정보 수정하기
-    @PostMapping("/roadmaps/{id}")
+    @PatchMapping("/roadmaps/{id}")
     public ResponseEntity<?> updateGroupRoadmap(@RequestBody @Valid RoadmapRequest.UpdateGroupRoadmapDTO requestDTO, Errors errors,
                                                 @PathVariable Long id, @AuthenticationPrincipal CustomUserDetails userDetails){
         roadmapService.updateGroupRoadmap(id, requestDTO, userDetails.getUser());

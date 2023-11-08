@@ -158,7 +158,7 @@ public class TilService {
         commentRepository.softDeleteCommentsByTilId(tilId);
 
         // 2. Til을 삭제한다.
-        tilRepository.deleteById(tilId);
+        tilRepository.softDeleteTilById(tilId);
     }
 
     // 나의 til 목록 전체 조회하기
