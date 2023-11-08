@@ -39,7 +39,7 @@ public class ImageService {
 
         String storageFileName = s3Service.uploadFile(multipartFile, FileFolder.USER_IMAGE);
         if(user.getImage() != null) {
-            s3Service.deleteFile(user.getImage()); // s3에 업로드하고, 기존에 있던것은 지운다
+            //s3Service.deleteFile(user.getImage()); // s3에 업로드하고, 기존에 있던것은 지운다
         }
 
         user.updateImage(storageFileName); // user의 image 필드는 파일명을 가진다
