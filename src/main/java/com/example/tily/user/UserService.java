@@ -236,7 +236,7 @@ public class UserService {
         roadmapRepository.softDeleteRoadmapByRoadmapIds(roadmapIds);
 
         // 8. 유저 삭제
-        userRepository.delete(user);
+        userRepository.softDeleteUserById(user.getId());
     }
 
     //////////////

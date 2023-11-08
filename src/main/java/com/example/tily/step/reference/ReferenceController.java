@@ -13,6 +13,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api")
 public class ReferenceController {
 
     private final ReferenceService referenceService;
@@ -34,7 +35,7 @@ public class ReferenceController {
     }
 
     // 참고자료 삭제
-    @DeleteMapping("/reference/{id}")
+    @DeleteMapping("/references/{id}")
     public ResponseEntity<?> deleteReference(@PathVariable("id") Long id, @AuthenticationPrincipal CustomUserDetails userDetails) {
         referenceService.deleteReference(id, userDetails.getUser());
 

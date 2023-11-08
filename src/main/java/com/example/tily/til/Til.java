@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name="til_tb")
-@SQLDelete(sql = "UPDATE til_tb SET isDeleted = true WHERE id = ?")
+@SQLDelete(sql = "UPDATE til_tb SET is_deleted = true WHERE id = ?")
 @Where(clause = "is_deleted = false")
 public class Til extends BaseTimeEntity {
 
