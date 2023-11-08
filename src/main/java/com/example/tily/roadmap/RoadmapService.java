@@ -38,40 +38,19 @@ public class RoadmapService {
     private final UserStepRepository userStepRepository;
     private final CommentRepository commentRepository;
 
+    // 로드맵 생성하기
     @Transactional
-    public RoadmapResponse.CreateRoadmapDTO createIndividualRoadmap(RoadmapRequest.CreateIndividualRoadmapDTO requestDTO, User user){
+    public RoadmapResponse.CreateRoadmapDTO createRoadmap(RoadmapRequest.CreateRoadmapDTO requestDTO, User user){
 
         Roadmap roadmap = Roadmap.builder()
                 .creator(user)
-                .category(Category.CATEGORY_INDIVIDUAL)
-                .name(requestDTO.name())
-                .stepNum(0)
-                .build();
-        roadmapRepository.save(roadmap);
-
-        UserRoadmap userRoadmap = UserRoadmap.builder()
-                .roadmap(roadmap)
-                .user(user)
-                .role(GroupRole.ROLE_MASTER)
-                .isAccept(true)
-                .build();
-        userRoadmapRepository.save(userRoadmap);
-
-        return new RoadmapResponse.CreateRoadmapDTO(roadmap);
-    }
-
-    @Transactional
-    public RoadmapResponse.CreateRoadmapDTO createGroupRoadmap(RoadmapRequest.CreateGroupRoadmapDTO requestDTO, User user){
-        
-        Roadmap roadmap = Roadmap.builder()
-                .creator(user)
-                .category(Category.CATEGORY_GROUP)
+                .category(Category.getCategory(requestDTO.category()))
                 .name(requestDTO.name())
                 .description(requestDTO.description())
                 .isPublic(requestDTO.isPublic()) // 공개여부
                 .currentNum(1L)
-                .code(generateRandomCode())
-                .isRecruit(true)    // 모집여부
+                .code(requestDTO.category().equals(Category.CATEGORY_TILY.getValue()) ? generateRandomCode() : null)
+                .isRecruit(requestDTO.category().equals(Category.CATEGORY_TILY.getValue()))    // 모집여부
                 .stepNum(0)
                 .build();
         roadmapRepository.save(roadmap);
@@ -88,6 +67,7 @@ public class RoadmapService {
         return new RoadmapResponse.CreateRoadmapDTO(roadmap);
     }
 
+    // 틸리 로드맵 생성하기 - 임시 api
     @Transactional
     public RoadmapResponse.CreateRoadmapDTO createTilyRoadmap(RoadmapRequest.CreateTilyRoadmapDTO requestDTO, User user){
 
@@ -157,6 +137,7 @@ public class RoadmapService {
         return new RoadmapResponse.CreateRoadmapDTO(roadmap);
     }
 
+    // 로드맵 정보 조회하기
     public RoadmapResponse.FindGroupRoadmapDTO findGroupRoadmap(Long id, User user){
         Roadmap roadmap = roadmapRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_NOT_FOUND));
@@ -224,6 +205,7 @@ public class RoadmapService {
         roadmap.update(requestDTO);
     }
 
+    // 내가 속한 로드맵 전체 목록 조회하기
     public RoadmapResponse.FindAllMyRoadmapDTO findAllMyRoadmaps(User user) {
 
         List<Roadmap> roadmaps = userRoadmapRepository.findByUserIdAndIsAccept(user.getId(), true);      // 내가 속한 로드맵 조회
@@ -247,6 +229,7 @@ public class RoadmapService {
         return new RoadmapResponse.FindAllMyRoadmapDTO(categories, new RoadmapResponse.FindAllMyRoadmapDTO.RoadmapDTO(tilys, groups));
     }
 
+    // 로드맵 조회하기
     public RoadmapResponse.FindRoadmapByQueryDTO findAll(String category, String name, int page, int size) {
 
         // 생성일자를 기준으로 내림차순
@@ -260,6 +243,7 @@ public class RoadmapService {
         return new RoadmapResponse.FindRoadmapByQueryDTO(Category.getCategory(category), roadmapDTOS, hasNext);
     }
 
+    // 그룹 로드맵에 참여 신청하기
     @Transactional
     public void applyGroupRoadmap(RoadmapRequest.ApplyRoadmapDTO requestDTO, Long id, User user){
         Roadmap roadmap = getRoadmapById(id);
