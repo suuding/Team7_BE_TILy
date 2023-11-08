@@ -152,6 +152,10 @@ public class TilService {
 
         checkTilWriterEqualUser(til, user);
 
+        // 1. Til과 연관된 Comment들을 삭제한다.
+        commentRepository.softDeleteCommentsByTilId(tilId);
+
+        // 2. Til을 삭제한다.
         tilRepository.deleteById(tilId);
     }
 

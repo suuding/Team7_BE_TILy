@@ -6,6 +6,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -16,6 +18,8 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name="step_tb")
+@SQLDelete(sql = "UPDATE step_tb SET isDeleted = true WHERE id = ?")
+@Where(clause = "isDeleted = false")
 public class Step {
 
     @Id
@@ -28,10 +32,15 @@ public class Step {
 
     @Column(nullable = false)
     private String title;
+
     @Column
     private String description;
+
     @Column
     private LocalDateTime dueDate;
+
+    @Column
+    private boolean isDeleted = false;
 
     @Builder
     public Step(Long id, Roadmap roadmap, String title, String description, LocalDateTime dueDate) {
@@ -42,8 +51,8 @@ public class Step {
         this.dueDate = dueDate;
     }
 
-    public void update(String title, String description){
-        this.title = title;
-        this.description = description;
+    public void update(StepRequest.UpdateStepDTO requestDTO){
+        this.title = requestDTO.title();
+        this.description = requestDTO.description();
     }
 }

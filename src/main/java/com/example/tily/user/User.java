@@ -7,6 +7,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -16,6 +18,8 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name="user_tb")
+@SQLDelete(sql = "UPDATE user_tb SET isDeleted = true WHERE id = ?")
+@Where(clause = "isDeleted = false")
 public class User extends BaseTimeEntity {
 
     @Id
@@ -35,6 +39,9 @@ public class User extends BaseTimeEntity {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @Column
+    private boolean isDeleted = false;
 
     @Builder
     public User(Long id, String email, String name, String password, String image, Role role) {
