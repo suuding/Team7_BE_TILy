@@ -41,7 +41,7 @@ public interface TilRepository extends JpaRepository<Til, Long>{
 
     List<Til> findByStepId(Long stepId);
 
-    List<Til> findByUserId(Long userId);
+    List<Til> findByWriterId(Long writerId);
 
     @Query("select t from Til t where t.writer.id=:userId and t.step.id=:stepId")
     Til findByStepIdAndUserId(@Param("stepId") Long stepId, @Param("userId") Long userId);
@@ -54,6 +54,8 @@ public interface TilRepository extends JpaRepository<Til, Long>{
                                            @Param("endDate") LocalDateTime endDate);
 
     Til findByRoadmapIdAndStepId(Long roadmapId, Long stepId);
+
+    List<Til> findByRoadmapId(Long roadmapId);
   
     @Modifying
     @Query("update Til t SET t.isDeleted = true WHERE t.isDeleted = false AND t.id IN :tilIds")

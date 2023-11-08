@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name="til_tb")
 @SQLDelete(sql = "UPDATE til_tb SET isDeleted = true WHERE id = ?")
-@Where(clause = "isDeleted = false")
+@Where(clause = "is_deleted = false")
 public class Til extends BaseTimeEntity {
 
     @Id
@@ -38,10 +38,10 @@ public class Til extends BaseTimeEntity {
     @Column(nullable = false)
     private String title;
 
-    @Column(columnDefinition="TEXT", length = 5000)
+    @Column(columnDefinition="TEXT")
     private String content;
 
-    @Column(columnDefinition="TEXT", length = 5000)
+    @Column(columnDefinition="TEXT")
     private String submitContent;
 
     @Column

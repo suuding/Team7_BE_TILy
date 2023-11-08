@@ -322,6 +322,6 @@ public class UserService {
     }
 
     private List<Til> getTilByUserId(Long userId){
-        return tilRepository.findByUserId(userId);
+        return tilRepository.findByWriterId(userId);
     }
 }
