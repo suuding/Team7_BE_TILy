@@ -16,33 +16,26 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    @PostMapping("/roadmaps/{roadmapId}/steps/{stepId}/tils/{tilId}/comments")
-    public ResponseEntity<?> createComment(@PathVariable("roadmapId") Long roadmapId, @PathVariable("stepId") Long stepId,
-                                           @PathVariable("tilId") Long tilId ,
-                                           @RequestBody @Valid CommentRequest.CreateCommentDTO requestDTO,
+    @PostMapping("/comments")
+    public ResponseEntity<?> createComment(@RequestBody @Valid CommentRequest.CreateCommentDTO requestDTO,
                                            @AuthenticationPrincipal CustomUserDetails userDetails) {
-        CommentResponse.CreateCommentDTO responseDTO = commentService.createComment(requestDTO,
-                roadmapId, stepId, tilId, userDetails.getUser());
+        CommentResponse.CreateCommentDTO responseDTO = commentService.createComment(requestDTO, userDetails.getUser());
 
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
 
-    @PatchMapping("/roadmaps/{roadmapId}/steps/{stepId}/tils/{tilId}/comments/{commentId}")
-    public ResponseEntity<?> updateComment(@PathVariable("roadmapId") Long roadmapId, @PathVariable("stepId") Long stepId,
-                                       @PathVariable("tilId") Long tilId, @PathVariable("commentId") Long commentId,
-                                       @RequestBody @Valid CommentRequest.UpdateCommentDTO requestDTO,
-                                       @AuthenticationPrincipal CustomUserDetails userDetails) {
-        commentService.updateComment(requestDTO, commentId, userDetails.getUser());
+    @PatchMapping("/comments/{id}")
+    public ResponseEntity<?> updateComment(@PathVariable("id") Long id, @RequestBody @Valid CommentRequest.UpdateCommentDTO requestDTO,
+                                           @AuthenticationPrincipal CustomUserDetails userDetails) {
+        commentService.updateComment(requestDTO, id, userDetails.getUser());
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 
-    // API 주소 수정 필요
-    @DeleteMapping("/roadmaps/{roadmapId}/steps/{stepId}/tils/{tilId}/comments/{commentId}")
-    public ResponseEntity<?> deleteComment(@PathVariable("roadmapId") Long roadmapId, @PathVariable("stepId")Long stepId,
-                                       @PathVariable("tilId") Long tilId, @PathVariable("commentId") Long commentId,
+    @DeleteMapping("/comments/{id}")
+    public ResponseEntity<?> deleteComment(@PathVariable("id") Long id,
                                        @AuthenticationPrincipal CustomUserDetails userDetails) {
 
-        commentService.deleteComment(commentId, userDetails.getUser());
+        commentService.deleteComment(id, userDetails.getUser());
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 }

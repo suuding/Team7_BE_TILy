@@ -140,16 +140,6 @@ public class RoadmapController {
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 
-    //  로드맵의 특정 step의 틸 목록 조회
-    @GetMapping("/roadmaps/groups/{groupId}/steps/{stepId}/tils")
-    public ResponseEntity<?> findTilOfStep(@PathVariable Long groupId, @PathVariable Long stepId,
-                                           @RequestParam(value="isSubmit", defaultValue = "true") Boolean isSubmit,
-                                           @RequestParam(value="isMember", defaultValue = "true") Boolean isMember,
-                                           @RequestParam(value="name", required = false) String name){
-        RoadmapResponse.FindTilOfStepDTO responseDTO = roadmapService.findTilOfStep(groupId, stepId, isSubmit, isMember, name);
-        return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
-    }
-
     // 그룹 로드맵 삭제
     @DeleteMapping("/roadmaps/{id}")
     public ResponseEntity<?> deleteRoadmap(@PathVariable Long id, @AuthenticationPrincipal CustomUserDetails userDetails){

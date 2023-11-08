@@ -12,6 +12,10 @@ public class ApiUtils {
         return new ApiResult<>(true, 200, "ok", result);
     }
 
+    public static <T> ApiResult<T> success(HttpStatus httpStatus, T result) {
+        return new ApiResult<>(true, httpStatus.value(), httpStatus.getReasonPhrase(), result);
+    }
+
     public static ApiResult<?> error(String message, HttpStatus httpStatus) {
         return new ApiResult<>(false, httpStatus.value(),  message, null);
     }
@@ -23,10 +27,4 @@ public class ApiUtils {
         private final String message;
         private final T result;
     }
-
-//    @Getter @Setter @AllArgsConstructor
-//    public static class ApiError {
-//        private final String message;
-//        private final int status;
-//    }
 }
