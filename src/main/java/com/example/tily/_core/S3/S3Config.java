@@ -24,7 +24,7 @@ public class S3Config {
     @Value("${cloud.aws.region.static}")
     private String region;
 
-    @Value("krmp-proxy.9rum.cc")
+    @Value("http://krmp-proxy.9rum.cc")
     private String proxyHost;
 
     @Value("3128")
