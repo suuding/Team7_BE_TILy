@@ -135,7 +135,7 @@ public class StepService {
         userStepRepository.softDeleteUserStepByStepId(stepId);
 
         // 5. Step을 삭제한다
-        stepRepository.delete(step);
+        stepRepository.softDeleteStepById(stepId);
     }
 
     // 로드맵의 관리자 권한 확인 (master, manager)

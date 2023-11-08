@@ -21,6 +21,10 @@ public interface StepRepository extends JpaRepository<Step, Long> {
     List<Step> findByRoadmapId(@Param("roadmapId") Long roadmapId);
 
     @Modifying
+    @Query("update Step s SET s.isDeleted = true WHERE s.isDeleted = false AND s.id = :stepId")
+    void softDeleteStepById(Long stepId);
+
+    @Modifying
     @Query("update Step s SET s.isDeleted = true WHERE s.isDeleted = false AND s.id IN :stepIds")
     void softDeleteStepByStepIds(List<Long> stepIds);
 }
