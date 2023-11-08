@@ -18,7 +18,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name="user_tb")
-@SQLDelete(sql = "UPDATE user_tb SET isDeleted = true WHERE id = ?")
+@SQLDelete(sql = "UPDATE user_tb SET is_deleted = true WHERE id = ?")
 @Where(clause = "is_deleted = false")
 public class User extends BaseTimeEntity {
 
