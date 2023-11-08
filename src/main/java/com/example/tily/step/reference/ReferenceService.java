@@ -25,15 +25,12 @@ public class ReferenceService {
 
     private final ReferenceRepository referenceRepository;
     private final StepRepository stepRepository;
-    private final RoadmapRepository roadmapRepository;
     private final UserRoadmapRepository userRoadmapRepository;
 
     // step의 참고자료 생성하기
     @Transactional
-    public void createReference(ReferenceRequest.CreateReferenceDTO requestDTO, Long roadmapId, Long stepId, User user) {
-        Roadmap roadmap = roadmapRepository.findById(roadmapId)
-                .orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_NOT_FOUND));
-
+    public void createReference(ReferenceRequest.CreateReferenceDTO requestDTO, User user) {
+        Long stepId = requestDTO.stepId();
         Step step = getStepById(stepId);
 
         Reference reference = Reference.builder()
@@ -41,11 +38,13 @@ public class ReferenceService {
                 .category(requestDTO.category())
                 .link(requestDTO.link())
                 .build();
+
         referenceRepository.save(reference);
     }
 
     // step의 참고자료 목록 조회하기
-    public StepResponse.FindReferenceDTO findReference(Long stepId, User user){
+    public StepResponse.FindReferenceDTO findReference(ReferenceRequest.FindReferenceDTO requestDTO, User user){
+        Long stepId = requestDTO.stepId();
         Step step = getStepById(stepId);
 
         List<Reference> references = referenceRepository.findByStepId(stepId);
