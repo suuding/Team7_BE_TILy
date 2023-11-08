@@ -38,7 +38,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	implementation 'org.mariadb.jdbc:mariadb-java-client'
 
-
+    implementation 'software.amazon.awssdk:s3:2.20.162'
+	implementation 'javax.xml.bind:jaxb-api:2.3.0'
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 }
 
