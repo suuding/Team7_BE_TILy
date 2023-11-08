@@ -51,6 +51,8 @@ public class StepService {
         Step step = Step.builder()
                 .roadmap(roadmap)
                 .title(requestDTO.title())
+                .description(requestDTO.description())
+                .dueDate(requestDTO.dueDate())
                 .build(); // 개인 로드맵이므로 description, dueDate 는 null
         stepRepository.save(step);
 
