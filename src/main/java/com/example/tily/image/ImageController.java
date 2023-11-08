@@ -24,7 +24,7 @@ public class ImageController {
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
 
-    @PostMapping("/users/{userId}/image")
+    @PostMapping("/users/{userId}/image", consumes = {"multipart/form-data"})
     public ResponseEntity<?> uploadUserImage(@PathVariable Long userId, @RequestParam("image") MultipartFile file,
                                              @AuthenticationPrincipal CustomUserDetails userDetails) {
         System.out.println("postmapping, user images");
