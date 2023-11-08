@@ -117,7 +117,7 @@ public class StepService {
 
         checkMasterAndManagerPermission(step.getRoadmap().getId(), user); // 매니저급만 삭제 가능
 
-        List<Til> tils = tilRepository.findByStepId(stepId);
+        List<Til> tils = getTisByStepId(stepId);
         List<Long> tilIds = tils.stream()
                 .map(Til::getId)
                 .collect(Collectors.toList());
@@ -154,6 +154,10 @@ public class StepService {
 
     private Roadmap getRoadmapById(Long roadmapId) {
         return roadmapRepository.findById(roadmapId).orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_NOT_FOUND));
+    }
+
+    private List<Til> getTisByStepId(Long stepId){
+        return tilRepository.findByStepId(stepId);
     }
 
     // 해당 로드맵에 속한 user

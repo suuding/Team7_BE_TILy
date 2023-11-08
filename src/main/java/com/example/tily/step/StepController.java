@@ -42,7 +42,7 @@ public class StepController {
     }
 
     // step 삭제
-    @DeleteMapping("/step/{stepId}")
+    @DeleteMapping("/steps/{stepId}")
     public ResponseEntity<?> deleteStep(@PathVariable Long stepId, @AuthenticationPrincipal CustomUserDetails userDetails){
         stepService.deleteStep(stepId, userDetails.getUser());
         return ResponseEntity.ok().body(ApiUtils.success(null));
