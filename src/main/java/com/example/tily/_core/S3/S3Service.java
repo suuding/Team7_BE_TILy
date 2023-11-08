@@ -38,8 +38,11 @@ public class S3Service implements FileService {
 
         //파일 업로드
         try(InputStream inputStream = file.getInputStream()) {
+            System.out.println("inputStream = " + inputStream);
+            System.out.println("s3Component.getBucket() = " + s3Component.getBucket());
             amazonS3.putObject(
-                    new PutObjectRequest(s3Component.getBucket(), fileName, inputStream, objectMetadata).withCannedAcl(CannedAccessControlList.PublicRead)
+                    new PutObjectRequest(s3Component.getBucket(), fileName, inputStream, objectMetadata)
+                .withCannedAcl(CannedAccessControlList.PublicRead)
             );
             log.info("asdfasdfasf inpuStream");
         } catch (IOException e) {
