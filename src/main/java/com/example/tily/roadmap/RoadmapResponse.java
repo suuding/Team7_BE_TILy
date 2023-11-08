@@ -1,13 +1,10 @@
 package com.example.tily.roadmap;
 
-import com.example.tily.roadmap.relation.GroupRole;
 import com.example.tily.roadmap.relation.UserRoadmap;
 import com.example.tily.step.Step;
 import com.example.tily.step.reference.Reference;
 import com.example.tily.til.Til;
-import com.example.tily.user.Role;
 import com.example.tily.user.User;
-import org.joda.time.DateTime;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
