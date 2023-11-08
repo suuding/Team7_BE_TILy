@@ -2,6 +2,7 @@ package com.example.tily.til;
 
 import com.example.tily._core.security.CustomUserDetails;
 import com.example.tily._core.utils.ApiUtils;
+import com.example.tily.roadmap.RoadmapResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -75,6 +76,16 @@ public class TilController {
                                           @AuthenticationPrincipal CustomUserDetails userDetails) {
 
         TilResponse.FindAllDTO responseDTO = tilService.findAllMyTil(roadmapId, date, title, page, size, userDetails.getUser());
+        return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
+    }
+
+    //  로드맵의 특정 step의 til 목록 조회하기
+    @GetMapping("/steps/{stepId}/tils")
+    public ResponseEntity<?> findTilOfStep(@PathVariable Long stepId,
+                                           @RequestParam(value="isSubmit", defaultValue = "true") Boolean isSubmit,
+                                           @RequestParam(value="isMember", defaultValue = "true") Boolean isMember,
+                                           @RequestParam(value="name", required = false) String name){
+        RoadmapResponse.FindTilOfStepDTO responseDTO = tilService.findTilOfStep(stepId, isSubmit, isMember, name);
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
 }
