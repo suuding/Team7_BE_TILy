@@ -23,9 +23,11 @@ public class S3Service implements FileService {
     @Override
     public String uploadFile(MultipartFile file, FileFolder fileFolder) {
 
+        System.out.println("s3service - uploadFile");
         //파일 이름 생성
         String fileName = getFileFolder(fileFolder) + createFileName(file.getOriginalFilename());
-
+        System.out.println("fileName = " + fileName);
+        
         //파일 변환
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentLength(file.getSize());
@@ -36,6 +38,7 @@ public class S3Service implements FileService {
             amazonS3.putObject(
                     new PutObjectRequest(s3Component.getBucket(), fileName, inputStream, objectMetadata).withCannedAcl(CannedAccessControlList.PublicReadWrite)
             );
+            System.out.println("12341324");
         } catch (IOException e) {
             throw new CustomException(ExceptionCode.FILE_UPLOAD_FAIL);
         }

@@ -36,7 +36,9 @@ public class ImageService {
             throw new CustomException(ExceptionCode.USER_UPDATE_FORBIDDEN);
         
         User user = getUserById(userId);
-
+        
+        System.out.println("postmapping, user images - service");
+        
         String storageFileName = s3Service.uploadFile(multipartFile, FileFolder.USER_IMAGE);
         if(user.getImage() != null) {
             //s3Service.deleteFile(user.getImage()); // s3에 업로드하고, 기존에 있던것은 지운다
