@@ -41,7 +41,7 @@ public class S3Config {
 
     @Bean
     @Profile("deploy")
-    public AmazonS3Client amazonS3ClientForDeploy() {
+    public AmazonS3 amazonS3ClientForDeploy() {
         AWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
 
         ClientConfiguration clientConfiguration = new ClientConfiguration();
