@@ -144,6 +144,6 @@ public class RoadmapController {
     @DeleteMapping("/roadmaps/{id}")
     public ResponseEntity<?> deleteRoadmap(@PathVariable Long id, @AuthenticationPrincipal CustomUserDetails userDetails){
         roadmapService.deleteRoadmap(id, userDetails.getUser());
-        return ResponseEntity.ok().body(null);
+        return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 }

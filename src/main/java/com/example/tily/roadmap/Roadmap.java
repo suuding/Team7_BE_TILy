@@ -18,7 +18,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name="roadmap_tb")
-@SQLDelete(sql = "UPDATE roadmap_tb SET isDeleted = true WHERE id = ?")
+@SQLDelete(sql = "UPDATE roadmap_tb SET is_deleted = true WHERE id = ?")
 @Where(clause = "is_deleted = false")
 public class Roadmap extends BaseTimeEntity {
     @Id
