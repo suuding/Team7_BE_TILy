@@ -72,7 +72,7 @@ public class ReferenceService {
 
         checkMasterAndManagerPermission(reference.getStep().getRoadmap().getId(), user); // 매니저급만 삭제 가능
 
-        referenceRepository.delete(reference);
+        referenceRepository.softDeleteReferenceById(referenceId);
     }
 
     private String checkMasterAndManagerPermission(Long roadmapId, User user) { // 매니저급만 접근

@@ -14,7 +14,7 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name="reference_tb")
-@SQLDelete(sql = "UPDATE reference_tb SET isDeleted = true WHERE id = ?")
+@SQLDelete(sql = "UPDATE reference_tb SET is_deleted = true WHERE id = ?")
 @Where(clause = "is_deleted = false")
 public class Reference {
 
