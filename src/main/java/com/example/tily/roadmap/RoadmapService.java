@@ -2,6 +2,7 @@ package com.example.tily.roadmap;
 
 import com.example.tily._core.errors.exception.CustomException;
 import com.example.tily._core.errors.exception.ExceptionCode;
+import com.example.tily.comment.CommentRepository;
 import com.example.tily.roadmap.relation.GroupRole;
 import com.example.tily.roadmap.relation.UserRoadmap;
 import com.example.tily.roadmap.relation.UserRoadmapRepository;
@@ -35,6 +36,7 @@ public class RoadmapService {
     private final TilRepository tilRepository;
     private final UserRoadmapRepository userRoadmapRepository;
     private final UserStepRepository userStepRepository;
+    private final CommentRepository commentRepository;
 
     @Transactional
     public RoadmapResponse.CreateRoadmapDTO createIndividualRoadmap(RoadmapRequest.CreateIndividualRoadmapDTO requestDTO, User user){
@@ -64,55 +66,15 @@ public class RoadmapService {
         Roadmap roadmap = Roadmap.builder()
                 .creator(user)
                 .category(Category.CATEGORY_GROUP)
-                .name(requestDTO.roadmap().name())
-                .description(requestDTO.roadmap().description())
-                .isPublic(requestDTO.roadmap().isPublic()) // 공개여부
+                .name(requestDTO.name())
+                .description(requestDTO.description())
+                .isPublic(requestDTO.isPublic()) // 공개여부
                 .currentNum(1L)
                 .code(generateRandomCode())
                 .isRecruit(true)    // 모집여부
-                .stepNum(requestDTO.steps().size())
+                .stepNum(0)
                 .build();
         roadmapRepository.save(roadmap);
-
-        List<RoadmapRequest.StepDTO> stepDTOS = requestDTO.steps();
-        for(RoadmapRequest.StepDTO stepDTO : stepDTOS){
-            // step 저장
-            Step step = Step.builder()
-                    .roadmap(roadmap)
-                    .title(stepDTO.title())
-                    .description(stepDTO.description())
-                    .dueDate(stepDTO.dueDate()!=null ? stepDTO.dueDate() : null)
-                    .build();
-            stepRepository.save(step);
-
-            UserStep userStep = UserStep.builder()
-                    .roadmap(roadmap)
-                    .step(step)
-                    .user(user)
-                    .isSubmit(false)
-                    .build();
-            userStepRepository.save(userStep);
-
-            // reference 저장
-            RoadmapRequest.ReferenceDTOs referenceDTOs = stepDTO.references();
-            List<Reference> references = new ArrayList<>();
-
-            // (1) youtube
-            List<RoadmapRequest.ReferenceDTO> youtubeDTOs = referenceDTOs.youtube();
-            for(RoadmapRequest.ReferenceDTO youtubeDTO : youtubeDTOs){
-                Reference reference = Reference.builder().step(step).category("youtube").link(youtubeDTO.link()).build();
-                references.add(reference);
-            }
-
-            // (2) reference
-            List<RoadmapRequest.ReferenceDTO> webDTOs = referenceDTOs.web();
-            for(RoadmapRequest.ReferenceDTO webDTO : webDTOs){
-                Reference reference = Reference.builder().step(step).category("web").link(webDTO.link()).build();
-                references.add(reference);
-            }
-
-            referenceRepository.saveAll(references);
-        }
 
         UserRoadmap userRoadmap = UserRoadmap.builder()
                 .roadmap(roadmap)
@@ -259,59 +221,7 @@ public class RoadmapService {
                 .orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_NOT_FOUND));
 
         // roadmap update
-        roadmap.update(requestDTO.roadmap());
-
-        // step update
-        List<RoadmapRequest.StepDTO> stepDTOs = requestDTO.steps();
-        for(RoadmapRequest.StepDTO stepDTO : stepDTOs){
-            Step step = stepRepository.findById(stepDTO.id()).orElse(null);
-
-            // 새로운 step
-            if (step == null) {
-                Step newStep = Step.builder()
-                        .roadmap(roadmap)
-                        .title(stepDTO.title())
-                        .description(stepDTO.description())
-                        .dueDate(stepDTO.dueDate()!=null ? stepDTO.dueDate() : null)
-                        .build();
-                Step newStep1 = stepRepository.save(newStep);
-
-                // 로드맵에 속한 사람들에게 userstep에 넣어야함
-                List<User> users = userRoadmapRepository.findByRoadmapIdAndIsAcceptTrue(id).stream().map(UserRoadmap::getUser).toList();
-                for (User u : users) {
-                    UserStep userStep = UserStep.builder()
-                            .roadmap(roadmap)
-                            .step(newStep1)
-                            .user(u)
-                            .isSubmit(false)
-                            .build();
-                    userStepRepository.save(userStep);
-                }
-            } else {
-                step.update(stepDTO.title(),stepDTO.description());
-            }
-
-            // reference 업데이트
-            for(RoadmapRequest.ReferenceDTO web : stepDTO.references().web()){
-                if (web.id() == null) {
-                    Reference newReference = Reference.builder().step(step).category("web").link(web.link()).build();
-                    referenceRepository.save(newReference);
-                } else {
-                    Reference reference = referenceRepository.findById(web.id()).orElse(null);
-                    reference.update(web.link());
-                }
-            }
-
-            for(RoadmapRequest.ReferenceDTO youtube : stepDTO.references().youtube()){
-                if (youtube.id() == null) {
-                    Reference newReference = Reference.builder().step(step).category("youtube").link(youtube.link()).build();
-                    referenceRepository.save(newReference);
-                } else {
-                    Reference reference = referenceRepository.findById(youtube.id()).orElse(null);
-                    reference.update(youtube.link());
-                }
-            }
-        }
+        roadmap.update(requestDTO);
     }
 
     public RoadmapResponse.FindAllMyRoadmapDTO findAllMyRoadmaps(User user) {
@@ -355,7 +265,7 @@ public class RoadmapService {
         Roadmap roadmap = getRoadmapById(id);
 
         // 모집을 중단했을 때
-        if (!roadmap.getIsRecruit())
+        if (!roadmap.isRecruit())
             throw new CustomException(ExceptionCode.ROADMAP_END_RECRUIT);
 
         // 최초로 한 번만 신청 가능
@@ -386,7 +296,7 @@ public class RoadmapService {
         Roadmap roadmap = getRoadmapById(id);
 
         // 모집을 중단했을 때
-        if (!roadmap.getIsRecruit())
+        if (!roadmap.isRecruit())
             throw new CustomException(ExceptionCode.ROADMAP_END_RECRUIT);
 
         // 이미 로드맵에 속한 경우
@@ -532,6 +442,44 @@ public class RoadmapService {
         userRoadmap.updateRole(GroupRole.ROLE_NONE.getValue());
     }
 
+    @Transactional
+    public void deleteRoadmap(Long roadmapId, User user){
+        Roadmap roadmap = getRoadmapById(roadmapId);
+
+        checkMasterAndManagerPermission(roadmapId, user);
+
+        // 1. Til과 연관된 Comment들을 삭제한다.
+        List<Til> tils = getTilsByRoadmapId(roadmapId);
+        List<Long> tilIds = tils.stream()
+                .map(Til::getId)
+                .collect(Collectors.toList());
+
+        commentRepository.softDeleteCommentsByTilIds(tilIds);
+
+        // 2. Til을 삭제한다.
+        tilRepository.softDeleteTilsByTilIds(tilIds);
+
+        // 3. Reference들을 삭제한다
+        List<Step> steps = getStepsByRoadmapId(roadmapId);
+        List<Long> stepIds = steps.stream()
+                .map(Step::getId)
+                .collect(Collectors.toList());
+
+        referenceRepository.softDeleteReferenceByStepIds(stepIds);
+
+        // 4. Step들을 삭제한다.
+        stepRepository.softDeleteStepByStepIds(stepIds);
+
+        // 5. UserStep들을 삭제한다.
+        userStepRepository.softDeleteUserStepByStepIds(stepIds);
+
+        // 6. UserRoadmap을 삭제한다
+        userRoadmapRepository.softDeleteUserRoadmapByRoadmapId(roadmapId);
+
+        // 7. Roadmap을 삭제한다
+        roadmapRepository.delete(roadmap);
+    }
+
     private static String generateRandomCode() {
         String upperAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         String lowerAlphabet = "abcdefghijklmnopqrstuvwxyz";
@@ -584,6 +532,14 @@ public class RoadmapService {
 
     private Roadmap getRoadmapById(Long roadmapId) {
         return roadmapRepository.findById(roadmapId).orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_NOT_FOUND));
+    }
+
+    private List<Step> getStepsByRoadmapId(Long roadmapId){
+        return stepRepository.findByRoadmapId(roadmapId);
+    }
+
+    private List<Til> getTilsByRoadmapId(Long roadmapId){
+        return tilRepository.findByRoadmapId(roadmapId);
     }
 
     // 해당 로드맵에 속하지 않은 user

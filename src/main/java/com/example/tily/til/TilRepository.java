@@ -3,11 +3,10 @@ package com.example.tily.til;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -40,6 +39,10 @@ public interface TilRepository extends JpaRepository<Til, Long>{
                                                @Param("title") String title,
                                                Pageable pageable);
 
+    List<Til> findByStepId(Long stepId);
+
+    List<Til> findByUserId(Long userId);
+
     @Query("select t from Til t where t.writer.id=:userId and t.step.id=:stepId")
     Til findByStepIdAndUserId(@Param("stepId") Long stepId, @Param("userId") Long userId);
 
@@ -51,4 +54,8 @@ public interface TilRepository extends JpaRepository<Til, Long>{
                                            @Param("endDate") LocalDateTime endDate);
 
     Til findByRoadmapIdAndStepId(Long roadmapId, Long stepId);
+  
+    @Modifying
+    @Query("update Til t SET t.isDeleted = true WHERE t.isDeleted = false AND t.id IN :tilIds")
+    void softDeleteTilsByTilIds(List<Long> tilIds);
 }

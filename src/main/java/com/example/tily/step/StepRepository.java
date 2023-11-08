@@ -1,8 +1,7 @@
 package com.example.tily.step;
 
-import com.example.tily.roadmap.Roadmap;
-import com.example.tily.step.reference.Reference;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -20,4 +19,8 @@ public interface StepRepository extends JpaRepository<Step, Long> {
 
     @Query("select s from Step s join fetch s.roadmap where s.roadmap.id=:roadmapId")
     List<Step> findByRoadmapId(@Param("roadmapId") Long roadmapId);
+
+    @Modifying
+    @Query("update Step s SET s.isDeleted = true WHERE s.isDeleted = false AND s.id IN :stepIds")
+    void softDeleteStepByStepIds(List<Long> stepIds);
 }

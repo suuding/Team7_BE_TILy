@@ -40,4 +40,12 @@ public class StepController {
         StepResponse.FindAllStepDTO responseDTO = stepService.findAllStep(roadmapId, userDetails.getUser());
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
+
+    // step 삭제
+    @DeleteMapping("/step/{stepId}")
+    public ResponseEntity<?> deleteStep(@PathVariable Long stepId, @AuthenticationPrincipal CustomUserDetails userDetails){
+        stepService.deleteStep(stepId, userDetails.getUser());
+
+        return ResponseEntity.ok().body(ApiUtils.success(null));
+    }
 }
