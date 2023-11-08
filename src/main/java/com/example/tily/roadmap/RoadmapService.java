@@ -461,7 +461,7 @@ public class RoadmapService {
         userRoadmapRepository.softDeleteUserRoadmapByRoadmapId(roadmapId);
 
         // 7. Roadmap을 삭제한다
-        roadmapRepository.delete(roadmap);
+        roadmapRepository.softDeleteRoadmapById(roadmapId);
     }
 
     private static String generateRandomCode() {

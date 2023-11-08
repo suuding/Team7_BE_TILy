@@ -56,6 +56,10 @@ public interface TilRepository extends JpaRepository<Til, Long>{
     Til findByRoadmapIdAndStepId(Long roadmapId, Long stepId);
 
     List<Til> findByRoadmapId(Long roadmapId);
+
+    @Modifying
+    @Query("update Til t SET t.isDeleted = true WHERE t.isDeleted = false AND t.id = :tilId")
+    void softDeleteTilById(Long tilId);
   
     @Modifying
     @Query("update Til t SET t.isDeleted = true WHERE t.isDeleted = false AND t.id IN :tilIds")
