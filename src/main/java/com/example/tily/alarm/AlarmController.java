@@ -11,6 +11,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api")
 public class AlarmController {
 
     private final AlarmService alarmService;

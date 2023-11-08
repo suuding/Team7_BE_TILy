@@ -12,6 +12,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api")
 public class RoadmapController {
     private final RoadmapService roadmapService;
 

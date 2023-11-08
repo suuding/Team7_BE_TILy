@@ -3,6 +3,7 @@ package com.example.tily.til;
 import com.example.tily._core.security.CustomUserDetails;
 import com.example.tily._core.utils.ApiUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.Errors;
@@ -12,64 +13,59 @@ import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api")
 public class TilController {
 
     private final TilService tilService;
 
-    @PostMapping("/roadmaps/{roadmapId}/steps/{stepId}/tils")
-    public ResponseEntity<?> createTil(@PathVariable("roadmapId") Long roadmapId,
-                                       @PathVariable("stepId") Long stepId,
-                                       @RequestBody @Valid TilRequest.CreateTilDTO requestDTO,  Errors errors,
+    // til 생성하기
+    @PostMapping("/tils")
+    public ResponseEntity<?> createTil(@RequestBody @Valid TilRequest.CreateTilDTO requestDTO, Errors errors,
                                        @AuthenticationPrincipal CustomUserDetails userDetails) {
 
-        TilResponse.CreateTilDTO responseDTO = tilService.createTil(requestDTO, roadmapId, stepId, userDetails.getUser());
-        return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
+        TilResponse.CreateTilDTO responseDTO = tilService.createTil(requestDTO, userDetails.getUser());
+        return ResponseEntity.ok().body(ApiUtils.success(HttpStatus.CREATED, responseDTO));
     }
 
-    @PatchMapping("/roadmaps/{roadmapId}/steps/{stepId}/tils/{tilId}")
-    public ResponseEntity<?> updateTil(@PathVariable("roadmapId") Long roadmapId,
-                                       @PathVariable("stepId") Long stepId,
-                                       @PathVariable("tilId") Long tilId,
-                                       @RequestBody @Valid TilRequest.UpdateTilDTO requestDTO, Errors errors,
-                                       @AuthenticationPrincipal CustomUserDetails userDetails) {
-
-        tilService.updateTil(requestDTO, tilId, userDetails.getUser());
-        return ResponseEntity.ok().body(ApiUtils.success(null));
-    }
-
-    @GetMapping("/roadmaps/{roadmapId}/steps/{stepId}/tils/{tilId}")
-    public ResponseEntity<?> viewTil(@PathVariable("roadmapId") Long roadmapId,
-                                     @PathVariable("stepId")Long stepId,
-                                     @PathVariable("tilId") Long tilId,
+    // til 조회하기
+    @GetMapping("/tils/{id}")
+    public ResponseEntity<?> viewTil(@PathVariable Long id,
                                      @AuthenticationPrincipal CustomUserDetails userDetails) {
 
-        TilResponse.ViewDTO responseDTO = tilService.viewTil(roadmapId, stepId, tilId, userDetails.getUser());
+        TilResponse.ViewDTO responseDTO = tilService.viewTil(id, userDetails.getUser());
         return ResponseEntity.ok(ApiUtils.success(responseDTO));
     }
 
-    @PostMapping("/roadmaps/{roadmapId}/steps/{stepId}/tils/{tilId}")
-    public ResponseEntity<?> submitTil(@PathVariable("roadmapId") Long roadmapId,
-                                       @PathVariable("stepId")Long stepId,
-                                       @PathVariable("tilId") Long tilId,
+    // til 수정하기 (저장하기)
+    @PatchMapping("/tils/{id}")
+    public ResponseEntity<?> updateTil(@PathVariable Long id,
+                                       @RequestBody @Valid TilRequest.UpdateTilDTO requestDTO, Errors errors,
+                                       @AuthenticationPrincipal CustomUserDetails userDetails) {
+
+        tilService.updateTil(requestDTO, id, userDetails.getUser());
+        return ResponseEntity.ok().body(ApiUtils.success(null));
+    }
+
+    // til 제출하기
+    @PostMapping("/tils/{id}")
+    public ResponseEntity<?> submitTil(@PathVariable Long id,
                                        @RequestBody @Valid TilRequest.SubmitTilDTO requestDTO,  Errors errors,
                                        @AuthenticationPrincipal CustomUserDetails userDetails) {
 
-        tilService.submitTil(requestDTO, roadmapId, stepId, tilId, userDetails.getUser());
+        tilService.submitTil(requestDTO, id, userDetails.getUser());
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 
-    // API 주소 수정 필요
-    @DeleteMapping("/roadmaps/{roadmapId}/steps/{stepId}/tils/{tilId}")
-    public ResponseEntity<?> deleteTil(@PathVariable("roadmapId") Long roadmapId,
-                                       @PathVariable("stepId")Long stepId,
-                                       @PathVariable("tilId") Long tilId,
+    // til 삭제하기
+    @DeleteMapping("/tils/{id}")
+    public ResponseEntity<?> deleteTil(@PathVariable Long id,
                                        @AuthenticationPrincipal CustomUserDetails userDetails) {
 
-        tilService.deleteTil(tilId, userDetails.getUser());
+        tilService.deleteTil(id, userDetails.getUser());
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 
-    // 나의 틸 목록 전체 조회하기
+    // 나의 til 목록 전체 조회하기
     @GetMapping("/tils/my")
     public ResponseEntity<?> findAllMyTil(@RequestParam(value = "roadmapId", required = false) Long roadmapId,
                                           @RequestParam(value = "date", required = false) String date,
