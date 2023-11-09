@@ -4,13 +4,13 @@ USE `tily`;
 
 
 CREATE TABLE alarm_tb (
-       id bigint AUTO_INCREMENT PRIMARY KEY,
-        created_date timestamp,
-        updated_date timestamp,
-        is_read boolean,
-        comment_id bigint,
-        receiver_id bigint,
-        til_id bigint,
+    id bigint AUTO_INCREMENT PRIMARY KEY,
+    created_date timestamp,
+    updated_date timestamp,
+    is_read boolean,
+    comment_id bigint,
+    receiver_id bigint,
+    til_id bigint,
 );
 
 create table comment_tb (
