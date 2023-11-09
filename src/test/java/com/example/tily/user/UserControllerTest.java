@@ -11,8 +11,7 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 
@@ -37,7 +36,7 @@ public class UserControllerTest {
 
         // when
         ResultActions result = mvc.perform(
-                post("/email/check")
+                post("/api/email/check")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(requestBody)
         );
@@ -60,7 +59,7 @@ public class UserControllerTest {
 
         // when
         ResultActions result = mvc.perform(
-                post("/email/code")
+                post("/api/email/code")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(requestBody)
         );
@@ -80,7 +79,7 @@ public class UserControllerTest {
 
         // when
         ResultActions result = mvc.perform(
-                post("/email/code")
+                post("/api/email/code")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(requestBody)
         );
@@ -101,7 +100,7 @@ public class UserControllerTest {
 
         // when
         ResultActions result = mvc.perform(
-                post("/join")
+                post("/api/join")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(requestBody)
         );
@@ -122,7 +121,7 @@ public class UserControllerTest {
 
         // when
         ResultActions result = mvc.perform(
-                post("/join")
+                post("/api/join")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(requestBody)
         );
@@ -143,7 +142,7 @@ public class UserControllerTest {
 
         // when
         ResultActions result = mvc.perform(
-                post("/join")
+                post("/api/join")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(requestBody)
         );
@@ -164,7 +163,7 @@ public class UserControllerTest {
 
         // when
         ResultActions result = mvc.perform(
-                post("/join")
+                post("/api/join")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(requestBody)
         );
@@ -185,7 +184,7 @@ public class UserControllerTest {
 
         // when
         ResultActions result = mvc.perform(
-                post("/login")
+                post("/api/login")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(requestBody)
         );
@@ -205,7 +204,7 @@ public class UserControllerTest {
 
         // when
         ResultActions result = mvc.perform(
-                post("/login")
+                post("/api/login")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(requestBody)
         );
@@ -226,7 +225,7 @@ public class UserControllerTest {
 
         // when
         ResultActions result = mvc.perform(
-                post("/login")
+                post("/api/login")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(requestBody)
         );
@@ -247,7 +246,7 @@ public class UserControllerTest {
 
         // when
         ResultActions result = mvc.perform(
-                post("/password/change")
+                post("/api/password/change")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(requestBody)
         );
@@ -267,7 +266,7 @@ public class UserControllerTest {
 
         // when
         ResultActions result = mvc.perform(
-                post("/password/change")
+                post("/api/password/change")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(requestBody)
         );
@@ -288,7 +287,7 @@ public class UserControllerTest {
 
         // when
         ResultActions result = mvc.perform(
-                post("/password/change")
+                post("/api/password/change")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(requestBody)
         );
@@ -305,7 +304,7 @@ public class UserControllerTest {
 
 
         ResultActions result = mvc.perform(
-                get("/gardens")
+                get("/api/gardens")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
         );
 
@@ -314,5 +313,25 @@ public class UserControllerTest {
 
         result.andExpect(jsonPath("$.success").value("true"));
     }
-    
+
+    /*
+    @DisplayName("사용자_탈퇴_성공_test")
+    @WithUserDetails(value = "tngus@test.com")
+    @Test
+    public void withdrawMembership_test() throws Exception {
+
+        // given
+
+        // when
+        ResultActions result = mvc.perform(
+                delete("/api/users")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+
+        // then
+        result.andExpect(jsonPath("$.success").value("true"));
+    }
+     */
+
 }
+
