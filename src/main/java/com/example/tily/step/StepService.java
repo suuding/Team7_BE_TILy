@@ -67,6 +67,8 @@ public class StepService {
             userStepRepository.save(userStep);
         }
 
+        roadmap.addStepNum();
+
         return new StepResponse.CreateStepDTO(step);
     }
 

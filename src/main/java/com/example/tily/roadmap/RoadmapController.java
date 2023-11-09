@@ -21,7 +21,7 @@ public class RoadmapController {
     // 로드맵 생성하기
     @PostMapping("/roadmaps")
     public ResponseEntity<?> createRoadmap(@RequestBody @Valid RoadmapRequest.CreateRoadmapDTO requestDTO, Errors errors,
-                                                @AuthenticationPrincipal CustomUserDetails userDetails){
+                                           @AuthenticationPrincipal CustomUserDetails userDetails){
         RoadmapResponse.CreateRoadmapDTO responseDTO = roadmapService.createRoadmap(requestDTO, userDetails.getUser());
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
@@ -29,7 +29,7 @@ public class RoadmapController {
     // 틸리 로드맵 생성하기 - 임시 api
     @PostMapping("/roadmaps/tily")
     public ResponseEntity<?> createTilyRoadmap(@RequestBody @Valid RoadmapRequest.CreateTilyRoadmapDTO requestDTO, Errors errors,
-                                                @AuthenticationPrincipal CustomUserDetails userDetails){
+                                               @AuthenticationPrincipal CustomUserDetails userDetails){
         RoadmapResponse.CreateRoadmapDTO responseDTO = roadmapService.createTilyRoadmap(requestDTO, userDetails.getUser());
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
