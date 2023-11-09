@@ -107,14 +107,22 @@ public class RoadmapService {
             // (1) youtube
             List<RoadmapRequest.ReferenceDTO> youtubeDTOs = referenceDTOs.youtube();
             for(RoadmapRequest.ReferenceDTO youtubeDTO : youtubeDTOs){
-                Reference reference = Reference.builder().step(step).category("youtube").link(youtubeDTO.link()).build();
+                Reference reference = Reference.builder().
+                        step(step).
+                        category("youtube").
+                        link(youtubeDTO.link()).
+                        build();
                 references.add(reference);
             }
 
             // (2) reference
             List<RoadmapRequest.ReferenceDTO> webDTOs = referenceDTOs.web();
             for(RoadmapRequest.ReferenceDTO webDTO : webDTOs){
-                Reference reference = Reference.builder().step(step).category("web").link(webDTO.link()).build();
+                Reference reference = Reference.builder().
+                        step(step).
+                        category("web").
+                        link(webDTO.link()).
+                        build();
                 references.add(reference);
             }
 
