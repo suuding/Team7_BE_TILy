@@ -43,6 +43,7 @@ CREATE TABLE step_tb (
 
 CREATE TABLE til_tb (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
     content TEXT,
     submit_content TEXT,
     roadmap_id BIGINT,
