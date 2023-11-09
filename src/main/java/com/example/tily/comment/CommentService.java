@@ -44,11 +44,22 @@ public class CommentService {
 
         String content = requestDTO.content();
 
-        Comment comment = Comment.builder().roadmap(roadmap).step(step).writer(user).til(til).content(content).build();
+        Comment comment = Comment.builder().
+                roadmap(roadmap).
+                step(step).
+                writer(user).
+                til(til).
+                content(content).
+                build();
         commentRepository.save(comment);
 
         // 댓글 작성하면 알림 생성
-        Alarm alarm = Alarm.builder().til(til).receiver(til.getWriter()).comment(comment).isRead(false).build();
+        Alarm alarm = Alarm.builder().
+                til(til).
+                receiver(til.getWriter()).
+                comment(comment).
+                isRead(false).
+                build();
         alarmRepository.save(alarm);
 
         return new CommentResponse.CreateCommentDTO(comment);
