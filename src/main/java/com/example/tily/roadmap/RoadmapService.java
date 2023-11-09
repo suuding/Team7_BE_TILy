@@ -190,7 +190,7 @@ public class RoadmapService {
 
     // 그룹 로드맵 정보 수정하기
     @Transactional
-    public void updateRoadmap(Long id, RoadmapRequest.UpdateGroupRoadmapDTO requestDTO, User user){
+    public void updateRoadmap(Long id, RoadmapRequest.UpdateRoadmapDTO requestDTO, User user){
         checkMasterAndManagerPermission(id ,user);
 
         Roadmap roadmap = roadmapRepository.findById(id)

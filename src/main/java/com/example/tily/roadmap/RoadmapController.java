@@ -45,7 +45,7 @@ public class RoadmapController {
 
     // 로드맵 정보 수정하기
     @PatchMapping("/roadmaps/{id}")
-    public ResponseEntity<?> updateRoadmap(@RequestBody @Valid RoadmapRequest.UpdateGroupRoadmapDTO requestDTO, Errors errors,
+    public ResponseEntity<?> updateRoadmap(@RequestBody @Valid RoadmapRequest.UpdateRoadmapDTO requestDTO, Errors errors,
                                            @PathVariable Long id, @AuthenticationPrincipal CustomUserDetails userDetails){
         roadmapService.updateRoadmap(id, requestDTO, userDetails.getUser());
         return ResponseEntity.ok().body(ApiUtils.success(null));
