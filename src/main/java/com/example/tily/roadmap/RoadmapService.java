@@ -49,8 +49,8 @@ public class RoadmapService {
                 .description(requestDTO.description())
                 .isPublic(requestDTO.isPublic()) // 공개여부
                 .currentNum(1L)
-                .code(requestDTO.category().equals(Category.CATEGORY_TILY.getValue()) ? generateRandomCode() : null)
-                .isRecruit(requestDTO.category().equals(Category.CATEGORY_TILY.getValue()))    // 모집여부
+                .code(requestDTO.category().equals(Category.CATEGORY_GROUP.getValue()) ? generateRandomCode() : null)
+                .isRecruit(!requestDTO.category().equals(Category.CATEGORY_INDIVIDUAL.getValue()))    // 모집여부
                 .stepNum(0)
                 .build();
         roadmapRepository.save(roadmap);
