@@ -41,7 +41,7 @@ public class S3Service implements FileService {
             System.out.println("inputStream = " + inputStream);
             System.out.println("s3Component.getBucket() = " + s3Component.getBucket());
             amazonS3.putObject(
-                    new PutObjectRequest(s3Component.getBucket(), fileName, inputStream, objectMetadata)
+                    new PutObjectRequest("tily-bucket", fileName, inputStream, objectMetadata)
                 .withCannedAcl(CannedAccessControlList.PublicRead)
             );
             log.info("asdfasdfasf inpuStream");
