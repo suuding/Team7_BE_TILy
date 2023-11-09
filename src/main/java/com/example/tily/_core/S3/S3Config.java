@@ -52,26 +52,46 @@ public class S3Config {
                .build();
    }
 
-   @Bean
-   @Profile("deploy")
-   public AmazonS3Client amazonS3ClientForDeploy() {
-       BasicAWSCredentials awsCreds = new BasicAWSCredentials(accessKey, secretKey);
+   // @Bean
+   // @Profile("deploy")
+   // public AmazonS3Client amazonS3ClientForDeploy() {
+   //     BasicAWSCredentials awsCreds = new BasicAWSCredentials(accessKey, secretKey);
 
-       ClientConfiguration clientConfiguration = new ClientConfiguration();
-       clientConfiguration.setConnectionTimeout(60000);  // 연결 타임아웃 시간 60000ms = 60s 설정
-       clientConfiguration.setSocketTimeout(60000);  // 소켓 타임아웃 시간 60000ms = 60s 설정
-       clientConfiguration.setProxyHost(proxyHost);
-       clientConfiguration.setProxyPort(proxyPort);
-       clientConfiguration.setProxyProtocol(Protocol.HTTP);
+   //     ClientConfiguration clientConfiguration = new ClientConfiguration();
+   //     clientConfiguration.setConnectionTimeout(60000);  // 연결 타임아웃 시간 60000ms = 60s 설정
+   //     clientConfiguration.setSocketTimeout(60000);  // 소켓 타임아웃 시간 60000ms = 60s 설정
+   //     clientConfiguration.setProxyHost(proxyHost);
+   //     clientConfiguration.setProxyPort(proxyPort);
+   //     clientConfiguration.setProxyProtocol(Protocol.HTTP);
 
-       return (AmazonS3Client) AmazonS3ClientBuilder
-               .standard()
-               .withRegion(region)
-               .withClientConfiguration(clientConfiguration)
-               .withCredentials(new AWSStaticCredentialsProvider(awsCreds))
-               .build();
-   }
+   //     return (AmazonS3Client) AmazonS3ClientBuilder
+   //             .standard()
+   //             .withCredentials(new AWSStaticCredentialsProvider(awsCreds))
+   //             .withRegion(region)
+   //             .withClientConfiguration(clientConfiguration)
+   //             .build();
+   // }
 
+    @Bean
+    @Profile("deploy")
+    public AmazonS3 amazonS3ClientForDeploy() {
+        AWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
+
+        ClientConfiguration clientConfiguration = new ClientConfiguration();
+        clientConfiguration.setConnectionTimeout(60000);  // 연결 타임아웃 시간 60000ms = 60s 설정
+        clientConfiguration.setSocketTimeout(60000);  // 소켓 타임아웃 시간 60000ms = 60s 설정
+        clientConfiguration.setProxyHost(proxyHost);
+        clientConfiguration.setProxyPort(proxyPort);
+        clientConfiguration.setProxyProtocol(Protocol.HTTP);
+
+        return AmazonS3ClientBuilder
+                .standard()
+                .withCredentials(new AWSStaticCredentialsProvider(credentials))
+                .withClientConfiguration(clientConfiguration)
+                .withRegion(region)
+                .build();
+    }
+    
     // @Bean
     // public S3Client s3Client() {
     //     SdkHttpClient sdkHttpClient = ApacheHttpClient.builder()

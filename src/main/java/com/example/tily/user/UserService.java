@@ -71,7 +71,7 @@ public class UserService {
                 .email(requestDTO.email())
                 .name(requestDTO.name())
                 .password(passwordEncoder.encode(requestDTO.password()))
-                .image(defaultImage)
+                .image(null)
                 .role(Role.ROLE_USER)
                 .build();
 
