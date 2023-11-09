@@ -26,8 +26,10 @@ public class CommentService {
     private final AlarmRepository alarmRepository;
 
     @Transactional
-    public CommentResponse.CreateCommentDTO createComment(CommentRequest.CreateCommentDTO requestDTO,
-                                                          Long roadmapId, Long stepId, Long tilId, User user) {
+    public CommentResponse.CreateCommentDTO createComment(CommentRequest.CreateCommentDTO requestDTO, User user) {
+        Long roadmapId = requestDTO.roadmapId();
+        Long stepId = requestDTO.stepId();
+        Long tilId = requestDTO.tilId();
 
         Roadmap roadmap = roadmapRepository.findById(roadmapId)
                 .orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_NOT_FOUND));
@@ -69,11 +71,11 @@ public class CommentService {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ExceptionCode.COMMENT_NOT_FOUND));
 
-        // 댓글 주인 또는 글의 주인만 댓글 삭제 가능
-        if(!comment.getWriter().getId().equals(user.getId()) || !comment.getTil().getWriter().getId().equals(user.getId()))
+        // 댓글 주인이 아니고 글의 주인도 아니라면 삭제 불가
+        if(!comment.getWriter().getId().equals(user.getId()) && !comment.getTil().getWriter().getId().equals(user.getId()))
             throw new CustomException(ExceptionCode.COMMENT_DELETE_FORBIDDEN);
 
         alarmRepository.deleteByCommentId(id);
-        commentRepository.deleteById(id);
+        commentRepository.softDeleteCommentById(id);
     }
 }

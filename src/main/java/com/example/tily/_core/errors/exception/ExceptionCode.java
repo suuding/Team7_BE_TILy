@@ -24,7 +24,7 @@ public enum ExceptionCode {
 
     // til 관련 에러
     TIL_ROADMAP_FORBIDDEN(HttpStatus.FORBIDDEN, "해당 로드맵에 til을 생성할 권한이 없습니다."),
-    TIL_STEP_EXIST(HttpStatus.BAD_REQUEST, "이미 step에 대한 til이 존재합니다."),
+    TIL_STEP_EXIST(HttpStatus.BAD_REQUEST, "해당 step에 대한 til이 이미 존재합니다."),
     TIL_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 til을 찾을 수 없습니다"),
     TIL_UPDATE_FORBIDDEN(HttpStatus.FORBIDDEN, "til을 저장할 권한이 없습니다."),
     TIL_CONTENT_NULL(HttpStatus.BAD_REQUEST, "til의 내용을 입력해주세요."),
@@ -33,12 +33,13 @@ public enum ExceptionCode {
     TIL_ALREADY_SUBMIT(HttpStatus.BAD_REQUEST, "이미 til을 제출하였습니다."),
     TIL_DELETE_FORBIDDEN(HttpStatus.FORBIDDEN, "해당 til을 삭제할 권한이 없습니다."),
     TIL_END_DUEDATE(HttpStatus.BAD_REQUEST, "제출 시간이 지나 til을 제출할 수 없습니다."),
+    TIL_FORBIDDEN(HttpStatus.FORBIDDEN, "til에 대한 권한이 없습니다."),
 
     // roadmap 관련 에러
     ROADMAP_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 roadmap을 찾을 수 없습니다."),
-    ROADMAP_NOT_FORBIDDEN(HttpStatus.FORBIDDEN, "해당 로드냅에 속하지 않았습니다."),
-    ROADMAP_NOT_BELONG(HttpStatus.NOT_FOUND, "해당 reoadmap에 속하지 않습니다."),
-    ROADMAP_FORBIDDEN(HttpStatus.FORBIDDEN, "해당 roadmap을 조회할 권한이 없습니다."),
+    ROADMAP_NOT_FORBIDDEN(HttpStatus.FORBIDDEN, "해당 로드맵에 속하지 않았습니다."),
+    ROADMAP_NOT_BELONG(HttpStatus.FORBIDDEN, "해당 reoadmap에 속하지 않습니다."),
+    ROADMAP_FORBIDDEN(HttpStatus.FORBIDDEN, "해당 roadmap에 접근할 권한이 없습니다."),
     ROADMAP_SUBMIT_FORBIDDEN(HttpStatus.FORBIDDEN, "해당 til을 제출할 권한이 없습니다."),
     ROADMAP_ALREADY_APPLY(HttpStatus.BAD_REQUEST, "해당 로드맵에 이미 신청했습니다."),
     ROADMAP_REJECT(HttpStatus.BAD_REQUEST, "로드맵 신청이 거절되었습니다."),
@@ -50,7 +51,7 @@ public enum ExceptionCode {
     // step 관련 에러
     STEP_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 step을 찾을 수 없습니다."),
     STEP_FORBIDDEN(HttpStatus.FORBIDDEN, "해당 step을 조회할 권한이 없습니다."),
-    STEP_NOT_INCLUDE(HttpStatus.BAD_REQUEST, "해당 step은 roadmap에 속하지 않았습니다."),
+    STEP_NOT_BELONG(HttpStatus.BAD_REQUEST, "해당 step은 roadmap에 속하지 않았습니다."),
     STEP_ROADMAP_FORBIDDEN(HttpStatus.FORBIDDEN, "해당 로드맵에 step을 생성할 권한이 없습니다."),
 
     // comment 관련 에러
@@ -65,6 +66,7 @@ public enum ExceptionCode {
 
     // reference 관련 에러
     REFERENCE_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 reference를 찾을 수 없습니다."),
+    REFERENCE_DELETE_FORBIDDEN(HttpStatus.FORBIDDEN, "해당 reference를 삭제할 권한이 없습니다"),
 
     // image 관련 에러
     IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 image를 찰을 수 없습니다."),

@@ -2,7 +2,10 @@ package com.example.tily._core.S3;
 
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.Protocol;
+<<<<<<< HEAD
 import com.amazonaws.auth.AWSCredentials;
+=======
+>>>>>>> e4cc1fe0a2894bcb0d58def9db97d9951f6a1dab
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
@@ -12,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+<<<<<<< HEAD
 import software.amazon.awssdk.auth.credentials.EnvironmentVariableCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
@@ -19,6 +23,8 @@ import software.amazon.awssdk.http.SdkHttpClient;
 import software.amazon.awssdk.http.apache.ApacheHttpClient;
 import software.amazon.awssdk.http.apache.ProxyConfiguration;
 import lombok.extern.slf4j.Slf4j;
+=======
+>>>>>>> e4cc1fe0a2894bcb0d58def9db97d9951f6a1dab
 
 import java.net.URI;
 
@@ -41,6 +47,7 @@ public class S3Config {
     private int proxyPort;
 
 
+<<<<<<< HEAD
    @Bean
    @Profile({"local", "prod"})
    public AmazonS3Client amazonS3Client() {
@@ -88,9 +95,18 @@ public class S3Config {
                 .standard()
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
                 .withClientConfiguration(clientConfiguration)
+=======
+    @Bean
+    @Profile({"local", "prod"})
+    public AmazonS3Client amazonS3Client() {
+        BasicAWSCredentials awsCreds = new BasicAWSCredentials(accessKey, secretKey);
+        return (AmazonS3Client) AmazonS3ClientBuilder
+                .standard()
+>>>>>>> e4cc1fe0a2894bcb0d58def9db97d9951f6a1dab
                 .withRegion(region)
                 .build();
     }
+<<<<<<< HEAD
     
     // @Bean
     // public S3Client s3Client() {
@@ -104,4 +120,26 @@ public class S3Config {
     //             .httpClient(sdkHttpClient)
     //             .build();
     // }
+=======
+
+    @Bean
+    @Profile("deploy")
+    public AmazonS3Client amazonS3ClientForDeploy() {
+        BasicAWSCredentials awsCreds = new BasicAWSCredentials(accessKey, secretKey);
+
+        ClientConfiguration clientConfiguration = new ClientConfiguration();
+        clientConfiguration.setConnectionTimeout(60000);  // 연결 타임아웃 시간 60000ms = 60s 설정
+        clientConfiguration.setSocketTimeout(60000);  // 소켓 타임아웃 시간 60000ms = 60s 설정
+        clientConfiguration.setProxyHost(proxyHost);
+        clientConfiguration.setProxyPort(proxyPort);
+        clientConfiguration.setProxyProtocol(Protocol.HTTP);
+
+        return (AmazonS3Client) AmazonS3ClientBuilder
+                .standard()
+                .withRegion(region)
+                .withClientConfiguration(clientConfiguration)
+                .withCredentials(new AWSStaticCredentialsProvider(awsCreds))
+                .build();
+    }
+>>>>>>> e4cc1fe0a2894bcb0d58def9db97d9951f6a1dab
 }

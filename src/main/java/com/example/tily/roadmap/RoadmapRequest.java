@@ -11,21 +11,45 @@ import java.util.List;
 
 public class RoadmapRequest {
 
-    public record CreateIndividualRoadmapDTO(@NotBlank(message = "이름을 입력해주세요.")
-                                             @Size(min=2, max=20, message = "이름은 2자에서 20자 이내여야 합니다.") String name) {
-    }
+    public record CreateIndividualRoadmapDTO(
+            @NotBlank(message = "이름을 입력해주세요.")
+            @Size(min=2, max=20, message = "이름은 2자에서 20자 이내여야 합니다.")
+            String name
+    ) { }
+    public record CreateGroupRoadmapDTO(
+            String name,
+            String description,
+            boolean isPublic
+    ) { }
 
-    public record CreateGroupRoadmapDTO(String name, String description, Boolean isPublic) {
-    }
+    public record CreateRoadmapDTO (
+            String category,
+            @NotBlank(message = "이름을 입력해주세요.")
+            @Size(min=2, max=20, message = "이름은 2자에서 20자 이내여야 합니다.")
+            String name,
+            String description,
+            boolean isPublic
+    ) { }
 
-    public record CreateTilyRoadmapDTO(RoadmapDTO roadmap, List<StepDTO> steps) {
-    }
+    public record CreateTilyRoadmapDTO(
+            RoadmapDTO roadmap,
+            List<StepDTO> steps
+    ) { }
 
-    public record UpdateGroupRoadmapDTO(String name, String description, Boolean isPublic, Boolean isRecruit) {
-    }
+    public record UpdateGroupRoadmapDTO(
+            String name,
+            String description,
+            boolean isPublic,
+            boolean isRecruit
+    ) { }
 
-    public record RoadmapDTO(@NotBlank(message = "이름을 입력해주세요.") String name, String description, String code, Boolean isPublic, Boolean isRecruit){
-    }
+    public record RoadmapDTO(
+            @NotBlank(message = "이름을 입력해주세요.") String name,
+            String description,
+            String code,
+            boolean isPublic,
+            boolean isRecruit
+    ){ }
 
     public record StepDTO(
             Long id,
@@ -35,21 +59,28 @@ public class RoadmapRequest {
             ReferenceDTOs references,
             LocalDateTime dueDate) {}
 
-    public record ReferenceDTOs(List<ReferenceDTO> youtube, List<ReferenceDTO> web) {
-    }
+    public record ReferenceDTOs(
+            List<ReferenceDTO> youtube,
+            List<ReferenceDTO> web
+    ) { }
 
-    public record ReferenceDTO(Long id, @NotBlank(message = "링크 주소를 입력해주세요.") String link) {
-    }
+    public record ReferenceDTO(
+            Long id,
+            @NotBlank(message = "링크 주소를 입력해주세요.") String link
+    ) { }
 
-    public record ApplyRoadmapDTO(@NotBlank(message="소개를 입력해주세요.")String content){
-    }
+    public record ApplyRoadmapDTO(
+            @NotBlank(message="소개를 입력해주세요.") String content
+    ) { }
 
-    public record ParticipateRoadmapDTO(@NotBlank(message="이름을 입력해주세요.")
-                                        @Size(min=8, max=8, message = "코드는 8자여야 합니다.") String code){
-    }
+    public record ParticipateRoadmapDTO(
+            @NotBlank(message="이름을 입력해주세요.")
+            @Size(min=8, max=8, message = "코드는 8자여야 합니다.") String code
+    ){ }
 
-    public record ChangeMemberRoleDTO(@NotNull(message="역할을 선택해주세요.") String role){
-    }
+    public record ChangeMemberRoleDTO(
+            @NotNull(message="역할을 선택해주세요.") String role
+    ){ }
 }
 
 

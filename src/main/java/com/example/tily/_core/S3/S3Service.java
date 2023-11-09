@@ -27,7 +27,7 @@ public class S3Service implements FileService {
 
         log.info("s3service - uploadFile");
         //파일 이름 생성
-        String fileName = getFileFolder(fileFolder) + createFileName(file.getOriginalFilename());
+        String fileName = "user/" + createFileName(file.getOriginalFilename());
         System.out.println("fileName = " + fileName);
         log.info("filename : "+fileName);
         

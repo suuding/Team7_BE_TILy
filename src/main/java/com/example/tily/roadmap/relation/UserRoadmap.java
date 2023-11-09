@@ -7,6 +7,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
@@ -14,6 +16,8 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name="user_roadmap_tb")
+@SQLDelete(sql = "UPDATE user_roadmap_tb SET is_deleted = true WHERE id = ?")
+@Where(clause = "is_deleted = false")
 public class UserRoadmap extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,7 +35,7 @@ public class UserRoadmap extends BaseTimeEntity {
     private String content;
 
     @Column
-    private Boolean isAccept;
+    private boolean isAccept;
 
     @Column(nullable = false)
     private String role;
@@ -39,8 +43,11 @@ public class UserRoadmap extends BaseTimeEntity {
     @Column(nullable = false)
     private int progress;
 
+    @Column
+    private boolean isDeleted = false;
+
     @Builder
-    public UserRoadmap(Roadmap roadmap, User user, String content, Boolean isAccept, GroupRole role, int progress) {
+    public UserRoadmap(Roadmap roadmap, User user, String content, boolean isAccept, GroupRole role, int progress) {
         this.roadmap = roadmap;
         this.user = user;
         this.content = content;
@@ -51,7 +58,7 @@ public class UserRoadmap extends BaseTimeEntity {
 
     public void updateRole(String role) { this.role = role; }
 
-    public void updateIsAccept(Boolean isAccept) { this.isAccept = isAccept; }
+    public void updateIsAccept(boolean isAccept) { this.isAccept = isAccept; }
 
     public void updateProgress(int progress) {
         this.progress = progress;
