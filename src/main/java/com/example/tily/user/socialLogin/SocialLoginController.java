@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/proxy")
+@RequestMapping("/api")
 public class SocialLoginController {
     private final KakaoLoginService kakaoLoginService;
 

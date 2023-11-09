@@ -14,7 +14,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/proxy")
+@RequestMapping("/api")
 public class TilController {
 
     private final TilService tilService;

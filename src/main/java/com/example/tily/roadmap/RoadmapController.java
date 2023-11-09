@@ -14,7 +14,7 @@ import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/proxy")
+@RequestMapping("/api")
 public class RoadmapController {
     private final RoadmapService roadmapService;
 

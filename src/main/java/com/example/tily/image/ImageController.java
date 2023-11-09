@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/proxy")
+@RequestMapping("/api")
 public class ImageController {
     final private ImageService imageService;
 

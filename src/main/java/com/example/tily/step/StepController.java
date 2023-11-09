@@ -13,7 +13,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/proxy")
+@RequestMapping("/api")
 public class StepController {
     private final StepService stepService;
 

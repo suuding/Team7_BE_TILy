@@ -16,7 +16,7 @@ import javax.validation.Valid;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/proxy")
+@RequestMapping("/api")
 public class UserController {
 
     private final UserService userService;

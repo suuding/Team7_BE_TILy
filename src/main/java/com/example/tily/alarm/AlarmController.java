@@ -11,7 +11,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/proxy")
+@RequestMapping("/api")
 public class AlarmController {
 
     private final AlarmService alarmService;
