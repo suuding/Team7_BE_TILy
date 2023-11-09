@@ -376,7 +376,7 @@ public class RoadmapService {
         if (role.equals(GroupRole.ROLE_MANAGER.getValue()) & userRoadmap.getRole().equals(GroupRole.ROLE_MASTER.getValue()))
             throw new CustomException(ExceptionCode.ROADMAP_DISMISS_FORBIDDEN);
 
-        userRoadmap.updateRole(GroupRole.ROLE_NONE.getValue());
+        userRoadmap.updateRoleAndIsAccept(GroupRole.ROLE_NONE.getValue(), false);
     }
 
     public RoadmapResponse.FindAppliedUsersDTO findAppliedUsers(Long groupsId, User user){

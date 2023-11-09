@@ -56,7 +56,14 @@ public class UserRoadmap extends BaseTimeEntity {
         this.progress = progress;
     }
 
-    public void updateRole(String role) { this.role = role; }
+    public void updateRole(String role) {
+        this.role = role;
+    }
+
+    public void updateRoleAndIsAccept(String role, boolean isAccept) {
+        this.role = role;
+        this.isAccept = isAccept;
+    }
 
     public void updateIsAccept(boolean isAccept) { this.isAccept = isAccept; }
 
