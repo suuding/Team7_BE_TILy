@@ -80,9 +80,9 @@ public class TilResponse {
             }
         }
 
-        public record RoadmapDTO(Long id, String name) {
+        public record RoadmapDTO(Long id, String name, String category) {
             public RoadmapDTO(Roadmap roadmap) {
-                this(roadmap.getId(), roadmap.getName());
+                this(roadmap.getId(), roadmap.getName(), roadmap.getCategory().getValue());
             }
         }
     }

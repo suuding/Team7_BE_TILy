@@ -62,6 +62,9 @@ public class CommentService {
                 build();
         alarmRepository.save(alarm);
 
+        // til내 댓글 갯수 증가
+        til.addCommentNum();
+
         return new CommentResponse.CreateCommentDTO(comment);
     }
 

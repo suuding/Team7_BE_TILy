@@ -80,5 +80,9 @@ public class Roadmap extends BaseTimeEntity {
         this.isRecruit = roadmap.isRecruit();
     }
 
+    public void addStepNum() {
+        this.stepNum++;
+    }
+
     public void updateImage (String image) {this.image = image; }
 }
