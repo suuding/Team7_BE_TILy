@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Service
 public class CommentService {
+
     private final RoadmapRepository roadmapRepository;
     private final StepRepository stepRepository;
     private final TilRepository tilRepository;
@@ -55,7 +56,6 @@ public class CommentService {
 
     @Transactional
     public void updateComment(CommentRequest.UpdateCommentDTO requestDTO, Long commentId, User user) {
-
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new CustomException(ExceptionCode.COMMENT_NOT_FOUND));
 

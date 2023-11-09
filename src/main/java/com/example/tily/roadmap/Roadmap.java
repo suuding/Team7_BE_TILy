@@ -1,7 +1,6 @@
 package com.example.tily.roadmap;
 
 import com.example.tily.BaseTimeEntity;
-import com.example.tily.roadmap.relation.UserRoadmap;
 import com.example.tily.user.User;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -11,8 +10,6 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -21,6 +18,7 @@ import java.util.List;
 @SQLDelete(sql = "UPDATE roadmap_tb SET is_deleted = true WHERE id = ?")
 @Where(clause = "is_deleted = false")
 public class Roadmap extends BaseTimeEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -75,7 +73,7 @@ public class Roadmap extends BaseTimeEntity {
         this.image = image;
     }
 
-    public void update(RoadmapRequest.UpdateGroupRoadmapDTO roadmap){
+    public void update(RoadmapRequest.UpdateRoadmapDTO roadmap){
         this.name = roadmap.name();
         this.description = roadmap.description();
         this.isPublic = roadmap.isPublic();

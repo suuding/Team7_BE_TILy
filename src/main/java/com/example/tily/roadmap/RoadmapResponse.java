@@ -13,14 +13,15 @@ import java.util.List;
 
 
 public class RoadmapResponse {
+
     public record CreateRoadmapDTO(Long id) {
         public CreateRoadmapDTO(Roadmap roadmap) {
             this(roadmap.getId());
         }
     }
 
-    public record FindGroupRoadmapDTO(Creator creator, String name, String description, String myRole, Long recentTilId, Long recentStepId, boolean isPublic, boolean isRecruit, String code, String category, List<StepDTO> steps) {
-        public FindGroupRoadmapDTO(Roadmap roadmap, List<StepDTO> steps, User user, Long recentTilId, Long recentStepId, String myRole) {
+    public record FindRoadmapDTO(Creator creator, String name, String description, String myRole, Long recentTilId, Long recentStepId, boolean isPublic, boolean isRecruit, String code, String category, List<StepDTO> steps) {
+        public FindRoadmapDTO(Roadmap roadmap, List<StepDTO> steps, User user, Long recentTilId, Long recentStepId, String myRole) {
             this(new Creator(user.getName(), user.getImage()), roadmap.getName(), roadmap.getDescription(), myRole, recentTilId, recentStepId, roadmap.isPublic(), roadmap.isRecruit(), roadmap.getCode(), roadmap.getCategory().getValue(), steps);
         }
 

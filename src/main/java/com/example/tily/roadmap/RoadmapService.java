@@ -20,9 +20,6 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -30,6 +27,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 public class RoadmapService {
+
     private final RoadmapRepository roadmapRepository;
     private final StepRepository stepRepository;
     private final ReferenceRepository referenceRepository;
@@ -38,10 +36,9 @@ public class RoadmapService {
     private final UserStepRepository userStepRepository;
     private final CommentRepository commentRepository;
 
-    // 로드맵 생성하기
+    // 로드맵 생성하기(개인, 그룹)
     @Transactional
     public RoadmapResponse.CreateRoadmapDTO createRoadmap(RoadmapRequest.CreateRoadmapDTO requestDTO, User user){
-
         Roadmap roadmap = Roadmap.builder()
                 .creator(user)
                 .category(Category.getCategory(requestDTO.category()))
@@ -70,7 +67,6 @@ public class RoadmapService {
     // 틸리 로드맵 생성하기 - 임시 api
     @Transactional
     public RoadmapResponse.CreateRoadmapDTO createTilyRoadmap(RoadmapRequest.CreateTilyRoadmapDTO requestDTO, User user){
-
         Roadmap roadmap = Roadmap.builder()
                 .creator(user)
                 .category(Category.CATEGORY_TILY)
@@ -138,7 +134,7 @@ public class RoadmapService {
     }
 
     // 로드맵 정보 조회하기
-    public RoadmapResponse.FindGroupRoadmapDTO findGroupRoadmap(Long id, User user){
+    public RoadmapResponse.FindRoadmapDTO findRoadmap(Long id, User user){
         Roadmap roadmap = roadmapRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_NOT_FOUND));
 
@@ -166,8 +162,8 @@ public class RoadmapService {
             webMap.put(step.getId(), webList);
         }
 
-        List<RoadmapResponse.FindGroupRoadmapDTO.StepDTO> steps = stepList.stream()
-                .map(step -> new RoadmapResponse.FindGroupRoadmapDTO.StepDTO(step
+        List<RoadmapResponse.FindRoadmapDTO.StepDTO> steps = stepList.stream()
+                .map(step -> new RoadmapResponse.FindRoadmapDTO.StepDTO(step
                         , youtubeMap.get(step.getId()).stream()
                         .map(RoadmapResponse.ReferenceDTOs.ReferenceDTO::new).collect(Collectors.toList())
                         , webMap.get(step.getId()).stream()
@@ -189,12 +185,12 @@ public class RoadmapService {
             }
         }
 
-        return new RoadmapResponse.FindGroupRoadmapDTO(roadmap, steps, roadmap.getCreator(), recentTilId, recentStepId, myRole);
+        return new RoadmapResponse.FindRoadmapDTO(roadmap, steps, roadmap.getCreator(), recentTilId, recentStepId, myRole);
     }
 
     // 그룹 로드맵 정보 수정하기
     @Transactional
-    public void updateGroupRoadmap(Long id, RoadmapRequest.UpdateGroupRoadmapDTO requestDTO, User user){
+    public void updateRoadmap(Long id, RoadmapRequest.UpdateRoadmapDTO requestDTO, User user){
         checkMasterAndManagerPermission(id ,user);
 
         Roadmap roadmap = roadmapRepository.findById(id)
@@ -206,7 +202,6 @@ public class RoadmapService {
 
     // 내가 속한 로드맵 전체 목록 조회하기
     public RoadmapResponse.FindAllMyRoadmapDTO findAllMyRoadmaps(User user) {
-
         List<Roadmap> roadmaps = userRoadmapRepository.findByUserIdAndIsAccept(user.getId(), true);      // 내가 속한 로드맵 조회
 
         List<RoadmapResponse.FindAllMyRoadmapDTO.CategoryDTO> categories = roadmaps.stream()
@@ -230,7 +225,6 @@ public class RoadmapService {
 
     // 로드맵 조회하기
     public RoadmapResponse.FindRoadmapByQueryDTO findAll(String category, String name, int page, int size) {
-
         // 생성일자를 기준으로 내림차순
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdDate"));
 
