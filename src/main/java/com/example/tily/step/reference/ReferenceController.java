@@ -13,7 +13,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/proxy")
 public class ReferenceController {
 
     private final ReferenceService referenceService;
