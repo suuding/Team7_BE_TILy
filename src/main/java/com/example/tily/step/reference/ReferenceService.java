@@ -43,8 +43,8 @@ public class ReferenceService {
     }
 
     // step의 참고자료 목록 조회하기
-    public StepResponse.FindReferenceDTO findReference(ReferenceRequest.FindReferenceDTO requestDTO, User user){
-        Long stepId = requestDTO.stepId();
+    public StepResponse.FindReferenceDTO findReference(Long stepId, User user){
+
         Step step = getStepById(stepId);
 
         List<Reference> references = referenceRepository.findByStepId(stepId);
