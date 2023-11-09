@@ -1,7 +1,5 @@
 CREATE SCHEMA IF NOT EXISTS `tily` DEFAULT CHARACTER SET utf8mb4;
-
 USE `tily`;
-
 
 CREATE TABLE user_tb (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -37,12 +35,13 @@ CREATE TABLE step_tb (
     title VARCHAR(255) NOT NULL,
     roadmap_id BIGINT,
     description TEXT,
+    due_date TIMESTAMP,
     is_deleted BOOLEAN,
-    due_date TIMESTAMP
 );
 
 CREATE TABLE til_tb (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) not null,
     content TEXT,
     submit_content TEXT,
     roadmap_id BIGINT,
@@ -51,7 +50,7 @@ CREATE TABLE til_tb (
     comment_num INT,
     is_personal BOOLEAN,
     submit_date TIMESTAMP,
-    is_deleted BOOLEAN,
+    is_deleted boolean,
     created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -100,7 +99,7 @@ CREATE TABLE alarm_tb (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     til_id BIGINT,
     comment_id BIGINT,
-    is_checked BOOLEAN,
+    is_read BOOLEAN,
     receiver_id BIGINT,
     created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -110,9 +109,9 @@ CREATE TABLE image (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     image_path varchar(255),
     original_image_name varchar(255),
-    storage_image_name varchar(255)
+    storage_image_name varchar(255),
+    primary key (id)
 );
-
 
 ALTER TABLE alarm_tb
 ADD FOREIGN KEY (til_id)
