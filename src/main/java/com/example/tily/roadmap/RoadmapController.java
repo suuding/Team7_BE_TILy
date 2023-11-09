@@ -39,7 +39,7 @@ public class RoadmapController {
     public ResponseEntity<?> findGroupRoadmap(@PathVariable Long id, @AuthenticationPrincipal CustomUserDetails userDetails){
         User user = Optional.ofNullable(userDetails).map(CustomUserDetails::getUser).orElse(null);
         RoadmapResponse.FindGroupRoadmapDTO responseDTO = roadmapService.findGroupRoadmap(id, user);
-
+        
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
 
