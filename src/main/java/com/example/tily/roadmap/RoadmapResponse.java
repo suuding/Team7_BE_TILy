@@ -13,6 +13,7 @@ import java.util.List;
 
 
 public class RoadmapResponse {
+
     public record CreateRoadmapDTO(Long id) {
         public CreateRoadmapDTO(Roadmap roadmap) {
             this(roadmap.getId());

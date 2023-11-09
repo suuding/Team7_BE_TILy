@@ -36,18 +36,18 @@ public class RoadmapController {
 
     // 틸리, 그룹 로드맵 정보 조회하기
     @GetMapping("/roadmaps/{id}")
-    public ResponseEntity<?> findGroupRoadmap(@PathVariable Long id, @AuthenticationPrincipal CustomUserDetails userDetails){
+    public ResponseEntity<?> findRoadmap(@PathVariable Long id, @AuthenticationPrincipal CustomUserDetails userDetails){
         User user = Optional.ofNullable(userDetails).map(CustomUserDetails::getUser).orElse(null);
-        RoadmapResponse.FindGroupRoadmapDTO responseDTO = roadmapService.findGroupRoadmap(id, user);
+        RoadmapResponse.FindGroupRoadmapDTO responseDTO = roadmapService.findRoadmap(id, user);
         
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
 
     // 그룹 로드맵 정보 수정하기
     @PatchMapping("/roadmaps/{id}")
-    public ResponseEntity<?> updateGroupRoadmap(@RequestBody @Valid RoadmapRequest.UpdateGroupRoadmapDTO requestDTO, Errors errors,
-                                                @PathVariable Long id, @AuthenticationPrincipal CustomUserDetails userDetails){
-        roadmapService.updateGroupRoadmap(id, requestDTO, userDetails.getUser());
+    public ResponseEntity<?> updateRoadmap(@RequestBody @Valid RoadmapRequest.UpdateGroupRoadmapDTO requestDTO, Errors errors,
+                                           @PathVariable Long id, @AuthenticationPrincipal CustomUserDetails userDetails){
+        roadmapService.updateRoadmap(id, requestDTO, userDetails.getUser());
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 
@@ -136,7 +136,7 @@ public class RoadmapController {
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 
-    // 그룹 로드맵 삭제
+    // 로드맵 삭제
     @DeleteMapping("/roadmaps/{id}")
     public ResponseEntity<?> deleteRoadmap(@PathVariable Long id, @AuthenticationPrincipal CustomUserDetails userDetails){
         roadmapService.deleteRoadmap(id, userDetails.getUser());

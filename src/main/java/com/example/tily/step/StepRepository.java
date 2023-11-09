@@ -9,10 +9,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface StepRepository extends JpaRepository<Step, Long> {
-    //List<Step> findByRoadmapId(Long id);
-
-    //@Query("select s from Step s join fetch s.roadmap where s.id=:id")
-    //Optional<Step> findById(Long id);
 
     @Query("select s from Step s join fetch s.roadmap where s.id=:stepId")
     Optional<Step> findById(@Param("stepId") Long stepId);

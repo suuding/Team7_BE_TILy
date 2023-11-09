@@ -21,6 +21,7 @@ import java.util.List;
 @SQLDelete(sql = "UPDATE roadmap_tb SET is_deleted = true WHERE id = ?")
 @Where(clause = "is_deleted = false")
 public class Roadmap extends BaseTimeEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
