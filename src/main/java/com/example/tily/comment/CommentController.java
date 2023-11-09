@@ -11,7 +11,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/proxy")
 public class CommentController {
 
     private final CommentService commentService;
