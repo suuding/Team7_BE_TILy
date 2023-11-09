@@ -34,7 +34,7 @@ public class TilControllerTest {
         Long roadmapId = 5L;
         Long stepId = 8L;
 
-        TilRequest.CreateTilDTO reqeustDTO = new TilRequest.CreateTilDTO("spring security");
+        TilRequest.CreateTilDTO reqeustDTO = new TilRequest.CreateTilDTO(roadmapId,stepId,"스프링 시큐리티 세팅");
 
         String requestBody = om.writeValueAsString(reqeustDTO);
 
@@ -58,7 +58,7 @@ public class TilControllerTest {
         Long roadmapId = 1L;
         Long stepId = 1L;
 
-        TilRequest.CreateTilDTO reqeustDTO = new TilRequest.CreateTilDTO("");
+        TilRequest.CreateTilDTO reqeustDTO = new TilRequest.CreateTilDTO(roadmapId, stepId, "");
 
         String requestBody = om.writeValueAsString(reqeustDTO);
 
@@ -82,7 +82,7 @@ public class TilControllerTest {
         Long roadmapId = 15L;
         Long stepId = 1L;
 
-        TilRequest.CreateTilDTO reqeustDTO = new TilRequest.CreateTilDTO("10월 9일 TIL");
+        TilRequest.CreateTilDTO reqeustDTO = new TilRequest.CreateTilDTO(roadmapId, stepId, "스프링 시큐리티 세팅");
 
         String requestBody = om.writeValueAsString(reqeustDTO);
 

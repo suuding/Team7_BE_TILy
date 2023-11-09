@@ -189,8 +189,8 @@ public class TiLyApplication {
 				.currentNum(currentNum)
 				.stepNum(stepNum)
 				.image(image)
-				.isPublic(false)
-				.isRecruit(false)
+				.isPublic(true)
+				.isRecruit(true)
 				.build();
 	}
 
