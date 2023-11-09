@@ -6,8 +6,8 @@ import java.util.List;
 
 
 public class StepResponse {
-    public record CreateIndividualStepDTO(Long id) {
-        public CreateIndividualStepDTO(Step step) {
+    public record CreateStepDTO(Long id) {
+        public CreateStepDTO(Step step) {
             this(step.getId());
         }
     }
@@ -24,7 +24,7 @@ public class StepResponse {
 
     public record FindAllStepDTO(List<StepDTO> steps, int progress, String myRole) {
 
-        public record StepDTO(Long id, String title, Boolean isSubmit, Long tilId) {
+        public record StepDTO(Long id, String title, boolean isSubmit, Long tilId) {
             public StepDTO(Step step, Til til) {
                 this(step.getId(), step.getTitle(), til==null ? false : (til.getSubmitContent()!=null), til==null ? null : til.getId());
             }

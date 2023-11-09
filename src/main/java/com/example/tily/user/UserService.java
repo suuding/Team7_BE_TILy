@@ -5,6 +5,17 @@ import com.example.tily._core.errors.exception.CustomException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.tily._core.security.JWTProvider;
 import com.example.tily._core.utils.RedisUtils;
+import com.example.tily.comment.CommentRepository;
+import com.example.tily.roadmap.Category;
+import com.example.tily.roadmap.Roadmap;
+import com.example.tily.roadmap.RoadmapRepository;
+import com.example.tily.roadmap.relation.UserRoadmap;
+import com.example.tily.roadmap.relation.UserRoadmapRepository;
+import com.example.tily.step.Step;
+import com.example.tily.step.StepRepository;
+import com.example.tily.step.reference.ReferenceRepository;
+import com.example.tily.step.relation.UserStep;
+import com.example.tily.step.relation.UserStepRepository;
 import com.example.tily.til.Til;
 import com.example.tily.til.TilRepository;
 import lombok.RequiredArgsConstructor;
@@ -30,20 +41,27 @@ public class UserService {
     private final JavaMailSender javaMailSender;
     private final RedisUtils redisUtils;
     private final TilRepository tilRepository;
+    private final UserRoadmapRepository userRoadmapRepository;
+    private final UserStepRepository userStepRepository;
+    private final RoadmapRepository roadmapRepository;
+    private final CommentRepository commentRepository;
+    private final StepRepository stepRepository;
+    private final ReferenceRepository referenceRepository;
+
     private String defaultImage = "user/profile-user.jpg";
 
     // (회원가입) 이메일 중복 체크 후 인증코드 전송
     @Transactional
     public void checkEmail(UserRequest.CheckEmailDTO requestDTO) {
         checkEmail(requestDTO.email());
-        sendCode(requestDTO.email());
+        //sendCode(requestDTO.email());
     }
 
     // 인증코드 전송
     @Transactional
     public void sendEmailCode(UserRequest.SendEmailCodeDTO requestDTO) {
         findByEmail(requestDTO.email());
-        sendCode(requestDTO.email());
+        //sendCode(requestDTO.email());
     }
 
     // 인증코드 확인
@@ -162,6 +180,65 @@ public class UserService {
         return new UserResponse.ViewGardensDTO(gardens);
     }
 
+    // 회원 탈퇴하기
+    public void withdrawMembership(User user){
+        // 1. 유저가 작성한 Comment들 삭제
+        List<Til> tils = getTilByUserId(user.getId());
+        List<Long> tilIds = tils.stream()
+                .map(Til::getId)
+                .collect(Collectors.toList());
+
+        commentRepository.softDeleteCommentsByTilIds(tilIds);
+
+        // 2. 유저가 작성한 Til 삭제
+        tilRepository.softDeleteTilsByTilIds(tilIds);
+
+        // 3. UserStep들을 삭제
+        List<UserStep> userSteps = getUserStepByUserId(user.getId());
+        List<Long> userStepIds = userSteps.stream()
+                .map(UserStep::getId)
+                .collect(Collectors.toList());
+
+        userStepRepository.softDeleteUserStepByUserStepIds(userStepIds);
+
+        // 4. 유저가 만든 Step들을 삭제
+        List<Step> steps = userSteps.stream()
+                .map(userStep -> userStep.getStep())
+                .collect(Collectors.toList());
+
+        List<Long> stepIds = steps.stream()
+                .map(Step::getId)
+                .collect(Collectors.toList());
+
+        stepRepository.softDeleteStepByStepIds(stepIds);
+
+        // 5. 유저가 작성한 Reference들을 삭제
+        referenceRepository.softDeleteReferenceByStepIds(stepIds);
+
+        // 6. UserRoadmap 삭제
+        List<UserRoadmap> userRoadmaps = getUserRoadmapByUserId(user.getId());
+        List<Long> userRoadmapIds = userRoadmaps.stream()
+                .map(UserRoadmap::getId)
+                .collect(Collectors.toList());
+
+        userRoadmapRepository.softDeleteUserRoadmapByUserRoadmapIds(userRoadmapIds);
+
+        // 7. 유저가 만든 로드맵 삭제
+        List<Roadmap> roadmaps = userRoadmaps.stream()
+                .map(userRoadmap -> userRoadmap.getRoadmap())
+                .filter(roadmap -> roadmap.getCreator().getId().equals(user.getId()))
+                .collect(Collectors.toList());
+
+        List<Long> roadmapIds = roadmaps.stream()
+                .map(Roadmap::getId)
+                .collect(Collectors.toList());
+
+        roadmapRepository.softDeleteRoadmapByRoadmapIds(roadmapIds);
+
+        // 8. 유저 삭제
+        userRepository.softDeleteUserById(user.getId());
+    }
+
     //////////////
 
     // 해당 이메일로 인증코드 전송
@@ -236,4 +313,15 @@ public class UserService {
         return userRepository.findById(id).orElseThrow(()->new CustomException(ExceptionCode.USER_NOT_FOUND));
     }
 
+    private List<UserRoadmap> getUserRoadmapByUserId(Long userId) {
+        return userRoadmapRepository.findByUserId(userId);
+    }
+
+    private List<UserStep> getUserStepByUserId(Long userId) {
+        return userStepRepository.findByUserId(userId);
+    }
+
+    private List<Til> getTilByUserId(Long userId){
+        return tilRepository.findByWriterId(userId);
+    }
 }

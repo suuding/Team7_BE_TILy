@@ -2,6 +2,7 @@ package com.example.tily.roadmap;
 
 import com.example.tily._core.security.CustomUserDetails;
 import com.example.tily._core.utils.ApiUtils;
+import com.example.tily.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -9,29 +10,23 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api")
 public class RoadmapController {
     private final RoadmapService roadmapService;
 
-    // 개인 로드맵(카테고리) 생성하기
-    @PostMapping("/roadmaps/individual")
-    public ResponseEntity<?> createIndividualRoadmap(@RequestBody @Valid RoadmapRequest.CreateIndividualRoadmapDTO requestDTO, Errors errors,
-                                                     @AuthenticationPrincipal CustomUserDetails userDetails) {
-        RoadmapResponse.CreateRoadmapDTO responseDTO = roadmapService.createIndividualRoadmap(requestDTO, userDetails.getUser());
-        return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
-    }
-
-    // 그룹 로드맵 생성하기
+    // 로드맵 생성하기
     @PostMapping("/roadmaps")
-    public ResponseEntity<?> createGroupRoadmap(@RequestBody @Valid RoadmapRequest.CreateGroupRoadmapDTO requestDTO, Errors errors,
+    public ResponseEntity<?> createRoadmap(@RequestBody @Valid RoadmapRequest.CreateRoadmapDTO requestDTO, Errors errors,
                                                 @AuthenticationPrincipal CustomUserDetails userDetails){
-        RoadmapResponse.CreateRoadmapDTO responseDTO = roadmapService.createGroupRoadmap(requestDTO, userDetails.getUser());
+        RoadmapResponse.CreateRoadmapDTO responseDTO = roadmapService.createRoadmap(requestDTO, userDetails.getUser());
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
 
-    // 틸리 로드맵 생성하기
+    // 틸리 로드맵 생성하기 - 임시 api
     @PostMapping("/roadmaps/tily")
     public ResponseEntity<?> createTilyRoadmap(@RequestBody @Valid RoadmapRequest.CreateTilyRoadmapDTO requestDTO, Errors errors,
                                                 @AuthenticationPrincipal CustomUserDetails userDetails){
@@ -42,12 +37,14 @@ public class RoadmapController {
     // 틸리, 그룹 로드맵 정보 조회하기
     @GetMapping("/roadmaps/{id}")
     public ResponseEntity<?> findGroupRoadmap(@PathVariable Long id, @AuthenticationPrincipal CustomUserDetails userDetails){
-         RoadmapResponse.FindGroupRoadmapDTO responseDTO = roadmapService.findGroupRoadmap(id, userDetails.getUser());
+        User user = Optional.ofNullable(userDetails).map(CustomUserDetails::getUser).orElse(null);
+        RoadmapResponse.FindGroupRoadmapDTO responseDTO = roadmapService.findGroupRoadmap(id, user);
+        
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
 
     // 그룹 로드맵 정보 수정하기
-    @PostMapping("/roadmaps/{id}")
+    @PatchMapping("/roadmaps/{id}")
     public ResponseEntity<?> updateGroupRoadmap(@RequestBody @Valid RoadmapRequest.UpdateGroupRoadmapDTO requestDTO, Errors errors,
                                                 @PathVariable Long id, @AuthenticationPrincipal CustomUserDetails userDetails){
         roadmapService.updateGroupRoadmap(id, requestDTO, userDetails.getUser());
@@ -141,13 +138,10 @@ public class RoadmapController {
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 
-    //  로드맵의 특정 step의 틸 목록 조회
-    @GetMapping("/roadmaps/groups/{groupId}/steps/{stepId}/tils")
-    public ResponseEntity<?> findTilOfStep(@PathVariable Long groupId, @PathVariable Long stepId,
-                                           @RequestParam(value="isSubmit", defaultValue = "true") Boolean isSubmit,
-                                           @RequestParam(value="isMember", defaultValue = "true") Boolean isMember,
-                                           @RequestParam(value="name", required = false) String name){
-        RoadmapResponse.FindTilOfStepDTO responseDTO = roadmapService.findTilOfStep(groupId, stepId, isSubmit, isMember, name);
-        return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
+    // 그룹 로드맵 삭제
+    @DeleteMapping("/roadmaps/{id}")
+    public ResponseEntity<?> deleteRoadmap(@PathVariable Long id, @AuthenticationPrincipal CustomUserDetails userDetails){
+        roadmapService.deleteRoadmap(id, userDetails.getUser());
+        return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 }
