@@ -174,20 +174,19 @@ public class RoadmapService {
                         .map(RoadmapResponse.ReferenceDTOs.ReferenceDTO::new).collect(Collectors.toList())))
                 .collect(Collectors.toList());
 
-        Optional<UserRoadmap> userRoadmap = userRoadmapRepository.findByRoadmapIdAndUserIdAndIsAcceptTrue(id, user.getId());
-        String myRole;
-        Long recentTilId;
-        Long recentStepId;
+        String myRole = "none";
+        Long recentTilId = null;
+        Long recentStepId = null;
 
-        if (userRoadmap.isPresent()) {
-            myRole = userRoadmap.get().getRole();
-            List<Til> tils = tilRepository.findByUserIdByOrderByUpdatedDateDesc(id, user.getId());
-            recentTilId = !tils.isEmpty() ? tils.get(0).getId() : null;
-            recentStepId = !tils.isEmpty() ? tils.get(0).getStep().getId() : null;
-        } else {
-            myRole = "none";
-            recentTilId = null;
-            recentStepId = null;
+        if(user != null){
+            Optional<UserRoadmap> userRoadmap = userRoadmapRepository.findByRoadmapIdAndUserIdAndIsAcceptTrue(id, user.getId());
+
+            if (userRoadmap.isPresent()) {
+                myRole = userRoadmap.get().getRole();
+                List<Til> tils = tilRepository.findByUserIdByOrderByUpdatedDateDesc(id, user.getId());
+                recentTilId = !tils.isEmpty() ? tils.get(0).getId() : null;
+                recentStepId = !tils.isEmpty() ? tils.get(0).getStep().getId() : null;
+            }
         }
 
         return new RoadmapResponse.FindGroupRoadmapDTO(roadmap, steps, roadmap.getCreator(), recentTilId, recentStepId, myRole);
