@@ -17,22 +17,16 @@ public class ImageController {
     final private ImageService imageService;
 
     // 폴더 별로 관리 하기 위해 나눔(user, roadmap, post)
-<<<<<<< HEAD
-    @GetMapping("/users/{userId}/image")
-=======
+
     @GetMapping("/images/users/{userId}")
->>>>>>> e4cc1fe0a2894bcb0d58def9db97d9951f6a1dab
     public ResponseEntity<?> findUserImage(@PathVariable Long userId){
         ImageResponse.UserImageDTO responseDTO = imageService.findUserImage(userId);
 
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
 
-<<<<<<< HEAD
-    @PostMapping(value = "/users/{userId}/image", consumes = {"multipart/form-data"})
-=======
+
     @PostMapping("/images/users/{userId}")
->>>>>>> e4cc1fe0a2894bcb0d58def9db97d9951f6a1dab
     public ResponseEntity<?> uploadUserImage(@PathVariable Long userId, @RequestParam("image") MultipartFile file,
                                              @AuthenticationPrincipal CustomUserDetails userDetails) {
         System.out.println("postmapping, user images");
@@ -42,22 +36,15 @@ public class ImageController {
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 
-<<<<<<< HEAD
-    @GetMapping("/roadmaps/{roadmapId}/image")
-=======
+
     @GetMapping("/images/roadmaps/{roadmapId}")
->>>>>>> e4cc1fe0a2894bcb0d58def9db97d9951f6a1dab
     public ResponseEntity<?> findRoadmapImage(@PathVariable Long roadmapId){
         ImageResponse.RoadmapImageDTO responseDTO = imageService.findRoadmapImage(roadmapId);
 
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
 
-<<<<<<< HEAD
-    @PostMapping("/roadmaps/{roadmapId}/image")
-=======
     @PostMapping("/images/roadmaps/{roadmapId}")
->>>>>>> e4cc1fe0a2894bcb0d58def9db97d9951f6a1dab
     public ResponseEntity<?> uploadRoadmapImage(@PathVariable Long roadmapId,
                                              @RequestParam("image") MultipartFile file) {
 
@@ -66,11 +53,8 @@ public class ImageController {
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 
-<<<<<<< HEAD
-    @PostMapping("/images/post")
-=======
+
     @PostMapping("/images/write")
->>>>>>> e4cc1fe0a2894bcb0d58def9db97d9951f6a1dab
     public ResponseEntity<?> postImage(@RequestParam("image") MultipartFile file){
         ImageResponse.PostImageDTO responseDTO = imageService.postImage(file);
 
