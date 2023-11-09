@@ -2,6 +2,7 @@ package com.example.tily.roadmap;
 
 import com.example.tily._core.security.CustomUserDetails;
 import com.example.tily._core.utils.ApiUtils;
+import com.example.tily.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -9,6 +10,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -35,7 +37,9 @@ public class RoadmapController {
     // 틸리, 그룹 로드맵 정보 조회하기
     @GetMapping("/roadmaps/{id}")
     public ResponseEntity<?> findGroupRoadmap(@PathVariable Long id, @AuthenticationPrincipal CustomUserDetails userDetails){
-         RoadmapResponse.FindGroupRoadmapDTO responseDTO = roadmapService.findGroupRoadmap(id, userDetails.getUser());
+        User user = Optional.ofNullable(userDetails).map(CustomUserDetails::getUser).orElse(null);
+        RoadmapResponse.FindGroupRoadmapDTO responseDTO = roadmapService.findGroupRoadmap(id, user);
+        
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
 
