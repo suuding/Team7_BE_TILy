@@ -134,7 +134,7 @@ public class RoadmapService {
     }
 
     // 로드맵 정보 조회하기
-    public RoadmapResponse.FindGroupRoadmapDTO findRoadmap(Long id, User user){
+    public RoadmapResponse.FindRoadmapDTO findRoadmap(Long id, User user){
         Roadmap roadmap = roadmapRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_NOT_FOUND));
 
@@ -162,8 +162,8 @@ public class RoadmapService {
             webMap.put(step.getId(), webList);
         }
 
-        List<RoadmapResponse.FindGroupRoadmapDTO.StepDTO> steps = stepList.stream()
-                .map(step -> new RoadmapResponse.FindGroupRoadmapDTO.StepDTO(step
+        List<RoadmapResponse.FindRoadmapDTO.StepDTO> steps = stepList.stream()
+                .map(step -> new RoadmapResponse.FindRoadmapDTO.StepDTO(step
                         , youtubeMap.get(step.getId()).stream()
                         .map(RoadmapResponse.ReferenceDTOs.ReferenceDTO::new).collect(Collectors.toList())
                         , webMap.get(step.getId()).stream()
@@ -185,7 +185,7 @@ public class RoadmapService {
             }
         }
 
-        return new RoadmapResponse.FindGroupRoadmapDTO(roadmap, steps, roadmap.getCreator(), recentTilId, recentStepId, myRole);
+        return new RoadmapResponse.FindRoadmapDTO(roadmap, steps, roadmap.getCreator(), recentTilId, recentStepId, myRole);
     }
 
     // 그룹 로드맵 정보 수정하기
