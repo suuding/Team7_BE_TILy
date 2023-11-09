@@ -54,14 +54,14 @@ public class UserService {
     @Transactional
     public void checkEmail(UserRequest.CheckEmailDTO requestDTO) {
         checkEmail(requestDTO.email());
-        sendCode(requestDTO.email());
+        //sendCode(requestDTO.email());
     }
 
     // 인증코드 전송
     @Transactional
     public void sendEmailCode(UserRequest.SendEmailCodeDTO requestDTO) {
         findByEmail(requestDTO.email());
-        sendCode(requestDTO.email());
+        //sendCode(requestDTO.email());
     }
 
     // 인증코드 확인
