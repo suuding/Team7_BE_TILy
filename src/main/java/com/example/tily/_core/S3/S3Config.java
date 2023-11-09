@@ -41,16 +41,16 @@ public class S3Config {
     private int proxyPort;
 
 
-   @Bean
-   @Profile({"local", "prod"})
-   public AmazonS3Client amazonS3Client() {
-       BasicAWSCredentials awsCreds = new BasicAWSCredentials(accessKey, secretKey);
-       return (AmazonS3Client) AmazonS3ClientBuilder
-               .standard()
-               .withRegion(region)
-               .withCredentials(new AWSStaticCredentialsProvider(awsCreds))
-               .build();
-   }
+   // @Bean
+   // @Profile({"local", "prod"})
+   // public AmazonS3Client amazonS3ClientTest() {
+   //     BasicAWSCredentials awsCreds = new BasicAWSCredentials(accessKey, secretKey);
+   //     return (AmazonS3Client) AmazonS3ClientBuilder
+   //             .standard()
+   //             .withRegion(region)
+   //             .withCredentials(new AWSStaticCredentialsProvider(awsCreds))
+   //             .build();
+   // }
 
    // @Bean
    // @Profile("deploy")
@@ -73,9 +73,8 @@ public class S3Config {
    // }
 
     @Bean
-    @Profile("deploy")
-    public AmazonS3 amazonS3ClientForDeploy() {
-        AWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
+    public AmazonS3Client amazonS3Client() {
+        BasicAWSCredentials awsCreds = new BasicAWSCredentials(accessKey, secretKey);
 
         ClientConfiguration clientConfiguration = new ClientConfiguration();
         clientConfiguration.setConnectionTimeout(60000);  // 연결 타임아웃 시간 60000ms = 60s 설정
@@ -84,11 +83,11 @@ public class S3Config {
         clientConfiguration.setProxyPort(proxyPort);
         clientConfiguration.setProxyProtocol(Protocol.HTTP);
 
-        return AmazonS3ClientBuilder
+        return (AmazonS3Client) AmazonS3ClientBuilder
                 .standard()
                 .withRegion(region)
-                .withCredentials(new AWSStaticCredentialsProvider(credentials))
                 .withClientConfiguration(clientConfiguration)
+                .withCredentials(new AWSStaticCredentialsProvider(awsCreds))
                 .build();
     }
 
