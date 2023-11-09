@@ -49,8 +49,8 @@ public class RoadmapService {
                 .description(requestDTO.description())
                 .isPublic(requestDTO.isPublic()) // 공개여부
                 .currentNum(1L)
-                .code(requestDTO.category().equals(Category.CATEGORY_TILY.getValue()) ? generateRandomCode() : null)
-                .isRecruit(requestDTO.category().equals(Category.CATEGORY_TILY.getValue()))    // 모집여부
+                .code(requestDTO.category().equals(Category.CATEGORY_GROUP.getValue()) ? generateRandomCode() : null)
+                .isRecruit(!requestDTO.category().equals(Category.CATEGORY_INDIVIDUAL.getValue()))    // 모집여부
                 .stepNum(0)
                 .build();
         roadmapRepository.save(roadmap);
@@ -174,20 +174,19 @@ public class RoadmapService {
                         .map(RoadmapResponse.ReferenceDTOs.ReferenceDTO::new).collect(Collectors.toList())))
                 .collect(Collectors.toList());
 
-        Optional<UserRoadmap> userRoadmap = userRoadmapRepository.findByRoadmapIdAndUserIdAndIsAcceptTrue(id, user.getId());
-        String myRole;
-        Long recentTilId;
-        Long recentStepId;
+        String myRole = "none";
+        Long recentTilId = null;
+        Long recentStepId = null;
 
-        if (userRoadmap.isPresent()) {
-            myRole = userRoadmap.get().getRole();
-            List<Til> tils = tilRepository.findByUserIdByOrderByUpdatedDateDesc(id, user.getId());
-            recentTilId = !tils.isEmpty() ? tils.get(0).getId() : null;
-            recentStepId = !tils.isEmpty() ? tils.get(0).getStep().getId() : null;
-        } else {
-            myRole = "none";
-            recentTilId = null;
-            recentStepId = null;
+        if(user != null){
+            Optional<UserRoadmap> userRoadmap = userRoadmapRepository.findByRoadmapIdAndUserIdAndIsAcceptTrue(id, user.getId());
+
+            if (userRoadmap.isPresent()) {
+                myRole = userRoadmap.get().getRole();
+                List<Til> tils = tilRepository.findByUserIdByOrderByUpdatedDateDesc(id, user.getId());
+                recentTilId = !tils.isEmpty() ? tils.get(0).getId() : null;
+                recentStepId = !tils.isEmpty() ? tils.get(0).getStep().getId() : null;
+            }
         }
 
         return new RoadmapResponse.FindGroupRoadmapDTO(roadmap, steps, roadmap.getCreator(), recentTilId, recentStepId, myRole);
@@ -377,7 +376,7 @@ public class RoadmapService {
         if (role.equals(GroupRole.ROLE_MANAGER.getValue()) & userRoadmap.getRole().equals(GroupRole.ROLE_MASTER.getValue()))
             throw new CustomException(ExceptionCode.ROADMAP_DISMISS_FORBIDDEN);
 
-        userRoadmap.updateRole(GroupRole.ROLE_NONE.getValue());
+        userRoadmap.updateRoleAndIsAccept(GroupRole.ROLE_NONE.getValue(), false);
     }
 
     public RoadmapResponse.FindAppliedUsersDTO findAppliedUsers(Long groupsId, User user){
