@@ -7,6 +7,11 @@ WORKDIR project
 # Spring 소스 코드를 이미지에 복사
 COPY . .
 
+# DATABASE_URL을 환경 변수로 삽입
+ENV DATABASE_URL=jdbc:mariadb://mariadb/tily
+ENV API_SERVER_URL=https://k9de89176f729a.user-app.krampoline.com
+
+
 # gradle 빌드 시 proxy 설정을 gradle.properties에 추가
 RUN echo "systemProp.http.proxyHost=krmp-proxy.9rum.cc\nsystemProp.http.proxyPort=3128\nsystemProp.https.proxyHost=krmp-proxy.9rum.cc\nsystemProp.https.proxyPort=3128" > /root/.gradle/gradle.properties
 
@@ -22,8 +27,5 @@ RUN ./gradlew clean build -x test
 FROM builder AS final
 COPY --from=builder /home/gradle/project/build/libs/TILy-0.0.1-SNAPSHOT.jar .
 
-# DATABASE_URL을 환경 변수로 삽입
-ENV DATABASE_URL=jdbc:mariadb://mariadb/tily
-
 # 빌드 결과 jar 파일을 실행
-CMD ["java", "-jar", "-Dspring.profiles.active=prod", "/home/gradle/project/build/libs/TILy-0.0.1-SNAPSHOT.jar"]
+CMD ["java", "-jar", "-Dspring.profiles.active=deploy", "/home/gradle/project/build/libs/TILy-0.0.1-SNAPSHOT.jar"]

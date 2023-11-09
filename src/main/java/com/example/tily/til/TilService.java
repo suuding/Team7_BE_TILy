@@ -132,7 +132,7 @@ public class TilService {
 
         // 제출 시간 지났는데 제출하려고할때
         LocalDateTime now = LocalDateTime.now();
-        if (now.isAfter(step.getDueDate()))
+        if (step.getDueDate()!=null && now.isAfter(step.getDueDate()))
             throw new CustomException(ExceptionCode.TIL_END_DUEDATE);
 
 

@@ -36,6 +36,10 @@ import java.util.Arrays;
 @EnableJpaAuditing
 @SpringBootApplication
 public class TiLyApplication {
+    
+    static {
+		System.setProperty("com.amazonaws.sdk.disableEc2Metadata", "true");
+	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(TiLyApplication.class, args);
@@ -281,11 +285,11 @@ public class TiLyApplication {
 				.build();
 	}
 
-	private Alarm newAlarm(Til til, User receiver, Boolean isChecked) {
+	private Alarm newAlarm(Til til, User receiver, Boolean isRead) {
 		return Alarm.builder()
 				.til(til)
 				.receiver(receiver)
-				.isChecked(false)
+				.isRead(false)
 				.build();
 	}
 

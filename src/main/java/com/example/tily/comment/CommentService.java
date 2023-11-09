@@ -2,9 +2,6 @@ package com.example.tily.comment;
 
 import com.example.tily._core.errors.exception.ExceptionCode;
 import com.example.tily._core.errors.exception.CustomException;
-import com.example.tily._core.errors.exception.Exception400;
-import com.example.tily._core.errors.exception.Exception403;
-import com.example.tily._core.errors.exception.Exception404;
 import com.example.tily.alarm.Alarm;
 import com.example.tily.alarm.AlarmRepository;
 import com.example.tily.roadmap.Roadmap;
@@ -48,7 +45,7 @@ public class CommentService {
         commentRepository.save(comment);
 
         // 댓글 작성하면 알림 생성
-        Alarm alarm = Alarm.builder().til(til).receiver(til.getWriter()).comment(comment).isChecked(false).build();
+        Alarm alarm = Alarm.builder().til(til).receiver(til.getWriter()).comment(comment).isRead(false).build();
         alarmRepository.save(alarm);
 
         return new CommentResponse.CreateCommentDTO(comment);
@@ -61,9 +58,8 @@ public class CommentService {
                 .orElseThrow(() -> new CustomException(ExceptionCode.COMMENT_NOT_FOUND));
 
 
-        if(!comment.getWriter().equals(user)) {
+        if(!comment.getWriter().getId().equals(user.getId()))
             throw new CustomException(ExceptionCode.COMMENT_UPDATE_FORBIDDEN);
-        }
 
         comment.updateComment(requestDTO.content());
     }
@@ -73,11 +69,11 @@ public class CommentService {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ExceptionCode.COMMENT_NOT_FOUND));
 
-        if(!comment.getWriter().equals(user)) {
+        // 댓글 주인 또는 글의 주인만 댓글 삭제 가능
+        if(!comment.getWriter().getId().equals(user.getId()) || !comment.getTil().getWriter().getId().equals(user.getId()))
             throw new CustomException(ExceptionCode.COMMENT_DELETE_FORBIDDEN);
 
-        }
-
+        alarmRepository.deleteByCommentId(id);
         commentRepository.deleteById(id);
     }
 }

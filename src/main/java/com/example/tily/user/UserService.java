@@ -1,7 +1,5 @@
 package com.example.tily.user;
 
-import com.example.tily._core.errors.exception.Exception403;
-import com.example.tily._core.errors.exception.Exception404;
 import com.example.tily._core.errors.exception.ExceptionCode;
 import com.example.tily._core.errors.exception.CustomException;
 import com.auth0.jwt.interfaces.DecodedJWT;
@@ -32,6 +30,7 @@ public class UserService {
     private final JavaMailSender javaMailSender;
     private final RedisUtils redisUtils;
     private final TilRepository tilRepository;
+    private String defaultImage = "user/profile-user.jpg";
 
     // (회원가입) 이메일 중복 체크 후 인증코드 전송
     @Transactional
@@ -72,6 +71,7 @@ public class UserService {
                 .email(requestDTO.email())
                 .name(requestDTO.name())
                 .password(passwordEncoder.encode(requestDTO.password()))
+                .image(null)
                 .role(Role.ROLE_USER)
                 .build();
 
@@ -96,7 +96,7 @@ public class UserService {
         Long userId = decodedJWT.getClaim("id").asLong();
 
         if (!redisUtils.existData(userId.toString()))
-            throw new Exception403("Refresh 토큰이 만료됐습니다.");
+            throw new CustomException(ExceptionCode.TOKEN_EXPIRED);
 
         User user = findById(userId);
         return createToken(user);

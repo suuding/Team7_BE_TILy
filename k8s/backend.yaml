@@ -15,12 +15,10 @@ spec:
       containers:
         - name: backend
           # 여러분의 backend image 주소를 입력해주세요.
-          image: krmp-d2hub-idock.9rum.cc/dev-test/repo_9a6c6c89fabb
+          image: krmp-d2hub-idock.9rum.cc/dev-test/repo_0e74a8b573f0
           env:
             - name: TZ
               value: Asia/Seoul
-            # - name: DATABASE_URL
-            #   value: jdbc:mariadb://mariadb/tily
             - name: MARIADB_DATABASE
               value: tily
             - name: MARIADB_USERNAME
@@ -28,35 +26,45 @@ spec:
                 secretKeyRef:
                   name: secret
                   key: MARIADB_USERNAME
-            - name : MARIADB_PASSWORD
+            - name: MARIADB_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: secret
                   key: MARIADB_PASSWORD
-            - name : MARIADB_ROOT_PASSWORD
+            - name: MARIADB_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: secret
                   key: MARIADB_ROOT_PASSWORD
-            - name : MAIL_USERNAME
+            - name: MAIL_USERNAME
               valueFrom:
                 secretKeyRef:
                   name: secret
                   key: MAIL_USERNAME
-            - name : MAIL_PASSWORD
+            - name: MAIL_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: secret
                   key: MAIL_PASSWORD
+            - name: ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: ACCESS_KEY
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: SECRET_KEY
           ports:
             - containerPort: 8080
           resources:
             requests:
               memory: 1Gi
-          # readinessProbe:
-          #   httpGet:
-          #     path: /api
-          #     port: 8080
+          #readinessProbe:
+            #httpGet:
+              #path: /api
+              #port: 8080
 ---
 apiVersion: v1
 kind: Service

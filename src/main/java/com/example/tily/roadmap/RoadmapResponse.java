@@ -7,6 +7,7 @@ import com.example.tily.step.reference.Reference;
 import com.example.tily.til.Til;
 import com.example.tily.user.Role;
 import com.example.tily.user.User;
+import org.joda.time.DateTime;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -21,9 +22,9 @@ public class RoadmapResponse {
         }
     }
 
-    public record FindGroupRoadmapDTO(Creator creator, String name, String description, String myRole, Long recentTilId, Long recentStepId, Boolean isPublic, Boolean isRecruit, String code, List<StepDTO> steps) {
+    public record FindGroupRoadmapDTO(Creator creator, String name, String description, String myRole, Long recentTilId, Long recentStepId, Boolean isPublic, Boolean isRecruit, String code, String category, List<StepDTO> steps) {
         public FindGroupRoadmapDTO(Roadmap roadmap, List<StepDTO> steps, User user, Long recentTilId, Long recentStepId, String myRole) {
-            this(new Creator(user.getName(), user.getImage()), roadmap.getName(), roadmap.getDescription(), myRole, recentTilId, recentStepId, roadmap.getIsPublic(), roadmap.getIsRecruit(), roadmap.getCode(), steps);
+            this(new Creator(user.getName(), user.getImage()), roadmap.getName(), roadmap.getDescription(), myRole, recentTilId, recentStepId, roadmap.getIsPublic(), roadmap.getIsRecruit(), roadmap.getCode(), roadmap.getCategory().getValue(), steps);
         }
 
         public record Creator(String name, String image) {}
@@ -54,15 +55,15 @@ public class RoadmapResponse {
        public record RoadmapDTO(List<TilyDTO> tilys, List<GroupDTO> groups) {}
     }
 
-    public record TilyDTO (Long id, String name, String image, int stepNum) {
+    public record TilyDTO (Long id, String name, String image, int stepNum, String description) {
         public TilyDTO(Roadmap roadmap) {
-            this(roadmap.getId(), roadmap.getName(), roadmap.getImage(), roadmap.getStepNum());
+            this(roadmap.getId(), roadmap.getName(), roadmap.getImage(), roadmap.getStepNum(), roadmap.getDescription());
         }
     }
 
-    public record GroupDTO (Long id, String name, int stepNum, Creator creator) {
-        public GroupDTO(Roadmap roadmap) {
-            this(roadmap.getId(), roadmap.getName(), roadmap.getStepNum(), new Creator(roadmap.getCreator()));
+    public record GroupDTO (Long id, String name, int stepNum, Creator creator, boolean isManager, String description) {
+        public GroupDTO(Roadmap roadmap, Boolean isManager) {
+            this(roadmap.getId(), roadmap.getName(), roadmap.getStepNum(), new Creator(roadmap.getCreator()), isManager, roadmap.getDescription());
         }
 
         public record Creator(Long id, String name, String image) {
@@ -77,9 +78,9 @@ public class RoadmapResponse {
             this(category.getValue(), roadmaps, hasNext);
         }
 
-        public record RoadmapDTO (Long id, String name, int stepNum, GroupDTO.Creator creator) {
+        public record RoadmapDTO (Long id, String name, String description, int stepNum, GroupDTO.Creator creator) {
             public RoadmapDTO(Roadmap roadmap) {
-                this(roadmap.getId(), roadmap.getName(), roadmap.getStepNum(), new GroupDTO.Creator(roadmap.getCreator()));
+                this(roadmap.getId(), roadmap.getName(), roadmap.getDescription(), roadmap.getStepNum(), new GroupDTO.Creator(roadmap.getCreator()));
             }
         }
     }
@@ -90,8 +91,12 @@ public class RoadmapResponse {
         }
     }
 
-    public record FindRoadmapMembersDTO(List<UserDTO> users) {
-        public record UserDTO(Long id, String name, String image, String role) {}
+    public record FindRoadmapMembersDTO(String myRole, List<UserDTO> users) {
+        public record UserDTO(Long id, String name, String image, String role) {
+            public UserDTO(User user, String role) {
+                this(user.getId(), user.getName(), user.getImage(), role);
+            }
+        }
     }
 
     public record FindAppliedUsersDTO(List<UserDTO> users) {
@@ -103,7 +108,7 @@ public class RoadmapResponse {
     }
 
     public record FindTilOfStepDTO(List<MemberDTO> members) {
-        public record MemberDTO(Long tilId, Long userId, String name, String image, String content, String submitDate, Integer commentNum) {
+        public record MemberDTO(Long tilId, Long userId, String name, String image, String content, LocalDateTime submitDate, Integer commentNum) {
 
             public MemberDTO(Til til, User user) {
                 this(
@@ -111,8 +116,8 @@ public class RoadmapResponse {
                         user.getId(),
                         user.getName(),
                         user.getImage(),
-                        til!=null ? til.getContent() : null,
-                        til!=null ? til.getSubmitDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) : null,
+                        til!=null ? til.getSubmitContent() : null,
+                        til!=null ? til.getSubmitDate() : null,
                         til!=null ? til.getCommentNum() : null);
             }
         }

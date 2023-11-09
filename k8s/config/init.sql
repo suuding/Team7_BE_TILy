@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS roadmap_tb (
     category VARCHAR(255) NOT NULL,
     name VARCHAR(255) NOT NULL,
     creator_id BIGINT,
-    description VARCHAR(255),
+    description TEXT,
     image VARCHAR(255),
     step_num INT,
     current_num BIGINT,
@@ -34,14 +34,14 @@ CREATE TABLE IF NOT EXISTS step_tb (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     roadmap_id BIGINT,
-    description VARCHAR(255),
+    description TEXT,
     due_date TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS til_tb (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    content VARCHAR(255),
-    submit_content VARCHAR(255),
+    content TEXT,
+    submit_content TEXT,
     roadmap_id BIGINT,
     step_id BIGINT,
     writer_id BIGINT,
@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS comment_tb (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     til_id BIGINT,
     writer_id BIGINT,
-    content VARCHAR(255),
+    content TEXT,
     created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS reference_tb (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     step_id BIGINT,
     category VARCHAR(255) NOT NULL,
-    link VARCHAR(255) NOT NULL
+    link TEXT
 );
 
 CREATE TABLE IF NOT EXISTS user_roadmap_tb (
@@ -92,7 +92,7 @@ CREATE TABLE IF NOT EXISTS alarm_tb (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     til_id BIGINT,
     comment_id BIGINT,
-    is_checked BOOLEAN,
+    is_read BOOLEAN,
     receiver_id BIGINT,
     created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP

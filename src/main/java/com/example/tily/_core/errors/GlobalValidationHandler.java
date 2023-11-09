@@ -1,7 +1,6 @@
 package com.example.tily._core.errors;
 
 import com.example.tily._core.errors.exception.CustomException;
-import com.example.tily._core.errors.exception.Exception400;
 import com.example.tily._core.errors.exception.ExceptionCode;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
