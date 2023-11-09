@@ -50,6 +50,9 @@ public class CommentService {
         Alarm alarm = Alarm.builder().til(til).receiver(til.getWriter()).comment(comment).isRead(false).build();
         alarmRepository.save(alarm);
 
+        // til내 댓글 갯수 증가
+        til.addCommentNum();
+
         return new CommentResponse.CreateCommentDTO(comment);
     }
 
