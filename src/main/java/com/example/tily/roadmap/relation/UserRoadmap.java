@@ -19,6 +19,7 @@ import javax.persistence.*;
 @SQLDelete(sql = "UPDATE user_roadmap_tb SET is_deleted = true WHERE id = ?")
 @Where(clause = "is_deleted = false")
 public class UserRoadmap extends BaseTimeEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

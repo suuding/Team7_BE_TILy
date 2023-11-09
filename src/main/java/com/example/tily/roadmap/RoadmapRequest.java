@@ -1,26 +1,12 @@
 package com.example.tily.roadmap;
 
-import com.example.tily.roadmap.relation.GroupRole;
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.List;
 
 public class RoadmapRequest {
-
-    public record CreateIndividualRoadmapDTO(
-            @NotBlank(message = "이름을 입력해주세요.")
-            @Size(min=2, max=20, message = "이름은 2자에서 20자 이내여야 합니다.")
-            String name
-    ) { }
-    public record CreateGroupRoadmapDTO(
-            String name,
-            String description,
-            boolean isPublic
-    ) { }
 
     public record CreateRoadmapDTO (
             String category,
@@ -36,7 +22,7 @@ public class RoadmapRequest {
             List<StepDTO> steps
     ) { }
 
-    public record UpdateGroupRoadmapDTO(
+    public record UpdateRoadmapDTO(
             String name,
             String description,
             boolean isPublic,
