@@ -49,8 +49,8 @@ public class RoadmapService {
                 .description(requestDTO.description())
                 .isPublic(requestDTO.isPublic()) // 공개여부
                 .currentNum(1L)
-                .code(requestDTO.category().equals(Category.CATEGORY_TILY.getValue()) ? generateRandomCode() : null)
-                .isRecruit(requestDTO.category().equals(Category.CATEGORY_TILY.getValue()))    // 모집여부
+                .code(requestDTO.category().equals(Category.CATEGORY_GROUP.getValue()) ? generateRandomCode() : null)
+                .isRecruit(!requestDTO.category().equals(Category.CATEGORY_INDIVIDUAL.getValue()))    // 모집여부
                 .stepNum(0)
                 .build();
         roadmapRepository.save(roadmap);
@@ -376,7 +376,7 @@ public class RoadmapService {
         if (role.equals(GroupRole.ROLE_MANAGER.getValue()) & userRoadmap.getRole().equals(GroupRole.ROLE_MASTER.getValue()))
             throw new CustomException(ExceptionCode.ROADMAP_DISMISS_FORBIDDEN);
 
-        userRoadmap.updateRole(GroupRole.ROLE_NONE.getValue());
+        userRoadmap.updateRoleAndIsAccept(GroupRole.ROLE_NONE.getValue(), false);
     }
 
     public RoadmapResponse.FindAppliedUsersDTO findAppliedUsers(Long groupsId, User user){
