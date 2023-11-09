@@ -115,28 +115,28 @@ public class RoadmapController {
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 
-    // 로드맵의 구성원 강퇴하기
+    // 그룹 로드맵의 구성원 강퇴하기
     @DeleteMapping("/roadmaps/groups/{groupId}/members/{memberId}")
     public ResponseEntity<?> dismissMember(@PathVariable Long groupId, @PathVariable Long memberId, @AuthenticationPrincipal CustomUserDetails userDetails){
         roadmapService.dismissMember(groupId, memberId, userDetails.getUser());
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 
-    // 로드맵에 신청한 사람들 목록 조회하기
+    // 그룹 로드맵에 신청한 사람들 목록 조회하기
     @GetMapping("/roadmaps/groups/{groupId}/members/apply")
     public ResponseEntity<?> findAppliedUsers(@PathVariable Long groupId, @AuthenticationPrincipal CustomUserDetails userDetails){
         RoadmapResponse.FindAppliedUsersDTO responseDTO = roadmapService.findAppliedUsers(groupId, userDetails.getUser());
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
 
-    // 로드맵 참여 신청 승인
+    // 그룹 로드맵 참여 신청 승인
     @PostMapping("/roadmaps/groups/{groupId}/members/{memberId}/accept")
     public ResponseEntity<?> acceptApplication(@PathVariable Long groupId, @PathVariable Long memberId, @AuthenticationPrincipal CustomUserDetails userDetails){
         roadmapService.acceptApplication(groupId, memberId, userDetails.getUser());
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 
-    // 로드맵 참여 신청 거절
+    // 그룹 로드맵 참여 신청 거절
     @DeleteMapping("/roadmaps/groups/{groupId}/members/{memberId}/reject")
     public ResponseEntity<?> rejectApplication(@PathVariable Long groupId, @PathVariable Long memberId, @AuthenticationPrincipal CustomUserDetails userDetails){
         roadmapService.rejectApplication(groupId, memberId, userDetails.getUser());
