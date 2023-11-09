@@ -11,7 +11,6 @@ CREATE TABLE alarm_tb (
         comment_id bigint,
         receiver_id bigint,
         til_id bigint,
-        primary key (id)
 );
 
 create table comment_tb (
@@ -22,7 +21,6 @@ create table comment_tb (
         is_deleted boolean,
         til_id bigint,
         writer_id bigint,
-        primary key (id)
 );
 
 create table image (
@@ -30,7 +28,6 @@ create table image (
         image_path varchar(255),
         original_image_name varchar(255),
         storage_image_name varchar(255),
-        primary key (id)
 );
 
 create table reference_tb (
@@ -39,7 +36,6 @@ create table reference_tb (
         is_deleted boolean,
         link TEXT,
         step_id bigint,
-        primary key (id)
 );
 
 create table roadmap_tb (
@@ -57,7 +53,6 @@ create table roadmap_tb (
         name varchar(255) not null,
         step_num integer,
         creator_id bigint,
-        primary key (id)
 );
 
 CREATE TABLE step_tb (
@@ -67,7 +62,6 @@ CREATE TABLE step_tb (
         is_deleted boolean,
         title varchar(255) not null,
         roadmap_id bigint,
-        primary key (id)
 );
 
 CREATE TABLE til_tb (
@@ -84,7 +78,6 @@ CREATE TABLE til_tb (
         roadmap_id bigint,
         step_id bigint,
         writer_id bigint,
-        primary key (id)
 );
 
 CREATE TABLE user_roadmap_tb (
@@ -98,7 +91,6 @@ CREATE TABLE user_roadmap_tb (
         role varchar(255) not null,
         roadmap_id bigint,
         user_id bigint,
-        primary key (id)
 );
 
 CREATE TABLE user_step_tb (
@@ -108,7 +100,6 @@ CREATE TABLE user_step_tb (
         roadmap_id bigint,
         step_id bigint,
         user_id bigint,
-        primary key (id)
 );
 
 CREATE TABLE user_tb (
@@ -121,7 +112,6 @@ CREATE TABLE user_tb (
         name varchar(50) not null,
         password varchar(100) not null,
         role varchar(255),
-        primary key (id)
 );
 
 ALTER TABLE alarm_tb
