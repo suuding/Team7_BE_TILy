@@ -56,3 +56,4 @@ logging:
       amazonaws:
         util:
           EC2MetadataUtils: error
+    org.springframework.web.client.RestTemplate: DEBUG
