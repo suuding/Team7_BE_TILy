@@ -36,7 +36,7 @@ public class TilController {
 
         TilResponse.ViewDTO responseDTO = tilService.viewTil(tilId, userDetails.getUser());
 
-        return ResponseEntity.ok(ApiUtils.success(responseDTO));
+        return ResponseEntity.ok(ApiUtils.success(HttpStatus.OK, responseDTO));
     }
 
     // til 수정하기 (저장하기)
@@ -47,7 +47,7 @@ public class TilController {
 
         tilService.updateTil(requestDTO, tilId, userDetails.getUser());
 
-        return ResponseEntity.ok().body(ApiUtils.success(null));
+        return ResponseEntity.ok().body(ApiUtils.success(HttpStatus.OK, null));
     }
 
     // til 제출하기
@@ -57,7 +57,7 @@ public class TilController {
                                        @AuthenticationPrincipal CustomUserDetails userDetails) {
 
         tilService.submitTil(requestDTO, tilId, userDetails.getUser());
-        return ResponseEntity.ok().body(ApiUtils.success(null));
+        return ResponseEntity.ok().body(ApiUtils.success(HttpStatus.OK, null));
     }
 
     // til 삭제하기
@@ -67,7 +67,7 @@ public class TilController {
 
         tilService.deleteTil(tilId, userDetails.getUser());
 
-        return ResponseEntity.ok().body(ApiUtils.success(null));
+        return ResponseEntity.ok().body(ApiUtils.success(HttpStatus.OK, null));
     }
 
     // 나의 til 목록 전체 조회하기
@@ -81,7 +81,7 @@ public class TilController {
 
         TilResponse.FindAllDTO responseDTO = tilService.findAllMyTil(roadmapId, date, title, page, size, userDetails.getUser());
 
-        return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
+        return ResponseEntity.ok().body(ApiUtils.success(HttpStatus.OK, responseDTO));
     }
 
     //  로드맵의 특정 step의 til 목록 조회하기
@@ -92,6 +92,6 @@ public class TilController {
                                            @RequestParam(value="name", required = false) String name){
         RoadmapResponse.FindTilOfStepDTO responseDTO = tilService.findTilOfStep(stepId, isSubmit, isMember, name);
 
-        return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
+        return ResponseEntity.ok().body(ApiUtils.success(HttpStatus.OK, responseDTO));
     }
 }

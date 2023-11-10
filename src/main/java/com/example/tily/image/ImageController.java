@@ -3,6 +3,7 @@ package com.example.tily.image;
 import com.example.tily._core.security.CustomUserDetails;
 import com.example.tily._core.utils.ApiUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +20,7 @@ public class ImageController {
     public ResponseEntity<?> findUserImage(@PathVariable Long userId){
         ImageResponse.UserImageDTO responseDTO = imageService.findUserImage(userId);
 
-        return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
+        return ResponseEntity.ok().body(ApiUtils.success(HttpStatus.OK, responseDTO));
     }
 
     @PostMapping("/images/users/{userId}")
@@ -28,14 +29,14 @@ public class ImageController {
 
         imageService.updateUserImage(userId, file, userDetails.getUser());
 
-        return ResponseEntity.ok().body(ApiUtils.success(null));
+        return ResponseEntity.ok().body(ApiUtils.success(HttpStatus.CREATED, null));
     }
 
     @GetMapping("/images/roadmaps/{roadmapId}")
     public ResponseEntity<?> findRoadmapImage(@PathVariable Long roadmapId){
         ImageResponse.RoadmapImageDTO responseDTO = imageService.findRoadmapImage(roadmapId);
 
-        return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
+        return ResponseEntity.ok().body(ApiUtils.success(HttpStatus.OK, responseDTO));
     }
 
     @PostMapping("/images/roadmaps/{roadmapId}")
@@ -44,13 +45,13 @@ public class ImageController {
 
         imageService.updateRoadmapImage(roadmapId, file);
 
-        return ResponseEntity.ok().body(ApiUtils.success(null));
+        return ResponseEntity.ok().body(ApiUtils.success(HttpStatus.CREATED, null));
     }
 
     @PostMapping("/images/write")
     public ResponseEntity<?> postImage(@RequestParam("image") MultipartFile file){
         ImageResponse.PostImageDTO responseDTO = imageService.postImage(file);
 
-        return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
+        return ResponseEntity.ok().body(ApiUtils.success(HttpStatus.CREATED, responseDTO));
     }
 }

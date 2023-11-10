@@ -33,7 +33,7 @@ public class StepController {
                                         @AuthenticationPrincipal CustomUserDetails userDetails) {
         stepService.updateStep(stepId, requestDTO, userDetails.getUser());
 
-        return ResponseEntity.ok().body(ApiUtils.success(null));
+        return ResponseEntity.ok().body(ApiUtils.success(HttpStatus.OK, null));
     }
 
     // 특정 로드맵의 step 목록 전체 조회
@@ -41,7 +41,7 @@ public class StepController {
     public ResponseEntity<?> findAllStep(@PathVariable("roadmapId") Long roadmapId, @AuthenticationPrincipal CustomUserDetails userDetails) {
         StepResponse.FindAllStepDTO responseDTO = stepService.findAllStep(roadmapId, userDetails.getUser());
 
-        return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
+        return ResponseEntity.ok().body(ApiUtils.success(HttpStatus.OK, responseDTO));
     }
 
     // step 삭제
@@ -49,6 +49,6 @@ public class StepController {
     public ResponseEntity<?> deleteStep(@PathVariable Long stepId, @AuthenticationPrincipal CustomUserDetails userDetails){
         stepService.deleteStep(stepId, userDetails.getUser());
 
-        return ResponseEntity.ok().body(ApiUtils.success(null));
+        return ResponseEntity.ok().body(ApiUtils.success(HttpStatus.OK, null));
     }
 }
