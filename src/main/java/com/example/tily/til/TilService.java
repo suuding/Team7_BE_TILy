@@ -3,6 +3,7 @@ package com.example.tily.til;
 import com.example.tily._core.errors.exception.ExceptionCode;
 import com.example.tily._core.errors.exception.CustomException;
 
+import com.example.tily.alarm.AlarmRepository;
 import com.example.tily.comment.Comment;
 import com.example.tily.comment.CommentRepository;
 import com.example.tily.roadmap.Category;
@@ -44,6 +45,7 @@ public class TilService {
     private final CommentRepository commentRepository;
     private final UserStepRepository userStepRepository;
     private final UserRoadmapRepository userRoadmapRepository;
+    private final AlarmRepository alarmRepository;
 
     // til 생성하기
     @Transactional
@@ -149,15 +151,22 @@ public class TilService {
 
     @Transactional
     public void deleteTil(Long tilId, User user) {
-
         Til til = getTilById(tilId);
 
         checkTilWriterEqualUser(til, user);
 
         // 1. Til과 연관된 Comment들을 삭제한다.
-        commentRepository.softDeleteCommentsByTilId(tilId);
+        List<Comment> comments = commentRepository.findByTilId(tilId);
+        List<Long> commentIds = comments.stream()
+                .map(Comment::getId)
+                .collect(Collectors.toList());
 
-        // 2. Til을 삭제한다.
+        commentRepository.softDeleteCommentsByIds(commentIds);
+
+        // 2. Comment들과 관련된 Alarm 삭제
+        alarmRepository.deleteByCommentIds(commentIds);
+
+        // 3. Til을 삭제한다.
         tilRepository.softDeleteTilById(tilId);
     }
 

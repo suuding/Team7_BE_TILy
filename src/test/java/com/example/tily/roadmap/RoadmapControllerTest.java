@@ -12,8 +12,6 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,11 +37,13 @@ public class RoadmapControllerTest {
 
         // given
         String name = "hong";
+
         String category = "individual";
         String description = "알고리즘 마무리하는 로드맵입니다.";
         Boolean isPublic = false;
 
         RoadmapRequest.CreateRoadmapDTO requestDTO = new RoadmapRequest.CreateRoadmapDTO(category,name,description,isPublic);
+
 
         String requestBody = om.writeValueAsString(requestDTO);
 
@@ -65,6 +65,7 @@ public class RoadmapControllerTest {
     public void roadmap_group_create_success_test() throws Exception {
 
         // given
+
         String name = "hong";
         String category = "group";
         String description = "알고리즘 마무리하는 로드맵입니다.";
@@ -212,7 +213,8 @@ public class RoadmapControllerTest {
         // 로드맵
         RoadmapRequest.RoadmapDTO roadmap = new RoadmapRequest.RoadmapDTO("new JAVA - 생활 코딩", "새로운 버젼 입니다", "modifiedCode1234", false, true);
 
-        RoadmapRequest.UpdateGroupRoadmapDTO requestDTO = new RoadmapRequest.UpdateGroupRoadmapDTO(roadmap.name(), roadmap.description(),roadmap.isPublic(), roadmap.isRecruit());
+
+        RoadmapRequest.UpdateRoadmapDTO requestDTO = new RoadmapRequest.UpdateRoadmapDTO(null,"새로운 버젼 입니다", true, true );
 
         String requestBody = om.writeValueAsString(requestDTO);
 
@@ -258,7 +260,9 @@ public class RoadmapControllerTest {
         // 로드맵
         RoadmapRequest.RoadmapDTO roadmap = new RoadmapRequest.RoadmapDTO(null, "새로운 버젼 입니다", "modifiedCode1234", false, true);
 
-        RoadmapRequest.UpdateGroupRoadmapDTO requestDTO = new RoadmapRequest.UpdateGroupRoadmapDTO(roadmap.name(), roadmap.description(), roadmap.isPublic(), roadmap.isRecruit());
+
+        RoadmapRequest.UpdateRoadmapDTO requestDTO = new RoadmapRequest.UpdateRoadmapDTO(null,"새로운 버젼 입니다", true, true );
+
 
         String requestBody = om.writeValueAsString(requestDTO);
 

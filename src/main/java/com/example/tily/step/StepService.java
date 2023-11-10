@@ -2,6 +2,8 @@ package com.example.tily.step;
 
 import com.example.tily._core.errors.exception.ExceptionCode;
 import com.example.tily._core.errors.exception.CustomException;
+import com.example.tily.alarm.AlarmRepository;
+import com.example.tily.comment.Comment;
 import com.example.tily.roadmap.Category;
 import com.example.tily.comment.CommentRepository;
 import com.example.tily.roadmap.Roadmap;
@@ -9,7 +11,6 @@ import com.example.tily.roadmap.RoadmapRepository;
 import com.example.tily.roadmap.relation.GroupRole;
 import com.example.tily.roadmap.relation.UserRoadmap;
 import com.example.tily.roadmap.relation.UserRoadmapRepository;
-import com.example.tily.step.reference.Reference;
 import com.example.tily.step.reference.ReferenceRepository;
 import com.example.tily.step.relation.UserStep;
 import com.example.tily.step.relation.UserStepRepository;
@@ -34,6 +35,7 @@ public class StepService {
     private final UserStepRepository userStepRepository;
     private final CommentRepository commentRepository;
     private final ReferenceRepository referenceRepository;
+    private final AlarmRepository alarmRepository;
 
     // step 생성하기
     @Transactional
@@ -52,7 +54,7 @@ public class StepService {
                 .roadmap(roadmap)
                 .title(requestDTO.title())
                 .description(requestDTO.description())
-                .dueDate(requestDTO.dueDate())
+                .dueDate(requestDTO.dueDate()!=null ? requestDTO.dueDate().plusHours(9) : null)
                 .build(); // 개인 로드맵이므로 description, dueDate 는 null
         stepRepository.save(step);
 
@@ -66,6 +68,8 @@ public class StepService {
                     .build();
             userStepRepository.save(userStep);
         }
+
+        roadmap.addStepNum();
 
         return new StepResponse.CreateStepDTO(step);
     }
@@ -87,7 +91,7 @@ public class StepService {
             if (til != null) til.updateTitle(requestDTO.title());
             step.updateTitle(requestDTO.title());
         } else { // 그룹 로드맵일 때
-            step.update(requestDTO.title(), requestDTO.description(), requestDTO.dueDate());
+            step.update(requestDTO.title(), requestDTO.description(), requestDTO.dueDate()!=null ? requestDTO.dueDate().plusHours(9) : null);
         }
     }
 
@@ -120,24 +124,32 @@ public class StepService {
 
         checkMasterAndManagerPermission(step.getRoadmap().getId(), user); // 매니저급만 삭제 가능
 
-        List<Til> tils = getTisByStepId(stepId);
+        // 1. Til을 삭제한다.
+        List<Til> tils = getTilsByStepId(stepId);
         List<Long> tilIds = tils.stream()
                 .map(Til::getId)
                 .collect(Collectors.toList());
 
-        // 1. Til과 연관된 Comment들을 삭제한다.
-        commentRepository.softDeleteCommentsByTilIds(tilIds);
-
-        // 2. Til들을 삭제한다
         tilRepository.softDeleteTilsByTilIds(tilIds);
 
-        // 3. Reference들을 삭제한다.
+        // 2. Til과 연관된 Comment들을 삭제한다.
+        List<Comment> comments = getCommentsByTilIds(tilIds);
+        List<Long> commentIds = comments.stream()
+                .map(Comment::getId)
+                .collect(Collectors.toList());
+
+        commentRepository.softDeleteCommentsByIds(commentIds);
+
+        // 3. Comment와 관련된 알람을 삭제한다.
+        alarmRepository.deleteByCommentIds(commentIds);
+
+        // 4. Reference들을 삭제한다.
         referenceRepository.softDeleteReferenceByStepId(stepId);
 
-        // 4. UserStep을 삭제한다
+        // 5. UserStep을 삭제한다
         userStepRepository.softDeleteUserStepByStepId(stepId);
 
-        // 5. Step을 삭제한다
+        // 6. Step을 삭제한다
         stepRepository.softDeleteStepById(stepId);
     }
 
@@ -159,8 +171,12 @@ public class StepService {
         return roadmapRepository.findById(roadmapId).orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_NOT_FOUND));
     }
 
-    private List<Til> getTisByStepId(Long stepId){
+    private List<Til> getTilsByStepId(Long stepId){
         return tilRepository.findByStepId(stepId);
+    }
+
+    private List<Comment> getCommentsByTilIds( List<Long> tilIds){
+        return commentRepository.findByTilIds(tilIds);
     }
 
     // 해당 로드맵에 속한 user

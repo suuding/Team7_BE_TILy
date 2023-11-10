@@ -14,9 +14,15 @@ public class UserResponse {
         public record GardenDTO(String day, int value) {}
     }
 
-    public record UserDTO(Long id, String name, String email, String image) {
+    public record UserDTO(Long id,
+                          String name,
+                          String email,
+                          String image) {
         public UserDTO(User user) {
-            this(user.getId(), user.getName(), user.getEmail(), user.getImage());
+            this(user.getId(),
+                    user.getName(),
+                    user.getEmail(),
+                    user.getImage());
         }
     }
 }

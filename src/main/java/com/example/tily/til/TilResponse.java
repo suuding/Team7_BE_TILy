@@ -22,9 +22,20 @@ public class TilResponse {
         }
     }
     
-    public record ViewDTO(String content, String submitContent, boolean isPersonal, boolean isSubmit, String roadmapName, StepDTO step, List<CommentDTO> comments) {
+    public record ViewDTO(String content,
+                          String submitContent,
+                          boolean isPersonal,
+                          boolean isSubmit,
+                          String roadmapName,
+                          StepDTO step,
+                          List<CommentDTO> comments) {
         public ViewDTO(Step step, Til til, boolean isSubmit, List<CommentDTO> comments) {
-            this(til.getContent(), til.getSubmitContent(), til.isPersonal(), isSubmit, step.getRoadmap().getName(), new StepDTO(step), comments);
+            this(til.getContent(),
+                    til.getSubmitContent(),
+                    til.isPersonal(),
+                    isSubmit,
+                    step.getRoadmap().getName(),
+                    new StepDTO(step), comments);
         }
 
         public record StepDTO(Long id, String title) {
@@ -33,9 +44,18 @@ public class TilResponse {
             }
         }
 
-        public record CommentDTO(Long id, String content, String name, String image, boolean isOwner, String createDate) {
+        public record CommentDTO(Long id,
+                                 String content,
+                                 String name,
+                                 String image,
+                                 boolean isOwner,
+                                 String createDate) {
             public CommentDTO(Comment comment, boolean isOwner) {
-                this(comment.getId(), comment.getContent(), comment.getWriter().getName(), comment.getWriter().getImage(), isOwner,
+                this(comment.getId(),
+                        comment.getContent(),
+                        comment.getWriter().getName(),
+                        comment.getWriter().getImage(),
+                        isOwner,
                         comment.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
             }
         }
@@ -43,9 +63,15 @@ public class TilResponse {
 
     public record FindAllDTO(List<TilDTO> tils, boolean hasNext) {}
 
-    public record TilDTO(Long id, String createDate, StepDTO step, RoadmapDTO roadmap) {
+    public record TilDTO(Long id,
+                         String createDate,
+                         StepDTO step,
+                         RoadmapDTO roadmap) {
         public TilDTO(Til til, Step step, Roadmap roadmap) {
-            this(til.getId(), til.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")), new StepDTO(step), new RoadmapDTO(roadmap));
+            this(til.getId(),
+                    til.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                    new StepDTO(step),
+                    new RoadmapDTO(roadmap));
         }
 
         public record StepDTO(Long id, String title) {
@@ -54,9 +80,9 @@ public class TilResponse {
             }
         }
 
-        public record RoadmapDTO(Long id, String name) {
+        public record RoadmapDTO(Long id, String name, String category) {
             public RoadmapDTO(Roadmap roadmap) {
-                this(roadmap.getId(), roadmap.getName());
+                this(roadmap.getId(), roadmap.getName(), roadmap.getCategory().getValue());
             }
         }
     }

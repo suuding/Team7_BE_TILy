@@ -5,8 +5,9 @@ import com.example.tily._core.errors.exception.CustomException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.tily._core.security.JWTProvider;
 import com.example.tily._core.utils.RedisUtils;
+import com.example.tily.alarm.AlarmRepository;
+import com.example.tily.comment.Comment;
 import com.example.tily.comment.CommentRepository;
-import com.example.tily.roadmap.Category;
 import com.example.tily.roadmap.Roadmap;
 import com.example.tily.roadmap.RoadmapRepository;
 import com.example.tily.roadmap.relation.UserRoadmap;
@@ -47,6 +48,7 @@ public class UserService {
     private final CommentRepository commentRepository;
     private final StepRepository stepRepository;
     private final ReferenceRepository referenceRepository;
+    private final AlarmRepository alarmRepository;
 
     private String defaultImage = "user/profile-user.jpg";
 
@@ -183,17 +185,25 @@ public class UserService {
     // 회원 탈퇴하기
     public void withdrawMembership(User user){
         // 1. 유저가 작성한 Comment들 삭제
+        List<Comment> comments = getCommentByUserId(user.getId());
+        List<Long> commentIds = comments.stream()
+                .map(Comment::getId)
+                .collect(Collectors.toList());
+
+        commentRepository.softDeleteCommentsByIds(commentIds);
+
+        // 2. Comment들과 관련된 Alarm 삭제
+        alarmRepository.deleteByCommentIds(commentIds);
+
+        // 3. 유저가 작성한 Til 삭제
         List<Til> tils = getTilByUserId(user.getId());
         List<Long> tilIds = tils.stream()
                 .map(Til::getId)
                 .collect(Collectors.toList());
 
-        commentRepository.softDeleteCommentsByTilIds(tilIds);
-
-        // 2. 유저가 작성한 Til 삭제
         tilRepository.softDeleteTilsByTilIds(tilIds);
 
-        // 3. UserStep들을 삭제
+        // 4. UserStep들을 삭제
         List<UserStep> userSteps = getUserStepByUserId(user.getId());
         List<Long> userStepIds = userSteps.stream()
                 .map(UserStep::getId)
@@ -201,7 +211,7 @@ public class UserService {
 
         userStepRepository.softDeleteUserStepByUserStepIds(userStepIds);
 
-        // 4. 유저가 만든 Step들을 삭제
+        // 5. 유저가 만든 Step들을 삭제
         List<Step> steps = userSteps.stream()
                 .map(userStep -> userStep.getStep())
                 .collect(Collectors.toList());
@@ -212,10 +222,10 @@ public class UserService {
 
         stepRepository.softDeleteStepByStepIds(stepIds);
 
-        // 5. 유저가 작성한 Reference들을 삭제
+        // 6. 유저가 작성한 Reference들을 삭제
         referenceRepository.softDeleteReferenceByStepIds(stepIds);
 
-        // 6. UserRoadmap 삭제
+        // 7. UserRoadmap 삭제
         List<UserRoadmap> userRoadmaps = getUserRoadmapByUserId(user.getId());
         List<Long> userRoadmapIds = userRoadmaps.stream()
                 .map(UserRoadmap::getId)
@@ -223,7 +233,7 @@ public class UserService {
 
         userRoadmapRepository.softDeleteUserRoadmapByUserRoadmapIds(userRoadmapIds);
 
-        // 7. 유저가 만든 로드맵 삭제
+        // 8. 유저가 만든 로드맵 삭제
         List<Roadmap> roadmaps = userRoadmaps.stream()
                 .map(userRoadmap -> userRoadmap.getRoadmap())
                 .filter(roadmap -> roadmap.getCreator().getId().equals(user.getId()))
@@ -235,7 +245,7 @@ public class UserService {
 
         roadmapRepository.softDeleteRoadmapByRoadmapIds(roadmapIds);
 
-        // 8. 유저 삭제
+        // 9. 유저 삭제
         userRepository.softDeleteUserById(user.getId());
     }
 
@@ -324,4 +334,6 @@ public class UserService {
     private List<Til> getTilByUserId(Long userId){
         return tilRepository.findByWriterId(userId);
     }
+
+    private List<Comment> getCommentByUserId(Long userId){return commentRepository.findByWriterId(userId);}
 }
