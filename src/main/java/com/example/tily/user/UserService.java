@@ -137,9 +137,9 @@ public class UserService {
         return new UserResponse.UserDTO(findById(user.getId()));
     }
 
-    // 사용자 정보 수정
+    //  사용자 정보 수정 - 비밀번호 수정
     @Transactional
-    public void updateUser(UserRequest.UpdateUserDTO requestDTO, Long userId) {
+    public void updatePassword(UserRequest.UpdateUserDTO requestDTO, Long userId) {
         User user = findById(userId);
 
         if (!user.getId().equals(userId))

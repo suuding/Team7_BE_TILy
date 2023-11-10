@@ -8,7 +8,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
@@ -95,7 +94,7 @@ public class UserController {
     @PatchMapping("/users")
     public ResponseEntity<?> updateUser(@RequestBody @Valid UserRequest.UpdateUserDTO requestDTO, Errors errors,
                                         @AuthenticationPrincipal CustomUserDetails userDetails) {
-        userService.updateUser(requestDTO, userDetails.getUser().getId());
+        userService.updatePassword(requestDTO, userDetails.getUser().getId()); // 비밀번호 수정
 
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
