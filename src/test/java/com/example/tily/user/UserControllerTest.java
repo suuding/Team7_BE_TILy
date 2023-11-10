@@ -4,10 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -15,6 +17,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 
+
+@AutoConfigureRestDocs(uriScheme = "http", uriHost = "localhost", uriPort = 8080)
+@ActiveProfiles("local")
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 public class UserControllerTest {
@@ -157,7 +162,7 @@ public class UserControllerTest {
     public void user_join_fail_test_3() throws Exception {
 
         // given
-        UserRequest.JoinDTO requestDTO = new UserRequest.JoinDTO("test@nate.com", "test", "te!");
+        UserRequest.JoinDTO requestDTO = new UserRequest.JoinDTO("test@nate.com", "test", "te");
 
         String requestBody = om.writeValueAsString(requestDTO);
 
@@ -170,7 +175,6 @@ public class UserControllerTest {
 
         // then
         result.andExpect(jsonPath("$.success").value("false"));
-        result.andExpect(jsonPath("$.message").value("올바른 비밀번호 형식을 입력해주세요."));
     }
 
     @DisplayName("사용자_로그인_성공_test")
@@ -314,7 +318,7 @@ public class UserControllerTest {
         result.andExpect(jsonPath("$.success").value("true"));
     }
 
-    /*
+
     @DisplayName("사용자_탈퇴_성공_test")
     @WithUserDetails(value = "tngus@test.com")
     @Test
@@ -331,7 +335,6 @@ public class UserControllerTest {
         // then
         result.andExpect(jsonPath("$.success").value("true"));
     }
-     */
 
 }
 

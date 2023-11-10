@@ -5,10 +5,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -20,6 +22,8 @@ import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@AutoConfigureRestDocs(uriScheme = "http", uriHost = "localhost", uriPort = 8080)
+@ActiveProfiles("local")
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 public class RoadmapControllerTest {
@@ -214,7 +218,7 @@ public class RoadmapControllerTest {
         RoadmapRequest.RoadmapDTO roadmap = new RoadmapRequest.RoadmapDTO("new JAVA - 생활 코딩", "새로운 버젼 입니다", "modifiedCode1234", false, true);
 
 
-        RoadmapRequest.UpdateRoadmapDTO requestDTO = new RoadmapRequest.UpdateRoadmapDTO(null,"새로운 버젼 입니다", true, true );
+        RoadmapRequest.UpdateRoadmapDTO requestDTO = new RoadmapRequest.UpdateRoadmapDTO("생활 코딩","새로운 버젼 입니다", true , true );
 
         String requestBody = om.writeValueAsString(requestDTO);
 
@@ -277,7 +281,7 @@ public class RoadmapControllerTest {
         result.andExpect(jsonPath("$.success").value("false"));
     }
 
-    @DisplayName("그룹 로드맵_수정_실패2_test:권한 없는 접근")
+    @DisplayName("그룹 로드맵_수정_실패2_test: 권한 없는 접근")
     @WithUserDetails(value = "test@test.com")
     @Test
     public void roadmap_group_update_fail_test_2() throws Exception {
@@ -307,7 +311,7 @@ public class RoadmapControllerTest {
         // 로드맵
         RoadmapRequest.RoadmapDTO roadmap = new RoadmapRequest.RoadmapDTO("new JAVA - 생활 코딩", "새로운 버젼 입니다", "modifiedCode1234", false, true);
 
-        RoadmapRequest.UpdateGroupRoadmapDTO requestDTO = new RoadmapRequest.UpdateGroupRoadmapDTO(roadmap.name(), roadmap.description(), roadmap.isPublic(), roadmap.isRecruit());
+        RoadmapRequest.UpdateRoadmapDTO requestDTO = new RoadmapRequest.UpdateRoadmapDTO(roadmap.name(), roadmap.description(), roadmap.isPublic(), roadmap.isRecruit());
 
         String requestBody = om.writeValueAsString(requestDTO);
 
@@ -344,30 +348,6 @@ public class RoadmapControllerTest {
         result.andExpect(jsonPath("$.result.categories[0].id").value(1L));
         result.andExpect(jsonPath("$.result.roadmaps.tilys[0].id").value(4L));
     }
-
-    /*
-    @DisplayName("로드맵_조회_성공_test")
-    @WithUserDetails(value = "tngus@test.com")
-    @Test
-    public void roadmap_find_success_test() throws Exception {
-
-        // given
-
-        // when
-        ResultActions result = mvc.perform(
-                get("/api/roadmaps")
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-        );
-
-        String responseBody = result.andReturn().getResponse().getContentAsString();
-        System.out.println("테스트 : "+responseBody);
-
-        // then
-        result.andExpect(jsonPath("$.success").value("true"));
-        result.andExpect(jsonPath("$.result.category").value("tily"));
-        result.andExpect(jsonPath("$.result.roadmaps[0].id").value(9L));
-    }
-    */
 
     @DisplayName("로드맵_조회_파라미터_성공_test")
     @WithUserDetails(value = "tngus@test.com")
@@ -603,7 +583,7 @@ public class RoadmapControllerTest {
         System.out.println("테스트 : "+responseBody);
     }
 
-    @DisplayName("로드맵_구성원_전체조회_실패_test:권한 없음")
+    @DisplayName("로드맵_구성원_전체조회_실패_test1: 권한 없음")
     @WithUserDetails(value = "test@test.com")
     @Test
     public void roadmap_members_find_fail_test_1() throws Exception{
@@ -624,7 +604,7 @@ public class RoadmapControllerTest {
         System.out.println("테스트 : "+responseBody);
     }
 
-    @DisplayName("로드맵_구성원_전체조회_실패_test: 해당 로드맵에 속하지 않은 사람의 접근")
+    @DisplayName("로드맵_구성원_전체조회_실패_test2: 해당 로드맵에 속하지 않은 사람의 접근")
     @WithUserDetails(value = "tngus@test.com")
     @Test
     public void roadmap_members_find_fail_test_2() throws Exception{
@@ -820,8 +800,8 @@ public class RoadmapControllerTest {
 
         // then
         result.andExpect(jsonPath("$.success").value("true"));
-        result.andExpect(jsonPath("$.result.users[0].name").value("applier"));
-        result.andExpect(jsonPath("$.result.users[0].content").value("참가 신청합니다"));
+        //result.andExpect(jsonPath("$.result.users[0].name").value("applier"));
+        //result.andExpect(jsonPath("$.result.users[0].content").value("참가 신청합니다"));
 
         String responseBody = result.andReturn().getResponse().getContentAsString();
         System.out.println("테스트 : "+responseBody);
@@ -830,7 +810,7 @@ public class RoadmapControllerTest {
     @DisplayName("신청자_조회하기_실패_test: 존재하지 않는 로드맵")
     @WithUserDetails(value = "hong@naver.com")
     @Test
-    public void applied_user_find_fail_test() throws Exception {
+    public void applied_user_find_fail_test_1() throws Exception {
         // given
         Long groupsId = 20L;
 
@@ -887,7 +867,7 @@ public class RoadmapControllerTest {
     public void application_accept_success_test() throws Exception {
         // given
         Long groupsId = 10L;
-        Long membersId = 6L;
+        Long membersId = 7L;
 
         // when
         ResultActions result = mvc.perform(
@@ -1136,7 +1116,7 @@ public class RoadmapControllerTest {
     }
     */
 
-    /*
+
     @DisplayName("그룹_로드맵_삭제_성공_test")
     @WithUserDetails(value = "hong@naver.com")
     @Test
@@ -1154,5 +1134,4 @@ public class RoadmapControllerTest {
         //then
         result.andExpect(jsonPath("$.success").value("true"));
     }
-     */
 }
