@@ -54,7 +54,7 @@ public class StepService {
                 .roadmap(roadmap)
                 .title(requestDTO.title())
                 .description(requestDTO.description())
-                .dueDate(Objects.isNull(requestDTO.dueDate()) ? null : requestDTO.dueDate().plusHours(9))
+                .dueDate(Objects.isNull(requestDTO.dueDate()) ? null : requestDTO.dueDate())
                 .build(); // 개인 로드맵이므로 description, dueDate 는 null
         stepRepository.save(step);
 
