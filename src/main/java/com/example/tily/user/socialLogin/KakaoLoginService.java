@@ -25,7 +25,9 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.UUID;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class KakaoLoginService {
@@ -35,18 +37,24 @@ public class KakaoLoginService {
     public SocialLoginResponse.TokenDTO kakaoLogin(String code) throws JsonProcessingException {
         // 1. "인가 코드"로 "액세스 토큰" 요청
         String accessToken = getAccessToken(code);
+        log.info("accessToken : "+accessToken);
 
         // 2. 토큰으로 카카오 API 호출
         SocialLoginResponse.UserInfoDto userInfo = getUserInfo(accessToken);
+        log.info("userInfo : "+userInfo);
 
         // 3. 카카오ID로 회원가입 처리
         User kakaoUser = registerUser(userInfo);
-
+        log.info("kakaoUser : "+kakaoUser.getUserInfo);
+    
+        log.info("4 before");
         // 4. 로그인 처리
         Authentication authentication = forceLogin(kakaoUser);
+        log.info("4 end");
 
         // 5. JWT 토큰을 응답에 넣음
         SocialLoginResponse.TokenDTO response = getJwtToken(authentication);
+        log.info("55");
 
         return response;
     }
