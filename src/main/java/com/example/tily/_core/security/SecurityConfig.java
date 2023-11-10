@@ -71,11 +71,10 @@ public class SecurityConfig {
 
         // 인증, 권한 필터 설정
         http.authorizeRequests(
-                authorize -> authorize.antMatchers(HttpMethod.GET, "/roadmaps").permitAll()
-                        .antMatchers(HttpMethod.GET, "/roadmaps/my").authenticated()
-                        .antMatchers(HttpMethod.GET, "/roadmaps/{roadmapId}").access("hasRole('ROLE_NONE') or hasRole('ROLE_USER')")
-                        .antMatchers("/roadmaps/**", "/user/**").authenticated()
-                        .antMatchers("/admin/**").access("hasRole('ADMIN')")
+                authorize -> authorize.antMatchers("/api/email/**", "/api/join", "/api/login", "/api/password/**").permitAll()
+                        .antMatchers(HttpMethod.GET, "/api/roadmaps").permitAll()
+                        .antMatchers(HttpMethod.GET, "/api/refresh").permitAll()
+                        .antMatchers("/api/roadmaps/**", "/api/alarms/**", "/api/comments/**", "/api/images/**", "/api/references/**", "/api/references/**", "/api/steps/**", "/api/tils/**", "/api/users/**", "/api/gardens/**").authenticated()
                         .anyRequest().permitAll()
         );
 

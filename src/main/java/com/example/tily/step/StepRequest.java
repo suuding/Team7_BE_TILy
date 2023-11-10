@@ -9,7 +9,6 @@ public class StepRequest {
             @NotBlank(message = "스텝 제목을 입력해주세요.") String title
     ) { }
 
-
     public record CreateStepDTO(
             @NotBlank(message = "step의 제목을 입력해주세요.")
             String title,

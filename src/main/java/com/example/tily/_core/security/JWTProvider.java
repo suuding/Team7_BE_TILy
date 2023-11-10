@@ -24,7 +24,7 @@ public class JWTProvider {
     // access token 생성
     public static String createAccessToken(User user) {
         String jwt = createToken(user, ACCESS_EXP);
-        return TOKEN_PREFIX + jwt;
+        return jwt;
     }
 
     // refresh token 생성

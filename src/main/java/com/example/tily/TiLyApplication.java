@@ -56,24 +56,24 @@ public class TiLyApplication {
 					newUser("applier@test.com", "applier", passwordEncoder, Role.ROLE_USER)
 			));
 			roadmapRepository.saveAll(Arrays.asList(
-					newIndividualRoadmap(User.builder().userId(1L).build(), Category.CATEGORY_INDIVIDUAL, "스프링 시큐리티", 10), //1
-					newIndividualRoadmap(User.builder().userId(2L).build(),Category.CATEGORY_INDIVIDUAL, "JPA 입문", 10),
-					newIndividualRoadmap(User.builder().userId(3L).build(),Category.CATEGORY_INDIVIDUAL, "자바 reflection", 10),
+					newIndividualRoadmap(User.builder().id(1L).build(), Category.CATEGORY_INDIVIDUAL, "스프링 시큐리티", 10), //1
+					newIndividualRoadmap(User.builder().id(2L).build(),Category.CATEGORY_INDIVIDUAL, "JPA 입문", 10),
+					newIndividualRoadmap(User.builder().id(3L).build(),Category.CATEGORY_INDIVIDUAL, "자바 reflection", 10),
 
-					newTilyRoadmap(User.builder().userId(4L).build(), Category.CATEGORY_TILY, "spring boot - 초급편", "틸리에서 제공하는 spring boot 초급자를 위한 로드맵입니다.", 100L, 20, "image.jpg"), //4
-					newTilyRoadmap(User.builder().userId(4L).build(), Category.CATEGORY_TILY, "spring boot - 중급편", "틸리에서 제공하는 spring boot 중급자를 위한 로드맵입니다.", 80L, 30 , "image.jpg"),
-					newTilyRoadmap(User.builder().userId(4L).build(), Category.CATEGORY_TILY, "spring boot - 고급편", "틸리에서 제공하는 spring boot 고급자를 위한 로드맵입니다.", 50L, 30 , "image.jpg"),
-					newTilyRoadmap(User.builder().userId(4L).build(), Category.CATEGORY_TILY, "Spring JPA - 초급편", "틸리에서 제공하는 Spring JPA 초급자를 위한 로드맵입니다.", 100L, 20 , "image.jpg"),
-					newTilyRoadmap(User.builder().userId(4L).build(), Category.CATEGORY_TILY, "Spring JPA - 중급편", "틸리에서 제공하는 Spring JPA 중급자를 위한 로드맵입니다.", 80L, 20 , "image.jpg"),
-					newTilyRoadmap(User.builder().userId(4L).build(), Category.CATEGORY_TILY, "Spring JPA - 고급편", "틸리에서 제공하는 Spring JPA 고급자를 위한 로드맵입니다.", 50L, 20 , "image.jpg"),
+					newTilyRoadmap(User.builder().id(4L).build(), Category.CATEGORY_TILY, "spring boot - 초급편", "틸리에서 제공하는 spring boot 초급자를 위한 로드맵입니다.", 20, "image.jpg"), //4
+					newTilyRoadmap(User.builder().id(4L).build(), Category.CATEGORY_TILY, "spring boot - 중급편", "틸리에서 제공하는 spring boot 중급자를 위한 로드맵입니다.", 30 , "image.jpg"),
+					newTilyRoadmap(User.builder().id(4L).build(), Category.CATEGORY_TILY, "spring boot - 고급편", "틸리에서 제공하는 spring boot 고급자를 위한 로드맵입니다.", 30 , "image.jpg"),
+					newTilyRoadmap(User.builder().id(4L).build(), Category.CATEGORY_TILY, "Spring JPA - 초급편", "틸리에서 제공하는 Spring JPA 초급자를 위한 로드맵입니다.", 20 , "image.jpg"),
+					newTilyRoadmap(User.builder().id(4L).build(), Category.CATEGORY_TILY, "Spring JPA - 중급편", "틸리에서 제공하는 Spring JPA 중급자를 위한 로드맵입니다.", 20 , "image.jpg"),
+					newTilyRoadmap(User.builder().id(4L).build(), Category.CATEGORY_TILY, "Spring JPA - 고급편", "틸리에서 제공하는 Spring JPA 고급자를 위한 로드맵입니다.", 20 , "image.jpg"),
 
-					newGroupRoadmap(User.builder().userId(1L).build(), Category.CATEGORY_GROUP, "JAVA 입문 수업 - 생활 코딩", "생활 코딩님의 로드맵입니다!", true, 5L, "pnu12345", true, 10), // 10
-					newGroupRoadmap(User.builder().userId(1L).build(), Category.CATEGORY_GROUP, "spring boot 스터디", "같이 spring boot 공부해봐요!", true, 3L, "pnu54321", true, 10),
-					newGroupRoadmap(User.builder().userId(2L).build(), Category.CATEGORY_GROUP, "JPA 스터디", "김영한 강사님의 JPA를 공부하는 스터디 ^^", false, 5L, "hoyai123", false, 20),
-					newGroupRoadmap(User.builder().userId(2L).build(), Category.CATEGORY_GROUP, "데이터베이스 스터디", "데이터베이스 공부합시다", true, 8L, "hoyoung1", true, 15),
-					newGroupRoadmap(User.builder().userId(3L).build(), Category.CATEGORY_GROUP, "카카오테크캠퍼스 1단계", "카카오테크캠퍼스 1단계입니다.", false, 50L, "kakao123", true, 20)
-
+					newGroupRoadmap(User.builder().id(1L).build(), Category.CATEGORY_GROUP, "JAVA 입문 수업 - 생활 코딩", "생활 코딩님의 로드맵입니다!", true, "pnu12345", true, 10), // 10
+					newGroupRoadmap(User.builder().id(1L).build(), Category.CATEGORY_GROUP, "spring boot 스터디", "같이 spring boot 공부해봐요!", true, "pnu54321", true, 10),
+					newGroupRoadmap(User.builder().id(2L).build(), Category.CATEGORY_GROUP, "JPA 스터디", "김영한 강사님의 JPA를 공부하는 스터디 ^^", false, "hoyai123", false, 20),
+					newGroupRoadmap(User.builder().id(2L).build(), Category.CATEGORY_GROUP, "데이터베이스 스터디", "데이터베이스 공부합시다", true, "hoyoung1", true, 15),
+					newGroupRoadmap(User.builder().id(3L).build(), Category.CATEGORY_GROUP, "카카오테크캠퍼스 1단계", "카카오테크캠퍼스 1단계입니다.", false, "kakao123", true, 20)
 			));
+      
 			userRoadmapRepository.saveAll(Arrays.asList(
 					newUserRoadmapRelation(Roadmap.builder().roadmapId(1L).build(), User.builder().userId(1L).build(), null, true, GroupRole.ROLE_MASTER, 0),
 					newUserRoadmapRelation(Roadmap.builder().roadmapId(2L).build(), User.builder().userId(2L).build(), null, true, GroupRole.ROLE_MASTER, 0),
@@ -100,6 +100,7 @@ public class TiLyApplication {
 					newUserRoadmapRelation(Roadmap.builder().roadmapId(12L).build(), User.builder().userId(5L).build(), "매니저", true, GroupRole.ROLE_MANAGER, 0),
 					newUserRoadmapRelation(Roadmap.builder().roadmapId(10L).build(), User.builder().userId(6L).build(), "참가 신청합니다", false, GroupRole.ROLE_MEMBER, 0)
 			));
+      
 			stepRepository.saveAll(Arrays.asList(
 					newIndividualStep(Roadmap.builder().roadmapId(1L).build(), "스프링 시큐리티를 사용하는 이유"),
 					newIndividualStep(Roadmap.builder().roadmapId(1L).build(), "OAuth 2.0으로 로그인 기능 구현하기"),
@@ -177,13 +178,12 @@ public class TiLyApplication {
 				.build();
 	}
 
-	public Roadmap newTilyRoadmap(User creator, Category category, String name, String description, Long currentNum, int stepNum, String image) {
+	public Roadmap newTilyRoadmap(User creator, Category category, String name, String description, int stepNum, String image) {
 		return Roadmap.builder()
 				.creator(creator)
 				.category(category)
 				.name(name)
 				.description(description)
-				.currentNum(currentNum)
 				.stepNum(stepNum)
 				.image(image)
 				.isPublic(false)
@@ -191,14 +191,13 @@ public class TiLyApplication {
 				.build();
 	}
 
-	private Roadmap newGroupRoadmap(User creator, Category category, String name, String description, boolean isPublic, Long currentNum, String code, boolean isRecruit,int stepNum) {
+	private Roadmap newGroupRoadmap(User creator, Category category, String name, String description, boolean isPublic, String code, boolean isRecruit,int stepNum) {
 		return Roadmap.builder()
 				.creator(creator)
 				.category(category)
 				.name(name)
 				.description(description)
 				.isPublic(isPublic)
-				.currentNum(currentNum)
 				.code(code)
 				.isRecruit(isRecruit)
 				.stepNum(stepNum)

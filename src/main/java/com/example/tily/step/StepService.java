@@ -54,7 +54,7 @@ public class StepService {
                 .roadmap(roadmap)
                 .title(requestDTO.title())
                 .description(requestDTO.description())
-                .dueDate(Objects.isNull(requestDTO.dueDate()) ? null : requestDTO.dueDate())
+                .dueDate(requestDTO.dueDate()!=null ? requestDTO.dueDate() : null)
                 .build(); // 개인 로드맵이므로 description, dueDate 는 null
         stepRepository.save(step);
 
@@ -91,7 +91,7 @@ public class StepService {
             if (til != null) til.updateTitle(requestDTO.title());
             step.updateTitle(requestDTO.title());
         } else { // 그룹 로드맵일 때
-            step.update(requestDTO.title(), requestDTO.description(), Objects.isNull(requestDTO.dueDate()) ? null : requestDTO.dueDate().plusHours(9));
+            step.update(requestDTO.title(), requestDTO.description(), requestDTO.dueDate()!=null ? requestDTO.dueDate() : null);
         }
     }
 
@@ -125,11 +125,12 @@ public class StepService {
 
         checkMasterAndManagerPermission(step.getRoadmap().getId(), user); // 매니저급만 삭제 가능
 
+        Roadmap roadmap = step.getRoadmap();
+        roadmap.subStepNum();
+
         // 1. Til을 삭제한다.
-        List<Til> tils = getTilsByStepId(stepId);
-        List<Long> tilIds = tils.stream()
-                .map(Til::getId)
-                .collect(Collectors.toList());
+        List<Long> tilIds = getTilsByStepId(stepId).stream().map(Til::getId).collect(Collectors.toList());
+//        List<Long> tilIds = tils.stream().map(Til::getId).collect(Collectors.toList());
 
         tilRepository.softDeleteTilsByTilIds(tilIds);
 
@@ -152,6 +153,8 @@ public class StepService {
 
         // 6. Step을 삭제한다
         stepRepository.softDeleteStepById(stepId);
+
+
     }
 
     // 로드맵의 관리자 권한 확인 (master, manager)
