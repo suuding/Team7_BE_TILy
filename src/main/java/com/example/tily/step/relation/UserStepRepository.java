@@ -23,8 +23,6 @@ public interface UserStepRepository extends JpaRepository<UserStep, Long> {
                                                      @Param("isSubmit") boolean isSubmit,
                                                      @Param("name") String name);
 
-    Optional<UserStep> findByStepIdAndUserIdAndIsSubmitTrue(Long stepId, Long userId);
-
     @Modifying
     @Query("update UserStep us SET us.isDeleted = true WHERE us.isDeleted = false AND us.step.id IN :stepIds")
     void softDeleteUserStepByStepIds(List<Long> stepIds); // 여러 step들에 대한 UserStep 삭제

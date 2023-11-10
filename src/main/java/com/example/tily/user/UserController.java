@@ -25,6 +25,7 @@ public class UserController {
     @PostMapping("/email/check")
     public ResponseEntity<?> checkEmail(@RequestBody @Valid UserRequest.CheckEmailDTO requestDTO, Errors errors) {
         userService.checkEmail(requestDTO);
+
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 
@@ -32,6 +33,7 @@ public class UserController {
     @PostMapping("/email/code")
     public ResponseEntity<?> sendEmailCode(@RequestBody @Valid UserRequest.SendEmailCodeDTO requestDTO, Errors errors) {
         userService.sendEmailCode(requestDTO);
+
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 
@@ -39,6 +41,7 @@ public class UserController {
     @PostMapping("/email/code/check")
     public ResponseEntity<?> checkEmailCode(@RequestBody @Valid UserRequest.CheckEmailCodeDTO requestDTO, Errors errors) {
         UserResponse.CheckEmailCodeDTO responseDTO = userService.checkEmailCode(requestDTO);
+
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
 
@@ -46,6 +49,7 @@ public class UserController {
     @PostMapping("/join")
     public ResponseEntity<?> join(@RequestBody @Valid UserRequest.JoinDTO requestDTO, Errors errors) {
         userService.join(requestDTO);
+
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 
@@ -64,6 +68,7 @@ public class UserController {
     @PostMapping("/password/change")
     public ResponseEntity<?> changePassword(@RequestBody @Valid UserRequest.ChangePwdDTO requestDTO, Errors errors) {
         userService.changePassword(requestDTO);
+
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 
@@ -82,6 +87,7 @@ public class UserController {
     @GetMapping("/users")
     public ResponseEntity<?> findUser(@AuthenticationPrincipal CustomUserDetails userDetails) {
         UserResponse.UserDTO responseDTO = userService.findUser(userDetails.getUser());
+
         return ResponseEntity.ok().body(responseDTO);
     }
 
@@ -90,6 +96,7 @@ public class UserController {
     public ResponseEntity<?> updateUser(@RequestBody @Valid UserRequest.UpdateUserDTO requestDTO, Errors errors,
                                         @AuthenticationPrincipal CustomUserDetails userDetails) {
         userService.updateUser(requestDTO, userDetails.getUser().getId());
+
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 
@@ -97,6 +104,7 @@ public class UserController {
     @GetMapping("/gardens")
     public ResponseEntity<?> gardens(@AuthenticationPrincipal CustomUserDetails userDetails) {
         UserResponse.ViewGardensDTO responseDTO = userService.viewGardens(userDetails.getUser());
+
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
 
@@ -104,6 +112,7 @@ public class UserController {
     @DeleteMapping("/users")
     public ResponseEntity<?> withdrawMembership(@AuthenticationPrincipal CustomUserDetails userDetails){
         userService.withdrawMembership(userDetails.getUser());
+
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 

@@ -23,6 +23,7 @@ public class ReferenceController {
     public ResponseEntity<?> createReference(@RequestBody @Valid ReferenceRequest.CreateReferenceDTO requestDTO, Errors errors,
                                              @AuthenticationPrincipal CustomUserDetails userDetails){
         referenceService.createReference(requestDTO, userDetails.getUser());
+
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 
@@ -32,6 +33,7 @@ public class ReferenceController {
     public ResponseEntity<?> findReference(@PathVariable("stepId") Long stepId,
                                            @AuthenticationPrincipal CustomUserDetails userDetails){
         StepResponse.FindReferenceDTO responseDTO = referenceService.findReference(stepId, userDetails.getUser());
+
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
 

@@ -28,6 +28,7 @@ public class CommentController {
     public ResponseEntity<?> updateComment(@PathVariable("commentId") Long commentId, @RequestBody @Valid CommentRequest.UpdateCommentDTO requestDTO,
                                            @AuthenticationPrincipal CustomUserDetails userDetails) {
         commentService.updateComment(requestDTO, commentId, userDetails.getUser());
+
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 
@@ -36,6 +37,7 @@ public class CommentController {
                                        @AuthenticationPrincipal CustomUserDetails userDetails) {
 
         commentService.deleteComment(commentId, userDetails.getUser());
+
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 }

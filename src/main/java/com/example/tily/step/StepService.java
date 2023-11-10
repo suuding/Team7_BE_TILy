@@ -114,6 +114,7 @@ public class StepService {
 
         List<StepResponse.FindAllStepDTO.StepDTO> stepDTOs = steps.stream()
                 .map(step -> new StepResponse.FindAllStepDTO.StepDTO(step, maps.get(step))).collect(Collectors.toList());
+
         return new StepResponse.FindAllStepDTO(stepDTOs, progress, myRole);
     }
 
@@ -160,6 +161,7 @@ public class StepService {
         if(!userRoadmap.getRole().equals(GroupRole.ROLE_MASTER.getValue()) && !userRoadmap.getRole().equals(GroupRole.ROLE_MANAGER.getValue())){
             throw new CustomException(ExceptionCode.ROADMAP_FORBIDDEN);
         }
+
         return userRoadmap.getRole();
     }
 

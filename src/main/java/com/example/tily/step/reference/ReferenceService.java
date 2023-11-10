@@ -83,6 +83,7 @@ public class ReferenceService {
         if(!userRoadmap.getRole().equals(GroupRole.ROLE_MASTER.getValue()) && !userRoadmap.getRole().equals(GroupRole.ROLE_MANAGER.getValue())){
             throw new CustomException(ExceptionCode.ROADMAP_FORBIDDEN);
         }
+
         return userRoadmap.getRole();
     }
 

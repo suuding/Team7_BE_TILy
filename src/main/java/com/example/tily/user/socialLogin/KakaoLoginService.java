@@ -112,6 +112,7 @@ public class KakaoLoginService {
 
             userRepository.save(kakaoUser);
         }
+
         return kakaoUser;
     }
 
@@ -121,6 +122,7 @@ public class KakaoLoginService {
 
         // 현재 실행 중인 스레드에 인증 정보를 설정
         SecurityContextHolder.getContext().setAuthentication(authentication);
+
         return authentication;
     }
 
@@ -135,6 +137,7 @@ public class KakaoLoginService {
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
         RestTemplate rt = new RestTemplate();
         ResponseEntity<String> response = rt.exchange(url, method, request, String.class);
+
         return response.getBody();
     }
 }

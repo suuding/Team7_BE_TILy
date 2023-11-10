@@ -104,6 +104,7 @@ public class TilService {
 
         List<TilResponse.ViewDTO.CommentDTO> commentDTOs = comments.stream()
                 .map(c -> new TilResponse.ViewDTO.CommentDTO(c, maps.get(c))).collect(Collectors.toList());
+
         return new TilResponse.ViewDTO(step, til, userStep.getIsSubmit(), commentDTOs);
     }
 
@@ -188,6 +189,7 @@ public class TilService {
 
         List<TilResponse.TilDTO> tilDTOs = tils.getContent().stream()
                 .map(til -> new TilResponse.TilDTO(til, til.getStep(), til.getRoadmap())).collect(Collectors.toList());
+
         return new TilResponse.FindAllDTO(tilDTOs, tils.hasNext());
     }
 

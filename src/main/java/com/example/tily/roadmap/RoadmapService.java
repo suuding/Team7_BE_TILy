@@ -500,6 +500,7 @@ public class RoadmapService {
         if(!userRoadmap.getRole().equals(GroupRole.ROLE_MASTER.getValue()) && !userRoadmap.getRole().equals(GroupRole.ROLE_MANAGER.getValue())){
             throw new CustomException(ExceptionCode.ROADMAP_FORBIDDEN);
         }
+
         return userRoadmap.getRole();
     }
 
@@ -522,6 +523,7 @@ public class RoadmapService {
     // 해당 로드맵에 속한 user
     private UserRoadmap getUserBelongRoadmap(Long roadmapId, Long userId) {
         getRoadmapById(roadmapId);
+
         return userRoadmapRepository.findByRoadmapIdAndUserIdAndIsAcceptTrue(roadmapId, userId).orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_NOT_BELONG));
     }
 

@@ -119,6 +119,7 @@ public class UserService {
             throw new CustomException(ExceptionCode.TOKEN_EXPIRED);
 
         User user = findById(userId);
+
         return createToken(user);
     }
 
@@ -293,6 +294,7 @@ public class UserService {
                 "<p>안녕하세요!<br>본인 인증을 위해 아래의 코드를 복사해 인증코드 입력 칸에 입력해주세요.<br>" +
                 "<div style='background-color:gainsboro; font-size: 30px; margin: 10px; padding: 5px; width: 250px' >" + code + "</div><br>" +
                 "TIL-y 서비스를 이용해주셔서 감사합니다. <br></p></div>";
+
         return content;
     }
 

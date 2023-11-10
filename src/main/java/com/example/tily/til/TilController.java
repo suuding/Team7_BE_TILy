@@ -25,6 +25,7 @@ public class TilController {
                                        @AuthenticationPrincipal CustomUserDetails userDetails) {
 
         TilResponse.CreateTilDTO responseDTO = tilService.createTil(requestDTO, userDetails.getUser());
+
         return ResponseEntity.ok().body(ApiUtils.success(HttpStatus.CREATED, responseDTO));
     }
 
@@ -34,6 +35,7 @@ public class TilController {
                                      @AuthenticationPrincipal CustomUserDetails userDetails) {
 
         TilResponse.ViewDTO responseDTO = tilService.viewTil(tilId, userDetails.getUser());
+
         return ResponseEntity.ok(ApiUtils.success(responseDTO));
     }
 
@@ -44,6 +46,7 @@ public class TilController {
                                        @AuthenticationPrincipal CustomUserDetails userDetails) {
 
         tilService.updateTil(requestDTO, tilId, userDetails.getUser());
+
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 
@@ -63,6 +66,7 @@ public class TilController {
                                        @AuthenticationPrincipal CustomUserDetails userDetails) {
 
         tilService.deleteTil(tilId, userDetails.getUser());
+
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 
@@ -76,6 +80,7 @@ public class TilController {
                                           @AuthenticationPrincipal CustomUserDetails userDetails) {
 
         TilResponse.FindAllDTO responseDTO = tilService.findAllMyTil(roadmapId, date, title, page, size, userDetails.getUser());
+
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
 
@@ -86,6 +91,7 @@ public class TilController {
                                            @RequestParam(value="isMember", defaultValue = "true") boolean isMember,
                                            @RequestParam(value="name", required = false) String name){
         RoadmapResponse.FindTilOfStepDTO responseDTO = tilService.findTilOfStep(stepId, isSubmit, isMember, name);
+
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
 }
