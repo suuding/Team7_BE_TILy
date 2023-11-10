@@ -45,7 +45,7 @@ public class KakaoLoginService {
 
         // 3. 카카오ID로 회원가입 처리
         User kakaoUser = registerUser(userInfo);
-        log.info("kakaoUser : "+kakaoUser.getUserInfo());
+        log.info("kakaoUser : "+kakaoUser);
     
         log.info("4 before");
         // 4. 로그인 처리
