@@ -38,7 +38,7 @@ CREATE TABLE step_tb (
     roadmap_id BIGINT,
     description TEXT,
     is_deleted BOOLEAN,
-    due_date TIMESTAMP
+    due_date TIMESTAMP NULL 
 );
 
 CREATE TABLE til_tb (
