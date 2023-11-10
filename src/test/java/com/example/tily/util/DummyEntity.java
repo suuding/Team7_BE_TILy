@@ -35,26 +35,24 @@ public class DummyEntity {
                 .build();
     }
 
-    public Roadmap newTilyRoadmap(User creator, Category category, String name, String description, Long currentNum, int stepNum, String image) {
+    public Roadmap newTilyRoadmap(User creator, Category category, String name, String description, int stepNum, String image) {
         return Roadmap.builder()
                 .creator(creator)
                 .category(category)
                 .name(name)
                 .description(description)
-                .currentNum(currentNum)
                 .stepNum(stepNum)
                 .image(image)
                 .build();
     }
 
-    protected Roadmap newGroupRoadmap(User creator, Category category, String name, String description, boolean isPublic, Long currentNum, String code, boolean isRecruit, int stepNum){
+    protected Roadmap newGroupRoadmap(User creator, Category category, String name, String description, boolean isPublic, String code, boolean isRecruit, int stepNum){
         return Roadmap.builder()
                 .creator(creator)
                 .category(category)
                 .name(name)
                 .description(description)
                 .isPublic(isPublic)
-                .currentNum(currentNum)
                 .code(code)
                 .isRecruit(isRecruit)
                 .stepNum(stepNum)
@@ -112,10 +110,10 @@ public class DummyEntity {
                 newIndividualRoadmap(userListPS.get(0), Category.CATEGORY_INDIVIDUAL, "스프링 시큐리티", 10),
                 newIndividualRoadmap(userListPS.get(1),Category.CATEGORY_INDIVIDUAL, "JPA 입문", 10),
                 newIndividualRoadmap(userListPS.get(2),Category.CATEGORY_INDIVIDUAL, "자바 reflection", 10),
-                newTilyRoadmap(userListPS.get(3), Category.CATEGORY_TILY, "spring boot - 초급편", "틸리에서 제공하는 spring boot 초급자를 위한 로드맵입니다.", 100L, 20, "image.jpg"),
-                newTilyRoadmap(userListPS.get(3), Category.CATEGORY_TILY, "spring boot - 중급편", "틸리에서 제공하는 spring boot 중급자를 위한 로드맵입니다.", 80L, 30 , "image.jpg"),
-                newGroupRoadmap(userListPS.get(0), Category.CATEGORY_GROUP, "JAVA 입문 수업 - 생활 코딩", "생활 코딩님의 로드맵입니다!", true, 3L, "pnu1234", true, 3),
-                newGroupRoadmap(userListPS.get(1), Category.CATEGORY_GROUP, "JPA 스터디", "김영한 강사님의 JPA를 공부하는 스터디 ^^", false, 10L, "ashfkc", true, 10)
+                newTilyRoadmap(userListPS.get(3), Category.CATEGORY_TILY, "spring boot - 초급편", "틸리에서 제공하는 spring boot 초급자를 위한 로드맵입니다.", 20, "image.jpg"),
+                newTilyRoadmap(userListPS.get(3), Category.CATEGORY_TILY, "spring boot - 중급편", "틸리에서 제공하는 spring boot 중급자를 위한 로드맵입니다.", 30 , "image.jpg"),
+                newGroupRoadmap(userListPS.get(0), Category.CATEGORY_GROUP, "JAVA 입문 수업 - 생활 코딩", "생활 코딩님의 로드맵입니다!", true, "pnu1234", true, 3),
+                newGroupRoadmap(userListPS.get(1), Category.CATEGORY_GROUP, "JPA 스터디", "김영한 강사님의 JPA를 공부하는 스터디 ^^", false, "ashfkc", true, 10)
         );
     }
 
