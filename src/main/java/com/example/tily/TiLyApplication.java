@@ -123,8 +123,8 @@ public class TiLyApplication {
 					newUserStepRelation(Step.builder().stepId(5L).build(), User.builder().userId(1L).build(), true),
 					newUserStepRelation(Step.builder().stepId(5L).build(), User.builder().userId(2L).build(), true),
 					newUserStepRelation(Step.builder().stepId(6L).build(), User.builder().userId(1L).build(), false),
-					newUserStepRelation(Step.builder().stepId(6L).build(), User.builder().userId(2L).build(), true),
-					newUserStepRelation(Step.builder().stepId(6L).build(), User.builder().userId(5L).build(), true)
+					newUserStepRelation(Step.builder().stepId(6L).build(), User.builder().userId(2L).build(), false),
+					newUserStepRelation(Step.builder().stepId(6L).build(), User.builder().userId(5L).build(), false)
 //					newUserStepRelation(Step.builder().id(5L).build(), User.builder().id(1L).build(), false),
 //					newUserStepRelation(Step.builder().id(6L).build(), User.builder().id(1L).build(), false),
 //					newUserStepRelation(Step.builder().id(7L).build(), User.builder().id(1L).build(), false)

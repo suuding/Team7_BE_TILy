@@ -54,7 +54,7 @@ public class StepService {
                 .roadmap(roadmap)
                 .title(requestDTO.title())
                 .description(requestDTO.description())
-                .dueDate(requestDTO.dueDate()!=null ? requestDTO.dueDate() : null)
+                .dueDate(requestDTO.dueDate()!=null ? requestDTO.dueDate().plusHours(9) : null)
                 .build(); // 개인 로드맵이므로 description, dueDate 는 null
         stepRepository.save(step);
 
@@ -91,7 +91,7 @@ public class StepService {
             if (til != null) til.updateTitle(requestDTO.title());
             step.updateTitle(requestDTO.title());
         } else { // 그룹 로드맵일 때
-            step.update(requestDTO.title(), requestDTO.description(), requestDTO.dueDate()!=null ? requestDTO.dueDate() : null);
+            step.update(requestDTO.title(), requestDTO.description(), requestDTO.dueDate()!=null ? requestDTO.dueDate().plusHours(9) : null);
         }
     }
 

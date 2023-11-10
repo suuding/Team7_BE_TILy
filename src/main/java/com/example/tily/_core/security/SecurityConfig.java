@@ -71,7 +71,7 @@ public class SecurityConfig {
 
         // 인증, 권한 필터 설정
         http.authorizeRequests(
-                authorize -> authorize.antMatchers("/api/email/**", "/api/join", "/api/login", "/api/password/**").permitAll()
+                authorize -> authorize.antMatchers("/api/email/**", "/api/join", "/api/login", "/api/password/**", "/api/auth/**").permitAll()
                         .antMatchers(HttpMethod.GET, "/api/roadmaps").permitAll()
                         .antMatchers(HttpMethod.GET, "/api/refresh").permitAll()
                         .antMatchers("/api/roadmaps/**", "/api/alarms/**", "/api/comments/**", "/api/images/**", "/api/references/**", "/api/references/**", "/api/steps/**", "/api/tils/**", "/api/users/**", "/api/gardens/**").authenticated()
