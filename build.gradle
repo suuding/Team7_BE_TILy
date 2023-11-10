@@ -2,7 +2,6 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '2.7.16'
 	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
-	id "org.asciidoctor.jvm.convert" version "3.3.2"
 }
 
 group = 'com.example'
@@ -59,12 +58,4 @@ tasks.named('test') {
 tasks.named('asciidoctor') {
 	inputs.dir snippetsDir
 	dependsOn test
-}
-bootJar {
-	dependsOn asciidoctor
-	copy {
-		// src/docs/asciidoc == from 경로
-		from "${asciidoctor.outputDir}"
-		into 'src/main/resources/static/docs' // /static/docs로 복사!
-	}
 }
