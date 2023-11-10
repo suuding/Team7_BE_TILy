@@ -165,15 +165,17 @@ public class UserService {
 
         List<Til> tils = tilRepository.findTilsByUserIdAndDateRange(userId, beginDateTime, endDateTime);
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
         // 모든 날에 대한 작성여부 0으로 초기화.
         for (LocalDate date = beginDateTime.toLocalDate(); !date.isAfter(endDateTime.toLocalDate()); date = date.plusDays(1)) {
-            maps.put(date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")), 0);
+            maps.put(date.format(formatter), 0);
         }
 
         // TIL 존재하는 날의 작성여부만 1로 변경.
         for (Til til : tils) {
             LocalDate tilDate = til.getCreatedDate().toLocalDate();
-            maps.put(tilDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")), 1);
+            maps.put(tilDate.format(formatter), 1);
         }
 
         List<UserResponse.ViewGardensDTO.GardenDTO> gardens = maps.entrySet().stream()
