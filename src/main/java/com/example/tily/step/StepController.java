@@ -22,15 +22,17 @@ public class StepController {
     public ResponseEntity<?> createStep(@RequestBody @Valid StepRequest.CreateStepDTO requestDTO, Errors errors,
                                         @AuthenticationPrincipal CustomUserDetails userDetails) {
         StepResponse.CreateStepDTO responseDTO = stepService.createStep(requestDTO, userDetails.getUser());
+
         return ResponseEntity.ok().body(ApiUtils.success(HttpStatus.CREATED, responseDTO));
     }
 
     // step 수정하기
-    @PatchMapping("/steps/{id}")
-    public ResponseEntity<?> updateStep(@PathVariable Long id,
+    @PatchMapping("/steps/{stepId}")
+    public ResponseEntity<?> updateStep(@PathVariable Long stepId,
                                         @RequestBody @Valid StepRequest.UpdateStepDTO requestDTO, Errors errors,
                                         @AuthenticationPrincipal CustomUserDetails userDetails) {
-        stepService.updateStep(id, requestDTO, userDetails.getUser());
+        stepService.updateStep(stepId, requestDTO, userDetails.getUser());
+
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 
@@ -38,6 +40,7 @@ public class StepController {
     @GetMapping("/roadmaps/{roadmapId}/steps")
     public ResponseEntity<?> findAllStep(@PathVariable("roadmapId") Long roadmapId, @AuthenticationPrincipal CustomUserDetails userDetails) {
         StepResponse.FindAllStepDTO responseDTO = stepService.findAllStep(roadmapId, userDetails.getUser());
+
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
 
@@ -45,6 +48,7 @@ public class StepController {
     @DeleteMapping("/steps/{stepId}")
     public ResponseEntity<?> deleteStep(@PathVariable Long stepId, @AuthenticationPrincipal CustomUserDetails userDetails){
         stepService.deleteStep(stepId, userDetails.getUser());
+
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 }

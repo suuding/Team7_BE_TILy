@@ -56,103 +56,103 @@ public class TiLyApplication {
 					newUser("applier@test.com", "applier", passwordEncoder, Role.ROLE_USER)
 			));
 			roadmapRepository.saveAll(Arrays.asList(
-					newIndividualRoadmap(User.builder().id(1L).build(), Category.CATEGORY_INDIVIDUAL, "스프링 시큐리티", 10), //1
-					newIndividualRoadmap(User.builder().id(2L).build(),Category.CATEGORY_INDIVIDUAL, "JPA 입문", 10),
-					newIndividualRoadmap(User.builder().id(3L).build(),Category.CATEGORY_INDIVIDUAL, "자바 reflection", 10),
+					newIndividualRoadmap(User.builder().userId(1L).build(), Category.CATEGORY_INDIVIDUAL, "스프링 시큐리티", 10), //1
+					newIndividualRoadmap(User.builder().userId(2L).build(),Category.CATEGORY_INDIVIDUAL, "JPA 입문", 10),
+					newIndividualRoadmap(User.builder().userId(3L).build(),Category.CATEGORY_INDIVIDUAL, "자바 reflection", 10),
 
-					newTilyRoadmap(User.builder().id(4L).build(), Category.CATEGORY_TILY, "spring boot - 초급편", "틸리에서 제공하는 spring boot 초급자를 위한 로드맵입니다.", 100L, 20, "image.jpg"), //4
-					newTilyRoadmap(User.builder().id(4L).build(), Category.CATEGORY_TILY, "spring boot - 중급편", "틸리에서 제공하는 spring boot 중급자를 위한 로드맵입니다.", 80L, 30 , "image.jpg"),
-					newTilyRoadmap(User.builder().id(4L).build(), Category.CATEGORY_TILY, "spring boot - 고급편", "틸리에서 제공하는 spring boot 고급자를 위한 로드맵입니다.", 50L, 30 , "image.jpg"),
-					newTilyRoadmap(User.builder().id(4L).build(), Category.CATEGORY_TILY, "Spring JPA - 초급편", "틸리에서 제공하는 Spring JPA 초급자를 위한 로드맵입니다.", 100L, 20 , "image.jpg"),
-					newTilyRoadmap(User.builder().id(4L).build(), Category.CATEGORY_TILY, "Spring JPA - 중급편", "틸리에서 제공하는 Spring JPA 중급자를 위한 로드맵입니다.", 80L, 20 , "image.jpg"),
-					newTilyRoadmap(User.builder().id(4L).build(), Category.CATEGORY_TILY, "Spring JPA - 고급편", "틸리에서 제공하는 Spring JPA 고급자를 위한 로드맵입니다.", 50L, 20 , "image.jpg"),
+					newTilyRoadmap(User.builder().userId(4L).build(), Category.CATEGORY_TILY, "spring boot - 초급편", "틸리에서 제공하는 spring boot 초급자를 위한 로드맵입니다.", 100L, 20, "image.jpg"), //4
+					newTilyRoadmap(User.builder().userId(4L).build(), Category.CATEGORY_TILY, "spring boot - 중급편", "틸리에서 제공하는 spring boot 중급자를 위한 로드맵입니다.", 80L, 30 , "image.jpg"),
+					newTilyRoadmap(User.builder().userId(4L).build(), Category.CATEGORY_TILY, "spring boot - 고급편", "틸리에서 제공하는 spring boot 고급자를 위한 로드맵입니다.", 50L, 30 , "image.jpg"),
+					newTilyRoadmap(User.builder().userId(4L).build(), Category.CATEGORY_TILY, "Spring JPA - 초급편", "틸리에서 제공하는 Spring JPA 초급자를 위한 로드맵입니다.", 100L, 20 , "image.jpg"),
+					newTilyRoadmap(User.builder().userId(4L).build(), Category.CATEGORY_TILY, "Spring JPA - 중급편", "틸리에서 제공하는 Spring JPA 중급자를 위한 로드맵입니다.", 80L, 20 , "image.jpg"),
+					newTilyRoadmap(User.builder().userId(4L).build(), Category.CATEGORY_TILY, "Spring JPA - 고급편", "틸리에서 제공하는 Spring JPA 고급자를 위한 로드맵입니다.", 50L, 20 , "image.jpg"),
 
-					newGroupRoadmap(User.builder().id(1L).build(), Category.CATEGORY_GROUP, "JAVA 입문 수업 - 생활 코딩", "생활 코딩님의 로드맵입니다!", true, 5L, "pnu12345", true, 10), // 10
-					newGroupRoadmap(User.builder().id(1L).build(), Category.CATEGORY_GROUP, "spring boot 스터디", "같이 spring boot 공부해봐요!", true, 3L, "pnu54321", true, 10),
-					newGroupRoadmap(User.builder().id(2L).build(), Category.CATEGORY_GROUP, "JPA 스터디", "김영한 강사님의 JPA를 공부하는 스터디 ^^", false, 5L, "hoyai123", false, 20),
-					newGroupRoadmap(User.builder().id(2L).build(), Category.CATEGORY_GROUP, "데이터베이스 스터디", "데이터베이스 공부합시다", true, 8L, "hoyoung1", true, 15),
-					newGroupRoadmap(User.builder().id(3L).build(), Category.CATEGORY_GROUP, "카카오테크캠퍼스 1단계", "카카오테크캠퍼스 1단계입니다.", false, 50L, "kakao123", true, 20)
+					newGroupRoadmap(User.builder().userId(1L).build(), Category.CATEGORY_GROUP, "JAVA 입문 수업 - 생활 코딩", "생활 코딩님의 로드맵입니다!", true, 5L, "pnu12345", true, 10), // 10
+					newGroupRoadmap(User.builder().userId(1L).build(), Category.CATEGORY_GROUP, "spring boot 스터디", "같이 spring boot 공부해봐요!", true, 3L, "pnu54321", true, 10),
+					newGroupRoadmap(User.builder().userId(2L).build(), Category.CATEGORY_GROUP, "JPA 스터디", "김영한 강사님의 JPA를 공부하는 스터디 ^^", false, 5L, "hoyai123", false, 20),
+					newGroupRoadmap(User.builder().userId(2L).build(), Category.CATEGORY_GROUP, "데이터베이스 스터디", "데이터베이스 공부합시다", true, 8L, "hoyoung1", true, 15),
+					newGroupRoadmap(User.builder().userId(3L).build(), Category.CATEGORY_GROUP, "카카오테크캠퍼스 1단계", "카카오테크캠퍼스 1단계입니다.", false, 50L, "kakao123", true, 20)
 
 			));
 			userRoadmapRepository.saveAll(Arrays.asList(
-					newUserRoadmapRelation(Roadmap.builder().id(1L).build(), User.builder().id(1L).build(), null, true, GroupRole.ROLE_MASTER, 0),
-					newUserRoadmapRelation(Roadmap.builder().id(2L).build(), User.builder().id(2L).build(), null, true, GroupRole.ROLE_MASTER, 0),
-					newUserRoadmapRelation(Roadmap.builder().id(3L).build(), User.builder().id(3L).build(), null, true, GroupRole.ROLE_MASTER, 0),
+					newUserRoadmapRelation(Roadmap.builder().roadmapId(1L).build(), User.builder().userId(1L).build(), null, true, GroupRole.ROLE_MASTER, 0),
+					newUserRoadmapRelation(Roadmap.builder().roadmapId(2L).build(), User.builder().userId(2L).build(), null, true, GroupRole.ROLE_MASTER, 0),
+					newUserRoadmapRelation(Roadmap.builder().roadmapId(3L).build(), User.builder().userId(3L).build(), null, true, GroupRole.ROLE_MASTER, 0),
 
-					newUserRoadmapRelation(Roadmap.builder().id(4L).build(), User.builder().id(4L).build(), null, true, GroupRole.ROLE_MASTER, 10),
-					newUserRoadmapRelation(Roadmap.builder().id(4L).build(), User.builder().id(1L).build(), null, true, GroupRole.ROLE_MEMBER, 10),
-					newUserRoadmapRelation(Roadmap.builder().id(4L).build(), User.builder().id(2L).build(), null, true, GroupRole.ROLE_MEMBER, 20),
-					newUserRoadmapRelation(Roadmap.builder().id(4L).build(), User.builder().id(3L).build(), null, true, GroupRole.ROLE_MEMBER, 100),
-					newUserRoadmapRelation(Roadmap.builder().id(5L).build(), User.builder().id(4L).build(), null, true, GroupRole.ROLE_MASTER, 0),
-					newUserRoadmapRelation(Roadmap.builder().id(6L).build(), User.builder().id(4L).build(), null, true, GroupRole.ROLE_MASTER, 0),
-					newUserRoadmapRelation(Roadmap.builder().id(7L).build(), User.builder().id(4L).build(), null, true, GroupRole.ROLE_MASTER, 0),
-					newUserRoadmapRelation(Roadmap.builder().id(7L).build(), User.builder().id(1L).build(), null, true, GroupRole.ROLE_MEMBER, 100),
-					newUserRoadmapRelation(Roadmap.builder().id(7L).build(), User.builder().id(2L).build(), null, true, GroupRole.ROLE_MEMBER, 20),
-					newUserRoadmapRelation(Roadmap.builder().id(7L).build(), User.builder().id(3L).build(), null, true, GroupRole.ROLE_MEMBER, 100),
-					newUserRoadmapRelation(Roadmap.builder().id(8L).build(), User.builder().id(4L).build(), null, true, GroupRole.ROLE_MASTER, 0),
-					newUserRoadmapRelation(Roadmap.builder().id(9L).build(), User.builder().id(4L).build(), null, true, GroupRole.ROLE_MASTER, 0),
+					newUserRoadmapRelation(Roadmap.builder().roadmapId(4L).build(), User.builder().userId(4L).build(), null, true, GroupRole.ROLE_MASTER, 10),
+					newUserRoadmapRelation(Roadmap.builder().roadmapId(4L).build(), User.builder().userId(1L).build(), null, true, GroupRole.ROLE_MEMBER, 10),
+					newUserRoadmapRelation(Roadmap.builder().roadmapId(4L).build(), User.builder().userId(2L).build(), null, true, GroupRole.ROLE_MEMBER, 20),
+					newUserRoadmapRelation(Roadmap.builder().roadmapId(4L).build(), User.builder().userId(3L).build(), null, true, GroupRole.ROLE_MEMBER, 100),
+					newUserRoadmapRelation(Roadmap.builder().roadmapId(5L).build(), User.builder().userId(4L).build(), null, true, GroupRole.ROLE_MASTER, 0),
+					newUserRoadmapRelation(Roadmap.builder().roadmapId(6L).build(), User.builder().userId(4L).build(), null, true, GroupRole.ROLE_MASTER, 0),
+					newUserRoadmapRelation(Roadmap.builder().roadmapId(7L).build(), User.builder().userId(4L).build(), null, true, GroupRole.ROLE_MASTER, 0),
+					newUserRoadmapRelation(Roadmap.builder().roadmapId(7L).build(), User.builder().userId(1L).build(), null, true, GroupRole.ROLE_MEMBER, 100),
+					newUserRoadmapRelation(Roadmap.builder().roadmapId(7L).build(), User.builder().userId(2L).build(), null, true, GroupRole.ROLE_MEMBER, 20),
+					newUserRoadmapRelation(Roadmap.builder().roadmapId(7L).build(), User.builder().userId(3L).build(), null, true, GroupRole.ROLE_MEMBER, 100),
+					newUserRoadmapRelation(Roadmap.builder().roadmapId(8L).build(), User.builder().userId(4L).build(), null, true, GroupRole.ROLE_MASTER, 0),
+					newUserRoadmapRelation(Roadmap.builder().roadmapId(9L).build(), User.builder().userId(4L).build(), null, true, GroupRole.ROLE_MASTER, 0),
 
-					newUserRoadmapRelation(Roadmap.builder().id(10L).build(), User.builder().id(2L).build(), "자바 공부하고싶습니다!", true, GroupRole.ROLE_MANAGER, 10),
-					newUserRoadmapRelation(Roadmap.builder().id(10L).build(), User.builder().id(3L).build(), "자바 공부하고싶습니다!", true, GroupRole.ROLE_MEMBER, 10),
-					newUserRoadmapRelation(Roadmap.builder().id(12L).build(), User.builder().id(1L).build(), "열심히 하겠습니다!", true, GroupRole.ROLE_MEMBER, 0),
-					newUserRoadmapRelation(Roadmap.builder().id(12L).build(), User.builder().id(2L).build(), "열심히 하겠습니다2!", true, GroupRole.ROLE_MEMBER, 0),
-					newUserRoadmapRelation(Roadmap.builder().id(13L).build(), User.builder().id(1L).build(), "열심히 하겠습니다!", false, GroupRole.ROLE_NONE, 0),
-					newUserRoadmapRelation(Roadmap.builder().id(12L).build(), User.builder().id(5L).build(), "매니저", true, GroupRole.ROLE_MANAGER, 0),
-					newUserRoadmapRelation(Roadmap.builder().id(10L).build(), User.builder().id(6L).build(), "참가 신청합니다", false, GroupRole.ROLE_MEMBER, 0)
+					newUserRoadmapRelation(Roadmap.builder().roadmapId(10L).build(), User.builder().userId(2L).build(), "자바 공부하고싶습니다!", true, GroupRole.ROLE_MANAGER, 10),
+					newUserRoadmapRelation(Roadmap.builder().roadmapId(10L).build(), User.builder().userId(3L).build(), "자바 공부하고싶습니다!", true, GroupRole.ROLE_MEMBER, 10),
+					newUserRoadmapRelation(Roadmap.builder().roadmapId(12L).build(), User.builder().userId(1L).build(), "열심히 하겠습니다!", true, GroupRole.ROLE_MEMBER, 0),
+					newUserRoadmapRelation(Roadmap.builder().roadmapId(12L).build(), User.builder().userId(2L).build(), "열심히 하겠습니다2!", true, GroupRole.ROLE_MEMBER, 0),
+					newUserRoadmapRelation(Roadmap.builder().roadmapId(13L).build(), User.builder().userId(1L).build(), "열심히 하겠습니다!", false, GroupRole.ROLE_NONE, 0),
+					newUserRoadmapRelation(Roadmap.builder().roadmapId(12L).build(), User.builder().userId(5L).build(), "매니저", true, GroupRole.ROLE_MANAGER, 0),
+					newUserRoadmapRelation(Roadmap.builder().roadmapId(10L).build(), User.builder().userId(6L).build(), "참가 신청합니다", false, GroupRole.ROLE_MEMBER, 0)
 			));
 			stepRepository.saveAll(Arrays.asList(
-					newIndividualStep(Roadmap.builder().id(1L).build(), "스프링 시큐리티를 사용하는 이유"),
-					newIndividualStep(Roadmap.builder().id(1L).build(), "OAuth 2.0으로 로그인 기능 구현하기"),
-					newIndividualStep(Roadmap.builder().id(1L).build(), "인증된 사용자 권한 부족 예외처리"),
-					newIndividualStep(Roadmap.builder().id(1L).build(), "소셜 로그인 사용하기"),
+					newIndividualStep(Roadmap.builder().roadmapId(1L).build(), "스프링 시큐리티를 사용하는 이유"),
+					newIndividualStep(Roadmap.builder().roadmapId(1L).build(), "OAuth 2.0으로 로그인 기능 구현하기"),
+					newIndividualStep(Roadmap.builder().roadmapId(1L).build(), "인증된 사용자 권한 부족 예외처리"),
+					newIndividualStep(Roadmap.builder().roadmapId(1L).build(), "소셜 로그인 사용하기"),
 
-					newGroupStep(Roadmap.builder().id(12L).build(),"다형성(Polymorphism)", "Day1", LocalDateTime.of(2023, 10, 1, 23 ,59) ),
-					newGroupStep(Roadmap.builder().id(12L).build(),"람다식(lambda expression)", "Day2", LocalDateTime.of(2023, 10, 3, 23 ,59) ),
-					newGroupStep(Roadmap.builder().id(12L).build(),"스트림(lambda expression)", "Day3", LocalDateTime.of(2023, 10, 5, 23 ,59) ),
+					newGroupStep(Roadmap.builder().roadmapId(12L).build(),"다형성(Polymorphism)", "Day1", LocalDateTime.of(2023, 10, 1, 23 ,59) ),
+					newGroupStep(Roadmap.builder().roadmapId(12L).build(),"람다식(lambda expression)", "Day2", LocalDateTime.of(2023, 10, 3, 23 ,59) ),
+					newGroupStep(Roadmap.builder().roadmapId(12L).build(),"스트림(lambda expression)", "Day3", LocalDateTime.of(2023, 10, 5, 23 ,59) ),
 
-					newGroupStep(Roadmap.builder().id(5L).build(),"spring boot 1일차", "Day1", LocalDateTime.of(2023, 10, 1, 23 ,59) ),
-					newGroupStep(Roadmap.builder().id(5L).build(),"spring boot 2일차", "Day2", LocalDateTime.of(2023, 10, 3, 23 ,59) ),
-					newGroupStep(Roadmap.builder().id(5L).build(),"spring boot 3일차", "Day3", LocalDateTime.of(2023, 10, 5, 23 ,59) )
+					newGroupStep(Roadmap.builder().roadmapId(5L).build(),"spring boot 1일차", "Day1", LocalDateTime.of(2023, 10, 1, 23 ,59) ),
+					newGroupStep(Roadmap.builder().roadmapId(5L).build(),"spring boot 2일차", "Day2", LocalDateTime.of(2023, 10, 3, 23 ,59) ),
+					newGroupStep(Roadmap.builder().roadmapId(5L).build(),"spring boot 3일차", "Day3", LocalDateTime.of(2023, 10, 5, 23 ,59) )
 			));
 			userStepRepository.saveAll(Arrays.asList(
-					newUserStepRelation(Step.builder().id(5L).build(), User.builder().id(1L).build(), true),
-					newUserStepRelation(Step.builder().id(5L).build(), User.builder().id(2L).build(), true),
-					newUserStepRelation(Step.builder().id(6L).build(), User.builder().id(1L).build(), false),
-					newUserStepRelation(Step.builder().id(6L).build(), User.builder().id(2L).build(), true),
-					newUserStepRelation(Step.builder().id(6L).build(), User.builder().id(5L).build(), true)
-//               newUserStepRelation(Step.builder().id(5L).build(), User.builder().id(1L).build(), false),
-//               newUserStepRelation(Step.builder().id(6L).build(), User.builder().id(1L).build(), false),
-//               newUserStepRelation(Step.builder().id(7L).build(), User.builder().id(1L).build(), false)
+					newUserStepRelation(Step.builder().stepId(5L).build(), User.builder().userId(1L).build(), true),
+					newUserStepRelation(Step.builder().stepId(5L).build(), User.builder().userId(2L).build(), true),
+					newUserStepRelation(Step.builder().stepId(6L).build(), User.builder().userId(1L).build(), false),
+					newUserStepRelation(Step.builder().stepId(6L).build(), User.builder().userId(2L).build(), true),
+					newUserStepRelation(Step.builder().stepId(6L).build(), User.builder().userId(5L).build(), true)
+//					newUserStepRelation(Step.builder().id(5L).build(), User.builder().id(1L).build(), false),
+//					newUserStepRelation(Step.builder().id(6L).build(), User.builder().id(1L).build(), false),
+//					newUserStepRelation(Step.builder().id(7L).build(), User.builder().id(1L).build(), false)
 			));
 			referenceRepository.saveAll(Arrays.asList(
-					newReference(Step.builder().id(4L).build(), "youtube", "https://www.youtube.com/watch?v=0L6QWKC1a6k"),
-					newReference(Step.builder().id(4L).build(), "youtube", "https://www.youtube.com/watch?v=U8LVCTaS3mQ"),
-					newReference(Step.builder().id(6L).build(), "youtube", "https://www.youtube.com/watch?v=1OLy4Dj_zCg"),
-					newReference(Step.builder().id(4L).build(), "web", "https://blog.naver.com/hoyai-/1234"),
-					newReference(Step.builder().id(5L).build(), "web", "https://blog.naver.com/cestlavie_01/1234"),
-					newReference(Step.builder().id(5L).build(), "web", "https://velog.io/@skydoves/open-source-machenism")
+					newReference(Step.builder().stepId(4L).build(), "youtube", "https://www.youtube.com/watch?v=0L6QWKC1a6k"),
+					newReference(Step.builder().stepId(4L).build(), "youtube", "https://www.youtube.com/watch?v=U8LVCTaS3mQ"),
+					newReference(Step.builder().stepId(6L).build(), "youtube", "https://www.youtube.com/watch?v=1OLy4Dj_zCg"),
+					newReference(Step.builder().stepId(4L).build(), "web", "https://blog.naver.com/hoyai-/1234"),
+					newReference(Step.builder().stepId(5L).build(), "web", "https://blog.naver.com/cestlavie_01/1234"),
+					newReference(Step.builder().stepId(5L).build(), "web", "https://velog.io/@skydoves/open-source-machenism")
 			));
 			tilRepository.saveAll(Arrays.asList(
-					newIndividualTil(Roadmap.builder().id(1L).build(), Step.builder().id(1L).build(), User.builder().id(1L).build(), "스프링 시큐리티를 사용하는 이유", "이것은 내용입니다.", true, null),
-					newIndividualTil(Roadmap.builder().id(1L).build(), Step.builder().id(2L).build(), User.builder().id(1L).build(), "OAuth 2.0으로 로그인 기능 구현하기", "이것은 내용입니다.", true, null),
-					newIndividualTil(Roadmap.builder().id(1L).build(), Step.builder().id(3L).build(), User.builder().id(1L).build(), "인증된 사용자 권한 부족 예외처리", "이것은 내용입니다.", true, null),
-					newIndividualTil(Roadmap.builder().id(1L).build(), Step.builder().id(4L).build(), User.builder().id(1L).build(), "소셜 로그인 사용하기", "이것은 내용입니다.", true, null),
+					newIndividualTil(Roadmap.builder().roadmapId(1L).build(), Step.builder().stepId(1L).build(), User.builder().userId(1L).build(), "스프링 시큐리티를 사용하는 이유", "이것은 내용입니다.", true, null),
+					newIndividualTil(Roadmap.builder().roadmapId(1L).build(), Step.builder().stepId(2L).build(), User.builder().userId(1L).build(), "OAuth 2.0으로 로그인 기능 구현하기", "이것은 내용입니다.", true, null),
+					newIndividualTil(Roadmap.builder().roadmapId(1L).build(), Step.builder().stepId(3L).build(), User.builder().userId(1L).build(), "인증된 사용자 권한 부족 예외처리", "이것은 내용입니다.", true, null),
+					newIndividualTil(Roadmap.builder().roadmapId(1L).build(), Step.builder().stepId(4L).build(), User.builder().userId(1L).build(), "소셜 로그인 사용하기", "이것은 내용입니다.", true, null),
 
-					newGroupTil(Roadmap.builder().id(12L).build(), Step.builder().id(5L).build(), User.builder().id(1L).build(), "다형성(Polymorphism)", "이것은 내용입니다1.", "이것은 제출할 내용입니다.", LocalDateTime.of(2023, Month.OCTOBER, 10, 1, 0, 0), 1,false ),
-					newGroupTil(Roadmap.builder().id(12L).build(), Step.builder().id(5L).build(), User.builder().id(2L).build(), "람다식(lambda expression)", "이것은 내용입니다2.", "이것은 제출할 내용입니다.", LocalDateTime.of(2023, Month.OCTOBER, 10, 2, 0, 0), 2,false ),
-					newGroupTil(Roadmap.builder().id(12L).build(), Step.builder().id(6L).build(), User.builder().id(1L).build(), "스트림(lambda expression)", "이것은 내용입니다3.", "이것은 제출할 내용입니다.", null, 3,false ),
-					newGroupTil(Roadmap.builder().id(12L).build(), Step.builder().id(6L).build(), User.builder().id(2L).build(), "다형성2(Polymorphism)", "이것은 내용입니다4.", "이것은 제출할 내용입니다.", LocalDateTime.of(2023, Month.OCTOBER, 10, 4, 0, 0), 4,false ),
-					newGroupTil(Roadmap.builder().id(12L).build(), Step.builder().id(6L).build(), User.builder().id(5L).build(), "매니저의 글", "이것은 내용입니다5.", "이것은 제출할 내용입니다.", LocalDateTime.of(2023, Month.OCTOBER, 10, 4, 0, 0), 4,false )
+					newGroupTil(Roadmap.builder().roadmapId(12L).build(), Step.builder().stepId(5L).build(), User.builder().userId(1L).build(), "다형성(Polymorphism)", "이것은 내용입니다1.", "이것은 제출할 내용입니다.", LocalDateTime.of(2023, Month.OCTOBER, 10, 1, 0, 0), 1,false ),
+					newGroupTil(Roadmap.builder().roadmapId(12L).build(), Step.builder().stepId(5L).build(), User.builder().userId(2L).build(), "람다식(lambda expression)", "이것은 내용입니다2.", "이것은 제출할 내용입니다.", LocalDateTime.of(2023, Month.OCTOBER, 10, 2, 0, 0), 2,false ),
+					newGroupTil(Roadmap.builder().roadmapId(12L).build(), Step.builder().stepId(6L).build(), User.builder().userId(1L).build(), "스트림(lambda expression)", "이것은 내용입니다3.", "이것은 제출할 내용입니다.", null, 3,false ),
+					newGroupTil(Roadmap.builder().roadmapId(12L).build(), Step.builder().stepId(6L).build(), User.builder().userId(2L).build(), "다형성2(Polymorphism)", "이것은 내용입니다4.", "이것은 제출할 내용입니다.", LocalDateTime.of(2023, Month.OCTOBER, 10, 4, 0, 0), 4,false ),
+					newGroupTil(Roadmap.builder().roadmapId(12L).build(), Step.builder().stepId(6L).build(), User.builder().userId(5L).build(), "매니저의 글", "이것은 내용입니다5.", "이것은 제출할 내용입니다.", LocalDateTime.of(2023, Month.OCTOBER, 10, 4, 0, 0), 4,false )
 			));
 
 			commentRepository.saveAll(Arrays.asList(
-					newComment(Roadmap.builder().id(1L).build(), Step.builder().id(1L).build(),Til.builder().id(1L).build(),User.builder().id(1L).build(), "이것은 댓글입니다."),
-					newComment(Roadmap.builder().id(1L).build(), Step.builder().id(1L).build(),Til.builder().id(1L).build(),User.builder().id(2L).build(), "이것도 댓글입니다.")
+					newComment(Roadmap.builder().roadmapId(1L).build(), Step.builder().stepId(1L).build(),Til.builder().tilId(1L).build(),User.builder().userId(1L).build(), "이것은 댓글입니다."),
+					newComment(Roadmap.builder().roadmapId(1L).build(), Step.builder().stepId(1L).build(),Til.builder().tilId(1L).build(),User.builder().userId(2L).build(), "이것도 댓글입니다.")
 
 			));
 
 			alarmRepository.saveAll(Arrays.asList(
-					newAlarm(Til.builder().id(5L).build(), User.builder().id(1L).build(), false)
+				newAlarm(Til.builder().tilId(5L).build(), User.builder().userId(1L).build(), false)
 			));
 		};
 	}

@@ -18,12 +18,14 @@ public class AlarmController {
     @GetMapping("/alarms")
     public ResponseEntity<?> findAll(@AuthenticationPrincipal CustomUserDetails userDetails) {
         AlarmResponse.FindAllDTO responseDTO = alarmService.findAll(userDetails.getUser());
+
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
 
     @PatchMapping("/alarms/read")
     public ResponseEntity<?> readAlarm(@RequestBody @Valid AlarmRequest.ReadAlarmDTO requestDTO, @AuthenticationPrincipal CustomUserDetails userDetails) {
         alarmService.readAlarm(requestDTO);
+
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 }

@@ -36,9 +36,9 @@ public class Reference {
     private boolean isDeleted = false;
 
     @Builder
-    public Reference(Step step, Long id, String category, String link) {
+    public Reference(Step step, Long referenceId, String category, String link) {
         this.step = step;
-        this.id = id;
+        this.id = referenceId;
         this.category = category;
         this.link = link;
     }

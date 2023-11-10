@@ -57,8 +57,8 @@ public class Til extends BaseTimeEntity {
     private boolean isDeleted = false;
 
     @Builder
-    public Til(Long id, Roadmap roadmap, Step step, User writer, String title, String content, String submitContent, LocalDateTime submitDate, int commentNum, boolean isPersonal) {
-        this.id = id;
+    public Til(Long tilId, Roadmap roadmap, Step step, User writer, String title, String content, String submitContent, LocalDateTime submitDate, int commentNum, boolean isPersonal) {
+        this.id = tilId;
         this.roadmap = roadmap;
         this.step = step;
         this.writer = writer;
