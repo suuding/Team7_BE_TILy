@@ -5,10 +5,10 @@ import com.example.tily._core.security.JWTProvider;
 import com.example.tily._core.utils.ApiUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +26,7 @@ public class UserController {
     public ResponseEntity<?> checkEmail(@RequestBody @Valid UserRequest.CheckEmailDTO requestDTO, Errors errors) {
         userService.checkEmail(requestDTO);
 
-        return ResponseEntity.ok().body(ApiUtils.success(null));
+        return ResponseEntity.ok().body(ApiUtils.success(HttpStatus.OK, null));
     }
 
     // 인증코드 전송
@@ -34,7 +34,7 @@ public class UserController {
     public ResponseEntity<?> sendEmailCode(@RequestBody @Valid UserRequest.SendEmailCodeDTO requestDTO, Errors errors) {
         userService.sendEmailCode(requestDTO);
 
-        return ResponseEntity.ok().body(ApiUtils.success(null));
+        return ResponseEntity.ok().body(ApiUtils.success(HttpStatus.OK, null));
     }
 
     // 인증코드 확인
@@ -42,7 +42,7 @@ public class UserController {
     public ResponseEntity<?> checkEmailCode(@RequestBody @Valid UserRequest.CheckEmailCodeDTO requestDTO, Errors errors) {
         UserResponse.CheckEmailCodeDTO responseDTO = userService.checkEmailCode(requestDTO);
 
-        return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
+        return ResponseEntity.ok().body(ApiUtils.success(HttpStatus.OK, responseDTO));
     }
 
     // 회원가입
@@ -50,7 +50,7 @@ public class UserController {
     public ResponseEntity<?> join(@RequestBody @Valid UserRequest.JoinDTO requestDTO, Errors errors) {
         userService.join(requestDTO);
 
-        return ResponseEntity.ok().body(ApiUtils.success(null));
+        return ResponseEntity.ok().body(ApiUtils.success(HttpStatus.CREATED, null));
     }
 
     // 로그인
@@ -61,7 +61,7 @@ public class UserController {
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
-                .body(ApiUtils.success(new UserResponse.LoginDTO(responseDTO.accessToken())));
+                .body(ApiUtils.success(HttpStatus.OK, new UserResponse.LoginDTO(responseDTO.accessToken())));
     }
 
     // 비밀번호 재설정
@@ -69,7 +69,7 @@ public class UserController {
     public ResponseEntity<?> changePassword(@RequestBody @Valid UserRequest.ChangePwdDTO requestDTO, Errors errors) {
         userService.changePassword(requestDTO);
 
-        return ResponseEntity.ok().body(ApiUtils.success(null));
+        return ResponseEntity.ok().body(ApiUtils.success(HttpStatus.OK, null));
     }
 
     // 토큰 재발급
@@ -80,7 +80,7 @@ public class UserController {
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
-                .body(ApiUtils.success(new UserResponse.LoginDTO(responseDTO.accessToken())));
+                .body(ApiUtils.success(HttpStatus.CREATED, new UserResponse.LoginDTO(responseDTO.accessToken())));
     }
 
     // 사용자 정보 조회하기
@@ -95,9 +95,9 @@ public class UserController {
     @PatchMapping("/users")
     public ResponseEntity<?> updateUser(@RequestBody @Valid UserRequest.UpdateUserDTO requestDTO, Errors errors,
                                         @AuthenticationPrincipal CustomUserDetails userDetails) {
-        userService.updateUser(requestDTO, userDetails.getUser().getId());
+        userService.updatePassword(requestDTO, userDetails.getUser().getId()); // 비밀번호 수정
 
-        return ResponseEntity.ok().body(ApiUtils.success(null));
+        return ResponseEntity.ok().body(ApiUtils.success(HttpStatus.OK, null));
     }
 
     // 사용자 장미밭 조회하기
@@ -105,7 +105,7 @@ public class UserController {
     public ResponseEntity<?> gardens(@AuthenticationPrincipal CustomUserDetails userDetails) {
         UserResponse.ViewGardensDTO responseDTO = userService.viewGardens(userDetails.getUser());
 
-        return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
+        return ResponseEntity.ok().body(ApiUtils.success(HttpStatus.OK, responseDTO));
     }
 
     // 회원 탈퇴하기
@@ -113,7 +113,7 @@ public class UserController {
     public ResponseEntity<?> withdrawMembership(@AuthenticationPrincipal CustomUserDetails userDetails){
         userService.withdrawMembership(userDetails.getUser());
 
-        return ResponseEntity.ok().body(ApiUtils.success(null));
+        return ResponseEntity.ok().body(ApiUtils.success(HttpStatus.OK, null));
     }
 
     public ResponseCookie setRefreshTokenCookie(String refreshToken) {

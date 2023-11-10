@@ -3,6 +3,7 @@ package com.example.tily.comment;
 import com.example.tily._core.security.CustomUserDetails;
 import com.example.tily._core.utils.ApiUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,7 @@ public class CommentController {
                                            @AuthenticationPrincipal CustomUserDetails userDetails) {
         CommentResponse.CreateCommentDTO responseDTO = commentService.createComment(requestDTO, userDetails.getUser());
 
-        return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
+        return ResponseEntity.ok().body(ApiUtils.success(HttpStatus.CREATED, responseDTO));
     }
 
     @PatchMapping("/comments/{commentId}")
@@ -29,7 +30,7 @@ public class CommentController {
                                            @AuthenticationPrincipal CustomUserDetails userDetails) {
         commentService.updateComment(requestDTO, commentId, userDetails.getUser());
 
-        return ResponseEntity.ok().body(ApiUtils.success(null));
+        return ResponseEntity.ok().body(ApiUtils.success(HttpStatus.OK, null));
     }
 
     @DeleteMapping("/comments/{commentId}")
@@ -38,6 +39,6 @@ public class CommentController {
 
         commentService.deleteComment(commentId, userDetails.getUser());
 
-        return ResponseEntity.ok().body(ApiUtils.success(null));
+        return ResponseEntity.ok().body(ApiUtils.success(HttpStatus.OK, null));
     }
 }

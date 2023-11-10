@@ -72,17 +72,7 @@ public class S3Service implements FileService {
 
     @Override
     public String getFileFolder(FileFolder fileFolder) {
-
-        String folder = "";
-        if(fileFolder == FileFolder.USER_IMAGE) {
-            folder = s3Component.getUserFolder()+"/";
-        }else if(fileFolder == FileFolder.ROADMAP_IMAGE){
-            folder = s3Component.getRoadmapFolder()+"/";
-        }else if(fileFolder == FileFolder.POST_IMAGE){
-            folder = s3Component.getPostFolder()+"/";
-        }
-
-        return folder;
+        return fileFolder.getFolder(s3Component);
     }
 
     private void validateFileExists(String fileName) {
@@ -107,6 +97,8 @@ public class S3Service implements FileService {
     //이미지 URL->파일 이름 변환
     public static String convertToFileName(String imageUrl){
         String[] path = imageUrl.split("/");
-        return path[path.length-2] + "/" + path[path.length-1];  //폴더 이름 + 파일 이름
+        String folderName = path[path.length-2];
+        String fileName = path[path.length-1];
+        return folderName + "/" + fileName;
     }
 }

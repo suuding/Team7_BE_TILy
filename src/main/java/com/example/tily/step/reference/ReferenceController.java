@@ -2,6 +2,7 @@ package com.example.tily.step.reference;
 
 import com.example.tily._core.security.CustomUserDetails;
 import com.example.tily._core.utils.ApiUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.Errors;
 import com.example.tily.step.StepResponse;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,7 @@ public class ReferenceController {
                                              @AuthenticationPrincipal CustomUserDetails userDetails){
         referenceService.createReference(requestDTO, userDetails.getUser());
 
-        return ResponseEntity.ok().body(ApiUtils.success(null));
+        return ResponseEntity.ok().body(ApiUtils.success(HttpStatus.CREATED, null));
     }
 
     // step의 참고자료 목록 조회
@@ -34,7 +35,7 @@ public class ReferenceController {
                                            @AuthenticationPrincipal CustomUserDetails userDetails){
         StepResponse.FindReferenceDTO responseDTO = referenceService.findReference(stepId, userDetails.getUser());
 
-        return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
+        return ResponseEntity.ok().body(ApiUtils.success(HttpStatus.OK, responseDTO));
     }
 
     // 참고자료 삭제
@@ -42,6 +43,6 @@ public class ReferenceController {
     public ResponseEntity<?> deleteReference(@PathVariable("referenceId") Long referenceId, @AuthenticationPrincipal CustomUserDetails userDetails) {
         referenceService.deleteReference(referenceId, userDetails.getUser());
 
-        return ResponseEntity.ok().body(ApiUtils.success(null));
+        return ResponseEntity.ok().body(ApiUtils.success(HttpStatus.OK, null));
     }
 }

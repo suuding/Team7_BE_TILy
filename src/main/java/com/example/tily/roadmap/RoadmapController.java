@@ -4,6 +4,7 @@ import com.example.tily._core.security.CustomUserDetails;
 import com.example.tily._core.utils.ApiUtils;
 import com.example.tily.user.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.Errors;
@@ -24,7 +25,7 @@ public class RoadmapController {
                                            @AuthenticationPrincipal CustomUserDetails userDetails){
         RoadmapResponse.CreateRoadmapDTO responseDTO = roadmapService.createRoadmap(requestDTO, userDetails.getUser());
 
-        return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
+        return ResponseEntity.ok().body(ApiUtils.success(HttpStatus.CREATED, responseDTO));
     }
 
     // 틸리 로드맵 생성하기 - 임시 api
@@ -33,7 +34,7 @@ public class RoadmapController {
                                                @AuthenticationPrincipal CustomUserDetails userDetails){
         RoadmapResponse.CreateRoadmapDTO responseDTO = roadmapService.createTilyRoadmap(requestDTO, userDetails.getUser());
 
-        return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
+        return ResponseEntity.ok().body(ApiUtils.success(HttpStatus.CREATED, responseDTO));
     }
 
     // 로드맵 정보 조회하기 (틸리, 그룹)
@@ -42,7 +43,7 @@ public class RoadmapController {
         User user = Optional.ofNullable(userDetails).map(CustomUserDetails::getUser).orElse(null);
         RoadmapResponse.FindRoadmapDTO responseDTO = roadmapService.findRoadmap(roadmapId, user);
         
-        return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
+        return ResponseEntity.ok().body(ApiUtils.success(HttpStatus.OK, responseDTO));
     }
 
     // 로드맵 정보 수정하기
@@ -51,7 +52,7 @@ public class RoadmapController {
                                            @PathVariable Long roadmapId, @AuthenticationPrincipal CustomUserDetails userDetails){
         roadmapService.updateRoadmap(roadmapId, requestDTO, userDetails.getUser());
 
-        return ResponseEntity.ok().body(ApiUtils.success(null));
+        return ResponseEntity.ok().body(ApiUtils.success(HttpStatus.OK, null));
     }
 
     // 로드맵 삭제
@@ -59,7 +60,7 @@ public class RoadmapController {
     public ResponseEntity<?> deleteRoadmap(@PathVariable Long roadmapId, @AuthenticationPrincipal CustomUserDetails userDetails){
         roadmapService.deleteRoadmap(roadmapId, userDetails.getUser());
 
-        return ResponseEntity.ok().body(ApiUtils.success(null));
+        return ResponseEntity.ok().body(ApiUtils.success(HttpStatus.OK, null));
     }
 
     // 내가 속한 로드맵 전체 목록 조회하기
@@ -67,7 +68,7 @@ public class RoadmapController {
     public ResponseEntity<?> findAllMyRoadmaps(@AuthenticationPrincipal CustomUserDetails userDetails) {
         RoadmapResponse.FindAllMyRoadmapDTO responseDTO = roadmapService.findAllMyRoadmaps(userDetails.getUser());
 
-        return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
+        return ResponseEntity.ok().body(ApiUtils.success(HttpStatus.OK, responseDTO));
     }
 
     // 로드맵 조회하기
@@ -79,7 +80,7 @@ public class RoadmapController {
                                                 @AuthenticationPrincipal CustomUserDetails userDetails) {
         RoadmapResponse.FindRoadmapByQueryDTO responseDTO  = roadmapService.findAll(category, name, page, size);
 
-        return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
+        return ResponseEntity.ok().body(ApiUtils.success(HttpStatus.OK, responseDTO));
     }
 
     // 그룹 로드맵에 참여 신청하기
@@ -88,7 +89,7 @@ public class RoadmapController {
                                           @PathVariable("groupId") Long groupId, @AuthenticationPrincipal CustomUserDetails userDetails){
         roadmapService.applyGroupRoadmap(requestDTO, groupId, userDetails.getUser());
 
-        return ResponseEntity.ok().body(ApiUtils.success(null));
+        return ResponseEntity.ok().body(ApiUtils.success(HttpStatus.OK, null));
     }
 
     // 틸리 로드맵에 참여 신청하기
@@ -96,7 +97,7 @@ public class RoadmapController {
     public ResponseEntity<?> applyTilyRoadmap(@PathVariable("tilyId") Long tilyId, @AuthenticationPrincipal CustomUserDetails userDetails){
         roadmapService.applyTilyRoadmap(tilyId, userDetails.getUser());
 
-        return ResponseEntity.ok().body(ApiUtils.success(null));
+        return ResponseEntity.ok().body(ApiUtils.success(HttpStatus.OK, null));
     }
 
     // 참가 코드로 그룹 로드맵 참여하기
@@ -105,7 +106,7 @@ public class RoadmapController {
                                                 @AuthenticationPrincipal CustomUserDetails userDetails){
         RoadmapResponse.ParticipateRoadmapDTO responseDTO = roadmapService.participateRoadmap(requestDTO, userDetails.getUser());
 
-        return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
+        return ResponseEntity.ok().body(ApiUtils.success(HttpStatus.OK, responseDTO));
     }
 
     // 그룹 로드맵의 구성원 전체 조회하기
@@ -113,7 +114,7 @@ public class RoadmapController {
     public ResponseEntity<?> findRoadmapMembers(@PathVariable Long groupId, @AuthenticationPrincipal CustomUserDetails userDetails){
         RoadmapResponse.FindRoadmapMembersDTO responseDTO = roadmapService.findRoadmapMembers(groupId, userDetails.getUser());
 
-        return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
+        return ResponseEntity.ok().body(ApiUtils.success(HttpStatus.OK, responseDTO));
     }
 
     // 그룹 로드맵의 구성원 역할 바꾸기
@@ -123,7 +124,7 @@ public class RoadmapController {
                                               @AuthenticationPrincipal CustomUserDetails userDetails){
         roadmapService.changeMemberRole(requestDTO, groupId, memberId, userDetails.getUser());
 
-        return ResponseEntity.ok().body(ApiUtils.success(null));
+        return ResponseEntity.ok().body(ApiUtils.success(HttpStatus.OK, null));
     }
 
     // 그룹 로드맵의 구성원 강퇴하기
@@ -132,7 +133,7 @@ public class RoadmapController {
                                            @AuthenticationPrincipal CustomUserDetails userDetails){
         roadmapService.dismissMember(groupId, memberId, userDetails.getUser());
 
-        return ResponseEntity.ok().body(ApiUtils.success(null));
+        return ResponseEntity.ok().body(ApiUtils.success(HttpStatus.OK, null));
     }
 
     // 그룹 로드맵에 신청한 사람들 목록 조회하기
@@ -140,7 +141,7 @@ public class RoadmapController {
     public ResponseEntity<?> findAppliedUsers(@PathVariable Long groupId, @AuthenticationPrincipal CustomUserDetails userDetails){
         RoadmapResponse.FindAppliedUsersDTO responseDTO = roadmapService.findAppliedUsers(groupId, userDetails.getUser());
 
-        return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
+        return ResponseEntity.ok().body(ApiUtils.success(HttpStatus.OK, responseDTO));
     }
 
     // 그룹 로드맵 참여 신청 승인
@@ -148,7 +149,7 @@ public class RoadmapController {
     public ResponseEntity<?> acceptApplication(@PathVariable Long groupId, @PathVariable Long memberId, @AuthenticationPrincipal CustomUserDetails userDetails){
         roadmapService.acceptApplication(groupId, memberId, userDetails.getUser());
 
-        return ResponseEntity.ok().body(ApiUtils.success(null));
+        return ResponseEntity.ok().body(ApiUtils.success(HttpStatus.OK, null));
     }
 
     // 그룹 로드맵 참여 신청 거절
@@ -157,6 +158,6 @@ public class RoadmapController {
                                                @AuthenticationPrincipal CustomUserDetails userDetails){
         roadmapService.rejectApplication(groupId, memberId, userDetails.getUser());
 
-        return ResponseEntity.ok().body(ApiUtils.success(null));
+        return ResponseEntity.ok().body(ApiUtils.success(HttpStatus.OK, null));
     }
 }
