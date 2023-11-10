@@ -11,7 +11,6 @@ import com.example.tily.roadmap.RoadmapRepository;
 import com.example.tily.roadmap.relation.GroupRole;
 import com.example.tily.roadmap.relation.UserRoadmap;
 import com.example.tily.roadmap.relation.UserRoadmapRepository;
-import com.example.tily.step.reference.Reference;
 import com.example.tily.step.reference.ReferenceRepository;
 import com.example.tily.step.relation.UserStep;
 import com.example.tily.step.relation.UserStepRepository;
@@ -125,7 +124,7 @@ public class StepService {
         checkMasterAndManagerPermission(step.getRoadmap().getId(), user); // 매니저급만 삭제 가능
 
         // 1. Til을 삭제한다.
-        List<Til> tils = getTisByStepId(stepId);
+        List<Til> tils = getTilsByStepId(stepId);
         List<Long> tilIds = tils.stream()
                 .map(Til::getId)
                 .collect(Collectors.toList());
@@ -171,7 +170,7 @@ public class StepService {
         return roadmapRepository.findById(roadmapId).orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_NOT_FOUND));
     }
 
-    private List<Til> getTisByStepId(Long stepId){
+    private List<Til> getTilsByStepId(Long stepId){
         return tilRepository.findByStepId(stepId);
     }
 
