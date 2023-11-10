@@ -35,18 +35,18 @@ public class ProxyConfig {
         return new RestTemplate(factory);
     }
 
-    @Bean
-    public RestTemplate restTemplate(RestTemplateBuilder restTemplateBuilder) {
-        return restTemplateBuilder
-                // 로깅 인터셉터에서 Stream을 소비하므로 BufferingClientHttpRequestFactory 을 꼭 써야한다.
-                .requestFactory(() -> new BufferingClientHttpRequestFactory(new SimpleClientHttpRequestFactory()))
-                // 타임아웃 설정 (ms 단위)
-                .setConnectTimeout(Duration.ofDays(30000))
-                .setReadTimeout(Duration.ofDays(30000))
-                // UTF-8 인코딩으로 메시지 컨버터 추가
-                .additionalMessageConverters(new StringHttpMessageConverter(Charset.forName("UTF-8")))
-                // 로깅 인터셉터 설정
-                .additionalInterceptors(new RestTemplateLoggingRequestInterceptor())
-                .build();
-    }
+    // @Bean
+    // public RestTemplate restTemplate(RestTemplateBuilder restTemplateBuilder) {
+    //     return restTemplateBuilder
+    //             // 로깅 인터셉터에서 Stream을 소비하므로 BufferingClientHttpRequestFactory 을 꼭 써야한다.
+    //             .requestFactory(() -> new BufferingClientHttpRequestFactory(new SimpleClientHttpRequestFactory()))
+    //             // 타임아웃 설정 (ms 단위)
+    //             .setConnectTimeout(Duration.ofDays(30000))
+    //             .setReadTimeout(Duration.ofDays(30000))
+    //             // UTF-8 인코딩으로 메시지 컨버터 추가
+    //             .additionalMessageConverters(new StringHttpMessageConverter(Charset.forName("UTF-8")))
+    //             // 로깅 인터셉터 설정
+    //             .additionalInterceptors(new RestTemplateLoggingRequestInterceptor())
+    //             .build();
+    // }
 }
