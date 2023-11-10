@@ -89,6 +89,9 @@ public class CommentService {
         if(!comment.getWriter().getId().equals(user.getId()) && !comment.getTil().getWriter().getId().equals(user.getId()))
             throw new CustomException(ExceptionCode.COMMENT_DELETE_FORBIDDEN);
 
+        Til til = comment.getTil();
+        til.subCommentNum();
+
         alarmRepository.deleteByCommentId(id);
         commentRepository.softDeleteCommentById(id);
     }
