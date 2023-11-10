@@ -27,7 +27,7 @@ public interface RoadmapRepository extends JpaRepository<Roadmap, Long> {
 
     @Modifying
     @Query("update Roadmap r SET r.isDeleted = true WHERE r.isDeleted = false AND r.id = :roadmapId")
-    void softDeleteRoadmapById(Long roadmapId);
+    void softDeleteRoadmapById(@Param("roadmapId") Long roadmapId);
 
     @Modifying
     @Query("update Roadmap r SET r.isDeleted = true WHERE r.isDeleted = false AND r.id IN :roadmapIds")

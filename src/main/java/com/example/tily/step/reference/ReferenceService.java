@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -93,6 +94,7 @@ public class ReferenceService {
     }
 
     private UserRoadmap getUserBelongRoadmap(Long roadmapId, Long userId) {
-        return userRoadmapRepository.findByRoadmapIdAndUserIdAndIsAcceptTrue(roadmapId, userId).orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_NOT_BELONG));
+        return userRoadmapRepository.findByRoadmapIdAndUserIdAndIsAcceptTrue(roadmapId, userId).orElseThrow(
+                () -> new CustomException(ExceptionCode.ROADMAP_NOT_BELONG));
     }
 }

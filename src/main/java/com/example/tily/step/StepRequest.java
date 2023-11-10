@@ -19,6 +19,7 @@ public class StepRequest {
     ) { }
 
     public record UpdateStepDTO(
+
             String title,
             String description,
             LocalDateTime dueDate

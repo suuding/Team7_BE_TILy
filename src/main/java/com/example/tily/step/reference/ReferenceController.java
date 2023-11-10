@@ -27,7 +27,7 @@ public class ReferenceController {
     }
 
     // step의 참고자료 목록 조회
-    @GetMapping("/references")
+    @GetMapping("/steps/{id}/references")
     public ResponseEntity<?> findReference(@RequestBody @Valid ReferenceRequest.FindReferenceDTO requestDTO,
                                            @AuthenticationPrincipal CustomUserDetails userDetails){
         StepResponse.FindReferenceDTO responseDTO = referenceService.findReference(requestDTO, userDetails.getUser());
