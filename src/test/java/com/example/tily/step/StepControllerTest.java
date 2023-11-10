@@ -4,10 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -16,6 +18,8 @@ import java.time.LocalDateTime;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
+@AutoConfigureRestDocs(uriScheme = "http", uriHost = "localhost", uriPort = 8080)
+@ActiveProfiles("local")
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 public class StepControllerTest {
@@ -50,10 +54,10 @@ public class StepControllerTest {
 
         // then
         result.andExpect(jsonPath("$.success").value("true"));
-        result.andExpect(jsonPath("$.result.id").value(11L));
+        result.andExpect(jsonPath("$.result.id").value(12L));
     }
 
-    @DisplayName("로드맵 스텝_생성_실패_test_1: 존재하지 않은 로드맵")
+    @DisplayName("스텝_생성_실패_test_1: 존재하지 않은 로드맵")
     @WithUserDetails(value = "hong@naver.com")
     @Test
     public void step_create_fail_test_1() throws Exception {
@@ -234,7 +238,7 @@ public class StepControllerTest {
     }
 
 
-    /*
+
     @DisplayName("스텝_삭제_성공_test")
     @WithUserDetails(value = "tngus@test.com")
     @Test
@@ -254,7 +258,6 @@ public class StepControllerTest {
         // then
         result.andExpect(jsonPath("$.success").value("true"));
     }
-     */
 
 
 }

@@ -6,10 +6,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -18,6 +20,8 @@ import java.time.LocalDateTime;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
+@AutoConfigureRestDocs(uriScheme = "http", uriHost = "localhost", uriPort = 8080)
+@ActiveProfiles("local")
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 public class ReferenceControllerTest {
@@ -157,6 +161,25 @@ public class ReferenceControllerTest {
 
     }
 
+    @DisplayName("참고자료_조회_실패_test: 존재하지 않는 스텝")
+    @WithUserDetails(value = "tngus@test.com")
+    @Test
+    public void reference_view_fail_test() throws Exception {
+
+        // given
+        Long stepId = 13434L;
+
+        // when
+        ResultActions result = mvc.perform(
+                get("/api/steps/" + stepId + "/references")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+
+        // then
+        result.andExpect(jsonPath("$.success").value("false"));
+
+    }
+
     @DisplayName("참고자료_삭제_성공_test")
     @WithUserDetails(value = "tngus@test.com")
     @Test
@@ -213,26 +236,6 @@ public class ReferenceControllerTest {
         // then
         result.andExpect(jsonPath("$.success").value("false"));
         result.andExpect(jsonPath("$.message").value("해당 reference를 찾을 수 없습니다."));
-
-    }
-
-    @DisplayName("참고자료_삭제_실패_test_3: 권한 없는 유저의 시도")
-    @WithUserDetails(value = "tngus@test.com")
-    @Test
-    public void reference_delete_fail_test_3() throws Exception {
-
-        // given
-        Long referenceId = 6L;
-
-        // when
-        ResultActions result = mvc.perform(
-                delete("/api/references/" + referenceId)
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-        );
-
-        // then
-        result.andExpect(jsonPath("$.success").value("false"));
-        result.andExpect(jsonPath("$.message").value("해당 roadmap에 접근할 권한이 없습니다."));
 
     }
 

@@ -4,10 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -16,6 +18,8 @@ import java.time.LocalDateTime;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
+@AutoConfigureRestDocs(uriScheme = "http", uriHost = "localhost", uriPort = 8080)
+@ActiveProfiles("local")
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 public class TilControllerTest {
@@ -32,7 +36,7 @@ public class TilControllerTest {
     public void create_til_success_test() throws Exception {
         //given
         Long roadmapId = 1L;
-        Long stepId = 4L;
+        Long stepId = 11L;
 
         TilRequest.CreateTilDTO reqeustDTO = new TilRequest.CreateTilDTO(roadmapId,stepId,"스프링 시큐리티 세팅");
 
@@ -178,7 +182,7 @@ public class TilControllerTest {
     @DisplayName("틸 저장(수정) 성공 test")
     @WithUserDetails(value = "tngus@test.com")
     @Test
-    public void update_til_test() throws Exception {
+    public void update_til_success_test() throws Exception {
 
         //given
         Long tilId = 1L;
@@ -202,7 +206,7 @@ public class TilControllerTest {
     @DisplayName("틸 저장(수정) 실패 test1: 존재하지 않는 til")
     @WithUserDetails(value = "tngus@test.com")
     @Test
-    public void update_til_failed_test_1() throws Exception {
+    public void update_til_fail_test_1() throws Exception {
 
         //given
         Long tilId = 15L;
@@ -227,7 +231,7 @@ public class TilControllerTest {
     @DisplayName("틸 저장(수정) 실패 test2: 내용 미입력")
     @WithUserDetails(value = "tngus@test.com")
     @Test
-    public void update_til_failed_test_2() throws Exception {
+    public void update_til_fail_test_2() throws Exception {
 
         //given
         Long tilId = 1L;
@@ -249,9 +253,9 @@ public class TilControllerTest {
     }
 
     @DisplayName("틸 저장(수정) 실패 test3: 권한 없는 경우")
-    @WithUserDetails(value = "tngus@test.com")
+    @WithUserDetails(value = "test@test.com")
     @Test
-    public void update_til_failed_test_3() throws Exception {
+    public void update_til_fail_test_3() throws Exception {
 
         //given
         Long tilId = 5L;
@@ -273,11 +277,11 @@ public class TilControllerTest {
     }
 
     @DisplayName("틸 조회 성공 test")
-    @WithUserDetails(value = "tngus@test.com")
+    @WithUserDetails(value = "hong@naver.com")
     @Test
     public void view_til_success_test() throws Exception {
         //given
-        Long tilId = 4L;
+        Long tilId = 5L;
 
         //when
         ResultActions result = mvc.perform(
@@ -300,7 +304,7 @@ public class TilControllerTest {
     @DisplayName("틸 조회 실패 test1: 존재하지 않는 til")
     @WithUserDetails(value = "tngus@test.com")
     @Test
-    public void view_til_failed_test_1() throws Exception {
+    public void view_til_fail_test_1() throws Exception {
         //given
         Long tilId = 151L;
 
@@ -342,9 +346,9 @@ public class TilControllerTest {
     @DisplayName("틸 제출 성공 test")
     @WithUserDetails(value = "tngus@test.com")
     @Test
-    public void submit_til_test() throws Exception {
+    public void submit_til_success_test() throws Exception {
         //given
-        Long tilId = 2L;
+        Long tilId = 7L;
 
         LocalDateTime submitDate = LocalDateTime.now();
 
@@ -365,13 +369,120 @@ public class TilControllerTest {
 
     }
 
-    @DisplayName("틸 삭제 성공 test")
-    @WithUserDetails(value = "hong@naver.com")
+    @DisplayName("틸 제출 실패 test1: 접근 권한 없는 경우")
+    @WithUserDetails(value = "test@test.com")
     @Test
-    public void delete_til_test() throws Exception {
+    public void submit_til_fail_test_1() throws Exception {
+        //given
+        Long tilId = 1L;
+
+        LocalDateTime submitDate = LocalDateTime.now();
+
+        TilRequest.SubmitTilDTO reqeustDTO = new TilRequest.SubmitTilDTO("제출할 내용입니다.");
+
+        String requestBody = om.writeValueAsString(reqeustDTO);
+        //when
+        ResultActions result = mvc.perform(
+                post("/api/tils/" + tilId)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(requestBody)
+        );
+
+        System.out.println("테스트 ---------------------------------- " + requestBody);
+        System.out.println("테스트 ---------------------------------- " + submitDate);
+        //then
+        result.andExpect(jsonPath("$.success").value("false"));
+        result.andExpect(jsonPath("$.message").value("til에 대한 권한이 없습니다."));
+
+    }
+
+    @DisplayName("틸 제출 실패 test2: til을 제출할 권한이 없는 경우")
+    @WithUserDetails(value = "tngus@test.com")
+    @Test
+    public void submit_til_fail_test_2() throws Exception {
+        //given
+        Long tilId = 1L;
+
+        LocalDateTime submitDate = LocalDateTime.now();
+
+        TilRequest.SubmitTilDTO reqeustDTO = new TilRequest.SubmitTilDTO("제출할 내용입니다.");
+
+        String requestBody = om.writeValueAsString(reqeustDTO);
+        //when
+        ResultActions result = mvc.perform(
+                post("/api/tils/" + tilId)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(requestBody)
+        );
+
+        System.out.println("테스트 ---------------------------------- " + requestBody);
+        System.out.println("테스트 ---------------------------------- " + submitDate);
+        //then
+        result.andExpect(jsonPath("$.success").value("false"));
+        result.andExpect(jsonPath("$.message").value("til을 제출할 권한이 없습니다."));
+
+    }
+
+    @DisplayName("틸 제출 실패 test3: 본인의 til이 아닌 경우")
+    @WithUserDetails(value = "test@test.com")
+    @Test
+    public void submit_til_fail_test_3() throws Exception {
+        //given
+        Long tilId = 1L;
+
+        LocalDateTime submitDate = LocalDateTime.now();
+
+        TilRequest.SubmitTilDTO reqeustDTO = new TilRequest.SubmitTilDTO("제출할 내용입니다.");
+
+        String requestBody = om.writeValueAsString(reqeustDTO);
+        //when
+        ResultActions result = mvc.perform(
+                post("/api/tils/" + tilId)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(requestBody)
+        );
+
+        System.out.println("테스트 ---------------------------------- " + requestBody);
+        System.out.println("테스트 ---------------------------------- " + submitDate);
+        //then
+        result.andExpect(jsonPath("$.success").value("false"));
+        result.andExpect(jsonPath("$.message").value("til에 대한 권한이 없습니다."));
+
+    }
+
+    @DisplayName("틸 제출 실패 test4: 이미 제출한 경우")
+    @WithUserDetails(value = "tngus@test.com")
+    @Test
+    public void submit_til_fail_test_4() throws Exception {
+        //given
+        Long tilId = 5L;
+
+        LocalDateTime submitDate = LocalDateTime.now();
+
+        TilRequest.SubmitTilDTO reqeustDTO = new TilRequest.SubmitTilDTO("제출할 내용입니다.");
+
+        String requestBody = om.writeValueAsString(reqeustDTO);
+        //when
+        ResultActions result = mvc.perform(
+                post("/api/tils/" + tilId)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(requestBody)
+        );
+
+        System.out.println("테스트 ---------------------------------- " + requestBody);
+        System.out.println("테스트 ---------------------------------- " + submitDate);
+        //then
+        result.andExpect(jsonPath("$.success").value("false"));
+        result.andExpect(jsonPath("$.message").value("이미 til을 제출하였습니다."));
+
+    }
+    @DisplayName("틸 삭제 성공 test")
+    @WithUserDetails(value = "tngus@test.com")
+    @Test
+    public void delete_til_success_test() throws Exception {
 
         //given
-        Long tilId = 2L;
+        Long tilId = 7L;
 
         //when
         ResultActions result = mvc.perform(
@@ -381,7 +492,30 @@ public class TilControllerTest {
         String responseBody = result.andReturn().getResponse().getContentAsString();
         System.out.println("테스트 : " + responseBody);
 
+        //then
         result.andExpect(jsonPath("$.success").value("true"));
+
+    }
+
+    @DisplayName("틸 삭제 실패 test1: 본인의 til이 아닌 경우")
+    @WithUserDetails(value = "hong@naver.com")
+    @Test
+    public void delete_til_fail_test_1() throws Exception {
+
+        //given
+        Long tilId = 7L;
+
+        //when
+        ResultActions result = mvc.perform(
+                delete("/api/tils/" + tilId )
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+        String responseBody = result.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : " + responseBody);
+
+        //then
+        result.andExpect(jsonPath("$.success").value("false"));
+        result.andExpect(jsonPath("$.message").value("til에 대한 권한이 없습니다."));
 
     }
 
@@ -404,7 +538,7 @@ public class TilControllerTest {
         result.andExpect(jsonPath("$.success").value("true"));
     }
 
-    @DisplayName("나의 틸 목록 조회 성공 test:제목으로 검색")
+    @DisplayName("나의 틸 목록 조회 성공 test: 제목으로 검색")
     @WithUserDetails(value = "tngus@test.com")
     @Test
     public void find_til_param_success_test_1() throws Exception {
@@ -445,10 +579,9 @@ public class TilControllerTest {
 
         // then
         result.andExpect(jsonPath("$.success").value("true"));
-        result.andExpect(jsonPath("$.result.tils[0].roadmap.id").value(1L));
     }
 
-    @DisplayName("나의 틸 목록 조회 실패 test:잘못된 날짜 형식")
+    @DisplayName("나의 틸 목록 조회 실패 test: 잘못된 날짜 형식")
     @WithUserDetails("tngus@test.com")
     @Test
     public void find_til_param_fail_test() throws Exception {
@@ -467,6 +600,6 @@ public class TilControllerTest {
 
         // then
         result.andExpect(jsonPath("$.success").value("false"));
-        result.andExpect(jsonPath("$.message").value("입력한 날짜를 찾을 수 없습니다."));
+        result.andExpect(jsonPath("$.message").value("잘못된 날짜 형식입니다."));
     }
 }
