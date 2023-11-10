@@ -2,6 +2,8 @@ package com.example.tily.step;
 
 import com.example.tily._core.errors.exception.ExceptionCode;
 import com.example.tily._core.errors.exception.CustomException;
+import com.example.tily.alarm.AlarmRepository;
+import com.example.tily.comment.Comment;
 import com.example.tily.roadmap.Category;
 import com.example.tily.comment.CommentRepository;
 import com.example.tily.roadmap.Roadmap;
@@ -34,6 +36,7 @@ public class StepService {
     private final UserStepRepository userStepRepository;
     private final CommentRepository commentRepository;
     private final ReferenceRepository referenceRepository;
+    private final AlarmRepository alarmRepository;
 
     // step 생성하기
     @Transactional
@@ -121,24 +124,32 @@ public class StepService {
 
         checkMasterAndManagerPermission(step.getRoadmap().getId(), user); // 매니저급만 삭제 가능
 
+        // 1. Til을 삭제한다.
         List<Til> tils = getTisByStepId(stepId);
         List<Long> tilIds = tils.stream()
                 .map(Til::getId)
                 .collect(Collectors.toList());
 
-        // 1. Til과 연관된 Comment들을 삭제한다.
-        commentRepository.softDeleteCommentsByTilIds(tilIds);
-
-        // 2. Til들을 삭제한다
         tilRepository.softDeleteTilsByTilIds(tilIds);
 
-        // 3. Reference들을 삭제한다.
+        // 2. Til과 연관된 Comment들을 삭제한다.
+        List<Comment> comments = getCommentsByTilIds(tilIds);
+        List<Long> commentIds = comments.stream()
+                .map(Comment::getId)
+                .collect(Collectors.toList());
+
+        commentRepository.softDeleteCommentsByIds(commentIds);
+
+        // 3. Comment와 관련된 알람을 삭제한다.
+        alarmRepository.deleteByCommentIds(commentIds);
+
+        // 4. Reference들을 삭제한다.
         referenceRepository.softDeleteReferenceByStepId(stepId);
 
-        // 4. UserStep을 삭제한다
+        // 5. UserStep을 삭제한다
         userStepRepository.softDeleteUserStepByStepId(stepId);
 
-        // 5. Step을 삭제한다
+        // 6. Step을 삭제한다
         stepRepository.softDeleteStepById(stepId);
     }
 
@@ -162,6 +173,10 @@ public class StepService {
 
     private List<Til> getTisByStepId(Long stepId){
         return tilRepository.findByStepId(stepId);
+    }
+
+    private List<Comment> getCommentsByTilIds( List<Long> tilIds){
+        return commentRepository.findByTilIds(tilIds);
     }
 
     // 해당 로드맵에 속한 user
