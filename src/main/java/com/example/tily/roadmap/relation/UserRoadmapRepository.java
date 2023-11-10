@@ -1,7 +1,9 @@
 package com.example.tily.roadmap.relation;
 
+import com.example.tily.roadmap.Category;
 import com.example.tily.roadmap.Roadmap;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -26,4 +28,14 @@ public interface UserRoadmapRepository extends JpaRepository<UserRoadmap, Long> 
 
     @Query("select ur from UserRoadmap ur where ur.roadmap.id=:roadmapId and (:name is null or ur.user.name like %:name%)")
     List<UserRoadmap> findByRoadmapIdAndIsAcceptTrueAndName(@Param("roadmapId") Long roadmapId, @Param("name") String name);
+
+    @Modifying
+    @Query("update UserRoadmap ur SET ur.isDeleted = true WHERE ur.isDeleted = false AND ur.roadmap.id = :roadmapId")
+    void softDeleteUserRoadmapByRoadmapId(Long roadmapId);
+
+    @Modifying
+    @Query("update UserRoadmap ur SET ur.isDeleted = true WHERE ur.isDeleted = false AND ur.id IN :userRoadmapIds")
+    void softDeleteUserRoadmapByUserRoadmapIds(List<Long> userRoadmapIds);
+
+    List<UserRoadmap> findByUserId(Long userId);
 }

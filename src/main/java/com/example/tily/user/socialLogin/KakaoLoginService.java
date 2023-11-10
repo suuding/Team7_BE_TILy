@@ -1,4 +1,4 @@
-package com.example.tily.socialLogin;
+package com.example.tily.user.socialLogin;
 
 import com.example.tily._core.security.CustomUserDetails;
 import com.example.tily._core.security.JWTProvider;
@@ -25,7 +25,9 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.UUID;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class KakaoLoginService {
@@ -35,18 +37,24 @@ public class KakaoLoginService {
     public SocialLoginResponse.TokenDTO kakaoLogin(String code) throws JsonProcessingException {
         // 1. "인가 코드"로 "액세스 토큰" 요청
         String accessToken = getAccessToken(code);
+        log.info("accessToken : "+accessToken);
 
         // 2. 토큰으로 카카오 API 호출
         SocialLoginResponse.UserInfoDto userInfo = getUserInfo(accessToken);
+        log.info("userInfo : "+userInfo);
 
         // 3. 카카오ID로 회원가입 처리
         User kakaoUser = registerUser(userInfo);
-
+        log.info("kakaoUser : "+kakaoUser);
+    
+        log.info("4 before");
         // 4. 로그인 처리
         Authentication authentication = forceLogin(kakaoUser);
+        log.info("4 end");
 
         // 5. JWT 토큰을 응답에 넣음
         SocialLoginResponse.TokenDTO response = getJwtToken(authentication);
+        log.info("55");
 
         return response;
     }
@@ -60,15 +68,19 @@ public class KakaoLoginService {
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
         body.add("client_id", "872b661d1b5d025d01a76fdb6936f3fb");
-        body.add("redirect_uri", "http://localhost:3000/auth/kakao/callback");
+        body.add("redirect_uri", "https://kab0f6629ef44a.user-app.krampoline.com/auth/kakao/callback");
         body.add("code", code);
+        
+        log.info("code"+code);
 
         // HTTP 요청 보내기
         String response = sendRequest("https://kauth.kakao.com/oauth/token", HttpMethod.POST, body, headers);
+        log.info("response"+response);
 
         // 액세스 토큰 파싱
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = objectMapper.readTree(response);
+        log.info("액세스 토큰 파싱");
 
         return jsonNode.get("access_token").asText();
     }
@@ -132,9 +144,12 @@ public class KakaoLoginService {
     }
 
     private String sendRequest(String url, HttpMethod method, MultiValueMap<String, String> body, HttpHeaders headers) {
+        log.info("url : "+url);
+        
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
         RestTemplate rt = new RestTemplate();
         ResponseEntity<String> response = rt.exchange(url, method, request, String.class);
+        log.info("response.getBody : "+response.getBody());
         return response.getBody();
     }
 }

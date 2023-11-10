@@ -2,6 +2,8 @@ package com.example.tily.step;
 
 import com.example.tily._core.errors.exception.ExceptionCode;
 import com.example.tily._core.errors.exception.CustomException;
+import com.example.tily.roadmap.Category;
+import com.example.tily.comment.CommentRepository;
 import com.example.tily.roadmap.Roadmap;
 import com.example.tily.roadmap.RoadmapRepository;
 import com.example.tily.roadmap.relation.GroupRole;
@@ -30,68 +32,68 @@ public class StepService {
     private final TilRepository tilRepository;
     private final UserRoadmapRepository userRoadmapRepository;
     private final UserStepRepository userStepRepository;
-
-    // 개인 로드맵(카테고리)의 step 생성하기
-    @Transactional
-    public StepResponse.CreateIndividualStepDTO createIndividualStep(Long id, StepRequest.CreateIndividualStepDTO requestDTO, User user){
-
-        Roadmap roadmap = getRoadmapById(id);
-
-        // 사용자가 해당 로드맵에 속했는지 확인
-        userRoadmapRepository.findByRoadmapIdAndUserIdAndIsAcceptTrue(id, user.getId())
-                .orElseThrow(() -> new CustomException(ExceptionCode.STEP_ROADMAP_FORBIDDEN));
-
-        Step step = Step.builder().roadmap(roadmap).title(requestDTO.title()).build(); // 개인 로드맵이므로 description, dueDate 는 null
-        stepRepository.save(step);
-
-        UserStep userStep = UserStep.builder().roadmap(roadmap).step(step).user(user).isSubmit(true).build();
-        userStepRepository.save(userStep);
-
-        return new StepResponse.CreateIndividualStepDTO(step);
-    }
+    private final CommentRepository commentRepository;
+    private final ReferenceRepository referenceRepository;
 
     // step 생성하기
     @Transactional
-    public StepResponse.CreateStepDTO createStep(StepRequest.CreateStepDTO requestDTO, Long roadmapId, User user) {
-        checkMasterAndManagerPermission(roadmapId, user); // 관리자 권한 확인
+    public StepResponse.CreateStepDTO createStep(StepRequest.CreateStepDTO requestDTO, User user) {
 
-        Roadmap roadmap = roadmapRepository.findById(roadmapId)
-                .orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_NOT_FOUND));
+        Long roadmapId = requestDTO.roadmapId();
+        Roadmap roadmap = getRoadmapById(roadmapId);
+
+        checkMasterAndManagerPermission(roadmapId, user);
+
+        // 사용자가 해당 로드맵에 속했는지 확인
+        userRoadmapRepository.findByRoadmapIdAndUserIdAndIsAcceptTrue(roadmapId, user.getId())
+                .orElseThrow(() -> new CustomException(ExceptionCode.STEP_ROADMAP_FORBIDDEN));
 
         Step step = Step.builder()
                 .roadmap(roadmap)
                 .title(requestDTO.title())
                 .description(requestDTO.description())
-                .dueDate(requestDTO.dueDate())
-                .build();
+                .dueDate(requestDTO.dueDate()!=null ? requestDTO.dueDate().plusHours(9) : null)
+                .build(); // 개인 로드맵이므로 description, dueDate 는 null
         stepRepository.save(step);
 
-        // 해당 로드맵에 속한 학생들에 대해, UserStep에 넣기
         List<User> users = userRoadmapRepository.findByRoadmapIdAndIsAcceptTrue(roadmapId).stream().map(UserRoadmap::getUser).toList();
         for (User u : users) {
             UserStep userStep = UserStep.builder()
                     .roadmap(roadmap)
                     .step(step)
                     .user(u)
-                    .isSubmit(false)
+                    .isSubmit(roadmap.getCategory().equals(Category.CATEGORY_INDIVIDUAL))
                     .build();
             userStepRepository.save(userStep);
         }
+
+        roadmap.addStepNum();
 
         return new StepResponse.CreateStepDTO(step);
     }
 
     // step 수정하기
-    public void updateStep(StepRequest.UpdateStepDTO requestDTO, Long roadmapId, Long stepId, User user) {
-        checkMasterAndManagerPermission(roadmapId, user); // 관리자 권한 확인
+    @Transactional
+    public void updateStep(Long stepId, StepRequest.UpdateStepDTO requestDTO, User user) {
 
         Step step = stepRepository.findById(stepId)
                 .orElseThrow(() -> new CustomException(ExceptionCode.STEP_NOT_FOUND));
 
-        step.update(requestDTO);
+        Roadmap roadmap = step.getRoadmap();
+
+        checkMasterAndManagerPermission(roadmap.getId(), user); // 관리자 권한 확인
+
+        // 개인 로드맵이면 대응되는 til의 제목도 수정
+        if (roadmap.getCategory().equals(Category.CATEGORY_INDIVIDUAL)) {
+            Til til = tilRepository.findByRoadmapIdAndStepId(roadmap.getId(), stepId);
+            if (til != null) til.updateTitle(requestDTO.title());
+            step.updateTitle(requestDTO.title());
+        } else { // 그룹 로드맵일 때
+            step.update(requestDTO.title(), requestDTO.description(), requestDTO.dueDate()!=null ? requestDTO.dueDate().plusHours(9) : null);
+        }
     }
 
-    // 로드맵의 step 목록 전체 조회
+    // 특정 로드맵의 step 목록 전체 조회
     public StepResponse.FindAllStepDTO findAllStep (Long roadmapId, User user) {
 
         List<Step> steps = stepRepository.findByRoadmapId(roadmapId);
@@ -102,21 +104,46 @@ public class StepService {
             maps.put(step, til);
         }
 
-        // 해당 페이지로 들어온 사람의 역할 (master, manager, member, none)
+        // 해당 페이지로 들어온 사람의 role (master, manager, member, none)
         Optional<UserRoadmap> userRoadmap = userRoadmapRepository.findByRoadmapIdAndUserIdAndIsAcceptTrue(roadmapId, user.getId());
-        String myRole = userRoadmap.isPresent() ? userRoadmap.get().getRole() : "none";
-        int progress = userRoadmap.isPresent() ? userRoadmap.get().getProgress() : 0;
+        String myRole = userRoadmap.map(UserRoadmap::getRole).orElse("none");
+        int progress = userRoadmap.map(UserRoadmap::getProgress).orElse(0);
 
         List<StepResponse.FindAllStepDTO.StepDTO> stepDTOs = steps.stream()
                 .map(step -> new StepResponse.FindAllStepDTO.StepDTO(step, maps.get(step))).collect(Collectors.toList());
         return new StepResponse.FindAllStepDTO(stepDTOs, progress, myRole);
     }
 
-    private Roadmap getRoadmapById(Long roadmapId) {
-        return roadmapRepository.findById(roadmapId).orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_NOT_FOUND));
+    // step 삭제하기
+    @Transactional
+    public void deleteStep(Long stepId, User user){
+        Step step = getStepById(stepId);
+
+        checkMasterAndManagerPermission(step.getRoadmap().getId(), user); // 매니저급만 삭제 가능
+
+        List<Til> tils = getTisByStepId(stepId);
+        List<Long> tilIds = tils.stream()
+                .map(Til::getId)
+                .collect(Collectors.toList());
+
+        // 1. Til과 연관된 Comment들을 삭제한다.
+        commentRepository.softDeleteCommentsByTilIds(tilIds);
+
+        // 2. Til들을 삭제한다
+        tilRepository.softDeleteTilsByTilIds(tilIds);
+
+        // 3. Reference들을 삭제한다.
+        referenceRepository.softDeleteReferenceByStepId(stepId);
+
+        // 4. UserStep을 삭제한다
+        userStepRepository.softDeleteUserStepByStepId(stepId);
+
+        // 5. Step을 삭제한다
+        stepRepository.softDeleteStepById(stepId);
     }
 
-    private String checkMasterAndManagerPermission(Long roadmapId, User user) { // 매니저급만 접근
+    // 로드맵의 관리자 권한 확인 (master, manager)
+    private String checkMasterAndManagerPermission(Long roadmapId, User user) {
         UserRoadmap userRoadmap = getUserBelongRoadmap(roadmapId, user.getId());
 
         if(!userRoadmap.getRole().equals(GroupRole.ROLE_MASTER.getValue()) && !userRoadmap.getRole().equals(GroupRole.ROLE_MANAGER.getValue())){
@@ -125,8 +152,21 @@ public class StepService {
         return userRoadmap.getRole();
     }
 
+    private Step getStepById(Long stepId) {
+        return stepRepository.findById(stepId).orElseThrow(() -> new CustomException(ExceptionCode.STEP_NOT_FOUND));
+    }
+
+    private Roadmap getRoadmapById(Long roadmapId) {
+        return roadmapRepository.findById(roadmapId).orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_NOT_FOUND));
+    }
+
+    private List<Til> getTisByStepId(Long stepId){
+        return tilRepository.findByStepId(stepId);
+    }
+
     // 해당 로드맵에 속한 user
     private UserRoadmap getUserBelongRoadmap(Long roadmapId, Long userId) {
-        return userRoadmapRepository.findByRoadmapIdAndUserIdAndIsAcceptTrue(roadmapId, userId).orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_NOT_BELONG));
+        return userRoadmapRepository.findByRoadmapIdAndUserIdAndIsAcceptTrue(roadmapId, userId)
+                .orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_NOT_BELONG));
     }
 }

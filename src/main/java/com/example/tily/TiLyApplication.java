@@ -176,6 +176,8 @@ public class TiLyApplication {
 				.category(category)
 				.name(name)
 				.stepNum(stepNum)
+				.isPublic(false)
+				.isRecruit(false)
 				.build();
 	}
 
@@ -188,6 +190,8 @@ public class TiLyApplication {
 				.currentNum(currentNum)
 				.stepNum(stepNum)
 				.image(image)
+				.isPublic(false)
+				.isRecruit(false)
 				.build();
 	}
 

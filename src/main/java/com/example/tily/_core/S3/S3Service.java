@@ -27,7 +27,7 @@ public class S3Service implements FileService {
 
         log.info("s3service - uploadFile");
         //파일 이름 생성
-        String fileName = getFileFolder(fileFolder) + createFileName(file.getOriginalFilename());
+        String fileName = createFileName(file.getOriginalFilename());
         System.out.println("fileName = " + fileName);
         log.info("filename : "+fileName);
         
@@ -41,8 +41,8 @@ public class S3Service implements FileService {
             System.out.println("inputStream = " + inputStream);
             System.out.println("s3Component.getBucket() = " + s3Component.getBucket());
             amazonS3.putObject(
-                    new PutObjectRequest("tily-bucket", fileName, inputStream, objectMetadata)
-                .withCannedAcl(CannedAccessControlList.PublicRead)
+                    new PutObjectRequest(s3Component.getBucket(), fileName, inputStream, objectMetadata)
+                .withCannedAcl(CannedAccessControlList.PublicReadWrite)
             );
             log.info("asdfasdfasf inpuStream");
         } catch (IOException e) {

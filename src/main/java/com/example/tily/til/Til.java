@@ -5,6 +5,8 @@ import com.example.tily.roadmap.Roadmap;
 import com.example.tily.step.Step;
 import com.example.tily.user.User;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -13,6 +15,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name="til_tb")
+@SQLDelete(sql = "UPDATE til_tb SET is_deleted = true WHERE id = ?")
+@Where(clause = "is_deleted = false")
 public class Til extends BaseTimeEntity {
 
     @Id
@@ -34,10 +38,10 @@ public class Til extends BaseTimeEntity {
     @Column(nullable = false)
     private String title;
 
-    @Column(columnDefinition="TEXT", length = 5000)
+    @Column(columnDefinition="TEXT")
     private String content;
 
-    @Column(columnDefinition="TEXT", length = 5000)
+    @Column(columnDefinition="TEXT")
     private String submitContent;
 
     @Column
@@ -49,6 +53,8 @@ public class Til extends BaseTimeEntity {
     @Column
     private boolean isPersonal;
 
+    @Column
+    private boolean isDeleted = false;
 
     @Builder
     public Til(Long id, Roadmap roadmap, Step step, User writer, String title, String content, String submitContent, LocalDateTime submitDate, int commentNum, boolean isPersonal) {
@@ -66,6 +72,14 @@ public class Til extends BaseTimeEntity {
 
     public void updateContent (String content) {
         this.content  = content;
+    }
+
+    public void updateTitle (String title) {
+        this.title = title;
+    }
+
+    public void addCommentNum () {
+        this.commentNum++;
     }
 
     public void submitTil(String submitContent) {

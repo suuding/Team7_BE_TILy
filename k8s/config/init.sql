@@ -3,18 +3,19 @@ CREATE SCHEMA IF NOT EXISTS `tily` DEFAULT CHARACTER SET utf8mb4;
 USE `tily`;
 
 
-CREATE TABLE IF NOT EXISTS user_tb (
+CREATE TABLE user_tb (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
     image VARCHAR(255),
     role VARCHAR(255),
+    is_deleted BOOLEAN,
     created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS roadmap_tb (
+CREATE TABLE roadmap_tb (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     category VARCHAR(255) NOT NULL,
     name VARCHAR(255) NOT NULL,
@@ -26,20 +27,23 @@ CREATE TABLE IF NOT EXISTS roadmap_tb (
     code VARCHAR(255),
     is_public BOOLEAN,
     is_recruit BOOLEAN,
+    is_deleted BOOLEAN,
     created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS step_tb (
+CREATE TABLE step_tb (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     roadmap_id BIGINT,
     description TEXT,
+    is_deleted BOOLEAN,
     due_date TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS til_tb (
+CREATE TABLE til_tb (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
     content TEXT,
     submit_content TEXT,
     roadmap_id BIGINT,
@@ -48,47 +52,52 @@ CREATE TABLE IF NOT EXISTS til_tb (
     comment_num INT,
     is_personal BOOLEAN,
     submit_date TIMESTAMP,
+    is_deleted BOOLEAN,
     created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS comment_tb (
+CREATE TABLE comment_tb (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     til_id BIGINT,
     writer_id BIGINT,
     content TEXT,
+    is_deleted BOOLEAN,
     created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS reference_tb (
+CREATE TABLE reference_tb (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     step_id BIGINT,
     category VARCHAR(255) NOT NULL,
-    link TEXT
+    link TEXT,
+    is_deleted BOOLEAN
 );
 
-CREATE TABLE IF NOT EXISTS user_roadmap_tb (
+CREATE TABLE user_roadmap_tb (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    content VARCHAR(255),
+    content TEXT,
     is_accept BOOLEAN,
     progress INT NOT NULL,
     role VARCHAR(255) NOT NULL,
     roadmap_id BIGINT,
     user_id BIGINT,
+    is_deleted BOOLEAN,
     created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS user_step_tb (
+CREATE TABLE user_step_tb (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     is_submit BOOLEAN NOT NULL,
     roadmap_id BIGINT,
     step_id BIGINT,
-    user_id BIGINT
+    user_id BIGINT,
+    is_deleted BOOLEAN
 );
 
-CREATE TABLE IF NOT EXISTS alarm_tb (
+CREATE TABLE alarm_tb (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     til_id BIGINT,
     comment_id BIGINT,
@@ -97,6 +106,15 @@ CREATE TABLE IF NOT EXISTS alarm_tb (
     created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE image (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    image_path varchar(255),
+    original_image_name varchar(255),
+    storage_image_name varchar(255)
+);
+
+
 ALTER TABLE alarm_tb
 ADD FOREIGN KEY (til_id)
 REFERENCES til_tb(id);

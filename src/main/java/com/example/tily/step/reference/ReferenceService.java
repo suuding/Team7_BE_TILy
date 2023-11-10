@@ -4,6 +4,9 @@ import com.example.tily._core.errors.exception.CustomException;
 import com.example.tily._core.errors.exception.ExceptionCode;
 import com.example.tily.roadmap.Roadmap;
 import com.example.tily.roadmap.RoadmapRepository;
+import com.example.tily.roadmap.relation.GroupRole;
+import com.example.tily.roadmap.relation.UserRoadmap;
+import com.example.tily.roadmap.relation.UserRoadmapRepository;
 import com.example.tily.step.Step;
 import com.example.tily.step.StepRepository;
 import com.example.tily.step.StepResponse;
@@ -22,14 +25,12 @@ public class ReferenceService {
 
     private final ReferenceRepository referenceRepository;
     private final StepRepository stepRepository;
-    private final RoadmapRepository roadmapRepository;
+    private final UserRoadmapRepository userRoadmapRepository;
 
     // step의 참고자료 생성하기
     @Transactional
-    public void createReference(ReferenceRequest.CreateReferenceDTO requestDTO, Long roadmapId, Long stepId, User user) {
-        Roadmap roadmap = roadmapRepository.findById(roadmapId)
-                .orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_NOT_FOUND));
-
+    public void createReference(ReferenceRequest.CreateReferenceDTO requestDTO, User user) {
+        Long stepId = requestDTO.stepId();
         Step step = getStepById(stepId);
 
         Reference reference = Reference.builder()
@@ -37,11 +38,13 @@ public class ReferenceService {
                 .category(requestDTO.category())
                 .link(requestDTO.link())
                 .build();
+
         referenceRepository.save(reference);
     }
 
     // step의 참고자료 목록 조회하기
     public StepResponse.FindReferenceDTO findReference(Long stepId, User user){
+
         Step step = getStepById(stepId);
 
         List<Reference> references = referenceRepository.findByStepId(stepId);
@@ -63,7 +66,33 @@ public class ReferenceService {
         return new StepResponse.FindReferenceDTO(step, youtubeDTOs, webDTOs);
     }
 
+    // 참고자료 삭제
+    public void deleteReference(Long referenceId, User user){
+        Reference reference = getReferenceById(referenceId);
+
+        checkMasterAndManagerPermission(reference.getStep().getRoadmap().getId(), user); // 매니저급만 삭제 가능
+
+        referenceRepository.softDeleteReferenceById(referenceId);
+    }
+
+    private String checkMasterAndManagerPermission(Long roadmapId, User user) { // 매니저급만 접근
+        UserRoadmap userRoadmap = getUserBelongRoadmap(roadmapId, user.getId());
+
+        if(!userRoadmap.getRole().equals(GroupRole.ROLE_MASTER.getValue()) && !userRoadmap.getRole().equals(GroupRole.ROLE_MANAGER.getValue())){
+            throw new CustomException(ExceptionCode.ROADMAP_FORBIDDEN);
+        }
+        return userRoadmap.getRole();
+    }
+
     private Step getStepById(Long stepId) {
         return stepRepository.findById(stepId).orElseThrow(() -> new CustomException(ExceptionCode.STEP_NOT_FOUND));
+    }
+
+    private Reference getReferenceById(Long referenceId){
+        return referenceRepository.findById(referenceId).orElseThrow(() -> new CustomException(ExceptionCode.REFERENCE_NOT_FOUND));
+    }
+
+    private UserRoadmap getUserBelongRoadmap(Long roadmapId, Long userId) {
+        return userRoadmapRepository.findByRoadmapIdAndUserIdAndIsAcceptTrue(roadmapId, userId).orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_NOT_BELONG));
     }
 }

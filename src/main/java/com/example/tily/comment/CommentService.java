@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Service
 public class CommentService {
+
     private final RoadmapRepository roadmapRepository;
     private final StepRepository stepRepository;
     private final TilRepository tilRepository;
@@ -26,8 +27,10 @@ public class CommentService {
     private final AlarmRepository alarmRepository;
 
     @Transactional
-    public CommentResponse.CreateCommentDTO createComment(CommentRequest.CreateCommentDTO requestDTO,
-                                                          Long roadmapId, Long stepId, Long tilId, User user) {
+    public CommentResponse.CreateCommentDTO createComment(CommentRequest.CreateCommentDTO requestDTO, User user) {
+        Long roadmapId = requestDTO.roadmapId();
+        Long stepId = requestDTO.stepId();
+        Long tilId = requestDTO.tilId();
 
         Roadmap roadmap = roadmapRepository.findById(roadmapId)
                 .orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_NOT_FOUND));
@@ -41,19 +44,32 @@ public class CommentService {
 
         String content = requestDTO.content();
 
-        Comment comment = Comment.builder().roadmap(roadmap).step(step).writer(user).til(til).content(content).build();
+        Comment comment = Comment.builder().
+                roadmap(roadmap).
+                step(step).
+                writer(user).
+                til(til).
+                content(content).
+                build();
         commentRepository.save(comment);
 
         // 댓글 작성하면 알림 생성
-        Alarm alarm = Alarm.builder().til(til).receiver(til.getWriter()).comment(comment).isRead(false).build();
+        Alarm alarm = Alarm.builder().
+                til(til).
+                receiver(til.getWriter()).
+                comment(comment).
+                isRead(false).
+                build();
         alarmRepository.save(alarm);
+
+        // til내 댓글 갯수 증가
+        til.addCommentNum();
 
         return new CommentResponse.CreateCommentDTO(comment);
     }
 
     @Transactional
     public void updateComment(CommentRequest.UpdateCommentDTO requestDTO, Long commentId, User user) {
-
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new CustomException(ExceptionCode.COMMENT_NOT_FOUND));
 
@@ -69,11 +85,11 @@ public class CommentService {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ExceptionCode.COMMENT_NOT_FOUND));
 
-        // 댓글 주인 또는 글의 주인만 댓글 삭제 가능
-        if(!comment.getWriter().getId().equals(user.getId()) || !comment.getTil().getWriter().getId().equals(user.getId()))
+        // 댓글 주인이 아니고 글의 주인도 아니라면 삭제 불가
+        if(!comment.getWriter().getId().equals(user.getId()) && !comment.getTil().getWriter().getId().equals(user.getId()))
             throw new CustomException(ExceptionCode.COMMENT_DELETE_FORBIDDEN);
 
         alarmRepository.deleteByCommentId(id);
-        commentRepository.deleteById(id);
+        commentRepository.softDeleteCommentById(id);
     }
 }

@@ -3,6 +3,7 @@ package com.example.tily.step;
 import com.example.tily._core.security.CustomUserDetails;
 import com.example.tily._core.utils.ApiUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.Errors;
@@ -16,19 +17,20 @@ import javax.validation.Valid;
 public class StepController {
     private final StepService stepService;
 
-    // 개인 로드맵(카테고리)의 step 생성하기
-    @PostMapping("/roadmaps/individual/{id}/steps")
-    public ResponseEntity<?> createIndividualStep(@RequestBody @Valid StepRequest.CreateIndividualStepDTO requestDTO, Errors errors,
-                                                  @PathVariable Long id, @AuthenticationPrincipal CustomUserDetails userDetails) {
-        StepResponse.CreateIndividualStepDTO responseDTO = stepService.createIndividualStep(id, requestDTO, userDetails.getUser());
-        return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
+    // step 생성하기
+    @PostMapping("/steps")
+    public ResponseEntity<?> createStep(@RequestBody @Valid StepRequest.CreateStepDTO requestDTO, Errors errors,
+                                        @AuthenticationPrincipal CustomUserDetails userDetails) {
+        StepResponse.CreateStepDTO responseDTO = stepService.createStep(requestDTO, userDetails.getUser());
+        return ResponseEntity.ok().body(ApiUtils.success(HttpStatus.CREATED, responseDTO));
     }
 
-    // 특정 로드맵의 step 생성
-    @PostMapping("/roadmaps/{roadmapId}/steps")
-    public ResponseEntity<?> createStep(@RequestBody @Valid StepRequest.CreateStepDTO requestDTO, Errors errors,
-                                        @PathVariable("roadmapId") Long roadmapId, @AuthenticationPrincipal CustomUserDetails userDetails) {
-        stepService.createStep(requestDTO, roadmapId, userDetails.getUser());
+    // step 수정하기
+    @PatchMapping("/steps/{id}")
+    public ResponseEntity<?> updateStep(@PathVariable Long id,
+                                        @RequestBody @Valid StepRequest.UpdateStepDTO requestDTO, Errors errors,
+                                        @AuthenticationPrincipal CustomUserDetails userDetails) {
+        stepService.updateStep(id, requestDTO, userDetails.getUser());
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 
@@ -39,12 +41,10 @@ public class StepController {
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
 
-    // 특정 로드맵의 step 수정
-    @PostMapping("/roadmaps/{roadmapId}/steps/{stepId}")
-    public ResponseEntity<?> createStep(@RequestBody @Valid StepRequest.UpdateStepDTO requestDTO, Errors errors,
-                                        @PathVariable("roadmapId") Long roadmapId, @PathVariable("stepId") Long stepId,
-                                        @AuthenticationPrincipal CustomUserDetails userDetails) {
-        stepService.updateStep(requestDTO, roadmapId, stepId, userDetails.getUser());
+    // step 삭제
+    @DeleteMapping("/steps/{stepId}")
+    public ResponseEntity<?> deleteStep(@PathVariable Long stepId, @AuthenticationPrincipal CustomUserDetails userDetails){
+        stepService.deleteStep(stepId, userDetails.getUser());
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 }

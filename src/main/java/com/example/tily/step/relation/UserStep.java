@@ -7,6 +7,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
@@ -14,6 +16,8 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name="user_step_tb")
+@SQLDelete(sql = "UPDATE user_step_tb SET is_deleted = true WHERE id = ?")
+@Where(clause = "is_deleted = false")
 public class UserStep {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,6 +37,9 @@ public class UserStep {
 
     @Column(nullable = false)
     private Boolean isSubmit;
+
+    @Column
+    private boolean isDeleted = false;
 
     @Builder
     public UserStep(Roadmap roadmap, Step step, User user, Boolean isSubmit){

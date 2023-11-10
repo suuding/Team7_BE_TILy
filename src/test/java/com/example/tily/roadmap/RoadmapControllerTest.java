@@ -12,8 +12,6 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +36,7 @@ public class RoadmapControllerTest {
 
         // given
         String name = "hong";
-        RoadmapRequest.CreateIndividualRoadmapDTO requestDTO = new RoadmapRequest.CreateIndividualRoadmapDTO(name);
+        RoadmapRequest.CreateRoadmapDTO requestDTO = new RoadmapRequest.CreateRoadmapDTO(name);
 
         String requestBody = om.writeValueAsString(requestDTO);
 
@@ -60,7 +58,7 @@ public class RoadmapControllerTest {
 
         // given
         String name = "";
-        RoadmapRequest.CreateIndividualRoadmapDTO requestDTO = new RoadmapRequest.CreateIndividualRoadmapDTO(name);
+        RoadmapRequest.CreateRoadmapDTO requestDTO = new RoadmapRequest.CreateRoadmapDTO(name);
 
         String requestBody = om.writeValueAsString(requestDTO);
 
@@ -108,7 +106,7 @@ public class RoadmapControllerTest {
         // 로드맵
         RoadmapRequest.RoadmapDTO roadmap = new RoadmapRequest.RoadmapDTO("운영체제(OS) 스터디", "면접 대비를 위한 CS 스터디 모임입니다!", null, true, null);
 
-        RoadmapRequest.CreateGroupRoadmapDTO requestDTO = new RoadmapRequest.CreateGroupRoadmapDTO(roadmap, steps);
+        RoadmapRequest.CreateRoadmapDTO requestDTO = new RoadmapRequest.CreateRoadmapDTO(roadmap, steps);
 
         String requestBody = om.writeValueAsString(requestDTO);
 
@@ -157,7 +155,7 @@ public class RoadmapControllerTest {
         // 로드맵
         RoadmapRequest.RoadmapDTO roadmap = new RoadmapRequest.RoadmapDTO(null, "면접 대비를 위한 CS 스터디 모임입니다!", null, true, null);
 
-        RoadmapRequest.CreateGroupRoadmapDTO requestDTO = new RoadmapRequest.CreateGroupRoadmapDTO(roadmap, steps);
+        RoadmapRequest.CreateRoadmapDTO requestDTO = new RoadmapRequest.CreateRoadmapDTO(roadmap, steps);
 
         String requestBody = om.writeValueAsString(requestDTO);
 
@@ -244,7 +242,7 @@ public class RoadmapControllerTest {
         // 로드맵
         RoadmapRequest.RoadmapDTO roadmap = new RoadmapRequest.RoadmapDTO("new JAVA - 생활 코딩", "새로운 버젼 입니다", "modifiedCode1234", false, true);
 
-        RoadmapRequest.UpdateGroupRoadmapDTO requestDTO = new RoadmapRequest.UpdateGroupRoadmapDTO(roadmap, steps);
+        RoadmapRequest.UpdateRoadmapDTO requestDTO = new RoadmapRequest.UpdateRoadmapDTO(null,"새로운 버젼 입니다", true, true );
 
         String requestBody = om.writeValueAsString(requestDTO);
 
@@ -290,7 +288,7 @@ public class RoadmapControllerTest {
         // 로드맵
         RoadmapRequest.RoadmapDTO roadmap = new RoadmapRequest.RoadmapDTO(null, "새로운 버젼 입니다", "modifiedCode1234", false, true);
 
-        RoadmapRequest.UpdateGroupRoadmapDTO requestDTO = new RoadmapRequest.UpdateGroupRoadmapDTO(roadmap, steps);
+        RoadmapRequest.UpdateRoadmapDTO requestDTO = new RoadmapRequest.UpdateRoadmapDTO(null,"새로운 버젼 입니다", true, true );
 
         String requestBody = om.writeValueAsString(requestDTO);
 
