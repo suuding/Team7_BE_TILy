@@ -17,7 +17,7 @@ public interface TilRepository extends JpaRepository<Til, Long>{
     List<Til> findByUserIdByOrderByUpdatedDateDesc(@Param("roadmapId") Long roadmapId, @Param("userId") Long userId);
 
     @Query("select t from Til t join fetch t.writer where t.id=:id")
-    Optional<Til> findById(Long id);
+    Optional<Til> findById(Long tilId);
 
     @Query("select t from Til t " +
             "where t.writer.id=:userId " +

@@ -55,13 +55,13 @@ public class ReferenceService {
 
         for(Reference reference : references){
             String category = reference.getCategory();
-            Long id = reference.getId();
+            Long referenceId = reference.getId();
             String link = reference.getLink();
 
             if(category.equals("youtube"))
-                youtubeDTOs.add(new StepResponse.FindReferenceDTO.YoutubeDTO(id, link));
+                youtubeDTOs.add(new StepResponse.FindReferenceDTO.YoutubeDTO(referenceId, link));
             else if(category.equals("web"))
-                webDTOs.add(new StepResponse.FindReferenceDTO.WebDTO(id, link));
+                webDTOs.add(new StepResponse.FindReferenceDTO.WebDTO(referenceId, link));
         }
 
         return new StepResponse.FindReferenceDTO(step, youtubeDTOs, webDTOs);

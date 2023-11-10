@@ -138,10 +138,10 @@ public class UserService {
 
     // 사용자 정보 수정
     @Transactional
-    public void updateUser(UserRequest.UpdateUserDTO requestDTO, Long id) {
-        User user = findById(id);
+    public void updateUser(UserRequest.UpdateUserDTO requestDTO, Long userId) {
+        User user = findById(userId);
 
-        if (!user.getId().equals(id))
+        if (!user.getId().equals(userId))
             throw new CustomException(ExceptionCode.USER_UPDATE_FORBIDDEN);
 
         if (!passwordEncoder.matches(requestDTO.curPassword(), user.getPassword()))
@@ -319,8 +319,8 @@ public class UserService {
     }
 
     // id로 사용자 조회
-    private User findById(Long id) {
-        return userRepository.findById(id).orElseThrow(()->new CustomException(ExceptionCode.USER_NOT_FOUND));
+    private User findById(Long userId) {
+        return userRepository.findById(userId).orElseThrow(()->new CustomException(ExceptionCode.USER_NOT_FOUND));
     }
 
     private List<UserRoadmap> getUserRoadmapByUserId(Long userId) {

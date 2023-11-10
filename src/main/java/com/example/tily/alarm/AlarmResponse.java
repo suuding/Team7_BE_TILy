@@ -10,8 +10,7 @@ public class AlarmResponse {
 
     public record RoadmapDTO(Long id, String name) {
         public RoadmapDTO(Roadmap roadmap) {
-            this(roadmap.getId(), roadmap.getName()
-            );
+            this(roadmap.getId(), roadmap.getName());
         }
     }
 
@@ -42,11 +41,10 @@ public class AlarmResponse {
                     alarm.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
                     new RoadmapDTO(alarm.getTil().getRoadmap()),
                     new StepDTO(alarm.getTil().getStep()),
-                    new SenderDTO(alarm.getComment().getWriter())
-            );
+                    new SenderDTO(alarm.getComment().getWriter()));
         }
     }
 
-    public record FindAllDTO(List<AlarmDTO> alarms) {
+    public record FindAllDTO(List<AlarmDTO> alarms){
     }
 }

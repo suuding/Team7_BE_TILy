@@ -35,9 +35,9 @@ public class ReferenceController {
     }
 
     // 참고자료 삭제
-    @DeleteMapping("/references/{id}")
-    public ResponseEntity<?> deleteReference(@PathVariable("id") Long id, @AuthenticationPrincipal CustomUserDetails userDetails) {
-        referenceService.deleteReference(id, userDetails.getUser());
+    @DeleteMapping("/references/{referenceId}")
+    public ResponseEntity<?> deleteReference(@PathVariable("referenceId") Long referenceId, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        referenceService.deleteReference(referenceId, userDetails.getUser());
 
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }

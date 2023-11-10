@@ -29,40 +29,40 @@ public class TilController {
     }
 
     // til 조회하기
-    @GetMapping("/tils/{id}")
-    public ResponseEntity<?> viewTil(@PathVariable Long id,
+    @GetMapping("/tils/{tilId}")
+    public ResponseEntity<?> viewTil(@PathVariable Long tilId,
                                      @AuthenticationPrincipal CustomUserDetails userDetails) {
 
-        TilResponse.ViewDTO responseDTO = tilService.viewTil(id, userDetails.getUser());
+        TilResponse.ViewDTO responseDTO = tilService.viewTil(tilId, userDetails.getUser());
         return ResponseEntity.ok(ApiUtils.success(responseDTO));
     }
 
     // til 수정하기 (저장하기)
-    @PatchMapping("/tils/{id}")
-    public ResponseEntity<?> updateTil(@PathVariable Long id,
+    @PatchMapping("/tils/{tilId}")
+    public ResponseEntity<?> updateTil(@PathVariable Long tilId,
                                        @RequestBody @Valid TilRequest.UpdateTilDTO requestDTO, Errors errors,
                                        @AuthenticationPrincipal CustomUserDetails userDetails) {
 
-        tilService.updateTil(requestDTO, id, userDetails.getUser());
+        tilService.updateTil(requestDTO, tilId, userDetails.getUser());
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 
     // til 제출하기
-    @PostMapping("/tils/{id}")
-    public ResponseEntity<?> submitTil(@PathVariable Long id,
+    @PostMapping("/tils/{tilId}")
+    public ResponseEntity<?> submitTil(@PathVariable Long tilId,
                                        @RequestBody @Valid TilRequest.SubmitTilDTO requestDTO,  Errors errors,
                                        @AuthenticationPrincipal CustomUserDetails userDetails) {
 
-        tilService.submitTil(requestDTO, id, userDetails.getUser());
+        tilService.submitTil(requestDTO, tilId, userDetails.getUser());
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 
     // til 삭제하기
-    @DeleteMapping("/tils/{id}")
-    public ResponseEntity<?> deleteTil(@PathVariable Long id,
+    @DeleteMapping("/tils/{tilId}")
+    public ResponseEntity<?> deleteTil(@PathVariable Long tilId,
                                        @AuthenticationPrincipal CustomUserDetails userDetails) {
 
-        tilService.deleteTil(id, userDetails.getUser());
+        tilService.deleteTil(tilId, userDetails.getUser());
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 

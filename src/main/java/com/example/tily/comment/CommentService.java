@@ -81,15 +81,15 @@ public class CommentService {
     }
 
     @Transactional
-    public void deleteComment(Long id, User user) {
-        Comment comment = commentRepository.findById(id)
+    public void deleteComment(Long commentId, User user) {
+        Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new CustomException(ExceptionCode.COMMENT_NOT_FOUND));
 
         // 댓글 주인이 아니고 글의 주인도 아니라면 삭제 불가
         if(!comment.getWriter().getId().equals(user.getId()) && !comment.getTil().getWriter().getId().equals(user.getId()))
             throw new CustomException(ExceptionCode.COMMENT_DELETE_FORBIDDEN);
 
-        alarmRepository.deleteByCommentId(id);
-        commentRepository.softDeleteCommentById(id);
+        alarmRepository.deleteByCommentId(commentId);
+        commentRepository.softDeleteCommentById(commentId);
     }
 }

@@ -35,26 +35,26 @@ public class RoadmapController {
     }
 
     // 로드맵 정보 조회하기 (틸리, 그룹)
-    @GetMapping("/roadmaps/{id}")
-    public ResponseEntity<?> findRoadmap(@PathVariable Long id, @AuthenticationPrincipal CustomUserDetails userDetails){
+    @GetMapping("/roadmaps/{roadmapId}")
+    public ResponseEntity<?> findRoadmap(@PathVariable Long roadmapId, @AuthenticationPrincipal CustomUserDetails userDetails){
         User user = Optional.ofNullable(userDetails).map(CustomUserDetails::getUser).orElse(null);
-        RoadmapResponse.FindRoadmapDTO responseDTO = roadmapService.findRoadmap(id, user);
+        RoadmapResponse.FindRoadmapDTO responseDTO = roadmapService.findRoadmap(roadmapId, user);
         
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
 
     // 로드맵 정보 수정하기
-    @PatchMapping("/roadmaps/{id}")
+    @PatchMapping("/roadmaps/{roadmapId}")
     public ResponseEntity<?> updateRoadmap(@RequestBody @Valid RoadmapRequest.UpdateRoadmapDTO requestDTO, Errors errors,
-                                           @PathVariable Long id, @AuthenticationPrincipal CustomUserDetails userDetails){
-        roadmapService.updateRoadmap(id, requestDTO, userDetails.getUser());
+                                           @PathVariable Long roadmapId, @AuthenticationPrincipal CustomUserDetails userDetails){
+        roadmapService.updateRoadmap(roadmapId, requestDTO, userDetails.getUser());
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 
     // 로드맵 삭제
-    @DeleteMapping("/roadmaps/{id}")
-    public ResponseEntity<?> deleteRoadmap(@PathVariable Long id, @AuthenticationPrincipal CustomUserDetails userDetails){
-        roadmapService.deleteRoadmap(id, userDetails.getUser());
+    @DeleteMapping("/roadmaps/{roadmapId}")
+    public ResponseEntity<?> deleteRoadmap(@PathVariable Long roadmapId, @AuthenticationPrincipal CustomUserDetails userDetails){
+        roadmapService.deleteRoadmap(roadmapId, userDetails.getUser());
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 
