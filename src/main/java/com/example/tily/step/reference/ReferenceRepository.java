@@ -3,6 +3,7 @@ package com.example.tily.step.reference;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ public interface ReferenceRepository extends JpaRepository<Reference, Long> {
 
     @Modifying
     @Query("update Reference r SET r.isDeleted = true WHERE r.isDeleted = false AND r.id = :referenceId")
-    void softDeleteReferenceById(Long referenceId);
+    void softDeleteReferenceById(@Param("referenceId")Long referenceId);
 
     @Modifying
     @Query("update Reference r SET r.isDeleted = true WHERE r.isDeleted = false AND r.step.id IN :stepIds")

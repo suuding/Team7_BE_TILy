@@ -27,6 +27,7 @@ public class ReferenceController {
     }
 
     // step의 참고자료 목록 조회
+
     @GetMapping("/steps/{stepId}/references")
     public ResponseEntity<?> findReference(@PathVariable("stepId") Long stepId,
                                            @AuthenticationPrincipal CustomUserDetails userDetails){

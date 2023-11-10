@@ -46,6 +46,6 @@ cloud:
         folderName3: post
       bucket: tily-bucket
     region:
-      static: ap-northeast-2
+      #static: ap-northeast-2
     stack:
       auto: false

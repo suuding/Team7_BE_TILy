@@ -34,7 +34,7 @@ public class CommentControllerTest {
         Long tilId = 1L;
 
         String content = "열심히 하셨군요 홍홍";
-        CommentRequest.CreateCommentDTO requestDTO = new CommentRequest.CreateCommentDTO(content);
+        CommentRequest.CreateCommentDTO requestDTO = new CommentRequest.CreateCommentDTO(roadmapId, stepId, tilId, content);
 
         String requestBody = om.writeValueAsString(requestDTO);
 

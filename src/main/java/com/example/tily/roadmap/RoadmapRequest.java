@@ -9,6 +9,7 @@ import java.util.List;
 public class RoadmapRequest {
 
     public record CreateRoadmapDTO (
+            @NotBlank(message = "카테고리를 선택해주세요.")
             String category,
             @NotBlank(message = "이름을 입력해주세요.")
             @Size(min=2, max=20, message = "이름은 2자에서 20자 이내여야 합니다.")
