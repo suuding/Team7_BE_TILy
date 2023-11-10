@@ -136,7 +136,8 @@ public class KakaoLoginService {
     private String sendRequest(String url, HttpMethod method, MultiValueMap<String, String> body, HttpHeaders headers) {
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
         RestTemplate rt = new RestTemplate();
-        ResponseEntity<String> response = rt.exchange(url, method, request, String.class);
+        //ResponseEntity<String> response = rt.exchange(url, method, request, String.class);
+        ResponseEntity<String> response = rt.postForEntity(url, request, String.class);
 
         return response.getBody();
     }
