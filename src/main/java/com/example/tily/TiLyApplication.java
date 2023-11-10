@@ -73,7 +73,7 @@ public class TiLyApplication {
 					newGroupRoadmap(User.builder().userId(2L).build(), Category.CATEGORY_GROUP, "데이터베이스 스터디", "데이터베이스 공부합시다", true, 8L, "hoyoung1", true, 15),
 					newGroupRoadmap(User.builder().userId(3L).build(), Category.CATEGORY_GROUP, "카카오테크캠퍼스 1단계", "카카오테크캠퍼스 1단계입니다.", false, 50L, "kakao123", true, 20)
 
-					));
+			));
 			userRoadmapRepository.saveAll(Arrays.asList(
 					newUserRoadmapRelation(Roadmap.builder().roadmapId(1L).build(), User.builder().userId(1L).build(), null, true, GroupRole.ROLE_MASTER, 0),
 					newUserRoadmapRelation(Roadmap.builder().roadmapId(2L).build(), User.builder().userId(2L).build(), null, true, GroupRole.ROLE_MASTER, 0),
@@ -245,8 +245,8 @@ public class TiLyApplication {
 				.step(step)
 				.category(category)
 				.link(link)
-        		.build();
-  	}
+				.build();
+	}
 
 	private Til newIndividualTil(Roadmap roadmap, Step step, User writer, String title, String content, boolean isPersonal, String subContent) {
 		return Til.builder()

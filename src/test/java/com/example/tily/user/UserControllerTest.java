@@ -11,8 +11,7 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 
@@ -37,7 +36,7 @@ public class UserControllerTest {
 
         // when
         ResultActions result = mvc.perform(
-                post("/email/check")
+                post("/api/email/check")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(requestBody)
         );
@@ -60,7 +59,7 @@ public class UserControllerTest {
 
         // when
         ResultActions result = mvc.perform(
-                post("/email/code")
+                post("/api/email/code")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(requestBody)
         );
@@ -80,7 +79,7 @@ public class UserControllerTest {
 
         // when
         ResultActions result = mvc.perform(
-                post("/email/code")
+                post("/api/email/code")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(requestBody)
         );
@@ -101,7 +100,7 @@ public class UserControllerTest {
 
         // when
         ResultActions result = mvc.perform(
-                post("/join")
+                post("/api/join")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(requestBody)
         );
@@ -122,7 +121,7 @@ public class UserControllerTest {
 
         // when
         ResultActions result = mvc.perform(
-                post("/join")
+                post("/api/join")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(requestBody)
         );
@@ -143,7 +142,28 @@ public class UserControllerTest {
 
         // when
         ResultActions result = mvc.perform(
-                post("/join")
+                post("/api/join")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(requestBody)
+        );
+
+        // then
+        result.andExpect(jsonPath("$.success").value("false"));
+        result.andExpect(jsonPath("$.message").value("올바른 비밀번호 형식을 입력해주세요."));
+    }
+
+    @DisplayName("사용자_회원가입_실패_test_3:잘못된 비밀번호 길이")
+    @Test
+    public void user_join_fail_test_3() throws Exception {
+
+        // given
+        UserRequest.JoinDTO requestDTO = new UserRequest.JoinDTO("test@nate.com", "test", "te!");
+
+        String requestBody = om.writeValueAsString(requestDTO);
+
+        // when
+        ResultActions result = mvc.perform(
+                post("/api/join")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(requestBody)
         );
@@ -158,13 +178,13 @@ public class UserControllerTest {
     public void user_login_success_test() throws Exception {
 
         // given
-        UserRequest.LoginDTO requestDTO = new UserRequest.LoginDTO("tngus@test.com", "hongHong!");
+        UserRequest.LoginDTO requestDTO = new UserRequest.LoginDTO("tngus@test.com", "hongHong1!");
 
         String requestBody = om.writeValueAsString(requestDTO);
 
         // when
         ResultActions result = mvc.perform(
-                post("/login")
+                post("/api/login")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(requestBody)
         );
@@ -178,13 +198,13 @@ public class UserControllerTest {
     public void user_login_fail_test_1() throws Exception {
 
         // given
-        UserRequest.LoginDTO requestDTO = new UserRequest.LoginDTO("tngus1@test.com", "Honghong!");
+        UserRequest.LoginDTO requestDTO = new UserRequest.LoginDTO("tngus1@test.com", "test1234!");
 
         String requestBody = om.writeValueAsString(requestDTO);
 
         // when
         ResultActions result = mvc.perform(
-                post("/login")
+                post("/api/login")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(requestBody)
         );
@@ -199,13 +219,13 @@ public class UserControllerTest {
     public void user_login_fail_test_2() throws Exception {
 
         // given
-        UserRequest.LoginDTO requestDTO = new UserRequest.LoginDTO("tngus@test.com", "Honghong!@");
+        UserRequest.LoginDTO requestDTO = new UserRequest.LoginDTO("tngus@test.com", "Honghong123!");
 
         String requestBody = om.writeValueAsString(requestDTO);
 
         // when
         ResultActions result = mvc.perform(
-                post("/login")
+                post("/api/login")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(requestBody)
         );
@@ -226,7 +246,7 @@ public class UserControllerTest {
 
         // when
         ResultActions result = mvc.perform(
-                post("/password/change")
+                post("/api/password/change")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(requestBody)
         );
@@ -246,7 +266,7 @@ public class UserControllerTest {
 
         // when
         ResultActions result = mvc.perform(
-                post("/password/change")
+                post("/api/password/change")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(requestBody)
         );
@@ -267,7 +287,7 @@ public class UserControllerTest {
 
         // when
         ResultActions result = mvc.perform(
-                post("/password/change")
+                post("/api/password/change")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(requestBody)
         );
@@ -284,7 +304,7 @@ public class UserControllerTest {
 
 
         ResultActions result = mvc.perform(
-                get("/gardens")
+                get("/api/gardens")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
         );
 
@@ -293,5 +313,25 @@ public class UserControllerTest {
 
         result.andExpect(jsonPath("$.success").value("true"));
     }
-    
+
+    /*
+    @DisplayName("사용자_탈퇴_성공_test")
+    @WithUserDetails(value = "tngus@test.com")
+    @Test
+    public void withdrawMembership_test() throws Exception {
+
+        // given
+
+        // when
+        ResultActions result = mvc.perform(
+                delete("/api/users")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+
+        // then
+        result.andExpect(jsonPath("$.success").value("true"));
+    }
+     */
+
 }
+

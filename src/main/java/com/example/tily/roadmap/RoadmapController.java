@@ -117,7 +117,8 @@ public class RoadmapController {
 
     // 그룹 로드맵의 구성원 강퇴하기
     @DeleteMapping("/roadmaps/groups/{groupId}/members/{memberId}")
-    public ResponseEntity<?> dismissMember(@PathVariable Long groupId, @PathVariable Long memberId, @AuthenticationPrincipal CustomUserDetails userDetails){
+    public ResponseEntity<?> dismissMember(@PathVariable Long groupId, @PathVariable Long memberId,
+                                           @AuthenticationPrincipal CustomUserDetails userDetails){
         roadmapService.dismissMember(groupId, memberId, userDetails.getUser());
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
@@ -138,7 +139,8 @@ public class RoadmapController {
 
     // 그룹 로드맵 참여 신청 거절
     @DeleteMapping("/roadmaps/groups/{groupId}/members/{memberId}/reject")
-    public ResponseEntity<?> rejectApplication(@PathVariable Long groupId, @PathVariable Long memberId, @AuthenticationPrincipal CustomUserDetails userDetails){
+    public ResponseEntity<?> rejectApplication(@PathVariable Long groupId, @PathVariable Long memberId,
+                                               @AuthenticationPrincipal CustomUserDetails userDetails){
         roadmapService.rejectApplication(groupId, memberId, userDetails.getUser());
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }

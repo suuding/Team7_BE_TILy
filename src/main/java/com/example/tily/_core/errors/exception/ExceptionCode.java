@@ -38,7 +38,7 @@ public enum ExceptionCode {
     // roadmap 관련 에러
     ROADMAP_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 roadmap을 찾을 수 없습니다."),
     ROADMAP_NOT_FORBIDDEN(HttpStatus.FORBIDDEN, "해당 로드맵에 속하지 않았습니다."),
-    ROADMAP_NOT_BELONG(HttpStatus.FORBIDDEN, "해당 reoadmap에 속하지 않습니다."),
+    ROADMAP_NOT_BELONG(HttpStatus.FORBIDDEN, "해당 roadmap에 속하지 않습니다."),
     ROADMAP_FORBIDDEN(HttpStatus.FORBIDDEN, "해당 roadmap에 접근할 권한이 없습니다."),
     ROADMAP_SUBMIT_FORBIDDEN(HttpStatus.FORBIDDEN, "해당 til을 제출할 권한이 없습니다."),
     ROADMAP_ALREADY_APPLY(HttpStatus.BAD_REQUEST, "해당 로드맵에 이미 신청했습니다."),
