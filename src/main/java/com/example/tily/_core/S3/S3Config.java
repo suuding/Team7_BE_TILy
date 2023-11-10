@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Profile;
 
 @Configuration
 public class S3Config {
-    @Value("${cloud.aws.credentials.access-key}") // application.yml 에 명시한 내용
+    @Value("${cloud.aws.credentials.access-key}")
     private String accessKey;
 
     @Value("${cloud.aws.credentials.secret-key}")
@@ -22,16 +22,13 @@ public class S3Config {
     @Value("${cloud.aws.region.static}")
     private String region;
 
-    @Value("krmp-proxy.9rum.cc")
-    private String proxyHost;
+    private final static String proxyHost = "krmp-proxy.9rum.cc";
 
-    @Value("3128")
-    private int proxyPort;
-
+    private final static int proxyPort = 3128;
 
     @Bean
-    @Profile({"local", "prod"})
-    public AmazonS3Client amazonS3Client() {
+    @Profile(!"deploy")
+    public AmazonS3Client amazonS3ClientFor() {
         BasicAWSCredentials awsCreds = new BasicAWSCredentials(accessKey, secretKey);
         return (AmazonS3Client) AmazonS3ClientBuilder
                 .standard()
@@ -46,11 +43,9 @@ public class S3Config {
         BasicAWSCredentials awsCreds = new BasicAWSCredentials(accessKey, secretKey);
 
         ClientConfiguration clientConfiguration = new ClientConfiguration();
-        clientConfiguration.setConnectionTimeout(60000);  // 연결 타임아웃 시간 60000ms = 60s 설정
-        clientConfiguration.setSocketTimeout(60000);  // 소켓 타임아웃 시간 60000ms = 60s 설정
+        clientConfiguration.setProxyProtocol(Protocol.HTTP);
         clientConfiguration.setProxyHost(proxyHost);
         clientConfiguration.setProxyPort(proxyPort);
-        clientConfiguration.setProxyProtocol(Protocol.HTTP);
 
         return (AmazonS3Client) AmazonS3ClientBuilder
                 .standard()
