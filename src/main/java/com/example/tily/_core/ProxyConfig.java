@@ -13,15 +13,13 @@ import java.net.Proxy;
 @Configuration
 public class ProxyConfig {
 
-    @Value("krmp-proxy.9rum.cc")
-    private String proxyHost;
+    private final static String proxyHost = "krmp-proxy.9rum.cc";
 
-    @Value("3128")
-    private int proxyPort;
+    private final static int proxyPort = 3128;
 
     @Bean
     @Profile("deploy")
-    public RestTemplate restTemplateWithProxy() {
+    public RestTemplate restTemplateForProxy() {
         SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
         Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyHost, proxyPort));
         requestFactory.setProxy(proxy);
