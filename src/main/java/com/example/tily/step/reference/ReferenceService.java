@@ -33,6 +33,8 @@ public class ReferenceService {
         Long stepId = requestDTO.stepId();
         Step step = getStepById(stepId);
 
+        checkMasterAndManagerPermission(step.getRoadmap().getId(), user); // 생성자 혹 매니저만 생성 가능
+
         Reference reference = Reference.builder()
                 .step(step)
                 .category(requestDTO.category())
@@ -44,7 +46,6 @@ public class ReferenceService {
 
     // step의 참고자료 목록 조회하기
     public StepResponse.FindReferenceDTO findReference(Long stepId, User user){
-
         Step step = getStepById(stepId);
 
         List<Reference> references = referenceRepository.findByStepId(stepId);
@@ -70,7 +71,7 @@ public class ReferenceService {
     public void deleteReference(Long referenceId, User user){
         Reference reference = getReferenceById(referenceId);
 
-        checkMasterAndManagerPermission(reference.getStep().getRoadmap().getId(), user); // 매니저급만 삭제 가능
+        checkMasterAndManagerPermission(reference.getStep().getRoadmap().getId(), user); // 생성자 혹 매니저만 삭제 가능
 
         referenceRepository.softDeleteReferenceById(referenceId);
     }
