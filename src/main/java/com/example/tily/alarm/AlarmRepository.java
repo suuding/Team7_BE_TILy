@@ -18,5 +18,5 @@ public interface AlarmRepository extends JpaRepository<Alarm, Long> {
     void deleteByCommentId(Long commentId);
 
     @Query("delete from Alarm a where a.comment.id in :commentIds")
-    void deleteAlarmsByCommentIds(List<Long> commentIds);
+    void deleteByCommentIds(List<Long> commentIds);
 }

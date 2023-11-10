@@ -8,7 +8,6 @@ import com.example.tily._core.utils.RedisUtils;
 import com.example.tily.alarm.AlarmRepository;
 import com.example.tily.comment.Comment;
 import com.example.tily.comment.CommentRepository;
-import com.example.tily.roadmap.Category;
 import com.example.tily.roadmap.Roadmap;
 import com.example.tily.roadmap.RoadmapRepository;
 import com.example.tily.roadmap.relation.UserRoadmap;
@@ -194,7 +193,7 @@ public class UserService {
         commentRepository.softDeleteCommentsByIds(commentIds);
 
         // 2. Comment들과 관련된 Alarm 삭제
-        alarmRepository.deleteAlarmsByCommentIds(commentIds);
+        alarmRepository.deleteByCommentIds(commentIds);
 
         // 3. 유저가 작성한 Til 삭제
         List<Til> tils = getTilByUserId(user.getId());
