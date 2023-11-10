@@ -1,6 +1,5 @@
 package com.example.tily._core.config;
 
-import com.example.tily._core.RestTemplateLoggingRequestInterceptor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
