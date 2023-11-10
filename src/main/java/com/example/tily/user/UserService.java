@@ -119,6 +119,7 @@ public class UserService {
             throw new CustomException(ExceptionCode.TOKEN_EXPIRED);
 
         User user = findById(userId);
+
         return createToken(user);
     }
 
@@ -138,10 +139,10 @@ public class UserService {
 
     // 사용자 정보 수정
     @Transactional
-    public void updateUser(UserRequest.UpdateUserDTO requestDTO, Long id) {
-        User user = findById(id);
+    public void updateUser(UserRequest.UpdateUserDTO requestDTO, Long userId) {
+        User user = findById(userId);
 
-        if (!user.getId().equals(id))
+        if (!user.getId().equals(userId))
             throw new CustomException(ExceptionCode.USER_UPDATE_FORBIDDEN);
 
         if (!passwordEncoder.matches(requestDTO.curPassword(), user.getPassword()))
@@ -293,6 +294,7 @@ public class UserService {
                 "<p>안녕하세요!<br>본인 인증을 위해 아래의 코드를 복사해 인증코드 입력 칸에 입력해주세요.<br>" +
                 "<div style='background-color:gainsboro; font-size: 30px; margin: 10px; padding: 5px; width: 250px' >" + code + "</div><br>" +
                 "TIL-y 서비스를 이용해주셔서 감사합니다. <br></p></div>";
+
         return content;
     }
 
@@ -319,8 +321,8 @@ public class UserService {
     }
 
     // id로 사용자 조회
-    private User findById(Long id) {
-        return userRepository.findById(id).orElseThrow(()->new CustomException(ExceptionCode.USER_NOT_FOUND));
+    private User findById(Long userId) {
+        return userRepository.findById(userId).orElseThrow(()->new CustomException(ExceptionCode.USER_NOT_FOUND));
     }
 
     private List<UserRoadmap> getUserRoadmapByUserId(Long userId) {

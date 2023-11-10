@@ -56,13 +56,13 @@ public class ReferenceService {
 
         for(Reference reference : references){
             String category = reference.getCategory();
-            Long id = reference.getId();
+            Long referenceId = reference.getId();
             String link = reference.getLink();
 
             if(category.equals("youtube"))
-                youtubeDTOs.add(new StepResponse.FindReferenceDTO.YoutubeDTO(id, link));
+                youtubeDTOs.add(new StepResponse.FindReferenceDTO.YoutubeDTO(referenceId, link));
             else if(category.equals("web"))
-                webDTOs.add(new StepResponse.FindReferenceDTO.WebDTO(id, link));
+                webDTOs.add(new StepResponse.FindReferenceDTO.WebDTO(referenceId, link));
         }
 
         return new StepResponse.FindReferenceDTO(step, youtubeDTOs, webDTOs);
@@ -83,6 +83,7 @@ public class ReferenceService {
         if(!userRoadmap.getRole().equals(GroupRole.ROLE_MASTER.getValue()) && !userRoadmap.getRole().equals(GroupRole.ROLE_MANAGER.getValue())){
             throw new CustomException(ExceptionCode.ROADMAP_FORBIDDEN);
         }
+
         return userRoadmap.getRole();
     }
 

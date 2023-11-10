@@ -1,0 +1,73 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+spec:
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          image: krmp-d2hub-idock.9rum.cc/dev-test/repo_703249f0f77b  # backend image
+          env:
+            - name: TZ
+              value: Asia/Seoul
+            - name: MARIADB_DATABASE
+              value: tily
+            - name: MARIADB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: MARIADB_USERNAME
+            - name: MARIADB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: MARIADB_PASSWORD
+            - name: MARIADB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: MARIADB_ROOT_PASSWORD
+            - name: MAIL_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: MAIL_USERNAME
+            - name: MAIL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: MAIL_PASSWORD
+            - name: ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: ACCESS_KEY
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: SECRET_KEY
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              memory: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+spec:
+  selector:
+    app: backend
+  ports:
+    - port: 8080
+      targetPort: 8080

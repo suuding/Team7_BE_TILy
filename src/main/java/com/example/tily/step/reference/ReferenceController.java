@@ -23,6 +23,7 @@ public class ReferenceController {
     public ResponseEntity<?> createReference(@RequestBody @Valid ReferenceRequest.CreateReferenceDTO requestDTO, Errors errors,
                                              @AuthenticationPrincipal CustomUserDetails userDetails){
         referenceService.createReference(requestDTO, userDetails.getUser());
+
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 
@@ -32,13 +33,14 @@ public class ReferenceController {
     public ResponseEntity<?> findReference(@PathVariable("stepId") Long stepId,
                                            @AuthenticationPrincipal CustomUserDetails userDetails){
         StepResponse.FindReferenceDTO responseDTO = referenceService.findReference(stepId, userDetails.getUser());
+
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
 
     // 참고자료 삭제
-    @DeleteMapping("/references/{id}")
-    public ResponseEntity<?> deleteReference(@PathVariable("id") Long id, @AuthenticationPrincipal CustomUserDetails userDetails) {
-        referenceService.deleteReference(id, userDetails.getUser());
+    @DeleteMapping("/references/{referenceId}")
+    public ResponseEntity<?> deleteReference(@PathVariable("referenceId") Long referenceId, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        referenceService.deleteReference(referenceId, userDetails.getUser());
 
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }

@@ -43,8 +43,8 @@ public class Step {
     private boolean isDeleted = false;
 
     @Builder
-    public Step(Long id, Roadmap roadmap, String title, String description, LocalDateTime dueDate) {
-        this.id = id;
+    public Step(Long stepId, Roadmap roadmap, String title, String description, LocalDateTime dueDate) {
+        this.id = stepId;
         this.roadmap = roadmap;
         this.title = title;
         this.description = description;

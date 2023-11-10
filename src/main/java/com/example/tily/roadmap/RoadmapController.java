@@ -23,6 +23,7 @@ public class RoadmapController {
     public ResponseEntity<?> createRoadmap(@RequestBody @Valid RoadmapRequest.CreateRoadmapDTO requestDTO, Errors errors,
                                            @AuthenticationPrincipal CustomUserDetails userDetails){
         RoadmapResponse.CreateRoadmapDTO responseDTO = roadmapService.createRoadmap(requestDTO, userDetails.getUser());
+
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
 
@@ -31,30 +32,33 @@ public class RoadmapController {
     public ResponseEntity<?> createTilyRoadmap(@RequestBody @Valid RoadmapRequest.CreateTilyRoadmapDTO requestDTO, Errors errors,
                                                @AuthenticationPrincipal CustomUserDetails userDetails){
         RoadmapResponse.CreateRoadmapDTO responseDTO = roadmapService.createTilyRoadmap(requestDTO, userDetails.getUser());
+
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
 
     // 로드맵 정보 조회하기 (틸리, 그룹)
-    @GetMapping("/roadmaps/{id}")
-    public ResponseEntity<?> findRoadmap(@PathVariable Long id, @AuthenticationPrincipal CustomUserDetails userDetails){
+    @GetMapping("/roadmaps/{roadmapId}")
+    public ResponseEntity<?> findRoadmap(@PathVariable Long roadmapId, @AuthenticationPrincipal CustomUserDetails userDetails){
         User user = Optional.ofNullable(userDetails).map(CustomUserDetails::getUser).orElse(null);
-        RoadmapResponse.FindRoadmapDTO responseDTO = roadmapService.findRoadmap(id, user);
+        RoadmapResponse.FindRoadmapDTO responseDTO = roadmapService.findRoadmap(roadmapId, user);
         
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
 
     // 로드맵 정보 수정하기
-    @PatchMapping("/roadmaps/{id}")
+    @PatchMapping("/roadmaps/{roadmapId}")
     public ResponseEntity<?> updateRoadmap(@RequestBody @Valid RoadmapRequest.UpdateRoadmapDTO requestDTO, Errors errors,
-                                           @PathVariable Long id, @AuthenticationPrincipal CustomUserDetails userDetails){
-        roadmapService.updateRoadmap(id, requestDTO, userDetails.getUser());
+                                           @PathVariable Long roadmapId, @AuthenticationPrincipal CustomUserDetails userDetails){
+        roadmapService.updateRoadmap(roadmapId, requestDTO, userDetails.getUser());
+
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 
     // 로드맵 삭제
-    @DeleteMapping("/roadmaps/{id}")
-    public ResponseEntity<?> deleteRoadmap(@PathVariable Long id, @AuthenticationPrincipal CustomUserDetails userDetails){
-        roadmapService.deleteRoadmap(id, userDetails.getUser());
+    @DeleteMapping("/roadmaps/{roadmapId}")
+    public ResponseEntity<?> deleteRoadmap(@PathVariable Long roadmapId, @AuthenticationPrincipal CustomUserDetails userDetails){
+        roadmapService.deleteRoadmap(roadmapId, userDetails.getUser());
+
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 
@@ -62,6 +66,7 @@ public class RoadmapController {
     @GetMapping("/roadmaps/my")
     public ResponseEntity<?> findAllMyRoadmaps(@AuthenticationPrincipal CustomUserDetails userDetails) {
         RoadmapResponse.FindAllMyRoadmapDTO responseDTO = roadmapService.findAllMyRoadmaps(userDetails.getUser());
+
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
 
@@ -73,6 +78,7 @@ public class RoadmapController {
                                                 @RequestParam(value="size", defaultValue = "12") int size,
                                                 @AuthenticationPrincipal CustomUserDetails userDetails) {
         RoadmapResponse.FindRoadmapByQueryDTO responseDTO  = roadmapService.findAll(category, name, page, size);
+
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
 
@@ -81,6 +87,7 @@ public class RoadmapController {
     public ResponseEntity<?> applyGroupRoadmap(@RequestBody @Valid RoadmapRequest.ApplyRoadmapDTO requestDTO, Errors errors,
                                           @PathVariable("groupId") Long groupId, @AuthenticationPrincipal CustomUserDetails userDetails){
         roadmapService.applyGroupRoadmap(requestDTO, groupId, userDetails.getUser());
+
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 
@@ -88,6 +95,7 @@ public class RoadmapController {
     @PostMapping("/roadmaps/tily/{tilyId}/apply")
     public ResponseEntity<?> applyTilyRoadmap(@PathVariable("tilyId") Long tilyId, @AuthenticationPrincipal CustomUserDetails userDetails){
         roadmapService.applyTilyRoadmap(tilyId, userDetails.getUser());
+
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 
@@ -96,6 +104,7 @@ public class RoadmapController {
     public ResponseEntity<?> participateRoadmap(@RequestBody @Valid RoadmapRequest.ParticipateRoadmapDTO requestDTO, Errors errors,
                                                 @AuthenticationPrincipal CustomUserDetails userDetails){
         RoadmapResponse.ParticipateRoadmapDTO responseDTO = roadmapService.participateRoadmap(requestDTO, userDetails.getUser());
+
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
 
@@ -103,6 +112,7 @@ public class RoadmapController {
     @GetMapping("/roadmaps/groups/{groupId}/members")
     public ResponseEntity<?> findRoadmapMembers(@PathVariable Long groupId, @AuthenticationPrincipal CustomUserDetails userDetails){
         RoadmapResponse.FindRoadmapMembersDTO responseDTO = roadmapService.findRoadmapMembers(groupId, userDetails.getUser());
+
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
 
@@ -112,6 +122,7 @@ public class RoadmapController {
                                               @PathVariable Long groupId, @PathVariable Long memberId,
                                               @AuthenticationPrincipal CustomUserDetails userDetails){
         roadmapService.changeMemberRole(requestDTO, groupId, memberId, userDetails.getUser());
+
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 
@@ -120,6 +131,7 @@ public class RoadmapController {
     public ResponseEntity<?> dismissMember(@PathVariable Long groupId, @PathVariable Long memberId,
                                            @AuthenticationPrincipal CustomUserDetails userDetails){
         roadmapService.dismissMember(groupId, memberId, userDetails.getUser());
+
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 
@@ -127,6 +139,7 @@ public class RoadmapController {
     @GetMapping("/roadmaps/groups/{groupId}/members/apply")
     public ResponseEntity<?> findAppliedUsers(@PathVariable Long groupId, @AuthenticationPrincipal CustomUserDetails userDetails){
         RoadmapResponse.FindAppliedUsersDTO responseDTO = roadmapService.findAppliedUsers(groupId, userDetails.getUser());
+
         return ResponseEntity.ok().body(ApiUtils.success(responseDTO));
     }
 
@@ -134,6 +147,7 @@ public class RoadmapController {
     @PostMapping("/roadmaps/groups/{groupId}/members/{memberId}/accept")
     public ResponseEntity<?> acceptApplication(@PathVariable Long groupId, @PathVariable Long memberId, @AuthenticationPrincipal CustomUserDetails userDetails){
         roadmapService.acceptApplication(groupId, memberId, userDetails.getUser());
+
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 
@@ -142,6 +156,7 @@ public class RoadmapController {
     public ResponseEntity<?> rejectApplication(@PathVariable Long groupId, @PathVariable Long memberId,
                                                @AuthenticationPrincipal CustomUserDetails userDetails){
         roadmapService.rejectApplication(groupId, memberId, userDetails.getUser());
+
         return ResponseEntity.ok().body(ApiUtils.success(null));
     }
 }

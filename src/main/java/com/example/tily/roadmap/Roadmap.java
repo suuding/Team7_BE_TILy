@@ -56,8 +56,8 @@ public class Roadmap extends BaseTimeEntity {
     private boolean isDeleted = false;
 
     @Builder
-    public Roadmap(Long id, User creator, Category category, String name, String description, boolean isPublic, String code, boolean isRecruit, int stepNum, String image) {
-        this.id = id;
+    public Roadmap(Long roadmapId, User creator, Category category, String name, String description, boolean isPublic, String code, boolean isRecruit, int stepNum, String image) {
+        this.id = roadmapId;
         this.creator = creator;
         this.category = category;
         this.name = name;
