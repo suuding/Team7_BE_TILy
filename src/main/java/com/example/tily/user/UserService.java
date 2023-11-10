@@ -335,5 +335,5 @@ public class UserService {
         return tilRepository.findByWriterId(userId);
     }
 
-    private List<Comment> getCommentByUserId(Long userId){return commentRepository.findByUserId(userId);}
+    private List<Comment> getCommentByUserId(Long userId){return commentRepository.findByWriterId(userId);}
 }
