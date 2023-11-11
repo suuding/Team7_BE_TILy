@@ -1,8 +1,8 @@
 package com.example.tily._core.security;
 
 
-import com.example.tily._core.errors.exception.CustomException;
-import com.example.tily._core.errors.exception.ExceptionCode;
+import com.example.tily._core.errors.CustomException;
+import com.example.tily._core.errors.ExceptionCode;
 import com.example.tily._core.utils.FilterResponseUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

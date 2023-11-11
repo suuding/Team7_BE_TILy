@@ -1,7 +1,7 @@
 package com.example.tily.alarm;
 
-import com.example.tily._core.errors.exception.ExceptionCode;
-import com.example.tily._core.errors.exception.CustomException;
+import com.example.tily._core.errors.ExceptionCode;
+import com.example.tily._core.errors.CustomException;
 import com.example.tily.user.User;
 import lombok.RequiredArgsConstructor;
 

@@ -1,7 +1,7 @@
 package com.example.tily.user;
 
-import com.example.tily._core.errors.exception.ExceptionCode;
-import com.example.tily._core.errors.exception.CustomException;
+import com.example.tily._core.errors.ExceptionCode;
+import com.example.tily._core.errors.CustomException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.tily._core.security.JWTProvider;
 import com.example.tily._core.utils.RedisUtils;

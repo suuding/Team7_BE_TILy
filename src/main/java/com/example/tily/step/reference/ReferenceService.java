@@ -1,9 +1,7 @@
 package com.example.tily.step.reference;
 
-import com.example.tily._core.errors.exception.CustomException;
-import com.example.tily._core.errors.exception.ExceptionCode;
-import com.example.tily.roadmap.Roadmap;
-import com.example.tily.roadmap.RoadmapRepository;
+import com.example.tily._core.errors.CustomException;
+import com.example.tily._core.errors.ExceptionCode;
 import com.example.tily.roadmap.relation.GroupRole;
 import com.example.tily.roadmap.relation.UserRoadmap;
 import com.example.tily.roadmap.relation.UserRoadmapRepository;
@@ -17,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
