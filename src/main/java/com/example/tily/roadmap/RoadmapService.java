@@ -78,7 +78,7 @@ public class RoadmapService {
                 .code(generateRandomCode())
                 .isRecruit(true)    // 모집여부
                 .stepNum(requestDTO.steps().size())
-                .image("tily.png")
+                .image(requestDTO.roadmap().image())
                 .build();
         roadmapRepository.save(roadmap);
 

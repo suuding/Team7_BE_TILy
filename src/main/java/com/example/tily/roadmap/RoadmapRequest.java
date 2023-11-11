@@ -34,6 +34,7 @@ public class RoadmapRequest {
             @NotBlank(message = "이름을 입력해주세요.") String name,
             String description,
             String code,
+            String image,
             boolean isPublic,
             boolean isRecruit
     ){ }
