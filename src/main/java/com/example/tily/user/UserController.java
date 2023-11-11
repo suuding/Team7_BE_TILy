@@ -80,7 +80,7 @@ public class UserController {
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
-                .body(ApiUtils.success(HttpStatus.CREATED, new UserResponse.LoginDTO(responseDTO.accessToken())));
+                .body(ApiUtils.success(HttpStatus.OK, new UserResponse.LoginDTO(responseDTO.accessToken())));
     }
 
     // 사용자 정보 조회하기
