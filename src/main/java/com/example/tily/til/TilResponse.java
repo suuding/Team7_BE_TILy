@@ -1,19 +1,11 @@
 package com.example.tily.til;
 
 import com.example.tily.comment.Comment;
-import com.example.tily.comment.CommentResponse;
 import com.example.tily.roadmap.Roadmap;
 import com.example.tily.step.Step;
-import com.example.tily.user.User;
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.data.domain.Slice;
-
-import javax.swing.text.StyledEditorKit;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 public class TilResponse {
     public record CreateTilDTO(Long id) {
@@ -49,14 +41,14 @@ public class TilResponse {
                                  String name,
                                  String image,
                                  boolean isOwner,
-                                 String createDate) {
+                                 LocalDateTime createDate) {
             public CommentDTO(Comment comment, boolean isOwner) {
                 this(comment.getId(),
                         comment.getContent(),
                         comment.getWriter().getName(),
                         comment.getWriter().getImage(),
                         isOwner,
-                        comment.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+                        comment.getCreatedDate());
             }
         }
     }
