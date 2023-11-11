@@ -31,10 +31,10 @@ public class ImageService {
     }
 
     @Transactional
-    public void updateUserImage(Long userId, MultipartFile multipartFile, User userDetails) {
+    public void updateUserImageS3(Long userId, MultipartFile multipartFile, User userDetails) {
         if (!userDetails.getId().equals(userId))
             throw new CustomException(ExceptionCode.USER_UPDATE_FORBIDDEN);
-        
+
         User user = getUserById(userId);
 
         String storageFileName = s3Service.uploadFile(multipartFile, FileFolder.USER_IMAGE);
@@ -43,6 +43,16 @@ public class ImageService {
         }
 
         user.updateImage(storageFileName); // user의 image 필드는 파일명을 가진다
+    }
+
+    @Transactional
+    public void updateUserImage(Long userId, ImageRequest.UpdateUserImageDTO requestDTO, User userDetails) {
+        if (!userDetails.getId().equals(userId))
+            throw new CustomException(ExceptionCode.USER_UPDATE_FORBIDDEN);
+
+        User user = getUserById(userId);
+
+        user.updateImage(requestDTO.url());
     }
 
     @Transactional
