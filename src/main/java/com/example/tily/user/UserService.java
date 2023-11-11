@@ -50,7 +50,7 @@ public class UserService {
     private final ReferenceRepository referenceRepository;
     private final AlarmRepository alarmRepository;
 
-    private String defaultImage = "user/profile-user.jpg";
+    private String defaultImage = "/assets/icons/ic_profile";
 
     // (회원가입) 이메일 중복 체크 후 인증코드 전송
     @Transactional
