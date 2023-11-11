@@ -194,6 +194,7 @@ public class RoadmapResponse {
                 String name,
                 String description,
                 int stepNum,
+                String image,
                 GroupDTO.Creator creator) {
             public RoadmapDTO(Roadmap roadmap) {
                 this(
@@ -201,6 +202,7 @@ public class RoadmapResponse {
                         roadmap.getName(),
                         roadmap.getDescription(),
                         roadmap.getStepNum(),
+                        roadmap.getImage(),
                         new GroupDTO.Creator(roadmap.getCreator())
                 );
             }
