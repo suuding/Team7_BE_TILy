@@ -33,6 +33,7 @@ public class AlarmService {
         for (AlarmRequest.ReadAlarmDTO.AlarmDTO alarm : alarms) {
             Alarm a = alarmRepository.findById(alarm.id())
                     .orElseThrow(() -> new CustomException(ExceptionCode.ALARM_NOT_FOUND));
+
             a.readAlarm();
         }
     }
