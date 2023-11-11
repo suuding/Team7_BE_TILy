@@ -26,27 +26,25 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final AlarmRepository alarmRepository;
 
+    // 댓글 생성하기
     @Transactional
     public CommentResponse.CreateCommentDTO createComment(CommentRequest.CreateCommentDTO requestDTO, User user) {
         Long roadmapId = requestDTO.roadmapId();
         Long stepId = requestDTO.stepId();
         Long tilId = requestDTO.tilId();
 
-        Roadmap roadmap = roadmapRepository.findById(roadmapId)
+        roadmapRepository.findById(roadmapId)
                 .orElseThrow(() -> new CustomException(ExceptionCode.ROADMAP_NOT_FOUND));
 
-        Step step = stepRepository.findById(stepId)
+        stepRepository.findById(stepId)
                 .orElseThrow(() -> new CustomException(ExceptionCode.STEP_NOT_FOUND));
 
         Til til = tilRepository.findById(tilId)
                 .orElseThrow(() -> new CustomException(ExceptionCode.TIL_NOT_FOUND));
 
-
         String content = requestDTO.content();
 
         Comment comment = Comment.builder().
-                roadmap(roadmap).
-                step(step).
                 writer(user).
                 til(til).
                 content(content).
@@ -62,17 +60,16 @@ public class CommentService {
                 build();
         alarmRepository.save(alarm);
 
-        // til내 댓글 갯수 증가
-        til.addCommentNum();
+        til.addCommentNum();    // til의 댓글 갯수 증가
 
         return new CommentResponse.CreateCommentDTO(comment);
     }
 
+    // 댓글 수정하기
     @Transactional
     public void updateComment(CommentRequest.UpdateCommentDTO requestDTO, Long commentId, User user) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new CustomException(ExceptionCode.COMMENT_NOT_FOUND));
-
 
         if(!comment.getWriter().getId().equals(user.getId()))
             throw new CustomException(ExceptionCode.COMMENT_UPDATE_FORBIDDEN);
@@ -80,6 +77,7 @@ public class CommentService {
         comment.updateComment(requestDTO.content());
     }
 
+    // 댓글 삭제하기
     @Transactional
     public void deleteComment(Long commentId, User user) {
         Comment comment = commentRepository.findById(commentId)
@@ -90,7 +88,7 @@ public class CommentService {
             throw new CustomException(ExceptionCode.COMMENT_DELETE_FORBIDDEN);
 
         Til til = comment.getTil();
-        til.subCommentNum();
+        til.subCommentNum();    // til의 댓글 갯수 감소
 
         alarmRepository.deleteByCommentId(commentId);
         commentRepository.softDeleteCommentById(commentId);
