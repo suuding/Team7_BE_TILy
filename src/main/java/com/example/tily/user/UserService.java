@@ -86,6 +86,9 @@ public class UserService {
     @Transactional
     public void join(UserRequest.JoinDTO requestDTO) {
         checkEmail(requestDTO.email());
+        
+        if (!requestDTO.password().equals(requestDTO.passwordConfirm()))
+            throw new CustomException(ExceptionCode.USER_PASSWORD_WRONG);
 
         User user = User.builder()
                 .email(requestDTO.email())
