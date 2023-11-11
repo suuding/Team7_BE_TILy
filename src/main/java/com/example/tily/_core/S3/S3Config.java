@@ -28,7 +28,7 @@ public class S3Config {
 
 
     @Bean
-    @Profile("prod", "local")
+    @Profile({"prod", "local"})
     public AmazonS3Client amazonS3Client() {
         BasicAWSCredentials awsCreds = new BasicAWSCredentials(accessKey, secretKey);
         return (AmazonS3Client) AmazonS3ClientBuilder
