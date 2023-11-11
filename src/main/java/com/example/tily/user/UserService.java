@@ -91,7 +91,7 @@ public class UserService {
                 .email(requestDTO.email())
                 .name(requestDTO.name())
                 .password(passwordEncoder.encode(requestDTO.password()))
-                .image(null)
+                .image(createDefaultImage(defaultImage))
                 .role(Role.ROLE_USER)
                 .build();
 
@@ -340,4 +340,9 @@ public class UserService {
     }
 
     private List<Comment> getCommentByUserId(Long userId){return commentRepository.findByWriterId(userId);}
+    
+    private String createDefaultImage(String defaultImage) {
+        int random = (int)(Math.random()*6)+1;
+        return defaultImage+random+".svg";
+    }
 }
