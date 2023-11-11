@@ -73,6 +73,8 @@ public class SecurityConfig {
         http.authorizeRequests(
                 authorize -> authorize.antMatchers("/api/email/**", "/api/join", "/api/login", "/api/password/**", "/api/auth/**").permitAll()
                         .antMatchers(HttpMethod.GET, "/api/roadmaps").permitAll()
+                        .antMatchers("/api/roadmaps/my").authenticated()
+                        .antMatchers(HttpMethod.GET, "/api/roadmaps/{roadmapId}").permitAll()
                         .antMatchers(HttpMethod.GET, "/api/refresh").permitAll()
                         .antMatchers("/api/roadmaps/**", "/api/alarms/**", "/api/comments/**", "/api/images/**", "/api/references/**", "/api/references/**", "/api/steps/**", "/api/tils/**", "/api/users/**", "/api/gardens").authenticated()
                         .anyRequest().permitAll()
