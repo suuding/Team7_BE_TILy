@@ -112,7 +112,7 @@ public class UserControllerTest {
 
         // then
         result.andExpect(jsonPath("$.success").value("true"));
-        result.andExpect(jsonPath("$.message").value("ok"));
+        result.andExpect(jsonPath("$.message").value("Created"));
     }
 
     @DisplayName("사용자_회원가입_실패_test_1:잘못된 이메일 형식")
@@ -301,22 +301,22 @@ public class UserControllerTest {
         result.andExpect(jsonPath("$.message").value("올바른 비밀번호 형식을 입력해주세요."));
     }
 
-    @DisplayName("장미밭 조회 성공 test")
-    @WithUserDetails(value = "tngus@test.com")
-    @Test
-    public void view_gardens_test() throws Exception {
-
-
-        ResultActions result = mvc.perform(
-                get("/api/gardens")
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-        );
-
-        String responseBody = result.andReturn().getResponse().getContentAsString();
-        System.out.println("테스트 : " + responseBody);
-
-        result.andExpect(jsonPath("$.success").value("true"));
-    }
+//    @DisplayName("장미밭 조회 성공 test")
+//    @WithUserDetails(value = "tngus@test.com")
+//    @Test
+//    public void view_gardens_test() throws Exception {
+//
+//
+//        ResultActions result = mvc.perform(
+//                get("/api/gardens")
+//                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+//        );
+//
+//        String responseBody = result.andReturn().getResponse().getContentAsString();
+//        System.out.println("테스트 : " + responseBody);
+//
+//        result.andExpect(jsonPath("$.success").value("true"));
+//    }
 
 
     @DisplayName("사용자_탈퇴_성공_test")

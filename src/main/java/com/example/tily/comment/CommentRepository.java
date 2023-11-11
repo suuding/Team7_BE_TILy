@@ -25,6 +25,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     @Query("update Comment c SET c.isDeleted = true WHERE c.isDeleted = false AND c.id IN :commentIds")
     void softDeleteCommentsByIds(List<Long> commentIds);
 
+    // 추후 확장성을 고려한 soft delete 쿼리 작성
     @Modifying
     @Query("update Comment c SET c.isDeleted = true WHERE c.isDeleted = false AND c.til.id = :tilId")
     void softDeleteCommentsByTilId(Long tilId);

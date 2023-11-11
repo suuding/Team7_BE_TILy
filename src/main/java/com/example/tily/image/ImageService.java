@@ -2,8 +2,8 @@ package com.example.tily.image;
 
 import com.example.tily._core.S3.FileFolder;
 import com.example.tily._core.S3.S3Service;
-import com.example.tily._core.errors.exception.CustomException;
-import com.example.tily._core.errors.exception.ExceptionCode;
+import com.example.tily._core.errors.CustomException;
+import com.example.tily._core.errors.ExceptionCode;
 import com.example.tily.roadmap.Roadmap;
 import com.example.tily.roadmap.RoadmapRepository;
 import com.example.tily.user.User;
@@ -31,10 +31,10 @@ public class ImageService {
     }
 
     @Transactional
-    public void updateUserImage(Long userId, MultipartFile multipartFile, User userDetails) {
+    public void updateUserImageS3(Long userId, MultipartFile multipartFile, User userDetails) {
         if (!userDetails.getId().equals(userId))
             throw new CustomException(ExceptionCode.USER_UPDATE_FORBIDDEN);
-        
+
         User user = getUserById(userId);
 
         String storageFileName = s3Service.uploadFile(multipartFile, FileFolder.USER_IMAGE);
@@ -43,6 +43,16 @@ public class ImageService {
         }
 
         user.updateImage(storageFileName); // user의 image 필드는 파일명을 가진다
+    }
+
+    @Transactional
+    public void updateUserImage(Long userId, ImageRequest.UpdateUserImageDTO requestDTO, User userDetails) {
+        if (!userDetails.getId().equals(userId))
+            throw new CustomException(ExceptionCode.USER_UPDATE_FORBIDDEN);
+
+        User user = getUserById(userId);
+
+        user.updateImage(requestDTO.url());
     }
 
     @Transactional

@@ -1,6 +1,5 @@
 package com.example.tily._core.errors;
 
-import com.example.tily._core.errors.exception.*;
 import com.example.tily._core.utils.ApiUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
