@@ -1,6 +1,6 @@
 package com.example.tily._core.utils;
 
-import com.example.tily._core.errors.exception.CustomException;
+import com.example.tily._core.errors.CustomException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javax.servlet.http.HttpServletResponse;

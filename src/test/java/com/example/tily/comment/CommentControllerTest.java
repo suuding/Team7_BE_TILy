@@ -155,12 +155,12 @@ public class CommentControllerTest {
     }
 
     @DisplayName("댓글 수정 실패 test - 권한없음")
-    @WithUserDetails(value = "tngus@test.com")
+    @WithUserDetails(value = "hong@naver.com")
     @Test
     public void update_comment_fail_test() throws Exception {
 
         //given
-        Long commentId = 2L;
+        Long commentId = 3L;
 
         String content = "수정한 댓글입니다 홍홍";
         CommentRequest.UpdateCommentDTO requestDTO = new CommentRequest.UpdateCommentDTO(content);
@@ -228,7 +228,7 @@ public class CommentControllerTest {
 
         //given
 
-        Long commentId = 2L;
+        Long commentId = 3L;
 
         //when
         ResultActions result = mvc.perform(

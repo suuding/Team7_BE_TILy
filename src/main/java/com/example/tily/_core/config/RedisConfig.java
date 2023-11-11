@@ -1,4 +1,4 @@
-package com.example.tily._core;
+package com.example.tily._core.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

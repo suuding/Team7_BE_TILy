@@ -41,7 +41,7 @@ public class Comment extends BaseTimeEntity {
     private boolean isDeleted = false;
 
     @Builder
-    public Comment (Long commentId, Roadmap roadmap, Step step, Til til, User writer, String content) {
+    public Comment (Long commentId, Til til, User writer, String content) {
         this.id = commentId;
         this.til = til;
         this.writer = writer;

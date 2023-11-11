@@ -26,9 +26,10 @@ public class S3Config {
 
     private final static int proxyPort = 3128;
 
+
     @Bean
-    @Profile(!"deploy")
-    public AmazonS3Client amazonS3ClientFor() {
+    @Profile({"prod", "local"})
+    public AmazonS3Client amazonS3Client() {
         BasicAWSCredentials awsCreds = new BasicAWSCredentials(accessKey, secretKey);
         return (AmazonS3Client) AmazonS3ClientBuilder
                 .standard()
@@ -39,7 +40,7 @@ public class S3Config {
 
     @Bean
     @Profile("deploy")
-    public AmazonS3Client amazonS3ClientForDeploy() {
+    public AmazonS3Client amazonS3ClientForProxy() {
         BasicAWSCredentials awsCreds = new BasicAWSCredentials(accessKey, secretKey);
 
         ClientConfiguration clientConfiguration = new ClientConfiguration();

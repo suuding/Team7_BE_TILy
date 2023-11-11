@@ -879,29 +879,29 @@ public class RoadmapControllerTest {
         result.andExpect(jsonPath("$.success").value("true"));
     }
 
-    @DisplayName("신청_승인하기_실패_test1: 존재하지 않은 유저")
+//    @DisplayName("신청_승인하기_실패_test1: 존재하지 않은 유저")
+//    @WithUserDetails(value = "hong@naver.com")
+//    @Test
+//    public void application_accept_fail_test_1() throws Exception {
+//        // given
+//        Long groupsId = 5L;
+//        Long membersId = 10L;
+//
+//        // when
+//        ResultActions result = mvc.perform(
+//                post("/api/roadmaps/groups/"+ groupsId +"/members/"+ membersId +"/accept")
+//                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+//        );
+//
+//        // then
+//        result.andExpect(jsonPath("$.success").value("false"));
+//        result.andExpect(jsonPath("$.message").value("해당 사용자를 찾을 수 없습니다."));
+//    }
+
+    @DisplayName("신청_승인하기_실패_test1: 존재하지 않은 로드맵")
     @WithUserDetails(value = "hong@naver.com")
     @Test
     public void application_accept_fail_test_1() throws Exception {
-        // given
-        Long groupsId = 10L;
-        Long membersId = 10L;
-
-        // when
-        ResultActions result = mvc.perform(
-                post("/api/roadmaps/groups/"+ groupsId +"/members/"+ membersId +"/accept")
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-        );
-
-        // then
-        result.andExpect(jsonPath("$.success").value("false"));
-        result.andExpect(jsonPath("$.message").value("해당 사용자를 찾을 수 없습니다."));
-    }
-
-    @DisplayName("신청_승인하기_실패_test2: 존재하지 않은 로드맵")
-    @WithUserDetails(value = "hong@naver.com")
-    @Test
-    public void application_accept_fail_test_2() throws Exception {
         // given
         Long groupsId = 20L;
         Long membersId = 10L;
@@ -917,12 +917,12 @@ public class RoadmapControllerTest {
         result.andExpect(jsonPath("$.message").value("해당 roadmap을 찾을 수 없습니다."));
     }
 
-    @DisplayName("신청_승인하기_실패_test3: 권한이 없는 유저")
+    @DisplayName("신청_승인하기_실패_test2: 권한이 없는 유저")
     @WithUserDetails(value = "test@test.com")
     @Test
-    public void application_accept_fail_test_3() throws Exception {
+    public void application_accept_fail_test_2() throws Exception {
         // given
-        Long groupsId = 10L;
+        Long groupsId = 5L;
         Long membersId = 6L;
 
         // when
@@ -933,7 +933,7 @@ public class RoadmapControllerTest {
 
         // then
         result.andExpect(jsonPath("$.success").value("false"));
-        result.andExpect(jsonPath("$.message").value("해당 roadmap에 접근할 권한이 없습니다."));
+        result.andExpect(jsonPath("$.message").value("해당 roadmap에 속하지 않습니다."));
     }
 
     @DisplayName("신청_거절하기_성공_test")

@@ -1,7 +1,7 @@
 package com.example.tily.til;
 
-import com.example.tily._core.errors.exception.ExceptionCode;
-import com.example.tily._core.errors.exception.CustomException;
+import com.example.tily._core.errors.ExceptionCode;
+import com.example.tily._core.errors.CustomException;
 
 import com.example.tily.alarm.AlarmRepository;
 import com.example.tily.comment.Comment;

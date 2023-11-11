@@ -1,4 +1,4 @@
-package com.example.tily._core.errors.exception;
+package com.example.tily._core.errors;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

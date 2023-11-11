@@ -123,8 +123,8 @@ public class TiLyApplication {
 					newUserStepRelation(Step.builder().stepId(5L).build(), User.builder().userId(1L).build(), true),
 					newUserStepRelation(Step.builder().stepId(5L).build(), User.builder().userId(2L).build(), true),
 					newUserStepRelation(Step.builder().stepId(6L).build(), User.builder().userId(1L).build(), false),
-					newUserStepRelation(Step.builder().stepId(6L).build(), User.builder().userId(2L).build(), true),
-					newUserStepRelation(Step.builder().stepId(6L).build(), User.builder().userId(5L).build(), true)
+					newUserStepRelation(Step.builder().stepId(6L).build(), User.builder().userId(2L).build(), false),
+					newUserStepRelation(Step.builder().stepId(6L).build(), User.builder().userId(5L).build(), false)
 //					newUserStepRelation(Step.builder().id(5L).build(), User.builder().id(1L).build(), false),
 //					newUserStepRelation(Step.builder().id(6L).build(), User.builder().id(1L).build(), false),
 //					newUserStepRelation(Step.builder().id(7L).build(), User.builder().id(1L).build(), false)
@@ -152,8 +152,8 @@ public class TiLyApplication {
 
 			commentRepository.saveAll(Arrays.asList(
 					newComment(Roadmap.builder().roadmapId(1L).build(), Step.builder().stepId(1L).build(), Til.builder().tilId(1L).build(), User.builder().userId(1L).build(), "이것은 댓글입니다."),
-					newComment(Roadmap.builder().roadmapId(1L).build(), Step.builder().stepId(1L).build(), Til.builder().tilId(1L).build(), User.builder().userId(2L).build(), "이것도 댓글입니다.")
-
+					newComment(Roadmap.builder().roadmapId(1L).build(), Step.builder().stepId(1L).build(), Til.builder().tilId(1L).build(), User.builder().userId(2L).build(), "이것도 댓글입니다."),
+					newComment(Roadmap.builder().roadmapId(1L).build(), Step.builder().stepId(2L).build(), Til.builder().tilId(2L).build(), User.builder().userId(1L).build(), "이것도 댓글입니다.")
 			));
 
 			alarmRepository.saveAll(Arrays.asList(
@@ -265,8 +265,6 @@ public class TiLyApplication {
 
 	private Comment newComment(Roadmap roadmap, Step step, Til til, User writer, String content) {
 		return Comment.builder()
-				.roadmap(roadmap)
-				.step(step)
 				.til(til)
 				.writer(writer)
 				.content(content)

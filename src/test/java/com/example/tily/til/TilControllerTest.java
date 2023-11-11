@@ -477,12 +477,12 @@ public class TilControllerTest {
 
     }
     @DisplayName("틸 삭제 성공 test")
-    @WithUserDetails(value = "tngus@test.com")
+    @WithUserDetails(value = "hong@naver.com")
     @Test
     public void delete_til_success_test() throws Exception {
 
         //given
-        Long tilId = 7L;
+        Long tilId = 6L;
 
         //when
         ResultActions result = mvc.perform(

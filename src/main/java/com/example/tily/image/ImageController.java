@@ -8,6 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.validation.Errors;
+
+import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,13 +26,22 @@ public class ImageController {
         return ResponseEntity.ok().body(ApiUtils.success(HttpStatus.OK, responseDTO));
     }
 
-    @PostMapping("/images/users/{userId}")
+    @PostMapping("/images/users/{userId}/s3")
     public ResponseEntity<?> uploadUserImage(@PathVariable Long userId, @RequestParam("image") MultipartFile file,
                                              @AuthenticationPrincipal CustomUserDetails userDetails) {
 
-        imageService.updateUserImage(userId, file, userDetails.getUser());
+        imageService.updateUserImageS3(userId, file, userDetails.getUser());
 
-        return ResponseEntity.ok().body(ApiUtils.success(HttpStatus.CREATED, null));
+        return ResponseEntity.ok().body(ApiUtils.success(HttpStatus.OK, null));
+    }
+
+    @PostMapping("/images/users/{userId}")
+    public ResponseEntity<?> uploadUserImage(@RequestBody @Valid ImageRequest.UpdateUserImageDTO requestDTO, Errors errors,
+                                             @PathVariable Long userId, @AuthenticationPrincipal CustomUserDetails userDetails) {
+
+        imageService.updateUserImage(userId, requestDTO, userDetails.getUser());
+
+        return ResponseEntity.ok().body(ApiUtils.success(HttpStatus.OK, null));
     }
 
     @GetMapping("/images/roadmaps/{roadmapId}")
