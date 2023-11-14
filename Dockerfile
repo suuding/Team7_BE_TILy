@@ -26,4 +26,4 @@ FROM builder AS final
 COPY --from=builder /home/gradle/project/build/libs/TILy-0.0.1-SNAPSHOT.jar .
 
 # 빌드 결과 jar 파일을 실행
-CMD ["java", "-jar", "-Dspring.profiles.active=deploy", "/home/gradle/project/build/libs/TILy-0.0.1-SNAPSHOT.jar"]
+CMD ["java", "-jar", "-Dspring.profiles.active=deploy", "-Duser.timezone=Asia/Seoul","-Dhttp.proxyHost=krmp-proxy.9rum.cc", "-Dhttp.proxyPort=3128" , "/home/gradle/project/build/libs/TILy-0.0.1-SNAPSHOT.jar"]
