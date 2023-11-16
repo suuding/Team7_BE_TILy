@@ -223,9 +223,13 @@ public class TilService {
             }
         } else { // 로드맵에 속한 모든 사용자에 대해
             for (User user : users) {
-                Til til = tilRepository.findByStepIdAndUserId(stepId, user.getId());
-                if (til==null) members.add(new RoadmapResponse.FindTilOfStepDTO.MemberDTO(null, user));
-                else members.add(new RoadmapResponse.FindTilOfStepDTO.MemberDTO(til, user));
+                Optional<UserRoadmap> userRoadmap = userRoadmaps.stream().filter(u -> u.getUser().equals(user)).findFirst();
+                
+                if (userRoadmap.isPresent()) {
+                    Til til = tilRepository.findByStepIdAndUserId(stepId, user.getId());
+                    if (til==null) members.add(new RoadmapResponse.FindTilOfStepDTO.MemberDTO(null, user));
+                    else members.add(new RoadmapResponse.FindTilOfStepDTO.MemberDTO(til, user));
+                }
             }
         }
 
