@@ -26,12 +26,12 @@
 
 
 # 🏳️‍🌈 목차
-1. [서비스 기획 의도](https://github.com/Step3-kakao-tech-campus/Team7_BE/tree/Evaluation#-%EC%99%9C-%EC%9D%B4%EB%9F%B0-%EC%84%9C%EB%B9%84%EC%8A%A4%EB%A5%BC)
-2. [주요 기능](https://github.com/Step3-kakao-tech-campus/Team7_BE/tree/Evaluation#-%EC%A3%BC%EC%9A%94-%EA%B8%B0%EB%8A%A5)
-3. [BE - 핵심 개발 영역](https://github.com/Step3-kakao-tech-campus/Team7_BE/tree/Evaluation#-be---%ED%95%B5%EC%8B%AC-%EA%B0%9C%EB%B0%9C-%EC%98%81%EC%97%AD)
-4. [ERD](https://github.com/Step3-kakao-tech-campus/Team7_BE/tree/Evaluation#-erd)
-5. [아키텍쳐 구조](https://github.com/Step3-kakao-tech-campus/Team7_BE/tree/Evaluation#%EF%B8%8F-%EC%95%84%ED%82%A4%ED%83%9D%EC%B3%90-%EA%B5%AC%EC%A1%B0)
-6. [TIL-y 구성원](https://github.com/Step3-kakao-tech-campus/Team7_BE/tree/Evaluation#-til-y-%EA%B5%AC%EC%84%B1%EC%9B%90)
+1. [서비스 기획 의도](https://github.com/suuding/Team7_BE_TILy?tab=readme-ov-file#-%EC%99%9C-%EC%9D%B4%EB%9F%B0-%EC%84%9C%EB%B9%84%EC%8A%A4%EB%A5%BC)
+2. [주요 기능](https://github.com/suuding/Team7_BE_TILy?tab=readme-ov-file#-%EC%A3%BC%EC%9A%94-%EA%B8%B0%EB%8A%A5)
+3. [BE - 핵심 개발 영역](https://github.com/suuding/Team7_BE_TILy?tab=readme-ov-file#-be---%ED%95%B5%EC%8B%AC-%EA%B0%9C%EB%B0%9C-%EC%98%81%EC%97%AD)
+4. [ERD](https://github.com/suuding/Team7_BE_TILy?tab=readme-ov-file#-erd)
+5. [아키텍쳐 구조](https://github.com/suuding/Team7_BE_TILy?tab=readme-ov-file#-erd)
+6. [TIL-y 구성원](https://github.com/suuding/Team7_BE_TILy?tab=readme-ov-file#-til-y-%EA%B5%AC%EC%84%B1%EC%9B%90)
 
 
 <br/>
@@ -182,7 +182,7 @@
 
 
 
-# 👨‍💻🧑‍💻 TIL-y 구성원
+# 👨‍💻 TIL-y 구성원
 
 <table>
   <tr>
